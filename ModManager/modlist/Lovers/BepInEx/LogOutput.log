@@ -1,0 +1,31 @@
+﻿[Message: Preloader] BepInEx 6.0.0-reactor.13 - Among Us
+[Message: Preloader] BLEEDING EDGE Build #13 from 81d70dda09c133f31b0aae3506d89e3bc3fc5f24 at reactor
+[Info   :   BepInEx] System platform: Bits64, Windows
+[Info   : Preloader] Running under Unity v2019.4.9.5308042
+[Info   : Preloader] 0 patcher plugins loaded
+[Info   : Preloader] 0 assemblies discovered
+[Message:   BepInEx] Chainloader initialized
+[Info   :Unhollower] Registered mono type UnhollowerRuntimeLib.DelegateSupport+Il2CppToMonoDelegateReference in il2cpp domain
+[Info   :   BepInEx] 3 plugins to load
+[Info   :   BepInEx] Loading [CustomServer 1.0.0]
+[Message:CustomServer] Custom Server Region loaded
+[Info   :   BepInEx] Loading [Love Couple Mod 1.0.0]
+[Info   :   BepInEx] Loading [WoodiAPI 1.0.0]
+[Message:  WoodiAPI] Woodi API loaded
+[Message:   BepInEx] Chainloader startup complete
+[Error  :    Detour] System.NullReferenceException: Object reference not set to an instance of an object
+  at LoveCoupleMod.AmongUsClientPatch.Postfix1 (FMLLKEACGIO __instance, InnerNet.ClientData NJJBJMCBDCJ, GHMBCKNECJF OECOPGMHMKC) [0x00007] in <216b1c83c7d84010b067d06bbf6b4de5>:0 
+  at (wrapper dynamic-method) FMLLKEACGIO.DMD<FMLLKEACGIO::JCEGBHAKDPI>(FMLLKEACGIO,InnerNet.ClientData,GHMBCKNECJF)
+  at (wrapper dynamic-method) MonoMod.Utils.DynamicMethodDefinition.(il2cpp -> managed) JCEGBHAKDPI(intptr,intptr,GHMBCKNECJF,UnhollowerBaseLib.Runtime.Il2CppMethodInfo*)
+[Error  :    Detour] System.NullReferenceException: Object reference not set to an instance of an object
+  at LoveCoupleMod.AmongUsClientPatch.Postfix1 (FMLLKEACGIO __instance, InnerNet.ClientData NJJBJMCBDCJ, GHMBCKNECJF OECOPGMHMKC) [0x00007] in <216b1c83c7d84010b067d06bbf6b4de5>:0 
+  at (wrapper dynamic-method) FMLLKEACGIO.DMD<FMLLKEACGIO::JCEGBHAKDPI>(FMLLKEACGIO,InnerNet.ClientData,GHMBCKNECJF)
+  at (wrapper dynamic-method) MonoMod.Utils.DynamicMethodDefinition.(il2cpp -> managed) JCEGBHAKDPI(intptr,intptr,GHMBCKNECJF,UnhollowerBaseLib.Runtime.Il2CppMethodInfo*)
+[Error  :    Detour] System.NullReferenceException: Object reference not set to an instance of an object
+  at LoveCoupleMod.AmongUsClientPatch.Postfix1 (FMLLKEACGIO __instance, InnerNet.ClientData NJJBJMCBDCJ, GHMBCKNECJF OECOPGMHMKC) [0x00007] in <216b1c83c7d84010b067d06bbf6b4de5>:0 
+  at (wrapper dynamic-method) FMLLKEACGIO.DMD<FMLLKEACGIO::JCEGBHAKDPI>(FMLLKEACGIO,InnerNet.ClientData,GHMBCKNECJF)
+  at (wrapper dynamic-method) MonoMod.Utils.DynamicMethodDefinition.(il2cpp -> managed) JCEGBHAKDPI(intptr,intptr,GHMBCKNECJF,UnhollowerBaseLib.Runtime.Il2CppMethodInfo*)
+[Error  :    Detour] System.NullReferenceException: Object reference not set to an instance of an object
+  at LoveCoupleMod.AmongUsClientPatch.Postfix1 (FMLLKEACGIO __instance, InnerNet.ClientData NJJBJMCBDCJ, GHMBCKNECJF OECOPGMHMKC) [0x00007] in <216b1c83c7d84010b067d06bbf6b4de5>:0 
+  at (wrapper dynamic-method) FMLLKEACGIO.DMD<FMLLKEACGIO::JCEGBHAKDPI>(FMLLKEACGIO,InnerNet.ClientData,GHMBCKNECJF)
+  at (wrapper dynamic-method) MonoMod.Utils.DynamicMethodDefinition.(il2cpp -> managed) JCEGBHAKDPI(intptr,intptr,GHMBCKNECJF,UnhollowerBaseLib.Runtime.Il2CppMethodInfo*)

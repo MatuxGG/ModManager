@@ -1,0 +1,11 @@
+﻿[Message: Preloader] BepInEx 6.0.0-be.330 - Among Us
+[Message: Preloader] BLEEDING EDGE Build #330 from 59f6de93e5c6a2ba72333d6cb909945e9b596d79 at master
+[Info   :   BepInEx] System platform: Bits64, Windows
+[Info   : Preloader] Running under Unity v2019.4.9.5308042
+[Info   : Preloader] 0 patcher plugins loaded
+[Info   : Preloader] 0 assemblies discovered
+[Message:   BepInEx] Chainloader initialized
+[Info   :Unhollower] Registered mono type UnhollowerRuntimeLib.DelegateSupport+Il2CppToMonoDelegateReference in il2cpp domain
+[Info   :   BepInEx] 1 plugin to load
+[Info   :   BepInEx] Loading [Torch Mod 1.0.0]
+[Message:   BepInEx] Chainloader startup complete
