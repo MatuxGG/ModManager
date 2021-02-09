@@ -1,4 +1,4 @@
-REM VERSION 0.1
+REM VERSION 0.3
 
 REM CustomKeybinds v1.1
 REM Extra Roles v1.2.2
