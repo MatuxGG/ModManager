@@ -29,7 +29,7 @@ namespace ModManager
 
             this.loading.Text = "";
 
-            this.mods = new Mod[13];
+            this.mods = new Mod[14];
             this.mods[0] = new Mod("Among Us Classic", "Among Us Classic");
             this.mods[1] = new Mod("CustomKeyBinds", "Custom Keybinds");
             this.mods[2] = new Mod("ExtraRoles", "Extra Roles");
@@ -43,6 +43,7 @@ namespace ModManager
             this.mods[10] = new Mod("AnonymousImpostors", "Anonymous impostors");
             this.mods[11] = new Mod("Chameleon", "Chameleon");
             this.mods[12] = new Mod("Smol", "Smol");
+            this.mods[13] = new Mod("AllOfUs", "All Of Us");
 
             foreach (Mod installedMod in this.mods)
             {
