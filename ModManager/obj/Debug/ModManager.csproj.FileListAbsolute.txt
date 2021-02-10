@@ -1,0 +1,14 @@
+D:\visualstudio\ModManager\ModManager\bin\Debug\ModManager.exe.config
+D:\visualstudio\ModManager\ModManager\bin\Debug\ModManager.exe
+D:\visualstudio\ModManager\ModManager\bin\Debug\ModManager.pdb
+D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.Properties.Resources.resources
+D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.csproj.GenerateResource.cache
+D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.csproj.CoreCompileInputs.cache
+D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.exe
+D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.pdb
+D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.ModManager.resources
+D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.csprojAssemblyReference.cache
+D:\visualstudio\ModManager\ModManager\bin\Debug\AutoUpdater.NET.dll
+D:\visualstudio\ModManager\ModManager\bin\Debug\AutoUpdater.NET.pdb
+D:\visualstudio\ModManager\ModManager\bin\Debug\AutoUpdater.NET.xml
+D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.csproj.CopyComplete
