@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "Mod Manager"
-#define MyAppVersion "1.0"
+#define MyAppVersion "2.0"
 #define MyAppPublisher "Matux"
 #define MyAppURL "https://matux.fr"
 #define MyAppExeName "ModManager.exe"
@@ -10,7 +10,7 @@
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{C4E379FE-EE2C-4116-A93E-FE263907B1D0}
+AppId={{CC76304C-F1DA-4342-9330-410D36CBF787}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -22,14 +22,16 @@ DefaultDirName={autopf}\{#MyAppName}
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
+PrivilegesRequiredOverridesAllowed=dialog
 OutputBaseFilename=ModManagerInstaller
-SetupIconFile=D:\visualstudio\ModManager\among-us-blue.ico
+SetupIconFile=D:\visualstudio\ModManager\ModManager\Resources\among-us-blue.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
+Name: "french"; MessagesFile: "compiler:Languages\French.isl"
 
 [Tasks]
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
@@ -41,8 +43,9 @@ Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\AutoUpdater.NET.pdb"; D
 Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\AutoUpdater.NET.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\ModManager.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\ModManager.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\Resources"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\modlist\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\Newtonsoft.Json.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager\ModManager\files\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

@@ -34,270 +34,269 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ModManager));
-            this.valid = new System.Windows.Forms.Button();
-            this.mod = new System.Windows.Forms.ComboBox();
-            this.title = new System.Windows.Forms.Label();
-            this.choose = new System.Windows.Forms.Label();
+            this.mainTitle = new System.Windows.Forms.Label();
+            this.AmongUsDirectoryLabel = new System.Windows.Forms.Label();
+            this.AmongUsDirectorySelection = new System.Windows.Forms.Button();
+            this.AmongUsPathSelection = new System.Windows.Forms.TextBox();
+            this.AmongUsSelectionPopup = new System.Windows.Forms.FolderBrowserDialog();
+            this.AmongUsPathLabel = new System.Windows.Forms.Label();
             this.credits = new System.Windows.Forms.LinkLabel();
-            this.version = new System.Windows.Forms.Label();
-            this.modTitle = new System.Windows.Forms.Label();
-            this.modDescripiton = new System.Windows.Forms.Label();
-            this.currentModTitle = new System.Windows.Forms.Label();
-            this.separator = new System.Windows.Forms.Label();
-            this.separator2 = new System.Windows.Forms.Label();
-            this.currentMod = new System.Windows.Forms.Label();
-            this.loading = new System.Windows.Forms.Label();
-            this.separator3 = new System.Windows.Forms.Label();
-            this.directoryTitle = new System.Windows.Forms.Label();
-            this.folderBrowser = new System.Windows.Forms.FolderBrowserDialog();
-            this.directorySelect = new System.Windows.Forms.Button();
-            this.directoryPath = new System.Windows.Forms.Label();
-            this.Play = new System.Windows.Forms.Button();
+            this.VersionField = new System.Windows.Forms.Label();
+            this.AmongUsDirSwitchButton = new System.Windows.Forms.Button();
+            this.AmongUsDirSwitchLabel = new System.Windows.Forms.Label();
+            this.OpenAmongUs = new System.Windows.Forms.Button();
+            this.RemoveModsButton = new System.Windows.Forms.Button();
+            this.PlayGameButton = new System.Windows.Forms.Button();
+            this.ModsGroupbox = new System.Windows.Forms.GroupBox();
+            this.AmongUsDirectoryConfirm = new System.Windows.Forms.Button();
+            this.logo = new System.Windows.Forms.PictureBox();
+            this.frFlag = new System.Windows.Forms.PictureBox();
+            this.enFlag = new System.Windows.Forms.PictureBox();
+            ((System.ComponentModel.ISupportInitialize)(this.logo)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.frFlag)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.enFlag)).BeginInit();
             this.SuspendLayout();
             // 
-            // valid
+            // mainTitle
             // 
-            this.valid.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.valid.Location = new System.Drawing.Point(41, 626);
-            this.valid.Name = "valid";
-            this.valid.Size = new System.Drawing.Size(140, 51);
-            this.valid.TabIndex = 0;
-            this.valid.Text = "Switch mod";
-            this.valid.UseVisualStyleBackColor = true;
+            this.mainTitle.AutoSize = true;
+            this.mainTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 40F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.mainTitle.ForeColor = System.Drawing.SystemColors.Control;
+            this.mainTitle.Location = new System.Drawing.Point(219, 22);
+            this.mainTitle.Name = "mainTitle";
+            this.mainTitle.Size = new System.Drawing.Size(444, 76);
+            this.mainTitle.TabIndex = 3;
+            this.mainTitle.Text = "Mod Manager";
             // 
-            // mod
+            // AmongUsDirectoryLabel
             // 
-            this.mod.Cursor = System.Windows.Forms.Cursors.Default;
-            this.mod.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.mod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.mod.FormattingEnabled = true;
-            this.mod.Location = new System.Drawing.Point(42, 369);
-            this.mod.Name = "mod";
-            this.mod.Size = new System.Drawing.Size(369, 33);
-            this.mod.TabIndex = 2;
+            this.AmongUsDirectoryLabel.AutoSize = true;
+            this.AmongUsDirectoryLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AmongUsDirectoryLabel.ForeColor = System.Drawing.SystemColors.Control;
+            this.AmongUsDirectoryLabel.Location = new System.Drawing.Point(270, 211);
+            this.AmongUsDirectoryLabel.Name = "AmongUsDirectoryLabel";
+            this.AmongUsDirectoryLabel.Size = new System.Drawing.Size(347, 25);
+            this.AmongUsDirectoryLabel.TabIndex = 5;
+            this.AmongUsDirectoryLabel.Text = "Please select your Among Us directory";
             // 
-            // title
+            // AmongUsDirectorySelection
             // 
-            this.title.AutoSize = true;
-            this.title.Font = new System.Drawing.Font("Microsoft Sans Serif", 40F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.title.Location = new System.Drawing.Point(186, 31);
-            this.title.Name = "title";
-            this.title.Size = new System.Drawing.Size(444, 76);
-            this.title.TabIndex = 3;
-            this.title.Text = "Mod Manager";
-            this.title.Click += new System.EventHandler(this.label1_Click);
+            this.AmongUsDirectorySelection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AmongUsDirectorySelection.Location = new System.Drawing.Point(316, 272);
+            this.AmongUsDirectorySelection.Name = "AmongUsDirectorySelection";
+            this.AmongUsDirectorySelection.Size = new System.Drawing.Size(268, 57);
+            this.AmongUsDirectorySelection.TabIndex = 6;
+            this.AmongUsDirectorySelection.Text = "Select directory";
+            this.AmongUsDirectorySelection.UseVisualStyleBackColor = true;
             // 
-            // choose
+            // AmongUsPathSelection
             // 
-            this.choose.AutoSize = true;
-            this.choose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.choose.Location = new System.Drawing.Point(37, 324);
-            this.choose.Name = "choose";
-            this.choose.Size = new System.Drawing.Size(165, 25);
-            this.choose.TabIndex = 4;
-            this.choose.Text = "Choose a mod :";
-            this.choose.Click += new System.EventHandler(this.choose_Click);
+            this.AmongUsPathSelection.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AmongUsPathSelection.Location = new System.Drawing.Point(32, 484);
+            this.AmongUsPathSelection.Name = "AmongUsPathSelection";
+            this.AmongUsPathSelection.Size = new System.Drawing.Size(866, 30);
+            this.AmongUsPathSelection.TabIndex = 7;
+            this.AmongUsPathSelection.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // AmongUsSelectionPopup
+            // 
+            this.AmongUsSelectionPopup.RootFolder = System.Environment.SpecialFolder.MyComputer;
+            this.AmongUsSelectionPopup.SelectedPath = "C:\\";
+            // 
+            // AmongUsPathLabel
+            // 
+            this.AmongUsPathLabel.AutoSize = true;
+            this.AmongUsPathLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AmongUsPathLabel.ForeColor = System.Drawing.SystemColors.Control;
+            this.AmongUsPathLabel.Location = new System.Drawing.Point(270, 424);
+            this.AmongUsPathLabel.Name = "AmongUsPathLabel";
+            this.AmongUsPathLabel.Size = new System.Drawing.Size(346, 25);
+            this.AmongUsPathLabel.TabIndex = 8;
+            this.AmongUsPathLabel.Text = "Or enter Among Us directory path here";
             // 
             // credits
             // 
             this.credits.AutoSize = true;
             this.credits.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.credits.Location = new System.Drawing.Point(629, 639);
+            this.credits.LinkColor = System.Drawing.Color.White;
+            this.credits.Location = new System.Drawing.Point(740, 704);
             this.credits.Name = "credits";
-            this.credits.Size = new System.Drawing.Size(146, 25);
-            this.credits.TabIndex = 6;
+            this.credits.Size = new System.Drawing.Size(149, 25);
+            this.credits.TabIndex = 9;
             this.credits.TabStop = true;
-            this.credits.Text = "made by Matux";
-            this.credits.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            this.credits.Text = "Made By Matux";
             // 
-            // version
+            // VersionField
             // 
-            this.version.AutoSize = true;
-            this.version.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.version.Location = new System.Drawing.Point(463, 639);
-            this.version.Name = "version";
-            this.version.Size = new System.Drawing.Size(111, 25);
-            this.version.TabIndex = 7;
-            this.version.Text = "Version 1.0";
+            this.VersionField.AutoSize = true;
+            this.VersionField.BackColor = System.Drawing.SystemColors.ControlText;
+            this.VersionField.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.VersionField.ForeColor = System.Drawing.Color.Lime;
+            this.VersionField.Location = new System.Drawing.Point(538, 704);
+            this.VersionField.Name = "VersionField";
+            this.VersionField.Size = new System.Drawing.Size(155, 25);
+            this.VersionField.TabIndex = 10;
+            this.VersionField.Text = "Version X.X.X.X";
             // 
-            // modTitle
+            // AmongUsDirSwitchButton
             // 
-            this.modTitle.AutoSize = true;
-            this.modTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.modTitle.Location = new System.Drawing.Point(37, 452);
-            this.modTitle.Name = "modTitle";
-            this.modTitle.Size = new System.Drawing.Size(102, 25);
-            this.modTitle.TabIndex = 8;
-            this.modTitle.Text = "Mod Title";
+            this.AmongUsDirSwitchButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AmongUsDirSwitchButton.Location = new System.Drawing.Point(275, 129);
+            this.AmongUsDirSwitchButton.Name = "AmongUsDirSwitchButton";
+            this.AmongUsDirSwitchButton.Size = new System.Drawing.Size(118, 41);
+            this.AmongUsDirSwitchButton.TabIndex = 11;
+            this.AmongUsDirSwitchButton.Text = "Change";
+            this.AmongUsDirSwitchButton.UseVisualStyleBackColor = true;
             // 
-            // modDescripiton
+            // AmongUsDirSwitchLabel
             // 
-            this.modDescripiton.AutoSize = true;
-            this.modDescripiton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.modDescripiton.Location = new System.Drawing.Point(37, 496);
-            this.modDescripiton.Name = "modDescripiton";
-            this.modDescripiton.Size = new System.Drawing.Size(153, 25);
-            this.modDescripiton.TabIndex = 9;
-            this.modDescripiton.Text = "Mod Description";
+            this.AmongUsDirSwitchLabel.AutoSize = true;
+            this.AmongUsDirSwitchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AmongUsDirSwitchLabel.ForeColor = System.Drawing.SystemColors.Control;
+            this.AmongUsDirSwitchLabel.Location = new System.Drawing.Point(27, 137);
+            this.AmongUsDirSwitchLabel.Name = "AmongUsDirSwitchLabel";
+            this.AmongUsDirSwitchLabel.Size = new System.Drawing.Size(194, 25);
+            this.AmongUsDirSwitchLabel.TabIndex = 12;
+            this.AmongUsDirSwitchLabel.Text = "Among Us directory :";
             // 
-            // currentModTitle
+            // OpenAmongUs
             // 
-            this.currentModTitle.AutoSize = true;
-            this.currentModTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currentModTitle.Location = new System.Drawing.Point(37, 256);
-            this.currentModTitle.Name = "currentModTitle";
-            this.currentModTitle.Size = new System.Drawing.Size(144, 25);
-            this.currentModTitle.TabIndex = 10;
-            this.currentModTitle.Text = "Current mod :";
-            this.currentModTitle.Click += new System.EventHandler(this.label1_Click_1);
+            this.OpenAmongUs.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.OpenAmongUs.Location = new System.Drawing.Point(469, 129);
+            this.OpenAmongUs.Name = "OpenAmongUs";
+            this.OpenAmongUs.Size = new System.Drawing.Size(115, 41);
+            this.OpenAmongUs.TabIndex = 13;
+            this.OpenAmongUs.Text = "Open";
+            this.OpenAmongUs.UseVisualStyleBackColor = true;
             // 
-            // separator
+            // RemoveModsButton
             // 
-            this.separator.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.separator.Location = new System.Drawing.Point(42, 303);
-            this.separator.Name = "separator";
-            this.separator.Size = new System.Drawing.Size(706, 2);
-            this.separator.TabIndex = 11;
-            this.separator.Click += new System.EventHandler(this.separator_Click);
+            this.RemoveModsButton.BackColor = System.Drawing.Color.Red;
+            this.RemoveModsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.RemoveModsButton.Location = new System.Drawing.Point(32, 697);
+            this.RemoveModsButton.Name = "RemoveModsButton";
+            this.RemoveModsButton.Size = new System.Drawing.Size(263, 39);
+            this.RemoveModsButton.TabIndex = 16;
+            this.RemoveModsButton.Text = "Remove mods";
+            this.RemoveModsButton.UseVisualStyleBackColor = false;
             // 
-            // separator2
+            // PlayGameButton
             // 
-            this.separator2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.separator2.Location = new System.Drawing.Point(42, 430);
-            this.separator2.Name = "separator2";
-            this.separator2.Size = new System.Drawing.Size(706, 2);
-            this.separator2.TabIndex = 12;
-            this.separator2.Click += new System.EventHandler(this.separator2_Click);
+            this.PlayGameButton.BackColor = System.Drawing.Color.Lime;
+            this.PlayGameButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.PlayGameButton.Location = new System.Drawing.Point(343, 697);
+            this.PlayGameButton.Name = "PlayGameButton";
+            this.PlayGameButton.Size = new System.Drawing.Size(140, 39);
+            this.PlayGameButton.TabIndex = 17;
+            this.PlayGameButton.Text = "Play";
+            this.PlayGameButton.UseVisualStyleBackColor = false;
             // 
-            // currentMod
+            // ModsGroupbox
             // 
-            this.currentMod.AutoSize = true;
-            this.currentMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.currentMod.Location = new System.Drawing.Point(207, 256);
-            this.currentMod.Name = "currentMod";
-            this.currentMod.Size = new System.Drawing.Size(94, 25);
-            this.currentMod.TabIndex = 13;
-            this.currentMod.Text = "Unknown";
-            this.currentMod.Click += new System.EventHandler(this.label2_Click);
+            this.ModsGroupbox.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.ModsGroupbox.ForeColor = System.Drawing.SystemColors.Control;
+            this.ModsGroupbox.Location = new System.Drawing.Point(22, 176);
+            this.ModsGroupbox.Name = "ModsGroupbox";
+            this.ModsGroupbox.Size = new System.Drawing.Size(884, 499);
+            this.ModsGroupbox.TabIndex = 18;
+            this.ModsGroupbox.TabStop = false;
+            this.ModsGroupbox.Text = "Choose wanted mods :";
             // 
-            // loading
+            // AmongUsDirectoryConfirm
             // 
-            this.loading.AutoSize = true;
-            this.loading.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.loading.Location = new System.Drawing.Point(449, 372);
-            this.loading.Name = "loading";
-            this.loading.Size = new System.Drawing.Size(147, 25);
-            this.loading.TabIndex = 14;
-            this.loading.Text = "Progress status";
-            this.loading.Click += new System.EventHandler(this.loading_Click);
+            this.AmongUsDirectoryConfirm.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.AmongUsDirectoryConfirm.Location = new System.Drawing.Point(316, 550);
+            this.AmongUsDirectoryConfirm.Name = "AmongUsDirectoryConfirm";
+            this.AmongUsDirectoryConfirm.Size = new System.Drawing.Size(268, 57);
+            this.AmongUsDirectoryConfirm.TabIndex = 19;
+            this.AmongUsDirectoryConfirm.Text = "Confirm directory";
+            this.AmongUsDirectoryConfirm.UseVisualStyleBackColor = true;
             // 
-            // separator3
+            // logo
             // 
-            this.separator3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.separator3.Location = new System.Drawing.Point(42, 232);
-            this.separator3.Name = "separator3";
-            this.separator3.Size = new System.Drawing.Size(706, 2);
-            this.separator3.TabIndex = 15;
-            this.separator3.Click += new System.EventHandler(this.label1_Click_2);
+            this.logo.Image = ((System.Drawing.Image)(resources.GetObject("logo.Image")));
+            this.logo.Location = new System.Drawing.Point(52, 22);
+            this.logo.Name = "logo";
+            this.logo.Size = new System.Drawing.Size(104, 101);
+            this.logo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.logo.TabIndex = 20;
+            this.logo.TabStop = false;
             // 
-            // directoryTitle
+            // frFlag
             // 
-            this.directoryTitle.AutoSize = true;
-            this.directoryTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.directoryTitle.Location = new System.Drawing.Point(37, 138);
-            this.directoryTitle.Name = "directoryTitle";
-            this.directoryTitle.Size = new System.Drawing.Size(214, 25);
-            this.directoryTitle.TabIndex = 16;
-            this.directoryTitle.Text = "Among Us directory :";
+            this.frFlag.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.frFlag.Image = ((System.Drawing.Image)(resources.GetObject("frFlag.Image")));
+            this.frFlag.Location = new System.Drawing.Point(745, 60);
+            this.frFlag.Name = "frFlag";
+            this.frFlag.Size = new System.Drawing.Size(62, 50);
+            this.frFlag.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.frFlag.TabIndex = 21;
+            this.frFlag.TabStop = false;
             // 
-            // folderBrowser
+            // enFlag
             // 
-            this.folderBrowser.HelpRequest += new System.EventHandler(this.folderBrowserDialog1_HelpRequest);
-            // 
-            // directorySelect
-            // 
-            this.directorySelect.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.directorySelect.Location = new System.Drawing.Point(285, 134);
-            this.directorySelect.Name = "directorySelect";
-            this.directorySelect.Size = new System.Drawing.Size(143, 32);
-            this.directorySelect.TabIndex = 17;
-            this.directorySelect.Text = "Select directory";
-            this.directorySelect.UseVisualStyleBackColor = false;
-            // 
-            // directoryPath
-            // 
-            this.directoryPath.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.directoryPath.Location = new System.Drawing.Point(37, 184);
-            this.directoryPath.Name = "directoryPath";
-            this.directoryPath.Size = new System.Drawing.Size(711, 28);
-            this.directoryPath.TabIndex = 18;
-            this.directoryPath.Text = "/!\\ Among Us directory not found, please select a location /!\\ ";
-            this.directoryPath.Click += new System.EventHandler(this.directoryPath_Click);
-            // 
-            // Play
-            // 
-            this.Play.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.Play.Location = new System.Drawing.Point(230, 626);
-            this.Play.Name = "Play";
-            this.Play.Size = new System.Drawing.Size(157, 51);
-            this.Play.TabIndex = 19;
-            this.Play.Text = "Play";
-            this.Play.UseVisualStyleBackColor = true;
-            this.Play.Click += new System.EventHandler(this.button1_Click);
+            this.enFlag.Cursor = System.Windows.Forms.Cursors.Hand;
+            this.enFlag.Image = ((System.Drawing.Image)(resources.GetObject("enFlag.Image")));
+            this.enFlag.Location = new System.Drawing.Point(827, 60);
+            this.enFlag.Name = "enFlag";
+            this.enFlag.Size = new System.Drawing.Size(62, 50);
+            this.enFlag.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.enFlag.TabIndex = 22;
+            this.enFlag.TabStop = false;
             // 
             // ModManager
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(818, 715);
-            this.Controls.Add(this.Play);
-            this.Controls.Add(this.directoryPath);
-            this.Controls.Add(this.directorySelect);
-            this.Controls.Add(this.directoryTitle);
-            this.Controls.Add(this.separator3);
-            this.Controls.Add(this.loading);
-            this.Controls.Add(this.currentMod);
-            this.Controls.Add(this.separator2);
-            this.Controls.Add(this.separator);
-            this.Controls.Add(this.currentModTitle);
-            this.Controls.Add(this.modDescripiton);
-            this.Controls.Add(this.modTitle);
-            this.Controls.Add(this.version);
+            this.BackColor = System.Drawing.SystemColors.ControlText;
+            this.ClientSize = new System.Drawing.Size(931, 764);
+            this.Controls.Add(this.enFlag);
+            this.Controls.Add(this.frFlag);
+            this.Controls.Add(this.logo);
+            this.Controls.Add(this.AmongUsDirectoryConfirm);
+            this.Controls.Add(this.ModsGroupbox);
+            this.Controls.Add(this.PlayGameButton);
+            this.Controls.Add(this.RemoveModsButton);
+            this.Controls.Add(this.OpenAmongUs);
+            this.Controls.Add(this.AmongUsDirSwitchLabel);
+            this.Controls.Add(this.AmongUsDirSwitchButton);
+            this.Controls.Add(this.VersionField);
             this.Controls.Add(this.credits);
-            this.Controls.Add(this.choose);
-            this.Controls.Add(this.title);
-            this.Controls.Add(this.mod);
-            this.Controls.Add(this.valid);
+            this.Controls.Add(this.AmongUsPathLabel);
+            this.Controls.Add(this.AmongUsPathSelection);
+            this.Controls.Add(this.AmongUsDirectorySelection);
+            this.Controls.Add(this.AmongUsDirectoryLabel);
+            this.Controls.Add(this.mainTitle);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Name = "ModManager";
             this.Text = "Mod Manager";
-            this.Load += new System.EventHandler(this.ModManager_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.logo)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.frFlag)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.enFlag)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Button valid;
-        private System.Windows.Forms.ComboBox mod;
-        private System.Windows.Forms.Label title;
-        private System.Windows.Forms.Label choose;
+        private System.Windows.Forms.Label mainTitle;
+        private System.Windows.Forms.Label AmongUsDirectoryLabel;
+        private System.Windows.Forms.Button AmongUsDirectorySelection;
+        private System.Windows.Forms.TextBox AmongUsPathSelection;
+        private System.Windows.Forms.FolderBrowserDialog AmongUsSelectionPopup;
+        private System.Windows.Forms.Label AmongUsPathLabel;
         private System.Windows.Forms.LinkLabel credits;
-        private System.Windows.Forms.Label version;
-        private System.Windows.Forms.Label modTitle;
-        private System.Windows.Forms.Label modDescripiton;
-        private System.Windows.Forms.Label currentModTitle;
-        private System.Windows.Forms.Label separator;
-        private System.Windows.Forms.Label separator2;
-        private System.Windows.Forms.Label currentMod;
-        private System.Windows.Forms.Label loading;
-        private System.Windows.Forms.Label separator3;
-        private System.Windows.Forms.Label directoryTitle;
-        private System.Windows.Forms.FolderBrowserDialog folderBrowser;
-        private System.Windows.Forms.Button directorySelect;
-        private System.Windows.Forms.Label directoryPath;
-        private System.Windows.Forms.Button Play;
+        private System.Windows.Forms.Label VersionField;
+        private System.Windows.Forms.Button AmongUsDirSwitchButton;
+        private System.Windows.Forms.Label AmongUsDirSwitchLabel;
+        private System.Windows.Forms.Button OpenAmongUs;
+        private System.Windows.Forms.Button RemoveModsButton;
+        private System.Windows.Forms.Button PlayGameButton;
+        private System.Windows.Forms.GroupBox ModsGroupbox;
+        private System.Windows.Forms.Button AmongUsDirectoryConfirm;
+        private System.Windows.Forms.PictureBox logo;
+        private System.Windows.Forms.PictureBox frFlag;
+        private System.Windows.Forms.PictureBox enFlag;
     }
 }
 

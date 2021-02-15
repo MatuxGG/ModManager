@@ -8,6 +8,9 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.IO;
+using System.Net;
+using System.IO.Compression;
+using Newtonsoft.Json;
 using AutoUpdaterDotNET;
 
 namespace ModManager
@@ -16,107 +19,211 @@ namespace ModManager
 
     public partial class ModManager : Form
     {
-
-        private string amongUsPath;
-        private string modsPath;
-        private Mod[] mods;
-        private Mod curMod;
+        private string serverURL;
+        private Version curVersion;
+        private string appDataPath;
+        private string appPath;
+        private List<Mod> mods;
+        private Config config;
+        private string lg;
         public ModManager()
         {
             InitializeComponent();
 
             AutoUpdater.Start("https://au.matux.fr/modManager/latest.xml");
 
-            this.loading.Text = "";
+            this.serverURL = "https://au.matux.fr/modManager";
+            this.curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager");
+            this.appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager";
+            this.getAmongUsPath();
+            this.VersionField.Text = "Version " + this.curVersion;
+            this.lg = "en_US";
 
-            this.mods = new Mod[14];
-            this.mods[0] = new Mod("Among Us Classic", "Among Us Classic");
-            this.mods[1] = new Mod("CustomKeyBinds", "Custom Keybinds");
-            this.mods[2] = new Mod("ExtraRoles", "Extra Roles");
-            this.mods[3] = new Mod("CustomRoles", "Custom Roles");
-            this.mods[4] = new Mod("Tryhard", "Tryhard");
-            this.mods[5] = new Mod("Sheriff", "Sheriff");
-            this.mods[6] = new Mod("Lovers", "Lovers");
-            this.mods[7] = new Mod("Mayor", "Mayor");
-            this.mods[8] = new Mod("Torch", "Torch");
-            this.mods[9] = new Mod("Sweeper", "Sweeper");
-            this.mods[10] = new Mod("AnonymousImpostors", "Anonymous impostors");
-            this.mods[11] = new Mod("Chameleon", "Chameleon");
-            this.mods[12] = new Mod("Smol", "Smol");
-            this.mods[13] = new Mod("AllOfUs", "All Of Us");
 
-            foreach (Mod installedMod in this.mods)
-            {
-                this.mod.Items.Add(installedMod.getName());
-            }
-
-            this.amongUsPath = getPath();
-            if (this.amongUsPath != null)
-            {
-                this.directoryPath.Text = this.amongUsPath;
-            } else
-            {
-                this.directoryPath.Text = "/!\\ Among Us directory not found, please select a location /!\\";
-            }
-
-            this.modsPath = getModsPath();
-
-            this.curMod = getCurrentMod();
-
-            if (this.curMod != null)
-            {
-                this.currentMod.Text = this.curMod.getName();
-                this.mod.SelectedItem = this.curMod.getName();
-                this.modTitle.Text = this.curMod.getName();
-            } else
-            {
-                this.currentMod.Text = "Unknown";
-                this.modTitle.Text = "";
-            }
-
-            
-
-            this.valid.Click += new EventHandler(this.valid_Click);
-            this.directorySelect.Click += new EventHandler(this.ChooseFolder);
+            this.AmongUsDirectorySelection.Click += new EventHandler(this.chooseAmongUsDirectory);
+            this.AmongUsDirectoryConfirm.Click += new EventHandler(this.textChangedAmongUsPath);
+            this.AmongUsDirSwitchButton.Click += new EventHandler(this.backToDirectorySelection);
+            this.OpenAmongUs.Click += new EventHandler(this.openAmongUsDirectory);
+            this.PlayGameButton.Click += new EventHandler(this.launchGame);
+            this.RemoveModsButton.Click += new EventHandler(this.removeMods);
             this.credits.Click += new EventHandler(this.goToMatux);
-            this.Play.Click += new EventHandler(this.play);
+            this.enFlag.Click += new EventHandler(this.changeLg);
+            this.frFlag.Click += new EventHandler(this.changeLg);
+
+            // Choose folder if needed
+            if (this.config == null || this.config.amongUsPath == null)
+            {
+                this.renderPage("PathSelection");
+            }
+            else
+            {
+                this.renderPage("ModSelection");
+            }
+
         }
 
-        private string getModsPath()
+        private void renderPage(string page)
         {
-            string path = System.AppDomain.CurrentDomain.BaseDirectory;
-            return path;
+            if (page == "PathSelection")
+            {
+                this.ModsGroupbox.Hide();
+                this.AmongUsDirSwitchLabel.Hide();
+                this.AmongUsDirSwitchButton.Hide();
+                this.OpenAmongUs.Hide();
+                this.RemoveModsButton.Hide();
+                this.PlayGameButton.Hide();
+                this.AmongUsDirSwitchButton.Hide();
+                this.OpenAmongUs.Hide();
+                this.AmongUsDirectoryLabel.Show();
+                this.AmongUsDirectorySelection.Show();
+                this.AmongUsPathLabel.Show();
+                this.AmongUsPathSelection.Show();
+                this.AmongUsDirectoryConfirm.Show();
+                if (this.config != null && this.config.amongUsPath != null)
+                {
+                    this.AmongUsPathSelection.Text = this.config.amongUsPath;
+                }
+            } else if (page == "ModSelection")
+            {
+                this.AmongUsDirectoryLabel.Hide();
+                this.AmongUsDirectorySelection.Hide();
+                this.AmongUsPathLabel.Hide();
+                this.AmongUsPathSelection.Hide();
+                this.AmongUsDirSwitchLabel.Show();
+                this.AmongUsDirSwitchButton.Show();
+                this.OpenAmongUs.Show();
+                this.RemoveModsButton.Show();
+                this.PlayGameButton.Show();
+                this.AmongUsDirSwitchButton.Show();
+                this.OpenAmongUs.Show();
+                this.ModsGroupbox.Show();
+                this.AmongUsDirectoryConfirm.Hide();
+                this.loadMods();
+            }
         }
 
-        private string getPath()
+        private void loadMods()
         {
-            DirectoryInfo temp = new DirectoryInfo("C:\\Program Files\\Steam\\steamapps\\common\\Among Us");
-            DirectoryInfo temp2 = new DirectoryInfo("D:\\Program Files\\Steam\\steamapps\\common\\Among Us");
-            string path = System.AppDomain.CurrentDomain.BaseDirectory+"settings.conf";
-            FileInfo settings = new FileInfo(path);
+            string modlistPath = this.appPath+"\\files\\modlist.json";
 
-            if (settings.Exists)
+            string json = System.IO.File.ReadAllText(modlistPath);
+            this.mods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(json);
+            int i = 0;
+            foreach (Mod item in this.mods)
             {
-                return File.ReadAllLines(path).First();
+                // Affichage Mod
+
+                Button buton = new Button();
+                buton.Size = new Size(200, 30);
+                buton.Font = new Font(buton.Font.FontFamily, 12);
+                int x = i % 9;
+                int y = i / 9;
+                buton.Location = new Point(10 + 220*y, 40 + 40 * x);
+                buton.Text = item.name;
+                buton.Name = item.id;
+                if (item.id != "Skeld.net")
+                {
+                    buton.Click += new EventHandler(this.enableMod);
+                } else
+                {
+                    buton.BackColor = Color.Blue;
+                    buton.Click += new EventHandler(this.openSkeldNet);
+                }
+
+                ToolTip tt = new ToolTip();
+                
+                tt.SetToolTip(buton, item.descriptionEN);
+
+                // Verification
+
+                if (this.config.installedMods.Contains(item.id))
+                {
+                    buton.Enabled = false;
+                    buton.BackColor = Color.Lime;
+                }
+
+                this.ModsGroupbox.Controls.Add(buton);
+                i++;
             }
-            else if (temp.Exists)
+
+            return;
+        }
+
+        private void enableMod(object sender, EventArgs e)
+        {
+            Button pressedButton = ((Button)sender);
+            string modId = pressedButton.Name;
+
+            if (this.config.installedMods.Contains(modId) == false) // && !File.Exists(pluginsPath + "\\" + file
             {
-                return "C:\\Program Files\\Steam\\steamapps\\common\\Among Us";
+
+                string dependenciesPath = this.appPath + "\\files\\dependencies";
+                string modPath = this.appPath + "\\files\\mods";
+                Mod m = this.getModById(modId);
+                foreach (string dependencie in m.dependencies)
+                {
+                    if (this.config.installedDependencies.Contains(dependencie) == false)
+                    {
+                        this.DirectoryCopy(dependenciesPath+ "\\"+dependencie, this.config.amongUsPath, true);
+                        this.config.installedDependencies.Add(dependencie);
+                    }
+                }
+
+                string pluginsPath = this.config.amongUsPath + "\\BepInEx\\plugins";
+
+                if (Directory.Exists(pluginsPath) == false)
+                {
+                    Directory.CreateDirectory(pluginsPath);
+                }
+
+
+                foreach (string file in m.plugins)
+                {
+                    File.Copy(modPath + "\\"+modId+"\\"+file, pluginsPath+"\\"+file);
+                    
+                }
+
+                this.config.installedMods.Add(modId);
+                this.config.update();
+                pressedButton.Enabled = false;
+                pressedButton.BackColor = Color.Lime;
+
             }
-            else if (temp2.Exists)
+            return;
+        }
+
+        private void removeMods(object sender, EventArgs e)
+        {
+            this.deleteMods();
+        }
+
+        private void deleteMods()
+        {
+            this.DirectoryDelete(this.config.amongUsPath + "\\BepInEx");
+            this.DirectoryDelete(this.config.amongUsPath + "\\Assets");
+            this.DirectoryDelete(this.config.amongUsPath + "\\mono");
+            this.FileDelete(this.config.amongUsPath + "\\doorstop_config.ini");
+            this.FileDelete(this.config.amongUsPath + "\\winhttp.dll");
+            this.config.installedDependencies.Clear();
+            this.config.installedMods.Clear();
+            this.config.update();
+            foreach (Button b in this.ModsGroupbox.Controls)
             {
-                return "D:\\Program Files\\Steam\\steamapps\\common\\Among Us";
-            } else
-            {
-                return null;
+                if (b.Enabled == false)
+                {
+                    b.Enabled = true;
+                    b.BackColor = Color.Black;
+                }
             }
         }
 
-        private Mod getModFromName(string name)
+        private Mod getModById(string id)
         {
             foreach (Mod m in this.mods)
             {
-                if (name == m.getName())
+                if (m.id == id)
                 {
                     return m;
                 }
@@ -124,29 +231,141 @@ namespace ModManager
             return null;
         }
 
-        private Mod getCurrentMod()
+        private void getAmongUsPath()
         {
-            DirectoryInfo bepInEx = new DirectoryInfo(this.amongUsPath+"\\BepInEx");
-            DirectoryInfo assets = new DirectoryInfo(this.amongUsPath + "\\Assets");
-            DirectoryInfo mono = new DirectoryInfo(this.amongUsPath + "\\mono");
-            FileInfo doorstop = new FileInfo(this.amongUsPath + "\\doorstop_config.ini");
-            FileInfo winhttp = new FileInfo(this.amongUsPath + "\\winhttp.dll");
+            FileInfo f = new FileInfo(this.appDataPath + "\\config.conf");
 
-            if (bepInEx.Exists && mono.Exists && doorstop.Exists && winhttp.Exists)
+            if (f.Exists)
             {
-                string modInfo = File.ReadLines(this.amongUsPath + "\\modInfo.txt").First();
-                return this.getModFromName(modInfo);
+                string json = System.IO.File.ReadAllText(this.appDataPath + "\\config.conf");
+                Config temp = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(json);
+                FileInfo f2 = new FileInfo(temp.amongUsPath + "\\Among Us.exe");
+                if (f2.Exists)
+                {
+                    this.config = temp;
+                    this.config.update();
+                    return;
+                }
             }
 
-            if (!bepInEx.Exists && !assets.Exists && !mono.Exists && !doorstop.Exists && !winhttp.Exists)
+            DirectoryInfo dirC = new DirectoryInfo("C:\\Program Files\\Steam\\steamapps\\common\\Among Us");
+            DirectoryInfo dirC2 = new DirectoryInfo("C:\\Program Files(x86)\\Steam\\steamapps\\common\\Among Us");
+
+            if (dirC.Exists)
             {
-                return this.getModFromName("Among Us Classic");
+                this.config.amongUsPath = "C:\\Program Files\\Steam\\steamapps\\common\\Among Us";
+                this.config.update();
+                return;
             }
+            if (dirC2.Exists)
+            {
+                this.config.amongUsPath = "C:\\Program Files(x86)\\Steam\\steamapps\\common\\Among Us";
+                this.config.update();
+                return;
+            }
+            return;
+        }
 
-            return null;
-        } 
+        public void chooseAmongUsDirectory(object sender, EventArgs e)
+        {
+            if (this.AmongUsSelectionPopup.ShowDialog() == DialogResult.OK)
+            {
+                FileInfo amongUsFile = new FileInfo(AmongUsSelectionPopup.SelectedPath + "\\Among Us.exe");
+                if (amongUsFile.Exists)
+                {
+                    this.config = new Config(AmongUsSelectionPopup.SelectedPath, new List<string>(), new List<string>());
+                    this.config.update();
 
-        private static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+                    this.renderPage("ModSelection");
+                }
+            }
+        }
+
+        public void textChangedAmongUsPath(object sender, EventArgs e)
+        {
+            FileInfo f = new FileInfo(this.AmongUsPathSelection.Text+"\\Among Us.exe");
+            if (f.Exists)
+            {
+
+                this.config = new Config(this.AmongUsPathSelection.Text, new List<string>(), new List<string>());
+                string json = JsonConvert.SerializeObject(this.config);
+                File.WriteAllText(this.appDataPath + "\\config.conf", json);
+
+                this.renderPage("ModSelection");
+            }
+        }
+
+        private void backToDirectorySelection(object sender, EventArgs e)
+        {
+            this.renderPage("PathSelection");
+        }
+
+        private void openAmongUsDirectory(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("explorer.exe", this.config.amongUsPath);
+        }
+
+        private void openSkeldNet(object sender, EventArgs e)
+        {
+            this.deleteMods();
+            string SkeldPath = this.appPath + "\\files\\mods\\Skeld.net\\SkeldLaunch.exe";
+            System.Diagnostics.Process.Start(SkeldPath);
+        }
+
+        private void changeLg(object sender, EventArgs e)
+        {
+            PictureBox lgBox = ((PictureBox)sender);
+            if (lgBox.Name == "frFlag")
+            {
+                this.lg = "fr_FR";
+                this.AmongUsDirSwitchLabel.Text = "Dossier Among Us :";
+                this.ModsGroupbox.Text = "Choisis les mods souhaités :";
+                this.AmongUsDirSwitchButton.Text = "Changer";
+                this.OpenAmongUs.Text = "Ouvrir";
+                this.AmongUsDirectorySelection.Text = "Sélectionner un dossier";
+                this.AmongUsDirectoryConfirm.Text = "Confirmer le dossier";
+                this.RemoveModsButton.Text = "Supprimer les mods";
+                this.PlayGameButton.Text = "Jouer";
+                this.credits.Text = "Créé par Matux";
+                this.AmongUsDirectoryLabel.Text = "Sélectionnez votre dossier Among Us";
+                this.AmongUsPathLabel.Text = "Ou entrez le chemin du dossier Among Us ici";
+            } else
+            {
+                this.lg = "en_US";
+                this.AmongUsDirSwitchLabel.Text = "Among Us directory :";
+                this.ModsGroupbox.Text = "Choose wanted mods :";
+                this.AmongUsDirSwitchButton.Text = "Change";
+                this.OpenAmongUs.Text = "Open";
+                this.AmongUsDirectorySelection.Text = "Select directory";
+                this.AmongUsDirectoryConfirm.Text = "Confirm directory";
+                this.RemoveModsButton.Text = "Remove mods";
+                this.PlayGameButton.Text = "Play";
+                this.credits.Text = "Made by Matux";
+                this.AmongUsDirectoryLabel.Text = "Please select your Among Us directory";
+                this.AmongUsPathLabel.Text = "Or enter Among Us directory path here";
+            }
+        }
+
+        private void openCredits(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://matux.fr");
+        }
+
+        private void launchGame(object sender, EventArgs e)
+        {
+            if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
+            {
+                return;
+            }
+            System.Diagnostics.Process.Start(this.config.amongUsPath + "\\Among Us.exe");
+        }
+
+        private void goToMatux(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start("https://matux.fr");
+        }
+
+        private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
         {
             // Get the subdirectories for the specified directory.
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);
@@ -180,14 +399,15 @@ namespace ModManager
             }
         }
 
-        private static void DirectoryDelete(string dirName)
+        private void DirectoryDelete(string dirName)
         {
             if (Directory.Exists(dirName))
             {
                 Directory.Delete(dirName, true);
             }
         }
-        private static void FileDelete(string fileName)
+
+        private void FileDelete(string fileName)
         {
             if (File.Exists(fileName))
             {
@@ -195,118 +415,5 @@ namespace ModManager
             }
         }
 
-        private void valid_Click(object sender, EventArgs e)
-        {
-            loading.Text = "Please wait ...";
-            loading.Refresh();
-            Mod choosenMod = getModFromName(mod.SelectedItem.ToString());
-
-            DirectoryDelete(amongUsPath + "\\BepInEx");
-            DirectoryDelete(amongUsPath + "\\mono");
-            DirectoryDelete(amongUsPath + "\\Assets");
-            FileDelete(amongUsPath + "\\doorstop_config.ini");
-            FileDelete(amongUsPath + "\\winhttp.dll");
-            FileDelete(amongUsPath + "\\modInfo.txt");
-
-            if (choosenMod.getName() != "Among Us Classic")
-            {
-                DirectoryCopy(modsPath + "\\" + choosenMod.getId(), amongUsPath, true);
-                string[] lines = { choosenMod.getName(), "" };
-                File.WriteAllLines(amongUsPath + "\\modInfo.txt", lines);
-            }
-            this.currentMod.Text = choosenMod.getName();
-            this.modTitle.Text = choosenMod.getName();
-            this.modDescripiton.Text = ""; // TODO
-            loading.Text = "Successfully installed !";
-            loading.Refresh();
-        }
-
-        public void ChooseFolder(object sender, EventArgs e)
-        {
-            if (folderBrowser.ShowDialog() == DialogResult.OK)
-            {
-                this.amongUsPath = folderBrowser.SelectedPath;
-                this.directoryPath.Text = this.amongUsPath;
-                string path = System.AppDomain.CurrentDomain.BaseDirectory + "settings.conf";
-                FileInfo settings = new FileInfo(path);
-                string[] lines = { this.amongUsPath, "" };
-                File.WriteAllLines(path, lines);
-            }
-        }
-
-        private void goToMatux(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start("https://matux.fr");
-        }
-
-        private void play(object sender, EventArgs e)
-        {
-            System.Diagnostics.Process.Start(this.amongUsPath+ "\\Among Us.exe");
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-
-        }
-
-        private void label1_Click_1(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void ModManager_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void separator2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void loading_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void choose_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void separator_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click_2(object sender, EventArgs e)
-        {
-
-        }
-
-        private void directoryPath_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void folderBrowserDialog1_HelpRequest(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }
