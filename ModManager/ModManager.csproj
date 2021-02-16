@@ -50,6 +50,9 @@
   <PropertyGroup>
     <ApplicationIcon>among-us-blue.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoUpdater.NET, Version=1.6.4.0, Culture=neutral, PublicKeyToken=501435c91b35f4bc, processorArchitecture=MSIL">
       <HintPath>..\packages\Autoupdater.NET.Official.1.6.4\lib\net45\AutoUpdater.NET.dll</HintPath>
@@ -102,6 +105,7 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <None Include="app.manifest" />
     <None Include="modlist\AnonymousImpostors\BepInEx\core\BepInEx.IL2CPP.dll.config" />
     <None Include="modlist\AnonymousImpostors\doorstop_config.ini" />
     <None Include="modlist\AnonymousImpostors\mono\MonoBleedingEdge\etc\mono\2.0\Browsers\Compat.browser" />

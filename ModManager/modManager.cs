@@ -40,6 +40,7 @@ namespace ModManager
             this.getAmongUsPath();
             this.VersionField.Text = "Version " + this.curVersion;
             this.lg = "en_US";
+            this.WaitLabel.Hide();
 
 
             this.AmongUsDirectorySelection.Click += new EventHandler(this.chooseAmongUsDirectory);
@@ -48,6 +49,7 @@ namespace ModManager
             this.OpenAmongUs.Click += new EventHandler(this.openAmongUsDirectory);
             this.PlayGameButton.Click += new EventHandler(this.launchGame);
             this.RemoveModsButton.Click += new EventHandler(this.removeMods);
+            this.UpdateModsButton.Click += new EventHandler(this.updateMods);
             this.credits.Click += new EventHandler(this.goToMatux);
             this.enFlag.Click += new EventHandler(this.changeLg);
             this.frFlag.Click += new EventHandler(this.changeLg);
@@ -68,7 +70,7 @@ namespace ModManager
         {
             if (page == "PathSelection")
             {
-                this.ModsGroupbox.Hide();
+                this.ModsPanel.Hide();
                 this.AmongUsDirSwitchLabel.Hide();
                 this.AmongUsDirSwitchButton.Hide();
                 this.OpenAmongUs.Hide();
@@ -98,7 +100,7 @@ namespace ModManager
                 this.PlayGameButton.Show();
                 this.AmongUsDirSwitchButton.Show();
                 this.OpenAmongUs.Show();
-                this.ModsGroupbox.Show();
+                this.ModsPanel.Show();
                 this.AmongUsDirectoryConfirm.Hide();
                 this.loadMods();
             }
@@ -108,9 +110,17 @@ namespace ModManager
         {
             string modlistPath = this.appPath+"\\files\\modlist.json";
 
+            FileInfo modlist = new FileInfo(modlistPath);
+            if (!modlist.Exists)
+            {
+                this.updateModsWorker();
+            }
+
             string json = System.IO.File.ReadAllText(modlistPath);
             this.mods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(json);
             int i = 0;
+            int max = this.mods.Count/3;
+            if (this.mods.Count%3 != 0) { max++;}
             foreach (Mod item in this.mods)
             {
                 // Affichage Mod
@@ -118,9 +128,9 @@ namespace ModManager
                 Button buton = new Button();
                 buton.Size = new Size(200, 30);
                 buton.Font = new Font(buton.Font.FontFamily, 12);
-                int x = i % 9;
-                int y = i / 9;
-                buton.Location = new Point(10 + 220*y, 40 + 40 * x);
+                int x = i % max;
+                int y = i / max;
+                buton.Location = new Point(210*y, 40 * x);
                 buton.Text = item.name;
                 buton.Name = item.id;
                 if (item.id != "Skeld.net")
@@ -144,7 +154,7 @@ namespace ModManager
                     buton.BackColor = Color.Lime;
                 }
 
-                this.ModsGroupbox.Controls.Add(buton);
+                this.ModsPanel.Controls.Add(buton);
                 i++;
             }
 
@@ -209,14 +219,71 @@ namespace ModManager
             this.config.installedDependencies.Clear();
             this.config.installedMods.Clear();
             this.config.update();
-            foreach (Button b in this.ModsGroupbox.Controls)
+            foreach (Button b in this.ModsPanel.Controls)
             {
                 if (b.Enabled == false)
                 {
                     b.Enabled = true;
-                    b.BackColor = Color.Black;
+                    b.BackColor = SystemColors.ControlText;
                 }
             }
+        }
+
+        private void updateMods(object sender, EventArgs e)
+        {
+            this.updateModsWorker();
+        }
+
+        private void updateModsWorker()
+        {
+            string url = this.serverURL + "/files.zip";
+            string filesPath = this.appPath + "\\files";
+            // Disable mods and clicks
+            this.deleteMods();
+            this.ModsPanel.Controls.Clear();
+            this.AmongUsDirSwitchButton.Hide();
+            this.OpenAmongUs.Hide();
+            this.RemoveModsButton.Hide();
+            this.PlayGameButton.Hide();
+            this.AmongUsDirSwitchButton.Hide();
+            this.OpenAmongUs.Hide();
+            this.WaitLabel.Show();
+            this.Update();
+
+            // Download remote files.zip
+            using (var client = new WebClient())
+            {
+                client.DownloadFile(url, filesPath + "\\files.zip");
+            }
+
+            // Delete files
+            DirectoryInfo directoryInfo = new DirectoryInfo(filesPath);
+            foreach (FileInfo file in directoryInfo.GetFiles())
+            {
+                if (file.Name != "files.zip")
+                {
+                    file.Delete();
+                }
+            }
+            foreach (DirectoryInfo directory in directoryInfo.GetDirectories())
+            {
+                Directory.Delete(directory.FullName, recursive: true);
+            }
+
+            // Extract files.zip
+
+            ZipFile.ExtractToDirectory(filesPath + "\\files.zip", filesPath);
+            this.FileDelete(filesPath + "\\files.zip");
+
+            this.loadMods();
+
+            this.AmongUsDirSwitchButton.Show();
+            this.OpenAmongUs.Show();
+            this.RemoveModsButton.Show();
+            this.PlayGameButton.Show();
+            this.AmongUsDirSwitchButton.Show();
+            this.OpenAmongUs.Show();
+            this.WaitLabel.Hide();
         }
 
         private Mod getModById(string id)
@@ -329,6 +396,8 @@ namespace ModManager
                 this.credits.Text = "Créé par Matux";
                 this.AmongUsDirectoryLabel.Text = "Sélectionnez votre dossier Among Us";
                 this.AmongUsPathLabel.Text = "Ou entrez le chemin du dossier Among Us ici";
+                this.WaitLabel.Text = "Patientez SVP ...";
+                this.UpdateModsButton.Text = "Mods MAJ";
             } else
             {
                 this.lg = "en_US";
@@ -343,6 +412,8 @@ namespace ModManager
                 this.credits.Text = "Made by Matux";
                 this.AmongUsDirectoryLabel.Text = "Please select your Among Us directory";
                 this.AmongUsPathLabel.Text = "Or enter Among Us directory path here";
+                this.WaitLabel.Text = "Please wait ...";
+                this.UpdateModsButton.Text = "Update mods";
             }
         }
 
@@ -414,6 +485,5 @@ namespace ModManager
                 File.Delete(fileName);
             }
         }
-
     }
 }
