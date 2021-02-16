@@ -1,0 +1,272 @@
+[
+	{
+		"id": "AnonymousImpostors",
+		"name": "Anonymous Impostors",
+		"descriptionEN": "Impostors are anonymous to each other. Therefore impostors can accidentally kill each other. (two commands : /anonymous on|off and /soloimpostors on|off)",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["AnonymousImpostorsMod.dll"]
+	},
+	{
+		"id": "BetterPolus",
+		"name": "Better Polus",
+		"descriptionEN": "An Among Us mod that tweaks Polus, allowing a more balanced experience",
+		"descriptionFR": "",
+		"dependencies":
+			["BepInEx", "Reactor"],
+		"plugins":
+			["BetterPolus-2020.12.9s.dll"]
+	},
+	{
+		"id": "Chameleon",
+		"name": "Chameleon",
+		"descriptionEN": "The chameleon has the possibility to become invisible for a certain period of time",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["ChameleonMod.dll"]
+	},
+	{
+		"id": "Cultist",
+		"name": "Cultist",
+		"descriptionEN": "The cultist mod",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "Reactor", "Essentials"],
+		"plugins":
+			["CultistPlugin-2020.12.9s.dll"]
+	},
+	{
+		"id" :"CustomKeyBinds",
+		"name": "Custom Key Binds",
+		"descriptionEN": "Allows to customise your keybinds in settings",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["CustomKeyBinds.dll"]
+	},
+	{
+		"id": "CustomRoles",
+		"name": "Custom Roles",
+		"descriptionEN": "Combines 3 custom roles : The Torch, The Mayor and The Sweeper",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["CustomRolesMod.dll"]
+	},
+	{
+		"id": "Dictator",
+		"name": "Dictator",
+		"descriptionEN": "The Dictator vote counts as 8 votes",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["DictatorRole.dll"]
+	},
+	{
+		"id": "ExtraRoles",
+		"name": "Extra Roles",
+		"descriptionEN": "Combines 4 extra roles : The officier, The Joker, The Engineer and The Medic",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "Reactor", "Essentials"],
+		"plugins":
+			["ExtraRoles-2020.12.9s.dll"]
+	},
+	{
+		"id": "Lovers",
+		"name": "Lovers",
+		"descriptionEN": "The primary objective of the Love Couple is to stay alive together. If they are among the last 3 players they win. Each lover can win as an Impostor or Crewmate as well.",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["LoveCoupleMod.dll", "WoodiAPI.dll"]
+	},
+	{
+		"id": "Mayor",
+		"name": "Mayor",
+		"descriptionEN": "The mayor vote counts as 2 players",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["MayorMod.dll"]
+	},
+	{
+		"id": "Sheriff",
+		"name": "Sheriff",
+		"descriptionEN": "The Sheriff is able to kill Impostors. If they shoot a Crewmate, they will lose their life instead.",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["SherifMod.dll"]
+	},
+	{
+		"id": "Smol",
+		"name": "Smol",
+		"descriptionEN": "An Among Us Mod that makes the map and pets bigger",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "Reactor"],
+		"plugins":
+			["SmolMod-2020.12.9s.dll", "RemovePlayerLimit-2020.12.9s.dll"]
+	},
+	{
+		"id": "Sweeper",
+		"name": "Sweeper",
+		"descriptionEN": "The Sweeper is a crewmate that can vent",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["SweeperMod.dll"]
+	},
+	{
+		"id": "Torch",
+		"name": "Torch",
+		"descriptionEN": "The Torch has full vision, even when the lights are out",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx"],
+		"plugins":
+			["TorchRoleMod.dll"]
+	},
+	{
+		"id": "Tryhard",
+		"name": "Tryhard",
+		"descriptionEN": "Among us mod that fixes some game breaking bugs when tryharding among us. As well as some useful settings",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "Reactor"],
+		"plugins":
+			["AmongUsTryhard-2020.12.9s.dll"]
+	},
+	{
+		"id": "VentDigger",
+		"name": "Vent Digger",
+		"descriptionEN": "Impostors can dig their own vent network",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "Reactor"],
+		"plugins":
+			["VentDigger-2020.12.9s.dll"]
+	},
+	{
+		"id": "AllOfUs",
+		"name": "[Launchpad] All Of Us",
+		"descriptionEN": "Allows to play on launchpad custom server with 4 mods (Battle royal, Captain, Guard & Medic) and adds a few options (Crew venting, body dragging)",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "Reactor"],
+		"plugins":
+			["Launchpad-2020.12.9s.dll"]
+	},
+	{
+		"id": "CYTAnonymous",
+		"name": "[Cheap-YT] Anonymous",
+		"descriptionEN": "Allows to play on Cheat-YT custom server with Anonymous role",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "CheapYT"],
+		"plugins":
+			["AnonGameMode.dll"]
+	},
+	{
+		"id": "CYTBattleRoyal",
+		"name": "[Cheap-YT] Battle Royal",
+		"descriptionEN": "Allows to play on Cheat-YT custom server with Battle Royal mod",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "CheapYT"],
+		"plugins":
+			["BattleRoyalGameMode.dll"]
+	},
+	{
+		"id": "CYTCleaner",
+		"name": "[Cheap-YT] Cleaner",
+		"descriptionEN": "Allows to play on Cheat-YT custom server with Cleaner role",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "CheapYT"],
+		"plugins":
+			["CleanerRoleGameMode.dll"]
+	},
+	{
+		"id": "CYTColorSwap",
+		"name": "[Cheap-YT] Color Swap",
+		"descriptionEN": "Allows to play on Cheat-YT custom server with Color Swap mod",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "CheapYT"],
+		"plugins":
+			["ColorSwapGameMode.dll"]
+	},
+	{
+		"id": "CYTConfusion",
+		"name": "[Cheap-YT] Confusion",
+		"descriptionEN": "Allows to play on Cheat-YT custom server with Confusion mod",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "CheapYT"],
+		"plugins":
+			["ConfusionGameMode.dll"]
+	},
+	{
+		"id": "CYTInfiniteKillDistance",
+		"name": "[Cheap-YT] Infinite Kill Distance",
+		"descriptionEN": "Allows to play on Cheat-YT custom server with Infinite Kill Distance mod",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "CheapYT"],
+		"plugins":
+			["InfiniteKillDistanceGameMode.dll"]
+	},
+	{
+		"id": "CYTInvisibility",
+		"name": "[Cheap-YT] Invisibility",
+		"descriptionEN": "Allows to play on Cheat-YT custom server with Invisibility mod",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "CheapYT"],
+		"plugins":
+			["ImpostorInvisibility.dll"]
+	},
+	{
+		"id": "CYTJester",
+		"name": "[Cheap-YT] Jester",
+		"descriptionEN": "Allows to play on Cheat-YT custom server with Jester role",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "CheapYT"],
+		"plugins":
+			["TheJesterGameMode.dll"]
+	},
+	{
+		"id": "CYTQuantumTunneling",
+		"name": "[Cheap-YT] Quantum Tunneling",
+		"descriptionEN": "Allows to play on Cheat-YT custom server with Quantum Tunneling mod",
+		"descriptionFR": "",
+		"dependencies": 
+			["BepInEx", "CheapYT"],
+		"plugins":
+			["QuantumTunnelingGameMode.dll"]
+	},
+	{
+		"id": "Skeld.net",
+		"name": "Skeld.net",
+		"descriptionEN": "Allows to play on Skeld.net custom server with many mods",
+		"descriptionFR": "",
+		"dependencies": 
+			[],
+		"plugins":
+			[]
+	}
+]

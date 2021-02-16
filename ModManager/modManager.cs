@@ -42,7 +42,6 @@ namespace ModManager
             this.lg = "en_US";
             this.WaitLabel.Hide();
 
-
             this.AmongUsDirectorySelection.Click += new EventHandler(this.chooseAmongUsDirectory);
             this.AmongUsDirectoryConfirm.Click += new EventHandler(this.textChangedAmongUsPath);
             this.AmongUsDirSwitchButton.Click += new EventHandler(this.backToDirectorySelection);
@@ -491,5 +490,6 @@ namespace ModManager
                 File.Delete(fileName);
             }
         }
+
     }
 }
