@@ -44,8 +44,6 @@ Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\AutoUpdater.NET.xml"; D
 Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\ModManager.exe.config"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\ModManager.pdb"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager\ModManager\bin\Debug\Newtonsoft.Json.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager\ModManager\files\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

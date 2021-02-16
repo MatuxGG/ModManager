@@ -250,6 +250,12 @@ namespace ModManager
             this.WaitLabel.Show();
             this.Update();
 
+            DirectoryInfo fileMain = new DirectoryInfo(filesPath);
+            if (fileMain.Exists == false)
+            {
+                Directory.CreateDirectory(filesPath);
+            }
+
             // Download remote files.zip
             using (var client = new WebClient())
             {
