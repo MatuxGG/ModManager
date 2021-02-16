@@ -49,6 +49,8 @@ Don't hesitate to fork this project or contribute :)
 - Better Polus : https://github.com/Brybry16/BetterPolus
 - Cultist : https://github.com/Aeolic/CultistMod
 
+And ... Some other mods that will be credited directly in Mod Manager in a few patches :)
+
 ### Many alternative mod servers
 
 - All Of Us : https://discord.io/allofus
