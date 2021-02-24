@@ -11,7 +11,7 @@ using System.IO;
 using System.Net;
 using System.IO.Compression;
 using Newtonsoft.Json;
-using AutoUpdaterDotNET;
+using System.Diagnostics;
 
 namespace ModManager
 {
@@ -30,10 +30,29 @@ namespace ModManager
         {
             InitializeComponent();
 
-            AutoUpdater.Start("https://au.matux.fr/modManager/latest.xml");
 
             this.serverURL = "https://au.matux.fr/modManager";
             this.curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+
+            using (WebClient client = new WebClient())
+            {
+                string version = client.DownloadString(this.serverURL + "/version.txt");
+                if (Version.Parse(version) > curVersion)
+                {
+                    if (MessageBox.Show("There is a new version of Mod Manager available, would you like to download it ?", "Mod Manager Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    {
+                        FileInfo installer = new FileInfo(this.appPath + "\\ModManagerInstaller.exe");
+                        if (installer.Exists)
+                        {
+                            this.FileDelete(this.appPath + "\\ModManagerInstaller.exe");
+                        }
+                        client.DownloadFile(this.serverURL + "/ModManagerInstaller.exe", this.appPath + "\\ModManagerInstaller.exe");
+                        Process.Start(this.appPath + "\\ModManagerInstaller.exe");
+                        Environment.Exit(0);
+                    }
+                }
+            }
+
             this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager");
             this.appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager";
@@ -132,13 +151,15 @@ namespace ModManager
                 buton.Location = new Point(210*y, 40 * x);
                 buton.Text = item.name;
                 buton.Name = item.id;
-                if (item.id != "Skeld.net")
-                {
-                    buton.Click += new EventHandler(this.enableMod);
-                } else
+                if (item.id == "Skeld.net")
                 {
                     buton.BackColor = Color.Blue;
                     buton.Click += new EventHandler(this.openSkeldNet);
+                } else if (item.id == "TownOfUs") {
+                    buton.Click += new EventHandler(this.enableTownOfUs);
+                } else
+                {
+                    buton.Click += new EventHandler(this.enableMod);
                 }
 
                 ToolTip tt = new ToolTip();
@@ -203,7 +224,29 @@ namespace ModManager
             return;
         }
 
-        private void removeMods(object sender, EventArgs e)
+        private void enableTownOfUs(object sender, EventArgs e)
+        {
+            // Temporary installer before next update
+
+            this.deleteMods();
+            Button pressedButton = ((Button)sender);
+            string modId = pressedButton.Name;
+
+            if (this.config.installedMods.Contains(modId) == false) // && !File.Exists(pluginsPath + "\\" + file
+            {
+                string modPath = this.appPath + "\\files\\mods\\TownOfUs";
+                this.DirectoryCopy(modPath, this.config.amongUsPath, true);
+
+                this.config.installedMods.Add(modId);
+                this.config.update();
+                pressedButton.Enabled = false;
+                pressedButton.BackColor = Color.Lime;
+
+            }
+            return;
+        }
+
+            private void removeMods(object sender, EventArgs e)
         {
             this.deleteMods();
         }
@@ -340,6 +383,10 @@ namespace ModManager
 
         public void chooseAmongUsDirectory(object sender, EventArgs e)
         {
+            if (this.config != null && this.config.amongUsPath != null)
+            {
+                this.AmongUsSelectionPopup.SelectedPath = this.config.amongUsPath;
+            }
             if (this.AmongUsSelectionPopup.ShowDialog() == DialogResult.OK)
             {
                 FileInfo amongUsFile = new FileInfo(AmongUsSelectionPopup.SelectedPath + "\\Among Us.exe");
