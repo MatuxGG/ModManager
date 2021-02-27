@@ -10,7 +10,10 @@ D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.ModManager.resources
 D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.csproj.CopyComplete
 D:\visualstudio\ModManager\ModManager\bin\Debug\Newtonsoft.Json.dll
 D:\visualstudio\ModManager\ModManager\bin\Debug\Newtonsoft.Json.xml
+D:\visualstudio\ModManager\ModManager\bin\Debug\i18n.dll
+D:\visualstudio\ModManager\ModManager\bin\Debug\i18n.Domain.dll
+D:\visualstudio\ModManager\ModManager\bin\Debug\i18n.xml
+D:\visualstudio\ModManager\ModManager\bin\Debug\i18n.Domain.xml
 D:\visualstudio\ModManager\ModManager\obj\Debug\ModManager.csprojAssemblyReference.cache
-D:\visualstudio\ModManager\ModManager\bin\Debug\AutoUpdater.NET.dll
-D:\visualstudio\ModManager\ModManager\bin\Debug\AutoUpdater.NET.pdb
-D:\visualstudio\ModManager\ModManager\bin\Debug\AutoUpdater.NET.xml
+D:\visualstudio\ModManager\ModManager\bin\Debug\Octokit.dll
+D:\visualstudio\ModManager\ModManager\bin\Debug\Octokit.xml
