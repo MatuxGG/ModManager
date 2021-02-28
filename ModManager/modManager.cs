@@ -895,7 +895,7 @@ namespace ModManager
         private async Task GetGithubInfos(string author, string repository)
         {
             var client = new GitHubClient(new ProductHeaderValue("ModManager"));
-            var tokenAuth = new Credentials("9225e430ab0b8fbb69060f168aa7875c1f29add3");
+            var tokenAuth = new Credentials("263cf1135fc832ac53d5f8c1c01a6983668168bd");
             client.Credentials = tokenAuth;
             this.currentRelease = null;
             this.currentRelease =  await client.Repository.Release.GetLatest(author, repository);
