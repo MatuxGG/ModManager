@@ -1,0 +1,49 @@
+There is a new version of Mod Manager available, would you like to download it ?
+Mod Manager Update
+Sélectionne ton dossier Among Us
+Sélectionner un dossier
+Ou entre le chemin du dossier Among Us ici (cf captures d'écran sur le coté)
+Confirmer le dossier
+Etape 1 : Ouvrir Steam et parcourir les fichiers locaux
+Etape 2 : Dans la fenêtre qui s'ouvre, copier l'adresse de l'explorateur de fichiers
+Désinstaller les mods
+Jouer
+Mods disponibles :
+Auteur :
+Version :
+Github :
+Description :
+Installer mod
+Mod installé
+Dossier Among Us :
+Changer
+Ouvrir
+Langue :
+Nouveaux mods disponibles !
+Mise à jour Mods
+Mod Manager a été créé par Matux.
+Un grand merci aux personnes suivantes :
+- Les créateurs de mods : chaque mod disponible sur Mod Manager est la propriété de son créateur. Allez voir leur Gibhut !
+Version
+Tous les mods ont été désinstallés !
+Mods désinstallés
+Tous les mods ont été mis à jour !
+Mods mis à jour
+Le mod a été installé !
+Mod installé
+- Les traducteurs : Chaque traduction est disponible grace à des traducteurs du monde entier, bravo et merci !
+Paramètres
+Activer des salons à 10+ joueurs sur le server Imposteur de Matux [BETA] :
+Crédits
+Ferme Among Us pour installé ce mod
+Impossible d'installer le mod
+Ferme Among Us pour désinstaller ce mod
+Impossible de désinstaller le mod
+Ferme Among Us pour activer/désactiver les parties à 10+ joueurs
+Impossible d'activer ou désactiver les parties à 10+ joueurs
+Mise à jour mod
+The mod have been uninstalled !
+Mod uninstalled
+The mod have been updated !
+Mod updated
+Open Skeld.net :

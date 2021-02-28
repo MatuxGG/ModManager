@@ -37,6 +37,11 @@ namespace ModManager
         {
             InitializeComponent();
 
+            if (System.Diagnostics.Process.GetProcessesByName("ModManager").Length > 1)
+            {
+                Environment.Exit(0);
+            }
+
             this.serverURL = "https://mm.matux.fr";
             this.curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
@@ -829,6 +834,7 @@ namespace ModManager
             string json = System.IO.File.ReadAllText(modlistPath);
             this.mods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(json);
             ComboBox comboMods = (ComboBox) this.getPage("ModSelection").getControl("ModListCombo");
+            comboMods.Items.Clear();
             int i = 0;
             foreach (Mod item in this.mods)
             {
@@ -889,7 +895,7 @@ namespace ModManager
         private async Task GetGithubInfos(string author, string repository)
         {
             var client = new GitHubClient(new ProductHeaderValue("ModManager"));
-            var tokenAuth = new Credentials("0fd893b156d7f035d70387889d98f04098061a1d");
+            var tokenAuth = new Credentials("9225e430ab0b8fbb69060f168aa7875c1f29add3");
             client.Credentials = tokenAuth;
             this.currentRelease = null;
             this.currentRelease =  await client.Repository.Release.GetLatest(author, repository);
@@ -1444,11 +1450,17 @@ namespace ModManager
             {
                 return;
             }
-            ProcessStartInfo startInfo = new ProcessStartInfo();
+
+            string batpath = this.appPath + "\\openGame.bat";
+            this.FileDelete(batpath);
+            File.WriteAllText(batpath, "explorer.exe \""+this.config.amongUsPath+"\\Among Us.exe"+"\"");
+            Process.Start(batpath);
+
+            /*ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.LoadUserProfile = true;
             startInfo.UseShellExecute = false;
             startInfo.FileName = this.config.amongUsPath + "\\Among Us.exe";
-            Process.Start(startInfo);
+            Process.Start(startInfo);*/
         }
 
         private void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)

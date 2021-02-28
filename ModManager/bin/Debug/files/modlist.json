@@ -89,6 +89,7 @@
 		"author": "Woodi-dev",
 		"github": "Among-Us-Love-Couple-Mod"
 	},
+	{
 		"id": "Mark",
 		"name": "Mark",
 		"descriptions":
@@ -193,7 +194,7 @@
 		"name": "Tryhard",
 		"descriptions":
 			[
-				{"id": "EN", "description": "Among us mod that fixes some game breaking bugs when tryharding among us. As well as some useful settings.\r\n\r\nFeatures :\r\n- Fixes admin table blink issue\r\n- Fixes the fact that vent's animation is visible in the shadow\r\n- Allow you to disable Cameras, Admin table and Vitals when there are less than N players, updated at meetings (customizable)\r\n- Crewmates can use scanner at the same time (prevent scan abuse)\r\n- Fixes some cases when impostor is invisible after exiting a vent\r\n- Removes the kill button blink when one of your teammates kills\r\n- Option to hide player names (excluding yours and your impostor's teammates) to prevent wall/door clipping\r\n- Option to change the % of kill cooldown after a meeting\r\n- Option to force wire task (it's still counted as a "common task")\r\n- Allow you to change map and impostor count from the game lobby)"}
+				{"id": "EN", "description": "Among us mod that fixes some game breaking bugs when tryharding among us. As well as some useful settings.\r\n\r\nFeatures :\r\n- Fixes admin table blink issue\r\n- Fixes the fact that vent's animation is visible in the shadow\r\n- Allow you to disable Cameras, Admin table and Vitals when there are less than N players, updated at meetings (customizable)\r\n- Crewmates can use scanner at the same time (prevent scan abuse)\r\n- Fixes some cases when impostor is invisible after exiting a vent\r\n- Removes the kill button blink when one of your teammates kills\r\n- Option to hide player names (excluding yours and your impostor's teammates) to prevent wall/door clipping\r\n- Option to change the % of kill cooldown after a meeting\r\n- Option to force wire task (it's still counted as a common task)\r\n- Allow you to change map and impostor count from the game lobby)"}
 			],
 		"author": "Herysia",
 		"github": "AmongUsTryhard"
