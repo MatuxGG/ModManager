@@ -1,0 +1,49 @@
+There is a new version of Mod Manager available, would you like to download it ?
+Mod Manager Update
+Please select your Among Us directory
+Select directory
+Or enter Among Us directory path here (see steps on screenshots on the side)
+Confirm directory
+Step 1 : Open steam and browse Among Us files
+Step 2 : In the opened window, copy Among Us address in Windows Explorer
+Uninstall all mods
+Play
+Mods available :
+Author :
+Version :
+Github :
+Description :
+Install mod
+Uninstall mod
+Among Us directory :
+Change
+Open
+Language :
+New mods available !
+Update mods
+Mod Manager was created by Matux.
+Big thanks to :
+- Mods creators : each mod available in Mod Manager is the property of its respective creator. Go check each creator's Github!
+Version
+All Mods have been uninstalled !
+Mods uninstalled
+All Mods have been updated !
+Mods updated
+The mod have been installed !
+Mod installed
+- Translators : Each translation is available thanks to translators from all around the world, good job !
+Settings
+Enable 10+ players in lobby with Matux Impostor server [BETA] :
+Credits
+Close Among Us to install this mod
+Can't install mod
+Close Among Us to uninstall mods
+Can't uninstall mods
+Close Among Us to activate/deactivate 10+ players lobby
+Can't activate or deactivate 10+ players lobby
+Update mod
+The mod have been uninstalled !
+Mod uninstalled
+The mod have been updated !
+Mod updated
+Open Skeld.net :

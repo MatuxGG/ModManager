@@ -1,0 +1,232 @@
+[
+	{
+		"id": "ExtraRoles",
+		"name": "Extra Roles",
+		"descriptions":
+			[
+				{"id": "EN", "description": "A BepInEx mod for Among Us that adds 4 new roles into the game.\r\n\r\n- Medic :\r\nThe Medic can give any player a shield that will make them immortal.\r\nAlthough, if The Medic dies, the shield will break.\r\nThe only exception is The Officer; they will still die if they try to kill a Crewmate.\r\nThe Medic's other feature shows when they find a corpse: they can get a report that contains clues to the killer's identity.\r\nThe type of information they get is based on a timer that can be configured inside the lobby.\r\n\r\n- Officer :\r\nThe Officer is a class of Crewmate that is allowed to kill people, similar to Impostors.\r\nTheir goal is to locate the Impostor and deliver vigilante justice, but if they accidentally shoot a Crewmate, they die instead.\r\n\r\n- Engineer :\r\nThe Engineer can repair one emergency per game from anywhere on the entire map. \r\nThe other ability of The Engineer is that they are able to use the vents that were previously exclusive to Impostors.\r\n\r\n- Joker :\r\nThe Joker is interesting; they aren't part of the Crewmates or Impostors, and they can only win by being falsely convicted as an Impostor.\r\nIf The Joker get's voted off the ship, the game will end instantly.\r\nThe Joker also has no tasks."}
+			],
+		"author": "NotHunter101",
+		"github": "ExtraRolesAmongUs"
+	},
+	{
+		"id": "CustomRoles",
+		"name": "Custom Roles",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Adds 3 new custom roles to the popular game Among Us. These roles include The Torch, The Mayor and The Sweeper.\r\n\r\n- The Torch : \r\nThis role has full vision, even when the lights are out.\r\n\r\n- The Mayor :\r\nWhen a player receives this role, their vote counts as 2 players.\r\n\r\n- The Sweeper :\r\nThis role is on the side of the crewmates, however they can vent."}
+			],
+		"author": "tomozbot",
+		"github": "AmongUsCustomRoles"
+	},
+	{
+		"id": "TooManyRoles",
+		"name": "Too Many Roles",
+		"descriptions":
+			[
+				{"id": "EN", "description": "The Too Many Roles Mod, is a mod for among Us, adding roles and perssonalization options. 15 options are configurable in the lobby. And currently has 3 roles : TimeMaster, Investigator and Lighter.\r\n\r\n- Investigator :\r\nThe investigator, is a role allowing to see the movements of the players.\r\nWhen a player moves, he leaves a footprint on the ground, it disappears after a while...\r\nThe investigator can see this footprint.\r\n\r\n- TimeMaster :\r\nThe Time Master has a button, by pressing it all the players go back in time gradually.\r\nIf a player is dead during this time, he comes back to life.\r\nThis role is available for crewmate and impostor.\r\nReviving a player can be disabled.\r\nTasks, Door, Sabotag and other button are not impacted.\r\n\r\n- Lighter :\r\nThis is a role, having a different vision than a normal player, he can see during the light sabotage, if the option is activated"}
+			],
+		"author": "Hardel-DW",
+		"github": "TooManyRolesMods"
+	},
+	{
+		"id": "TownOfImpostors",
+		"name": "Town Of Impostors",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Town Of Impostors Mod is an Among Us modification for Windows.\r\nThis mod aims to add new classes and abilities to the game to enhance the gameplay.\r\n\r\n- Sheriff :\r\nThe Sheriff is a class that has the ability to kill Impostors. However, if they attempt to kill a fellow crewmate, they will lose their own life instead as a punishment.\r\n\r\n- Doctor :\r\nThe Doctor is a class that has the ability to revive dead players. However, this means they are also able to revive Impostors that have been killed by the Sheriff.\r\n\r\n- Impostor\r\nThe Impostor has additional abilities they can make use of :\r\n-> Drag & Drop Bodies - Impostors can drag around and drop dead bodies to reposition them. They may also drag bodies through vents.\r\n-> Dispose Bodies - Impostors can dispose a body they are dragging if they are close to a vent or inside the vents.\r\n-> Disguise - Impostors can disguise as another player for set duration. They must first sample the DNA of a player by being nearby the player."}
+			],
+		"author": "AJMix",
+		"github": "TownOfImpostors"
+	},
+	{
+		"id": "TownOfUs",
+		"name": "Town Of Us",
+		"descriptions":
+			[
+				{"id": "EN", "description": "An Among Us mod that adds a lot of mods and relevant game settings.\nThere are 10 roles :\nMayor, Jester, Sheriff, Lovers, Mafia, Godfather, Janitor, Mafioso, Engineer, Swapper, Shifter, Investigator, Time Master.\r\n\r\n- Mayor (Team Crewmate) :\r\nThe Mayor is a role that can vote multiple times.\r\nThe Mayor has a Vote Bank, which is the number of times they can vote.\r\nEvery time they don't vote in a meeting, one vote is added to the Vote Bank.\r\nDuring a meeting, so long as not everyone has voted, the Mayor can use a vote or multiple votes from their Vote Bank to vote multiple times.\r\nHowever, to compensate for this, the Mayor cannot fix Lights or Comms.\r\n\r\n- Jester (Team Neutral) :\r\nThe Jester has zero tasks and their aim is to be voted out.\r\nIf they are voted out then the game finishes and they win.\r\nHowever, the Jester does not win if the Crewmates or Impostor wins.\r\n\r\n- Sheriff (Team: Crewmates) :\r\nThe Sheriff's aim is able to kill and their aim is to killl Impostors.\r\nHowever, if they attempt to kill a Crewmate or a Neutral character, they instead die themselves.\r\n\r\n- Lovers (Team: Either Crewmates or Impostors) :\r\nThe Lovers are two players who are linked together.\r\nThey gain the primary objective to stay alive together.\r\nIf they are both among the last 3 players, they win.\r\nHowever, they can also win with their respective team and hence the Lovers do not know the role of the other lover.\r\nThere is a 66.7% chance that both Lovers are Crewmates.\r\nThere is a 33.3% chance that one Lover is a Crewmate and one is an Impostor.\r\n\r\n- Mafia (Team: Impostors) : \r\nThe Mafia are a group of three Impostors.\r\nThe Godfather is a normal impostor and can sabotage and kill.\r\nThe Janitor is an impostor who cannot kill but can instead clean up bodies so that they can't be seen nor reported.\r\nThe Mafioso is an impostor who cannot sabotage nor kill until the Godfather is dead.\r\nNOTE - The Mafia only appears in games of 3+ impostors, even when set to a 100% chance.\r\n\r\n- Engineer (Team: Crewmates) :\r\nThe Engineer can fix one sabotage per round from anywhere on the map.\r\nHowever, once fixed, the impostors receive an arrow pointing to the Engineer, giving up their spot.\r\nIf an Engineer has used a fix for that round, the button cannot be pressed by anybody and meetings can only happen from reporting bodies.\r\n\r\n- Shifter (Team: Neutral) :\r\nThe Shifter is a roleless character.\r\nThey have zero tasks and zero win conditions.\r\nHowever they can swap roles with people.\r\nSwapping roles with a custom role gives the Shifter the role and their tasks and turns the other player into a Shifter.\r\nSwapping roles with a Crewmate gives the Shifter their tasks and turns the Crewmate into a Shifter.\r\nSwapping roles with an Impostor fails and kills the Shifter.\r\n\r\n- Swapper (Team: Crewmates) :\r\nThe Swapper can swap two people's votes during a Meeting.\r\nEveryone who voted for the first person will instead be counted for the second and vice versa.\r\nThis could easily change the outcome of a vote and perhaps vote off a different person.\r\nTo counteract this, The Swapper cannot fix Lights or Comms and cannot push the Emergency Button.\r\n\r\n- Investigator (Team: Crewmates) :\r\nThe Investigator can see the movement of players.\r\nEvery player leaves a footprint that only the Investigator can see, which disappears after some time.\r\n\r\n- Time Master (Team: Crewmates) :\r\nThe Time Master can rewind time and all plaers will reverse.\r\nIf enabled, any players killed during this time will be revived.\r\nNothing but movements and kills are affected (for now)."}
+			],
+		"author": "slushiegoose",
+		"github": "Town-Of-Us"
+	},
+	{
+		"id": "Chameleon",
+		"name": "Chameleon",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Chameleon Mod is a mod for Among Us that adds a new role in Among Us, the chameleon.\r\nThe chameleon has the possibility to become invisible for a certain period of time.\r\nHe is part of the crewmates and can use his ability to find impostors more easily."}
+			],
+		"author": "Wunax",
+		"github": "Among-Us-Chameleon-Mod"
+	},
+	{
+		"id": "Cultist",
+		"name": "Cultist",
+		"descriptions":
+			[
+				{"id": "EN", "description": "A mod for Among Us that adds a new faction, the Cultists.\r\nThe Cultists start with a single Cultist that can convert crewmembers to the cult.\r\nIf the cult grows large enough, the Cultists win!\r\n\r\nThe mod adds a new faction to the game, the Cultists. The Cultists start with a single Cultist (The Cultist Leader) that can convert other crew members to the cult. They can not convert Impostors.\r\n\r\nIf there are more cultists alive than non-cultists, the Cult wins. For example, if there are 5 players alive and 3 of them are cultists, they win. Cultists don't have any tasks (and currently no fake tasks, so if you are new to among us, you should probably play some games without this mod first) and if a crewmate gets converted, their tasks are removed. The Cultists have a maximum number of conversion they can execute, when they are out of attempts they can not convert any more members.\r\n\r\nDepending on the settings, the Cultists have a lower overall vision and the Cult leader should carefully chose who he wants to convert.\r\n\r\nThis mod makes for some interesting overall gameplay changes because:\r\n- The crewmates need to make sure they not only vote out Impostors but Cultists as well, otherwise the Cult will easily win.\r\n- The Impostors need to make sure they don't kill randomly, they need to figure out who the cultist are, and make sure that they don't make the cultists win by killing a crewmate.\r\n- There is a new aspect of changing your faction during the game. For example, someone who was confirmed by a med-scan, could be a Cultist later on!"}
+			],
+		"author": "Aeolic",
+		"github": "CultistMod"
+	},
+	{
+		"id": "Dictator",
+		"name": "Dictator",
+		"descriptions":
+			[
+				{"id": "EN", "description": "This adds the Dictator role into the current version of among us.\r\nTheir vote counts for 8 people and can vote out who they want. If they die, you will have a normal game."}
+			],
+		"author": "DillyzThe1",
+		"github": "DictatorRole"
+	},
+	{
+		"id": "Lovers",
+		"name": "Love couple",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Love Couple is an Among Us modification, which adds a new win condition for two randomly chosen players.\r\nThe primary objective of the Love Couple is to stay alive together.\r\nIf they are among the last 3 players they win.\r\nEach lover can win as an Impostor or Crewmate as well."}
+			],
+		"author": "Woodi-dev",
+		"github": "Among-Us-Love-Couple-Mod"
+	},
+	{
+		"id": "Mark",
+		"name": "Mark",
+		"descriptions":
+			[
+				{"id": "EN", "description": "The idea is basically: Everyone is Mark and everyone is orange.\r\nYou can only refer to other players as Mark."}
+			],
+		"author": "marks-st",
+		"github": "MarkModeAmongUs"
+	},
+	{
+		"id": "Mayor",
+		"name": "Mayor",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Adds a new role called The Mayor to the popular game Among Us. When a player receives this role, their vote counts as 2 players."}
+			],
+		"author": "tomozbot",
+		"github": "MayorMod"
+	},
+	{
+		"id": "Sheriff",
+		"name": "Sheriff",
+		"descriptions":
+			[
+				{"id": "EN", "description": "The Sheriff is able to kill Impostors. If they shoot a Crewmate, they will lose their life instead."}
+			],
+		"author": "Brybry16",
+		"github": "Reactor-Sheriff"
+	},
+	{
+		"id": "Sweeper",
+		"name": "Sweeper",
+		"descriptions":
+			[
+				{"id": "EN", "description": "The Sweeper is a crewmate that can vent"}
+			],
+		"author": "tomozbot",
+		"github": "SweeperMod"
+	},
+	{
+		"id": "Thanos",
+		"name": "Thanos",
+		"descriptions":
+			[
+				{"id": "EN", "description": "The Thanos Mod is an Among Us mod, adding a new role and new features. A random player will be Thanos and will have to search for the 6 stones of infinity to unlock the finger snap, and finish the game. 16 options are configurable in the lobby.\r\n\r\nAt the start of a game, a randomly chosen person will become Thanos, he will then have a purple screen, and the name to display in purple, only Thanos can see his name in color.\r\nIn addition 6 stones are hidden through the map, Thanos will have to search and recover them without revealing his identity.\r\nEach stone offers a unique power, find all 6 and the mythical finger snap will be unlocked.\r\nThe stones are synchronized between all the players."}
+			],
+		"author": "Hardel-DW",
+		"github": "ModsThanos"
+	},
+	{
+		"id": "Torch",
+		"name": "Torch",
+		"descriptions":
+			[
+				{"id": "EN", "description": "The Torch has full vision, even when the lights are out"}
+			],
+		"author": "tomozbot",
+		"github": "TorchMod"
+	},
+	{
+		"id": "AnonymousImpostors",
+		"name": "Anonymous Impostors",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Impostors are anonymous to each other. Therefore impostors can accidentally kill each other.\r\nThe mod also adds a option to force imposters to win solo.\r\nThere are two commands : /anonymous on|off and /soloimpostors on|off"}
+			],
+		"author": "Wunax",
+		"github": "Among-Us-Anonymous-Impostors-Mod"
+	},
+	{
+		"id": "BetterPolus",
+		"name": "Better Polus",
+		"descriptions":
+			[
+				{"id": "EN", "description": "An Among Us mod that tweaks Polus, allowing a more balanced experience.\r\n\r\nFeatures:\r\n- Vitals have been moved to Laboratory.\r\n- The Reboot Wifi task is now located in the Dropship.\r\n- The Chart Course task is now located in Comms.\r\n- The Temperature (cold) task is now located Outside (Between O2 & Comms).\r\n- The Vents near both Reactor Pods are not linked to eachother anymore.\r\nThe Vent on top of Electrical is linked to the Vent on top of Security.\r\nThe Vent outside of Laboratory is linked to the Vent inside Storage."}
+			],
+		"author": "Brybry16",
+		"github": "BetterPolus"
+	},
+	{
+		"id": "Invisible",
+		"name": "Invisible",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Basically impostors can go invisible"}
+			],
+		"author": "gabriel-nsiqueira",
+		"github": "invisibility-mod"
+	},
+	{
+		"id": "StopTime",
+		"name": "Stop Time",
+		"descriptions":
+			[
+				{"id": "EN", "description": "This gamemode adds a new button to The Impostor's HUD that allows them to stop time for a certain amount of time."}
+			],
+		"author": "DillyzThe1",
+		"github": "StopTimeMod"
+	},
+	{
+		"id": "Tryhard",
+		"name": "Tryhard",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Among us mod that fixes some game breaking bugs when tryharding among us. As well as some useful settings.\r\n\r\nFeatures :\r\n- Fixes admin table blink issue\r\n- Fixes the fact that vent's animation is visible in the shadow\r\n- Allow you to disable Cameras, Admin table and Vitals when there are less than N players, updated at meetings (customizable)\r\n- Crewmates can use scanner at the same time (prevent scan abuse)\r\n- Fixes some cases when impostor is invisible after exiting a vent\r\n- Removes the kill button blink when one of your teammates kills\r\n- Option to hide player names (excluding yours and your impostor's teammates) to prevent wall/door clipping\r\n- Option to change the % of kill cooldown after a meeting\r\n- Option to force wire task (it's still counted as a common task)\r\n- Allow you to change map and impostor count from the game lobby)"}
+			],
+		"author": "Herysia",
+		"github": "AmongUsTryhard"
+	},
+	{
+		"id": "VentDigger",
+		"name": "Vent Digger",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Impostors can dig their own vent network"}
+			],
+		"author": "ZiadMontaser",
+		"github": "VentDigger"
+	},
+	{
+		"id" :"CustomKeyBinds",
+		"name": "Custom Key Binds",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Allows to customise your keybinds in settings"}
+			],
+		"author": "Herysia",
+		"github": "CustomKeyBinds"
+	},
+	{
+		"id": "MoreColors",
+		"name": "More colors",
+		"descriptions":
+			[
+				{"id": "EN", "description": "Adds 9 colors to the game"}
+			],
+		"author": "Snowad14",
+		"github": "Mores-Colors"
+	}
+]
