@@ -37,6 +37,8 @@ namespace ModManager
         {
             InitializeComponent();
 
+            this.Size = new Size(980, 570);
+
             // Exit if Mod Manager already running
             if (System.Diagnostics.Process.GetProcessesByName("ModManager").Length > 1)
             {
@@ -51,8 +53,6 @@ namespace ModManager
             // Create AppData if doesn't exist already
             this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager");
-
-            Directory.CreateDirectory(this.appPath + "\\files");
 
             using (WebClient client = new WebClient())
             {
@@ -78,7 +78,7 @@ namespace ModManager
             this.textureList = new TextureList(this.serverURL + "/textures", this.appPath + "\\textures.json", this);
             
 
-            this.modlist = new ModList(this.serverURL + "/modlist.json", this.appPath + "\\modlist.json", this);
+            this.modlist = new ModList(this.serverURL, this.appPath + "\\modlist.json", this);
             this.modlist.currentMod = this.modlist.mods.First();
             this.pagelist = new PageList(this);
             this.modlist.show();

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -23,6 +24,8 @@ namespace ModManager
 
         public ModManager modManager;
 
+        public string token;
+
         public ModList(string url, string path, ModManager modManager)
         {
             this.url = url;
@@ -33,10 +36,10 @@ namespace ModManager
 
         public void load()
         {
-            // Download remote files.zip
+            this.token = System.IO.File.ReadAllText(this.modManager.appPath+"\\token.txt");
             using (var client = new WebClient())
             {
-                client.DownloadFile(this.url, this.path);
+                client.DownloadFile(this.url+"/modlist.json", this.path);
             }
             string json = System.IO.File.ReadAllText(this.path);
             this.mods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(json);
@@ -148,8 +151,6 @@ namespace ModManager
             this.changeModsForCategory();
 
             this.changeModWorker();
-
-            //this.changeCatWorker();
         }
 
         public void changeMod(object sender, EventArgs e)
@@ -171,7 +172,7 @@ namespace ModManager
             {
                 string version = this.modManager.currentRelease.TagName;
                 modSelectionPage.getControl("VersionLabel").Text = version;
-
+                modSelectionPage.getControl("GameVersionLabel").Text = this.currentMod.gameVersion;
                 modSelectionPage.getControl("GithubLabel").Text = "https://github.com/" + this.currentMod.author + "/" + this.currentMod.github;
                 modSelectionPage.getControl("DescriptionLabel").Text = this.currentMod.description;
                 Button installButton = (Button)modSelectionPage.getControl("InstallModButton");
@@ -198,36 +199,50 @@ namespace ModManager
         public async Task GetGithubInfos(string author, string repository)
         {
             var client = new GitHubClient(new ProductHeaderValue("ModManager"));
-            var tokenAuth = new Credentials("TOKEN");
+            var tokenAuth = new Credentials(this.token);
             client.Credentials = tokenAuth;
             this.modManager.currentRelease = null;
             this.modManager.currentRelease = await client.Repository.Release.GetLatest(author, repository);
-
         }
-
 
         public void installDependencies()
         {
-            string dependenciesPath = this.modManager.appPath + "\\files\\dependencies";
             List<string> dependencies = new List<string>();
             dependencies.Add("BepInEx");
-            dependencies.Add("Reactor");
-            dependencies.Add("Essentials");
             foreach (string dependencie in dependencies)
             {
                 if (this.modManager.config.installedDependencies.Contains(dependencie) == false)
                 {
-                    this.modManager.utils.DirectoryCopy(dependenciesPath + "\\" + dependencie, this.modManager.config.amongUsPath, true);
+                    string tempPath = Path.GetTempPath() + "\\ModManager";
+                    this.modManager.utils.FileDelete(tempPath + "\\" + dependencie + ".zip");
+                    using (var client = new WebClient())
+                    {
+                        client.DownloadFile(this.url + "/" + dependencie + ".zip", tempPath + "\\" + dependencie + ".zip");
+                    }
+                    ZipFile.ExtractToDirectory(tempPath + "\\" + dependencie + ".zip", this.modManager.config.amongUsPath);
                     this.modManager.config.installedDependencies.Add(dependencie);
                 }
             }
+            this.modManager.config.update();
         }
 
         public void uninstallMod(object sender, EventArgs e)
         {
-            this.uninstallModWorker();
+            if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
+            {
+                MessageBox.Show("Close Among Us to uninstall this mod", "Can't uninstall mod", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").BackColor = System.Drawing.Color.Orange;
+            if (this.modManager.config.installedMods.Count == 1)
+            {
+                this.uninstallModsWorker();
+            } else
+            {
+                this.uninstallModWorker();
+            }
             this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").Visible = true;
-            this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").BackColor = System.Drawing.Color.Blue;
+            this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").BackColor = System.Drawing.Color.Blue;
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").Visible = false;
             MessageBox.Show("The mod have been uninstalled !", "Mod uninstalled", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -251,6 +266,11 @@ namespace ModManager
 
         public void updateMod(object sender, EventArgs e)
         {
+            if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
+            {
+                MessageBox.Show("Close Among Us to update this mod", "Can't update mod", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             this.uninstallModWorker();
             this.installModWorker();
             this.modManager.pagelist.get("ModSelection").getControl("UpdateModButton").Visible = false;
@@ -262,58 +282,53 @@ namespace ModManager
 
         public void installMod(object sender, EventArgs e)
         {
-            this.installModWorker();
-            this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").Visible = false;
-            this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").BackColor = System.Drawing.Color.Blue;
-            this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").Visible = true;
-            MessageBox.Show("The mod have been installed !", "Mod installed", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            return;
-        }
-
-        public async void installModWorker()
-        {
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
                 MessageBox.Show("Close Among Us to install this mod", "Can't install mod", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
+            this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").BackColor = System.Drawing.Color.Orange;
+            this.installModWorker();
+            this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").Visible = false;
+            this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").BackColor = System.Drawing.Color.Blue;
+            this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").Visible = true;
+            this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").BackColor = System.Drawing.Color.Red;
+            MessageBox.Show("The mod have been installed !", "Mod installed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
 
+        public void installModWorker()
+        {
             if (this.modManager.config.containsMod(this.currentMod.id) == false)
             {
-                this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").BackColor = System.Drawing.Color.Orange;
 
                 this.installDependencies();
 
                 string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
 
-                if (Directory.Exists(pluginsPath) == false)
-                {
-                    Directory.CreateDirectory(pluginsPath);
-                }
-
-                await this.GetGithubInfos(this.currentMod.author, this.currentMod.github);
-
-                using (WebClient wc = new WebClient())
-                {
-                    foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
+                bool foundDll = false;
+                foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
                     {
                         string fileName = tab.Name;
                         if (fileName.Contains(".dll"))
                         {
+                            foundDll = true;
                             this.installDll(this.modManager.currentRelease, tab);
-                            return;
                         }
                     }
-                    foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
+                if (foundDll)
+                {
+                    return;
+                }
+                foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
                     {
                         string fileName = tab.Name;
                         if (fileName.Contains(".zip"))
                         {
                             this.installZip(this.modManager.currentRelease, tab);
-                            return;
+                        return;
                         }
                     }
-                }
                 return;
             }
         }
@@ -439,6 +454,146 @@ namespace ModManager
                 this.modManager.config.update();
 
             }
+        }
+
+        public string getCode()
+        {
+            string code = "";
+            foreach (Mod m in this.mods)
+            {
+                if (this.modManager.config.containsMod(m.id))
+                {
+                    code = code + "1";
+                } else
+                {
+                    code = code + "0";
+                }
+            }
+            return this.BinaryStringToHex(code);
+        }
+
+        public void enterCode(object sender, EventArgs e)
+        {
+            if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
+            {
+                MessageBox.Show("Close Among Us to use a code", "Can't enter code", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+            string code = this.modManager.pagelist.get("Installed").getControl("UploadCodeTextbox").Text;
+            this.installFromCode(code);
+            MessageBox.Show("Mods from code have been installed", "Mods installed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public void installFromCode(string code)
+        {
+            string binary = HexStringToBinary(code);
+            this.uninstallModsWorker();
+            int i = 0;
+            foreach(Mod m in this.mods)
+            {
+                if (binary[i] == '1')
+                {
+                    this.currentMod = m;
+                    this.installModWorker();
+                }
+                i++;
+            }
+            
+        }
+
+        private static readonly Dictionary<char, string> hexCharacterToBinary = new Dictionary<char, string> {
+            { 'A', "00000" },
+            { 'B', "00001" },
+            { 'C', "00010" },
+            { 'D', "00011" },
+            { 'E', "00100" },
+            { 'F', "00101" },
+            { 'G', "00110" },
+            { 'H', "00111" },
+            { 'I', "01000" },
+            { 'J', "01001" },
+            { 'K', "01010" },
+            { 'L', "01011" },
+            { 'M', "01100" },
+            { 'N', "01101" },
+            { 'O', "01110" },
+            { 'P', "01111" },
+            { 'Q', "10000" },
+            { 'R', "10001" },
+            { 'S', "10010" },
+            { 'T', "10011" },
+            { 'U', "10100" },
+            { 'V', "10101" },
+            { 'W', "10110" },
+            { 'X', "10111" },
+            { 'Y', "11000" },
+            { 'Z', "11001" },
+            { '1', "11010" },
+            { '2', "11011" },
+            { '3', "11100" },
+            { '4', "11101" },
+            { '5', "11110" },
+            { '6', "11111" }
+        };
+
+        private static readonly Dictionary<string, char> BinaryToHexCharacter = new Dictionary<string, char> {
+            { "00000", 'A' },
+            { "00001", 'B' },
+            { "00010", 'C' },
+            { "00011", 'D' },
+            { "00100", 'E' },
+            { "00101", 'F' },
+            { "00110", 'G' },
+            { "00111", 'H' },
+            { "01000", 'I' },
+            { "01001", 'J' },
+            { "01010", 'K' },
+            { "01011", 'L' },
+            { "01100", 'M' },
+            { "01101", 'N' },
+            { "01110", 'O' },
+            { "01111", 'P' },
+            { "10000", 'Q' },
+            { "10001", 'R' },
+            { "10010", 'S' },
+            { "10011", 'T' },
+            { "10100", 'U' },
+            { "10101", 'V' },
+            { "10110", 'W' },
+            { "10111", 'X' },
+            { "11000", 'Y' },
+            { "11001", 'Z' },
+            { "11010", '1' },
+            { "11011", '2' },
+            { "11100", '3' },
+            { "11101", '4' },
+            { "11110", '5' },
+            { "11111", '6' }
+        };
+
+        public string BinaryStringToHex(string binary)
+        {
+            StringBuilder result = new StringBuilder();
+            while (binary.Length % 5 != 0)
+            {
+                binary = binary + "0";
+            }
+            while (binary.Length >= 5)
+            {
+                string sub = binary.Substring(0, 5);
+                result.Append(BinaryToHexCharacter[sub]);
+                binary = binary.Substring(5);
+            }
+            return result.ToString();
+        }
+        public string HexStringToBinary(string hex)
+        {
+            StringBuilder result = new StringBuilder();
+            foreach (char c in hex)
+            {
+                result.Append(hexCharacterToBinary[c]);
+            }
+            return result.ToString();
         }
     }
 }

@@ -48,7 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>among-us-blue.ico</ApplicationIcon>
+    <ApplicationIcon>modmanager.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationManifest>app.manifest</ApplicationManifest>
@@ -139,6 +139,7 @@
     <Content Include="modlist\*">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="modmanager.ico" />
     <Content Include="readme.txt" />
     <None Include="Resources\back.png" />
     <None Include="Resources\thanks.png" />
@@ -146,6 +147,7 @@
     <None Include="Resources\settings.png" />
     <None Include="Resources\github.png" />
     <None Include="Resources\discord.png" />
+    <None Include="Resources\announce.png" />
     <Content Include="Resources\step1.png" />
     <Content Include="Resources\step2.png" />
     <None Include="Resources\among-us-blue.ico" />

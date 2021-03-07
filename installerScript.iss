@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ModManager"
-#define MyAppVersion "3.0.0.2"
+#define MyAppVersion "3.0.0.3"
 #define MyAppPublisher "Matux"
 #define MyAppURL "https://matux.fr"
 #define MyAppExeName "ModManager.exe"
@@ -69,7 +69,6 @@ Source: "D:\visualstudio\ModManager\ModManager\bin\Release\Newtonsoft.Json.dll";
 Source: "D:\visualstudio\ModManager\ModManager\bin\Release\Newtonsoft.Json.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\visualstudio\ModManager\ModManager\bin\Release\Octokit.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\visualstudio\ModManager\ModManager\bin\Release\Octokit.xml"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager\ModManager\files\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]

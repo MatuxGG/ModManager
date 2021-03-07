@@ -101,14 +101,14 @@ namespace ModManager
         }
 
         public void install(Texture texture) {
-            DirectoryInfo backup = new DirectoryInfo(this.modManager.config.amongUsPath + "\\AmongDataSave");
+            DirectoryInfo backup = new DirectoryInfo(this.modManager.config.amongUsPath + "\\Among Us_Data.save");
             if (!backup.Exists)
             {
-                this.modManager.utils.DirectoryCopy(this.modManager.config.amongUsPath + "\\Among Us_Data", this.modManager.config.amongUsPath + "\\AmongDataSave", true);
+                this.modManager.utils.DirectoryCopy(this.modManager.config.amongUsPath + "\\Among Us_Data", this.modManager.config.amongUsPath + "\\Among Us_Data.save", true);
             }
 
             this.modManager.utils.DirectoryDelete(this.modManager.config.amongUsPath + "\\Among Us_Data");
-            this.modManager.utils.DirectoryCopy(this.modManager.config.amongUsPath + "\\AmongDataSave", this.modManager.config.amongUsPath + "\\Among Us_Data", true);
+            this.modManager.utils.DirectoryCopy(this.modManager.config.amongUsPath + "\\Among Us_Data.save", this.modManager.config.amongUsPath + "\\Among Us_Data", true);
 
             string tempPath = Path.GetTempPath() + "\\ModManager";
 
@@ -125,8 +125,8 @@ namespace ModManager
         public void cancelInstall()
         {
             this.modManager.utils.DirectoryDelete(this.modManager.config.amongUsPath + "\\Among Us_Data");
-            this.modManager.utils.DirectoryCopy(this.modManager.config.amongUsPath + "\\AmongDataSave", this.modManager.config.amongUsPath + "\\Among Us_Data", true);
-            this.modManager.utils.DirectoryDelete(this.modManager.config.amongUsPath + "\\AmongDataSave");
+            this.modManager.utils.DirectoryCopy(this.modManager.config.amongUsPath + "\\Among Us_Data.save", this.modManager.config.amongUsPath + "\\Among Us_Data", true);
+            this.modManager.utils.DirectoryDelete(this.modManager.config.amongUsPath + "\\Among Us_Data.save");
         }
     }
 }
