@@ -37,6 +37,7 @@ namespace ModManager
         {
             InitializeComponent();
 
+
             this.Size = new Size(980, 570);
 
             // Exit if Mod Manager already running
@@ -53,6 +54,9 @@ namespace ModManager
             // Create AppData if doesn't exist already
             this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager");
+
+            // Remove unused files directory
+            this.utils.DirectoryDelete(this.appPath + "\\files");
 
             using (WebClient client = new WebClient())
             {
