@@ -23,7 +23,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputBaseFilename=ModManagerInstaller
-SetupIconFile=D:\visualstudio\ModManager\ModManager\among-us-blue.ico
+SetupIconFile=D:\visualstudio\ModManager\ModManager\modmanager.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -68,7 +68,8 @@ Source: "D:\visualstudio\ModManager\ModManager\bin\Release\ModManager.pdb"; Dest
 Source: "D:\visualstudio\ModManager\ModManager\bin\Release\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\visualstudio\ModManager\ModManager\bin\Release\Newtonsoft.Json.xml"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\visualstudio\ModManager\ModManager\bin\Release\Octokit.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager\ModManager\bin\Release\Octokit.xml"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager\ModManager\bin\Release\Octokit.xml"; DestDir: "{app}"; Flags: ignoreversion             
+Source: "D:\visualstudio\ModManager\ModManager\token.txt"; DestDir: "{app}"; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 [Icons]
