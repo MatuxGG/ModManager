@@ -17,30 +17,35 @@ Join the discord : https://discord.gg/yBNgKuGjNw
 - If your Among Us folder is still in its default installation folder, the software will automatically detect it. If not, you have to select your Among Us directory manually in the top section of the app.
 - To select a mod, select it and click "Install mod". You can combine mods but do it at your own risks. Some of them just doesn't work together.
 - If at any point, you want to remove all mods installed, you have a button to do so.
+- You can also use textures packs in settings page.
 - You're ready to play ! :)
 
+## How to synchronise your installed mods with your friends ?
+
+- Click on Installed mods
+- Copy the code given
+- Your friends have to enter the code in this page
+- All mods will be installed in a few seconds
+- Everyone is ready to play then ! :)
 ## Features
 
 - Among Us directory auto detection
 - Launch Among Us from Mod Manager
 - Open Among Us folder
 - Mod selection
+- Textures packs selection
 - Combine mods (use it at your own risks)
 - Remove all mods in on click
 - Direct install from mod repositories
-- Updated mod available the second they're released
 - Detailled description of each mod
-- Various translations
-- Playing with more than 10 players available
-- Skeld.net
+- Server switch and 10+ players games available
+- Code system to allow people to share their configuration
 
 ## Credits & Resources
 
-[Reactor](https://github.com/NuclearPowered/Reactor) - The framework of the mod\
-[BepInEx](https://github.com/BepInEx) - For hooking game functions\
-[Essentials](https://github.com/DorCoMaNdO/Reactor-Essentials) - For created custom game options\
-[Impostor](https://github.com/Impostor/Impostor) - For the custom Impostor server\
-[Crowded Mod](https://github.com/CrowdedMods/CrowdedMod) - For 10+ players in lobby
+[BepInExReactor](https://github.com/NuclearPowered/BepInEx) - The main dependency of every mod\
+[Essentials](https://github.com/DorCoMaNdO/Reactor-Essentials) - For custom game options\
+
 
 Thanks to every mod creator. Go check their respective github repositories directly in Mod Manager !\
 Thanks to translators for their time.
