@@ -13,7 +13,7 @@ namespace ModManager
         public List<string> installedDependencies { get; set; }
         public string texture { get; set; }
 
-        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, string textture)
+        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, string texture)
         {
             this.amongUsPath = amongUsPath;
             this.installedMods = installedMods;

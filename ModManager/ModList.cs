@@ -207,23 +207,27 @@ namespace ModManager
 
         public void installDependencies()
         {
-            List<string> dependencies = new List<string>();
-            dependencies.Add("BepInEx");
-            foreach (string dependencie in dependencies)
+            using (var client = new WebClient())
             {
-                if (this.modManager.config.installedDependencies.Contains(dependencie) == false)
+                List<string> dependencies = new List<string>();
+                dependencies.Add("BepInEx");
+                foreach (string dependencie in dependencies)
                 {
-                    string tempPath = Path.GetTempPath() + "\\ModManager";
-                    this.modManager.utils.FileDelete(tempPath + "\\" + dependencie + ".zip");
-                    using (var client = new WebClient())
+                    if (this.modManager.config.installedDependencies.Contains(dependencie) == false)
                     {
-                        client.DownloadFile(this.url + "/" + dependencie + ".zip", tempPath + "\\" + dependencie + ".zip");
+                        string tempPath = Path.GetTempPath() + "\\ModManager";
+                        this.modManager.utils.DirectoryDelete(tempPath);
+                        Directory.CreateDirectory(tempPath);
+                        this.modManager.utils.FileDelete(tempPath + "\\" + dependencie + ".zip");
+                    
+                        client.DownloadFile(this.modManager.serverURL + "/" + dependencie + ".zip", tempPath + "\\" + dependencie + ".zip");
+                    
+                        ZipFile.ExtractToDirectory(tempPath + "\\" + dependencie + ".zip", this.modManager.config.amongUsPath);
+                        this.modManager.config.installedDependencies.Add(dependencie);
                     }
-                    ZipFile.ExtractToDirectory(tempPath + "\\" + dependencie + ".zip", this.modManager.config.amongUsPath);
-                    this.modManager.config.installedDependencies.Add(dependencie);
                 }
+                this.modManager.config.update();
             }
-            this.modManager.config.update();
         }
 
         public void uninstallMod(object sender, EventArgs e)
@@ -301,9 +305,7 @@ namespace ModManager
         {
             if (this.modManager.config.containsMod(this.currentMod.id) == false)
             {
-
                 this.installDependencies();
-
                 string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
 
                 bool foundDll = false;
@@ -316,6 +318,7 @@ namespace ModManager
                             this.installDll(this.modManager.currentRelease, tab);
                         }
                     }
+
                 if (foundDll)
                 {
                     return;
@@ -329,6 +332,7 @@ namespace ModManager
                         return;
                         }
                     }
+
                 return;
             }
         }
