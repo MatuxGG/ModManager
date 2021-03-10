@@ -710,7 +710,12 @@ namespace ModManager
             CreditsContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             CreditsContent.Name = "AnnounceContent";
             CreditsContent.Size = new System.Drawing.Size(920, 330);
-            CreditsContent.Text = "Mod Manager was created by Matux.\r\n\r\nBig thanks to each mod creator. Each mod available in Mod Manager is the property of its respective creator.\r\nOn each mod, you have a link to the mod Github. Don't hesitate check their Github, star their mods or follow them !";
+            CreditsContent.Text = "Mod Manager was created by Matux.\r\n" +
+                "\r\n" +
+                "Big thanks to each mod creator. Each mod available in Mod Manager is the property of its respective creator.\r\n" +
+                "On each mod, you have a link to the mod Github. Don't hesitate check their Github, star their mods or follow them !\r\n" +
+                "\r\n" +
+                "Also big thanks to Bloody, Minority, NazzyDragon, Neuronz and YouKnowWho for their help on Mod Manager discord server";
             CreditsContent.Cursor = Cursors.Arrow;
             this.modManager.Controls.Add(CreditsContent);
             p.addControl(CreditsContent);
@@ -818,6 +823,11 @@ namespace ModManager
 
         public void openInstalled(object sender, EventArgs e)
         {
+            this.openInstalledWorker();
+        }
+
+        public void openInstalledWorker()
+        {
             string installed = "";
             foreach (InstalledMod m in this.modManager.config.installedMods)
             {
@@ -826,7 +836,8 @@ namespace ModManager
             if (installed == "")
             {
                 installed = "No mod installed";
-            } else
+            }
+            else
             {
                 installed = installed.Substring(0, installed.Length - 2);
             }

@@ -1,1 +1,0 @@
-explorer.exe "D:\Program Files\Steam\steamapps\common\Among Us\Among Us.exe"

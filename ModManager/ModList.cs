@@ -307,20 +307,22 @@ namespace ModManager
             {
                 this.installDependencies();
                 string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
-
-                bool foundDll = false;
+                List<string> plugins = new List<string>();
                 foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
                     {
                         string fileName = tab.Name;
                         if (fileName.Contains(".dll"))
                         {
-                            foundDll = true;
+                            plugins.Add(fileName);
                             this.installDll(this.modManager.currentRelease, tab);
                         }
                     }
 
-                if (foundDll)
+                if (plugins.Count != 0)
                 {
+                    InstalledMod newMod = new InstalledMod(this.currentMod.id, this.modManager.currentRelease.TagName, new List<string>(), plugins);
+                    this.modManager.config.installedMods.Add(newMod);
+                    this.modManager.config.update();
                     return;
                 }
                 foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
@@ -347,12 +349,6 @@ namespace ModManager
             {
                 client.DownloadFile(fileUrl, pluginsPath + "\\" + fileName);
             }
-
-            List<string> plugins = new List<string>();
-            plugins.Add(fileName);
-            InstalledMod newMod = new InstalledMod(this.currentMod.id, fileTag, new List<string>(), plugins);
-            this.modManager.config.installedMods.Add(newMod);
-            this.modManager.config.update();
             return;
         }
 
@@ -484,7 +480,9 @@ namespace ModManager
                 return;
             }
             string code = this.modManager.pagelist.get("Installed").getControl("UploadCodeTextbox").Text;
+            this.modManager.pagelist.get("Installed").getControl("UploadCodeButton").BackColor = System.Drawing.Color.Orange;
             this.installFromCode(code);
+            this.modManager.pagelist.get("Installed").getControl("UploadCodeButton").BackColor = System.Drawing.SystemColors.ControlText;
             MessageBox.Show("Mods from code have been installed", "Mods installed", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -502,7 +500,8 @@ namespace ModManager
                 }
                 i++;
             }
-            
+            this.modManager.pagelist.openInstalledWorker();
+                return;
         }
 
         private static readonly Dictionary<char, string> hexCharacterToBinary = new Dictionary<char, string> {
