@@ -126,10 +126,13 @@
     <value>Microsoft Sans Serif, 30pt</value>
   </data>
   <data name="mainTitle.Location" type="System.Drawing.Point, System.Drawing">
-    <value>217, 10</value>
+    <value>317, 9</value>
+  </data>
+  <data name="mainTitle.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="mainTitle.Size" type="System.Drawing.Size, System.Drawing">
-    <value>842, 58</value>
+    <value>632, 47</value>
   </data>
   <assembly alias="mscorlib" name="mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089" />
   <data name="mainTitle.TabIndex" type="System.Int32, mscorlib">
@@ -160,10 +163,13 @@
     <value>Microsoft Sans Serif, 12pt</value>
   </data>
   <data name="VersionField.Location" type="System.Drawing.Point, System.Drawing">
-    <value>1102, 603</value>
+    <value>1140, 625</value>
+  </data>
+  <data name="VersionField.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="VersionField.Size" type="System.Drawing.Size, System.Drawing">
-    <value>155, 25</value>
+    <value>123, 20</value>
   </data>
   <data name="VersionField.TabIndex" type="System.Int32, mscorlib">
     <value>10</value>
@@ -189,11 +195,17 @@
   <data name="AmongUsSelectionPopup.SelectedPath" xml:space="preserve">
     <value>C:\</value>
   </data>
+  <data name="separator1.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="separator1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 74</value>
+    <value>9, 60</value>
+  </data>
+  <data name="separator1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="separator1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1258, 5</value>
+    <value>1270, 4</value>
   </data>
   <data name="separator1.TabIndex" type="System.Int32, mscorlib">
     <value>26</value>
@@ -211,10 +223,13 @@
     <value>1</value>
   </data>
   <data name="label1.Location" type="System.Drawing.Point, System.Drawing">
-    <value>12, 581</value>
+    <value>5, 607</value>
+  </data>
+  <data name="label1.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
+    <value>2, 0, 2, 0</value>
   </data>
   <data name="label1.Size" type="System.Drawing.Size, System.Drawing">
-    <value>1258, 5</value>
+    <value>1270, 4</value>
   </data>
   <data name="label1.TabIndex" type="System.Int32, mscorlib">
     <value>27</value>
@@ -238,10 +253,10 @@
     <value>25</value>
   </metadata>
   <data name="$this.AutoScaleDimensions" type="System.Drawing.SizeF, System.Drawing">
-    <value>8, 16</value>
+    <value>6, 13</value>
   </data>
   <data name="$this.ClientSize" type="System.Drawing.Size, System.Drawing">
-    <value>1282, 653</value>
+    <value>1284, 661</value>
   </data>
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
@@ -649,8 +664,11 @@
         ////8AAA////////////8AAA
 </value>
   </data>
+  <data name="$this.ImeMode" type="System.Windows.Forms.ImeMode, System.Windows.Forms">
+    <value>NoControl</value>
+  </data>
   <data name="$this.Margin" type="System.Windows.Forms.Padding, System.Windows.Forms">
-    <value>3, 4, 3, 4</value>
+    <value>2, 3, 2, 3</value>
   </data>
   <data name="$this.Text" xml:space="preserve">
     <value>Mod Manager</value>

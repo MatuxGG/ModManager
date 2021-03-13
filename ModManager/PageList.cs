@@ -147,7 +147,7 @@ namespace ModManager
 
             PictureBox AnnouncePic = new System.Windows.Forms.PictureBox();
             AnnouncePic.Image = global::ModManager.Properties.Resources.announce;
-            AnnouncePic.Location = new System.Drawing.Point(800, 15);
+            AnnouncePic.Location = new System.Drawing.Point(1130, 15);
             AnnouncePic.Name = "AnnouncePic";
             AnnouncePic.Size = new System.Drawing.Size(30, 30);
             AnnouncePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -160,7 +160,7 @@ namespace ModManager
 
             PictureBox SettingsPic = new System.Windows.Forms.PictureBox();
             SettingsPic.Image = global::ModManager.Properties.Resources.settings;
-            SettingsPic.Location = new System.Drawing.Point(850, 15);
+            SettingsPic.Location = new System.Drawing.Point(1180, 15);
             SettingsPic.Name = "SettingsPic";
             SettingsPic.Size = new System.Drawing.Size(30, 30);
             SettingsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -173,7 +173,7 @@ namespace ModManager
 
             PictureBox ThanksPic = new System.Windows.Forms.PictureBox();
             ThanksPic.Image = global::ModManager.Properties.Resources.thanks;
-            ThanksPic.Location = new System.Drawing.Point(900, 15);
+            ThanksPic.Location = new System.Drawing.Point(1230, 15);
             ThanksPic.Name = "ThanksPic";
             ThanksPic.Size = new System.Drawing.Size(30, 30);
             ThanksPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
@@ -187,7 +187,7 @@ namespace ModManager
             Button RemoveModsButton = new System.Windows.Forms.Button();
             RemoveModsButton.BackColor = System.Drawing.Color.Red;
             RemoveModsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            RemoveModsButton.Location = new System.Drawing.Point(20, 485);
+            RemoveModsButton.Location = new System.Drawing.Point(20, 620);
             RemoveModsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             RemoveModsButton.Name = "RemoveModsButton";
             RemoveModsButton.Size = new System.Drawing.Size(200, 32);
@@ -200,7 +200,7 @@ namespace ModManager
             Button PlayGameButton = new System.Windows.Forms.Button();
             PlayGameButton.BackColor = System.Drawing.Color.Lime;
             PlayGameButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            PlayGameButton.Location = new System.Drawing.Point(250, 485);
+            PlayGameButton.Location = new System.Drawing.Point(250, 620);
             PlayGameButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             PlayGameButton.Name = "PlayGameButton";
             PlayGameButton.Size = new System.Drawing.Size(100, 32);
@@ -212,7 +212,7 @@ namespace ModManager
             Button InstalledModsButton = new System.Windows.Forms.Button();
             InstalledModsButton.BackColor = System.Drawing.Color.Lime;
             InstalledModsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            InstalledModsButton.Location = new System.Drawing.Point(380, 485);
+            InstalledModsButton.Location = new System.Drawing.Point(380, 620);
             InstalledModsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             InstalledModsButton.Name = "InstalledModsButton";
             InstalledModsButton.Size = new System.Drawing.Size(200, 32);
@@ -221,15 +221,15 @@ namespace ModManager
             this.modManager.Controls.Add(InstalledModsButton);
             p.addControl(InstalledModsButton);
 
-            System.Windows.Forms.Label ModListLabel = new System.Windows.Forms.Label();
-            ModListLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModListLabel.ForeColor = System.Drawing.SystemColors.Control;
-            ModListLabel.Location = new System.Drawing.Point(20, 85);
-            ModListLabel.Name = "ModListLabel";
-            ModListLabel.Size = new System.Drawing.Size(150, 50);
-            ModListLabel.Text = "Mods available :";
-            this.modManager.Controls.Add(ModListLabel);
-            p.addControl(ModListLabel);
+            System.Windows.Forms.Label CatListLabel = new System.Windows.Forms.Label();
+            CatListLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            CatListLabel.ForeColor = System.Drawing.SystemColors.Control;
+            CatListLabel.Location = new System.Drawing.Point(20, 85);
+            CatListLabel.Name = "CatListLabel";
+            CatListLabel.Size = new System.Drawing.Size(150, 50);
+            CatListLabel.Text = "Category :";
+            this.modManager.Controls.Add(CatListLabel);
+            p.addControl(CatListLabel);
 
             ComboBox CatListCombo = new System.Windows.Forms.ComboBox();
             CatListCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -241,9 +241,19 @@ namespace ModManager
             this.modManager.Controls.Add(CatListCombo);
             p.addControl(CatListCombo);
 
+            System.Windows.Forms.Label ModListLabel = new System.Windows.Forms.Label();
+            ModListLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModListLabel.ForeColor = System.Drawing.SystemColors.Control;
+            ModListLabel.Location = new System.Drawing.Point(620, 85);
+            ModListLabel.Name = "ModListLabel";
+            ModListLabel.Size = new System.Drawing.Size(150, 50);
+            ModListLabel.Text = "Available mods :";
+            this.modManager.Controls.Add(ModListLabel);
+            p.addControl(ModListLabel);
+
             ComboBox ModListCombo = new System.Windows.Forms.ComboBox();
             ModListCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModListCombo.Location = new System.Drawing.Point(550, 80);
+            ModListCombo.Location = new System.Drawing.Point(800, 80);
             ModListCombo.Name = "ModListCombo";
             ModListCombo.Size = new System.Drawing.Size(300, 50);
             ModListCombo.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -292,7 +302,7 @@ namespace ModManager
             System.Windows.Forms.Label GameVersionTitle = new System.Windows.Forms.Label();
             GameVersionTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             GameVersionTitle.ForeColor = System.Drawing.SystemColors.Control;
-            GameVersionTitle.Location = new System.Drawing.Point(420, 160);
+            GameVersionTitle.Location = new System.Drawing.Point(620, 160);
             GameVersionTitle.Name = "GameVersionTitle";
             GameVersionTitle.Size = new System.Drawing.Size(150, 25);
             GameVersionTitle.Text = "Game version :";
@@ -302,7 +312,7 @@ namespace ModManager
             System.Windows.Forms.Label GameVersionLabel = new System.Windows.Forms.Label();
             GameVersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             GameVersionLabel.ForeColor = System.Drawing.SystemColors.Control;
-            GameVersionLabel.Location = new System.Drawing.Point(600, 160);
+            GameVersionLabel.Location = new System.Drawing.Point(800, 160);
             GameVersionLabel.Name = "GameVersionLabel";
             GameVersionLabel.Size = new System.Drawing.Size(200, 25);
             this.modManager.Controls.Add(GameVersionLabel);
@@ -346,7 +356,7 @@ namespace ModManager
             DescriptionLabel.BorderStyle = BorderStyle.FixedSingle;
             DescriptionLabel.Location = new System.Drawing.Point(20, 250);
             DescriptionLabel.Name = "DescriptionLabel";
-            DescriptionLabel.Size = new System.Drawing.Size(920, 160);
+            DescriptionLabel.Size = new System.Drawing.Size(1245, 300);
             DescriptionLabel.ScrollBars = ScrollBars.Vertical;
             DescriptionLabel.Multiline = true;
             DescriptionLabel.WordWrap = true;
@@ -359,7 +369,7 @@ namespace ModManager
             Button InstallModButton = new System.Windows.Forms.Button();
             InstallModButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             InstallModButton.ForeColor = System.Drawing.SystemColors.Control;
-            InstallModButton.Location = new System.Drawing.Point(20, 425);
+            InstallModButton.Location = new System.Drawing.Point(20, 565);
             InstallModButton.Name = "InstallModButton";
             InstallModButton.Size = new System.Drawing.Size(150, 32);
             InstallModButton.Text = "Install mod";
@@ -371,7 +381,7 @@ namespace ModManager
             Button UninstallModButton = new System.Windows.Forms.Button();
             UninstallModButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UninstallModButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            UninstallModButton.Location = new System.Drawing.Point(20, 425);
+            UninstallModButton.Location = new System.Drawing.Point(20, 565);
             UninstallModButton.Name = "UninstallModButton";
             UninstallModButton.Size = new System.Drawing.Size(150, 32);
             UninstallModButton.Text = "Uninstall mod";
@@ -384,7 +394,7 @@ namespace ModManager
             UpdateModButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UpdateModButton.Visible = false;
             UpdateModButton.ForeColor = System.Drawing.SystemColors.Control;
-            UpdateModButton.Location = new System.Drawing.Point(220, 425);
+            UpdateModButton.Location = new System.Drawing.Point(220, 565);
             UpdateModButton.Name = "UpdateModButton";
             UpdateModButton.Size = new System.Drawing.Size(150, 32);
             UpdateModButton.Text = "Update mod";
@@ -413,12 +423,12 @@ namespace ModManager
 
             System.Windows.Forms.Label InstalledTitle = new System.Windows.Forms.Label();
             InstalledTitle.TextAlign = ContentAlignment.MiddleCenter;
-            InstalledTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            InstalledTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             InstalledTitle.ForeColor = System.Drawing.SystemColors.Control;
             InstalledTitle.Location = new System.Drawing.Point(20, 80);
             InstalledTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             InstalledTitle.Name = "InstalledTitle";
-            InstalledTitle.Size = new System.Drawing.Size(920, 40);
+            InstalledTitle.Size = new System.Drawing.Size(1245, 40);
             InstalledTitle.Text = "Installed mods";
             this.modManager.Controls.Add(InstalledTitle);
             p.addControl(InstalledTitle);
@@ -432,7 +442,7 @@ namespace ModManager
             InstalledModsContent.Location = new System.Drawing.Point(20, 130);
             InstalledModsContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             InstalledModsContent.Name = "InstalledModsContent";
-            InstalledModsContent.Size = new System.Drawing.Size(920, 90);
+            InstalledModsContent.Size = new System.Drawing.Size(1245, 90);
             InstalledModsContent.Cursor = Cursors.Arrow;
             this.modManager.Controls.Add(InstalledModsContent);
             p.addControl(InstalledModsContent);
@@ -513,12 +523,12 @@ namespace ModManager
 
             System.Windows.Forms.Label AnnounceTitle = new System.Windows.Forms.Label();
             AnnounceTitle.TextAlign = ContentAlignment.MiddleCenter;
-            AnnounceTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AnnounceTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AnnounceTitle.ForeColor = System.Drawing.SystemColors.Control;
             AnnounceTitle.Location = new System.Drawing.Point(20, 80);
             AnnounceTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             AnnounceTitle.Name = "AnnounceTitle";
-            AnnounceTitle.Size = new System.Drawing.Size(920, 40);
+            AnnounceTitle.Size = new System.Drawing.Size(1245, 40);
             AnnounceTitle.Text = "News";
             this.modManager.Controls.Add(AnnounceTitle);
             p.addControl(AnnounceTitle);
@@ -532,7 +542,7 @@ namespace ModManager
             AnnounceContent.Location = new System.Drawing.Point(20, 130);
             AnnounceContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             AnnounceContent.Name = "AnnounceContent";
-            AnnounceContent.Size = new System.Drawing.Size(920, 330);
+            AnnounceContent.Size = new System.Drawing.Size(1245, 330);
             AnnounceContent.Cursor = Cursors.Arrow;
 
             using (var client = new WebClient())
@@ -564,12 +574,12 @@ namespace ModManager
 
             System.Windows.Forms.Label SettingsTitle = new System.Windows.Forms.Label();
             SettingsTitle.TextAlign = ContentAlignment.MiddleCenter;
-            SettingsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            SettingsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             SettingsTitle.ForeColor = System.Drawing.SystemColors.Control;
             SettingsTitle.Location = new System.Drawing.Point(20, 80);
             SettingsTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             SettingsTitle.Name = "SettingsTitle";
-            SettingsTitle.Size = new System.Drawing.Size(920, 40);
+            SettingsTitle.Size = new System.Drawing.Size(1245, 40);
             SettingsTitle.Text = "Settings";
             this.modManager.Controls.Add(SettingsTitle);
             p.addControl(SettingsTitle);
@@ -689,12 +699,12 @@ namespace ModManager
 
             System.Windows.Forms.Label CreditsTitle = new System.Windows.Forms.Label();
             CreditsTitle.TextAlign = ContentAlignment.MiddleCenter;
-            CreditsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            CreditsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             CreditsTitle.ForeColor = System.Drawing.SystemColors.Control;
             CreditsTitle.Location = new System.Drawing.Point(20, 80);
             CreditsTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             CreditsTitle.Name = "CreditsTitle";
-            CreditsTitle.Size = new System.Drawing.Size(920, 30);
+            CreditsTitle.Size = new System.Drawing.Size(1245, 30);
             CreditsTitle.BackColor = System.Drawing.SystemColors.ControlText;
             CreditsTitle.Text = "Credits";
             this.modManager.Controls.Add(CreditsTitle);
@@ -709,20 +719,22 @@ namespace ModManager
             CreditsContent.Location = new System.Drawing.Point(20, 130);
             CreditsContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             CreditsContent.Name = "AnnounceContent";
-            CreditsContent.Size = new System.Drawing.Size(920, 330);
-            CreditsContent.Text = "Mod Manager was created by Matux.\r\n" +
-                "\r\n" +
-                "Big thanks to each mod creator. Each mod available in Mod Manager is the property of its respective creator.\r\n" +
-                "On each mod, you have a link to the mod Github. Don't hesitate check their Github, star their mods or follow them !\r\n" +
-                "\r\n" +
-                "Also big thanks to Bloody, Minority, NazzyDragon, Neuronz and YouKnowWho for their help on Mod Manager discord server";
+            CreditsContent.Size = new System.Drawing.Size(1245, 330);
             CreditsContent.Cursor = Cursors.Arrow;
+
+
+            using (var client = new WebClient())
+            {
+                string credits = client.DownloadString(this.modManager.serverURL + "/credits.txt");
+                CreditsContent.Text = credits;
+            }
+
             this.modManager.Controls.Add(CreditsContent);
             p.addControl(CreditsContent);
 
             PictureBox MatuxGithubLabel = new System.Windows.Forms.PictureBox();
             MatuxGithubLabel.Image = Properties.Resources.github;
-            MatuxGithubLabel.Location = new System.Drawing.Point(20, 490);
+            MatuxGithubLabel.Location = new System.Drawing.Point(20, 625);
             MatuxGithubLabel.Name = "MatuxGithubLabel";
             MatuxGithubLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             MatuxGithubLabel.TabStop = false;
@@ -734,7 +746,7 @@ namespace ModManager
 
             PictureBox MMDiscordLabel = new System.Windows.Forms.PictureBox();
             MMDiscordLabel.Image = Properties.Resources.discord;
-            MMDiscordLabel.Location = new System.Drawing.Point(70, 490);
+            MMDiscordLabel.Location = new System.Drawing.Point(70, 625);
             MMDiscordLabel.Name = "MMDiscordLabel";
             MMDiscordLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             MMDiscordLabel.TabStop = false;

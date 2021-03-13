@@ -19,7 +19,6 @@ using System.Web.Security;
 namespace ModManager
 {
 
-
     public partial class ModManager : Form
     {
         public string serverURL;
@@ -30,6 +29,7 @@ namespace ModManager
         public PageList pagelist;
         public Utils utils;
         public TextureList textureList;
+        public ServerList serverList;
 
         public Release currentRelease;
         public Boolean isNewMods;
@@ -37,8 +37,7 @@ namespace ModManager
         {
             InitializeComponent();
 
-
-            this.Size = new Size(980, 570);
+            this.Size = new Size(1300, 700);
 
             // Exit if Mod Manager already running
             if (System.Diagnostics.Process.GetProcessesByName("ModManager").Length > 1)
@@ -87,6 +86,10 @@ namespace ModManager
             this.pagelist = new PageList(this);
             this.modlist.show();
             this.textureList.show();
+
+
+            this.serverList = new ServerList(this);
+            this.serverList.update();
 
             // Choose folder if needed
             if (this.config == null || this.config.amongUsPath == null)
