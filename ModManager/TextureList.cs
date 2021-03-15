@@ -114,9 +114,16 @@ namespace ModManager
 
             this.modManager.utils.FileDelete(tempPath + "\\" + texture.id + ".zip");
             this.modManager.utils.DirectoryDelete(tempPath + "\\" + texture.id);
-            using (var client = new WebClient())
+            try {
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(this.url+"/"+texture.id+".zip", tempPath+"\\"+texture.id+".zip");
+                }
+            }
+            catch
             {
-                client.DownloadFile(this.url+"/"+texture.id+".zip", tempPath+"\\"+texture.id+".zip");
+                MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Environment.Exit(0);
             }
             ZipFile.ExtractToDirectory(tempPath + "\\" + texture.id + ".zip", tempPath);
             this.modManager.utils.DirectoryCopy(tempPath + "\\" + texture.id, this.modManager.config.amongUsPath+"\\Among Us_Data", true);

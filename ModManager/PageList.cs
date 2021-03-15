@@ -25,6 +25,270 @@ namespace ModManager
         {
             // Header
 
+            System.Windows.Forms.Label separator3 = new System.Windows.Forms.Label();
+            separator3.Location = new System.Drawing.Point(370, 0);
+            separator3.Name = "separator3";
+            separator3.BorderStyle = BorderStyle.FixedSingle;
+            separator3.BackColor = System.Drawing.SystemColors.Control;
+            separator3.Size = new System.Drawing.Size(4, 63);
+            this.modManager.Controls.Add(separator3);
+
+            PictureBox ModListButton = new System.Windows.Forms.PictureBox();
+            ModListButton.Image = global::ModManager.Properties.Resources.list;
+            ModListButton.Location = new System.Drawing.Point(390, 15);
+            ModListButton.Name = "ModListButton";
+            ModListButton.Size = new System.Drawing.Size(32, 32);
+            ModListButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            ModListButton.TabStop = false;
+            ModListButton.Cursor = Cursors.Hand;
+            ModListButton.Click += new EventHandler(this.backToMods);
+            this.modManager.Controls.Add(ModListButton);
+
+            System.Windows.Forms.Label ModListText = new System.Windows.Forms.Label();
+            ModListText.TextAlign = ContentAlignment.MiddleRight;
+            ModListText.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModListText.ForeColor = System.Drawing.SystemColors.Control;
+            ModListText.Location = new System.Drawing.Point(390, 8);
+            ModListText.Name = "ModListText";
+            ModListText.Size = new System.Drawing.Size(85, 50);
+            ModListText.Text = "Mods";
+            ModListText.Cursor = Cursors.Hand;
+            ModListText.Click += new EventHandler(this.backToMods);
+            this.modManager.Controls.Add(ModListText);
+
+            System.Windows.Forms.Label separator4 = new System.Windows.Forms.Label();
+            separator4.Location = new System.Drawing.Point(485, 0);
+            separator4.Name = "separator4";
+            separator4.BorderStyle = BorderStyle.FixedSingle;
+            separator4.BackColor = System.Drawing.SystemColors.Control;
+            separator4.Size = new System.Drawing.Size(4, 63);
+            this.modManager.Controls.Add(separator4);
+
+            PictureBox InstalledModsButton = new System.Windows.Forms.PictureBox();
+            InstalledModsButton.Image = global::ModManager.Properties.Resources.local;
+            InstalledModsButton.Location = new System.Drawing.Point(505, 15);
+            InstalledModsButton.Name = "InstalledModsButton";
+            InstalledModsButton.Size = new System.Drawing.Size(32, 32);
+            InstalledModsButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            InstalledModsButton.TabStop = false;
+            InstalledModsButton.Cursor = Cursors.Hand;
+            InstalledModsButton.Click += new EventHandler(this.openInstalled);
+            this.modManager.Controls.Add(InstalledModsButton);
+
+            System.Windows.Forms.Label InstalledModsLabel = new System.Windows.Forms.Label();
+            InstalledModsLabel.TextAlign = ContentAlignment.MiddleRight;
+            InstalledModsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            InstalledModsLabel.ForeColor = System.Drawing.SystemColors.Control;
+            InstalledModsLabel.Location = new System.Drawing.Point(505, 8);
+            InstalledModsLabel.Name = "InstalledModsLabel";
+            InstalledModsLabel.Size = new System.Drawing.Size(105, 50);
+            InstalledModsLabel.Text = "Installed";
+            InstalledModsLabel.Cursor = Cursors.Hand;
+            InstalledModsLabel.Click += new EventHandler(this.openInstalled);
+            this.modManager.Controls.Add(InstalledModsLabel);
+
+            System.Windows.Forms.Label separator5 = new System.Windows.Forms.Label();
+            separator5.Location = new System.Drawing.Point(620, 0);
+            separator5.Name = "separator5";
+            separator5.BorderStyle = BorderStyle.FixedSingle;
+            separator5.BackColor = System.Drawing.SystemColors.Control;
+            separator5.Size = new System.Drawing.Size(4, 63);
+            this.modManager.Controls.Add(separator5);
+
+            PictureBox TextureListButton = new System.Windows.Forms.PictureBox();
+            TextureListButton.Image = global::ModManager.Properties.Resources.art;
+            TextureListButton.Location = new System.Drawing.Point(640, 15);
+            TextureListButton.Name = "TextureListButton";
+            TextureListButton.Size = new System.Drawing.Size(32, 32);
+            TextureListButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            TextureListButton.TabStop = false;
+            TextureListButton.Cursor = Cursors.Hand;
+            TextureListButton.Click += new EventHandler(this.openTextures);
+            this.modManager.Controls.Add(TextureListButton);
+
+            System.Windows.Forms.Label TextureListLabel = new System.Windows.Forms.Label();
+            TextureListLabel.TextAlign = ContentAlignment.MiddleRight;
+            TextureListLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            TextureListLabel.ForeColor = System.Drawing.SystemColors.Control;
+            TextureListLabel.Location = new System.Drawing.Point(640, 8);
+            TextureListLabel.Name = "TextureListLabel";
+            TextureListLabel.Size = new System.Drawing.Size(110, 50);
+            TextureListLabel.Text = "Textures";
+            TextureListLabel.Cursor = Cursors.Hand;
+            TextureListLabel.Click += new EventHandler(this.openTextures);
+            this.modManager.Controls.Add(TextureListLabel);
+
+            System.Windows.Forms.Label separator9 = new System.Windows.Forms.Label();
+            separator9.Location = new System.Drawing.Point(760, 0);
+            separator9.Name = "separator3";
+            separator9.BorderStyle = BorderStyle.FixedSingle;
+            separator9.BackColor = System.Drawing.SystemColors.Control;
+            separator9.Size = new System.Drawing.Size(4, 63);
+            this.modManager.Controls.Add(separator9);
+
+            PictureBox ServerListPic = new System.Windows.Forms.PictureBox();
+            ServerListPic.Image = global::ModManager.Properties.Resources.list;
+            ServerListPic.Location = new System.Drawing.Point(780, 15);
+            ServerListPic.Name = "ServerListPic";
+            ServerListPic.Size = new System.Drawing.Size(32, 32);
+            ServerListPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            ServerListPic.TabStop = false;
+            ServerListPic.Cursor = Cursors.Hand;
+            ServerListPic.Click += new EventHandler(this.openServers);
+            this.modManager.Controls.Add(ServerListPic);
+
+            System.Windows.Forms.Label ServerListLabel = new System.Windows.Forms.Label();
+            ServerListLabel.TextAlign = ContentAlignment.MiddleRight;
+            ServerListLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServerListLabel.ForeColor = System.Drawing.SystemColors.Control;
+            ServerListLabel.Location = new System.Drawing.Point(780, 8);
+            ServerListLabel.Name = "ServerListLabel";
+            ServerListLabel.Size = new System.Drawing.Size(100, 50);
+            ServerListLabel.Text = "Servers";
+            ServerListLabel.Cursor = Cursors.Hand;
+            ServerListLabel.Click += new EventHandler(this.openServers);
+            this.modManager.Controls.Add(ServerListLabel);
+
+            System.Windows.Forms.Label separator6 = new System.Windows.Forms.Label();
+            separator6.Location = new System.Drawing.Point(890, 0);
+            separator6.Name = "separator6";
+            separator6.BorderStyle = BorderStyle.FixedSingle;
+            separator6.BackColor = System.Drawing.SystemColors.Control;
+            separator6.Size = new System.Drawing.Size(4, 63);
+            this.modManager.Controls.Add(separator6);
+
+            PictureBox AnnouncePic = new System.Windows.Forms.PictureBox();
+            AnnouncePic.Image = global::ModManager.Properties.Resources.announce;
+            AnnouncePic.Location = new System.Drawing.Point(910, 15);
+            AnnouncePic.Name = "AnnouncePic";
+            AnnouncePic.Size = new System.Drawing.Size(32, 32);
+            AnnouncePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            AnnouncePic.TabStop = false;
+            AnnouncePic.Cursor = Cursors.Hand;
+            AnnouncePic.Click += new EventHandler(this.openAnnounce);
+            this.modManager.Controls.Add(AnnouncePic);
+
+            System.Windows.Forms.Label AnnounceLabel = new System.Windows.Forms.Label();
+            AnnounceLabel.TextAlign = ContentAlignment.MiddleRight;
+            AnnounceLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AnnounceLabel.ForeColor = System.Drawing.SystemColors.Control;
+            AnnounceLabel.Location = new System.Drawing.Point(910, 8);
+            AnnounceLabel.Name = "AnnounceLabel";
+            AnnounceLabel.Size = new System.Drawing.Size(90, 50);
+            AnnounceLabel.Text = "News";
+            AnnounceLabel.Cursor = Cursors.Hand;
+            AnnounceLabel.Click += new EventHandler(this.openAnnounce);
+            this.modManager.Controls.Add(AnnounceLabel);
+
+            System.Windows.Forms.Label separator7 = new System.Windows.Forms.Label();
+            separator7.Location = new System.Drawing.Point(1010, 0);
+            separator7.Name = "separator7";
+            separator7.BorderStyle = BorderStyle.FixedSingle;
+            separator7.BackColor = System.Drawing.SystemColors.Control;
+            separator7.Size = new System.Drawing.Size(4, 63);
+            this.modManager.Controls.Add(separator7);
+
+            PictureBox SettingsPic = new System.Windows.Forms.PictureBox();
+            SettingsPic.Image = global::ModManager.Properties.Resources.settings;
+            SettingsPic.Location = new System.Drawing.Point(1030, 15);
+            SettingsPic.Name = "SettingsPic";
+            SettingsPic.Size = new System.Drawing.Size(32, 32);
+            SettingsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            SettingsPic.TabStop = false;
+            SettingsPic.Cursor = Cursors.Hand;
+            SettingsPic.Click += new EventHandler(this.openSettings);
+            this.modManager.Controls.Add(SettingsPic);
+
+            System.Windows.Forms.Label SettingsLabel = new System.Windows.Forms.Label();
+            SettingsLabel.TextAlign = ContentAlignment.MiddleRight;
+            SettingsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            SettingsLabel.ForeColor = System.Drawing.SystemColors.Control;
+            SettingsLabel.Location = new System.Drawing.Point(1030, 8);
+            SettingsLabel.Name = "SettingsLabel";
+            SettingsLabel.Size = new System.Drawing.Size(110, 50);
+            SettingsLabel.Text = "Settings";
+            SettingsLabel.Cursor = Cursors.Hand;
+            SettingsLabel.Click += new EventHandler(this.openSettings);
+            this.modManager.Controls.Add(SettingsLabel);
+
+            System.Windows.Forms.Label separator8 = new System.Windows.Forms.Label();
+            separator8.Location = new System.Drawing.Point(1150, 0);
+            separator8.Name = "separator8";
+            separator8.BorderStyle = BorderStyle.FixedSingle;
+            separator8.BackColor = System.Drawing.SystemColors.Control;
+            separator8.Size = new System.Drawing.Size(4, 63);
+            this.modManager.Controls.Add(separator8);
+
+            PictureBox ThanksPic = new System.Windows.Forms.PictureBox();
+            ThanksPic.Image = global::ModManager.Properties.Resources.thanks;
+            ThanksPic.Location = new System.Drawing.Point(1170, 15);
+            ThanksPic.Name = "ThanksPic";
+            ThanksPic.Size = new System.Drawing.Size(32, 32);
+            ThanksPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            ThanksPic.TabStop = false;
+            ThanksPic.Cursor = Cursors.Hand;
+            ThanksPic.Click += new EventHandler(this.openCredits);
+            this.modManager.Controls.Add(ThanksPic);
+
+            System.Windows.Forms.Label ThanksLabel = new System.Windows.Forms.Label();
+            ThanksLabel.TextAlign = ContentAlignment.MiddleRight;
+            ThanksLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ThanksLabel.ForeColor = System.Drawing.SystemColors.Control;
+            ThanksLabel.Location = new System.Drawing.Point(1170, 8);
+            ThanksLabel.Name = "ThanksLabel";
+            ThanksLabel.Size = new System.Drawing.Size(100, 50);
+            ThanksLabel.Text = "Credits";
+            ThanksLabel.Cursor = Cursors.Hand;
+            ThanksLabel.Click += new EventHandler(this.openCredits);
+            this.modManager.Controls.Add(ThanksLabel);
+
+            // Footer
+
+            PictureBox PlayGameButton = new System.Windows.Forms.PictureBox();
+            PlayGameButton.Image = global::ModManager.Properties.Resources.play;
+            PlayGameButton.Location = new System.Drawing.Point(20, 620);
+            PlayGameButton.Name = "PlayGameButton";
+            PlayGameButton.Size = new System.Drawing.Size(32, 32);
+            PlayGameButton.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            PlayGameButton.TabStop = false;
+            PlayGameButton.Cursor = Cursors.Hand;
+            PlayGameButton.Click += new EventHandler(this.launchGame);
+            this.modManager.Controls.Add(PlayGameButton);
+
+            System.Windows.Forms.Label PlayGameLabel = new System.Windows.Forms.Label();
+            PlayGameLabel.TextAlign = ContentAlignment.MiddleLeft;
+            PlayGameLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            PlayGameLabel.ForeColor = System.Drawing.SystemColors.Control;
+            PlayGameLabel.Location = new System.Drawing.Point(50, 610);
+            PlayGameLabel.Name = "PlayGameLabel";
+            PlayGameLabel.Size = new System.Drawing.Size(200, 50);
+            PlayGameLabel.Text = "Launch the game";
+            PlayGameLabel.Cursor = Cursors.Hand;
+            PlayGameLabel.Click += new EventHandler(this.launchGame);
+            this.modManager.Controls.Add(PlayGameLabel);
+
+            PictureBox MatuxGithubLabel = new System.Windows.Forms.PictureBox();
+            MatuxGithubLabel.Image = Properties.Resources.github;
+            MatuxGithubLabel.Location = new System.Drawing.Point(1050, 625);
+            MatuxGithubLabel.Name = "MatuxGithubLabel";
+            MatuxGithubLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            MatuxGithubLabel.TabStop = false;
+            MatuxGithubLabel.Cursor = Cursors.Hand;
+            MatuxGithubLabel.Size = new System.Drawing.Size(25, 25);
+            MatuxGithubLabel.Click += new EventHandler(this.openMatuxGithub);
+            this.modManager.Controls.Add(MatuxGithubLabel);
+
+            PictureBox MMDiscordLabel = new System.Windows.Forms.PictureBox();
+            MMDiscordLabel.Image = Properties.Resources.discord;
+            MMDiscordLabel.Location = new System.Drawing.Point(1100, 625);
+            MMDiscordLabel.Name = "MMDiscordLabel";
+            MMDiscordLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            MMDiscordLabel.TabStop = false;
+            MMDiscordLabel.Cursor = Cursors.Hand;
+            MMDiscordLabel.Size = new System.Drawing.Size(25, 25);
+            MMDiscordLabel.Click += new EventHandler(this.openMMDiscord);
+            this.modManager.Controls.Add(MMDiscordLabel);
+
             this.modManager.VersionField.Text = "Version " + System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
 
             // Pages init
@@ -99,21 +363,19 @@ namespace ModManager
             System.Windows.Forms.Label Step1Label = new System.Windows.Forms.Label();
             Step1Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             Step1Label.ForeColor = System.Drawing.SystemColors.Control;
-            Step1Label.Location = new System.Drawing.Point(450, 70);
+            Step1Label.Location = new System.Drawing.Point(450, 90);
             Step1Label.Name = "Step1Label";
-            Step1Label.Size = new System.Drawing.Size(450, 25);
-            Step1Label.TabIndex = 28;
+            Step1Label.Size = new System.Drawing.Size(800, 25);
             Step1Label.Text = "Step 1 : Open steam and browse Among Us files";
             this.modManager.Controls.Add(Step1Label);
             p.addControl(Step1Label);
 
             PictureBox Step1Pic = new System.Windows.Forms.PictureBox();
             Step1Pic.Image = Properties.Resources.step1;
-            Step1Pic.Location = new System.Drawing.Point(450, 80);
+            Step1Pic.Location = new System.Drawing.Point(365, 120);
             Step1Pic.Name = "Step1Pic";
-            Step1Pic.Size = new System.Drawing.Size(230, 160);
+            Step1Pic.Size = new System.Drawing.Size(600, 200);
             Step1Pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            Step1Pic.TabIndex = 26;
             Step1Pic.TabStop = false;
             this.modManager.Controls.Add(Step1Pic);
             p.addControl(Step1Pic);
@@ -121,21 +383,19 @@ namespace ModManager
             System.Windows.Forms.Label Step2Label = new System.Windows.Forms.Label();
             Step2Label.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             Step2Label.ForeColor = System.Drawing.SystemColors.Control;
-            Step2Label.Location = new System.Drawing.Point(450, 250);
+            Step2Label.Location = new System.Drawing.Point(450, 330);
             Step2Label.Name = "Step2Label";
-            Step2Label.Size = new System.Drawing.Size(450, 50);
-            Step2Label.TabIndex = 29;
+            Step2Label.Size = new System.Drawing.Size(800, 25);
             Step2Label.Text = "Step 2 : In the opened window, copy Among Us address in Windows Explorer";
             this.modManager.Controls.Add(Step2Label);
             p.addControl(Step2Label);
 
             PictureBox Step2Pic = new System.Windows.Forms.PictureBox();
             Step2Pic.Image = Properties.Resources.step2;
-            Step2Pic.Location = new System.Drawing.Point(430, 300);
+            Step2Pic.Location = new System.Drawing.Point(400, 360);
             Step2Pic.Name = "Step2Pic";
-            Step2Pic.Size = new System.Drawing.Size(450, 160);
+            Step2Pic.Size = new System.Drawing.Size(800, 230);
             Step2Pic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            Step2Pic.TabIndex = 27;
             Step2Pic.TabStop = false;
             this.modManager.Controls.Add(Step2Pic);
             p.addControl(Step2Pic);
@@ -145,97 +405,33 @@ namespace ModManager
             // Mod Selection
             p = new Page("ModSelection");
 
-            PictureBox AnnouncePic = new System.Windows.Forms.PictureBox();
-            AnnouncePic.Image = global::ModManager.Properties.Resources.announce;
-            AnnouncePic.Location = new System.Drawing.Point(1130, 15);
-            AnnouncePic.Name = "AnnouncePic";
-            AnnouncePic.Size = new System.Drawing.Size(30, 30);
-            AnnouncePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            AnnouncePic.TabStop = false;
-            AnnouncePic.Cursor = Cursors.Hand;
-            AnnouncePic.Click += new EventHandler(this.openAnnounce);
-            AnnouncePic.BringToFront();
-            this.modManager.Controls.Add(AnnouncePic);
-            p.addControl(AnnouncePic);
-
-            PictureBox SettingsPic = new System.Windows.Forms.PictureBox();
-            SettingsPic.Image = global::ModManager.Properties.Resources.settings;
-            SettingsPic.Location = new System.Drawing.Point(1180, 15);
-            SettingsPic.Name = "SettingsPic";
-            SettingsPic.Size = new System.Drawing.Size(30, 30);
-            SettingsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            SettingsPic.TabStop = false;
-            SettingsPic.Cursor = Cursors.Hand;
-            SettingsPic.Click += new EventHandler(this.openSettings);
-            SettingsPic.BringToFront();
-            this.modManager.Controls.Add(SettingsPic);
-            p.addControl(SettingsPic);
-
-            PictureBox ThanksPic = new System.Windows.Forms.PictureBox();
-            ThanksPic.Image = global::ModManager.Properties.Resources.thanks;
-            ThanksPic.Location = new System.Drawing.Point(1230, 15);
-            ThanksPic.Name = "ThanksPic";
-            ThanksPic.Size = new System.Drawing.Size(30, 30);
-            ThanksPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            ThanksPic.TabStop = false;
-            ThanksPic.Cursor = Cursors.Hand;
-            ThanksPic.Click += new EventHandler(this.openCredits);
-            ThanksPic.BringToFront();
-            this.modManager.Controls.Add(ThanksPic);
-            p.addControl(ThanksPic);
-
-            Button RemoveModsButton = new System.Windows.Forms.Button();
-            RemoveModsButton.BackColor = System.Drawing.Color.Red;
-            RemoveModsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            RemoveModsButton.Location = new System.Drawing.Point(20, 620);
-            RemoveModsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            RemoveModsButton.Name = "RemoveModsButton";
-            RemoveModsButton.Size = new System.Drawing.Size(200, 32);
-            RemoveModsButton.TabIndex = 16;
-            RemoveModsButton.Text = "Uninstall all mods";
-            RemoveModsButton.Click += new EventHandler(this.modManager.modlist.uninstallMods);
-            this.modManager.Controls.Add(RemoveModsButton);
-            p.addControl(RemoveModsButton);
-
-            Button PlayGameButton = new System.Windows.Forms.Button();
-            PlayGameButton.BackColor = System.Drawing.Color.Lime;
-            PlayGameButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            PlayGameButton.Location = new System.Drawing.Point(250, 620);
-            PlayGameButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            PlayGameButton.Name = "PlayGameButton";
-            PlayGameButton.Size = new System.Drawing.Size(100, 32);
-            PlayGameButton.Text = "Play";
-            PlayGameButton.Click += new EventHandler(this.launchGame);
-            this.modManager.Controls.Add(PlayGameButton);
-            p.addControl(PlayGameButton);
-
-            Button InstalledModsButton = new System.Windows.Forms.Button();
-            InstalledModsButton.BackColor = System.Drawing.Color.Lime;
-            InstalledModsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            InstalledModsButton.Location = new System.Drawing.Point(380, 620);
-            InstalledModsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            InstalledModsButton.Name = "InstalledModsButton";
-            InstalledModsButton.Size = new System.Drawing.Size(200, 32);
-            InstalledModsButton.Text = "Installed mods";
-            InstalledModsButton.Click += new EventHandler(this.openInstalled);
-            this.modManager.Controls.Add(InstalledModsButton);
-            p.addControl(InstalledModsButton);
+            System.Windows.Forms.Label ModsTitle = new System.Windows.Forms.Label();
+            ModsTitle.TextAlign = ContentAlignment.MiddleCenter;
+            ModsTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModsTitle.ForeColor = System.Drawing.SystemColors.Control;
+            ModsTitle.Location = new System.Drawing.Point(20, 80);
+            ModsTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            ModsTitle.Name = "ModsTitle";
+            ModsTitle.Size = new System.Drawing.Size(1245, 40);
+            ModsTitle.Text = "Available mods";
+            this.modManager.Controls.Add(ModsTitle);
+            p.addControl(ModsTitle);
 
             System.Windows.Forms.Label CatListLabel = new System.Windows.Forms.Label();
             CatListLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             CatListLabel.ForeColor = System.Drawing.SystemColors.Control;
-            CatListLabel.Location = new System.Drawing.Point(20, 85);
+            CatListLabel.Location = new System.Drawing.Point(20, 135);
             CatListLabel.Name = "CatListLabel";
-            CatListLabel.Size = new System.Drawing.Size(150, 50);
+            CatListLabel.Size = new System.Drawing.Size(150, 30);
             CatListLabel.Text = "Category :";
             this.modManager.Controls.Add(CatListLabel);
             p.addControl(CatListLabel);
 
             ComboBox CatListCombo = new System.Windows.Forms.ComboBox();
             CatListCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            CatListCombo.Location = new System.Drawing.Point(200, 80);
+            CatListCombo.Location = new System.Drawing.Point(200, 130);
             CatListCombo.Name = "CatListCombo";
-            CatListCombo.Size = new System.Drawing.Size(300, 50);
+            CatListCombo.Size = new System.Drawing.Size(300, 30);
             CatListCombo.DropDownStyle = ComboBoxStyle.DropDownList;
             CatListCombo.SelectedIndexChanged += new EventHandler(this.modManager.modlist.changeCat);
             this.modManager.Controls.Add(CatListCombo);
@@ -244,18 +440,18 @@ namespace ModManager
             System.Windows.Forms.Label ModListLabel = new System.Windows.Forms.Label();
             ModListLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModListLabel.ForeColor = System.Drawing.SystemColors.Control;
-            ModListLabel.Location = new System.Drawing.Point(620, 85);
+            ModListLabel.Location = new System.Drawing.Point(620, 135);
             ModListLabel.Name = "ModListLabel";
-            ModListLabel.Size = new System.Drawing.Size(150, 50);
+            ModListLabel.Size = new System.Drawing.Size(150, 30);
             ModListLabel.Text = "Available mods :";
             this.modManager.Controls.Add(ModListLabel);
             p.addControl(ModListLabel);
 
             ComboBox ModListCombo = new System.Windows.Forms.ComboBox();
             ModListCombo.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModListCombo.Location = new System.Drawing.Point(800, 80);
+            ModListCombo.Location = new System.Drawing.Point(800, 130);
             ModListCombo.Name = "ModListCombo";
-            ModListCombo.Size = new System.Drawing.Size(300, 50);
+            ModListCombo.Size = new System.Drawing.Size(300, 30);
             ModListCombo.DropDownStyle = ComboBoxStyle.DropDownList;
             ModListCombo.SelectedIndexChanged += new EventHandler(this.modManager.modlist.changeMod);
             this.modManager.Controls.Add(ModListCombo);
@@ -264,7 +460,7 @@ namespace ModManager
             System.Windows.Forms.Label AuthorTitle = new System.Windows.Forms.Label();
             AuthorTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AuthorTitle.ForeColor = System.Drawing.SystemColors.Control;
-            AuthorTitle.Location = new System.Drawing.Point(20, 130);
+            AuthorTitle.Location = new System.Drawing.Point(20, 170);
             AuthorTitle.Name = "AuthorTitle";
             AuthorTitle.Size = new System.Drawing.Size(150, 25);
             AuthorTitle.Text = "Author :";
@@ -274,7 +470,7 @@ namespace ModManager
             System.Windows.Forms.Label AuthorLabel = new System.Windows.Forms.Label();
             AuthorLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AuthorLabel.ForeColor = System.Drawing.SystemColors.Control;
-            AuthorLabel.Location = new System.Drawing.Point(200, 130);
+            AuthorLabel.Location = new System.Drawing.Point(200, 170);
             AuthorLabel.Name = "AuthorLabel";
             AuthorLabel.Size = new System.Drawing.Size(500, 25);
             this.modManager.Controls.Add(AuthorLabel);
@@ -283,7 +479,7 @@ namespace ModManager
             System.Windows.Forms.Label VersionTitle = new System.Windows.Forms.Label();
             VersionTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             VersionTitle.ForeColor = System.Drawing.SystemColors.Control;
-            VersionTitle.Location = new System.Drawing.Point(20, 160);
+            VersionTitle.Location = new System.Drawing.Point(20, 200);
             VersionTitle.Name = "VersionTitle";
             VersionTitle.Size = new System.Drawing.Size(150, 25);
             VersionTitle.Text = "Version :";
@@ -293,13 +489,13 @@ namespace ModManager
             System.Windows.Forms.Label VersionLabel = new System.Windows.Forms.Label();
             VersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             VersionLabel.ForeColor = System.Drawing.SystemColors.Control;
-            VersionLabel.Location = new System.Drawing.Point(200, 160);
+            VersionLabel.Location = new System.Drawing.Point(200, 200);
             VersionLabel.Name = "VersionLabel";
             VersionLabel.Size = new System.Drawing.Size(200, 25);
             this.modManager.Controls.Add(VersionLabel);
             p.addControl(VersionLabel);
 
-            System.Windows.Forms.Label GameVersionTitle = new System.Windows.Forms.Label();
+            /*System.Windows.Forms.Label GameVersionTitle = new System.Windows.Forms.Label();
             GameVersionTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             GameVersionTitle.ForeColor = System.Drawing.SystemColors.Control;
             GameVersionTitle.Location = new System.Drawing.Point(620, 160);
@@ -307,12 +503,12 @@ namespace ModManager
             GameVersionTitle.Size = new System.Drawing.Size(150, 25);
             GameVersionTitle.Text = "Game version :";
             this.modManager.Controls.Add(GameVersionTitle);
-            p.addControl(GameVersionTitle);
+            p.addControl(GameVersionTitle);*/
 
             System.Windows.Forms.Label GameVersionLabel = new System.Windows.Forms.Label();
             GameVersionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             GameVersionLabel.ForeColor = System.Drawing.SystemColors.Control;
-            GameVersionLabel.Location = new System.Drawing.Point(800, 160);
+            GameVersionLabel.Location = new System.Drawing.Point(800, 200);
             GameVersionLabel.Name = "GameVersionLabel";
             GameVersionLabel.Size = new System.Drawing.Size(200, 25);
             this.modManager.Controls.Add(GameVersionLabel);
@@ -321,7 +517,7 @@ namespace ModManager
             System.Windows.Forms.Label GithubTitle = new System.Windows.Forms.Label();
             GithubTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             GithubTitle.ForeColor = System.Drawing.SystemColors.Control;
-            GithubTitle.Location = new System.Drawing.Point(20, 190);
+            GithubTitle.Location = new System.Drawing.Point(20, 230);
             GithubTitle.Name = "GithubTitle";
             GithubTitle.Size = new System.Drawing.Size(150, 25);
             GithubTitle.Text = "Github :";
@@ -332,29 +528,19 @@ namespace ModManager
             GithubLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             GithubLabel.ForeColor = System.Drawing.SystemColors.Control;
             GithubLabel.LinkColor = System.Drawing.SystemColors.Control;
-            GithubLabel.Location = new System.Drawing.Point(200, 190);
+            GithubLabel.Location = new System.Drawing.Point(200, 230);
             GithubLabel.Name = "GithubLabel";
             GithubLabel.Size = new System.Drawing.Size(500, 25);
             GithubLabel.Click += new EventHandler(this.openGithub);
             this.modManager.Controls.Add(GithubLabel);
             p.addControl(GithubLabel);
 
-            System.Windows.Forms.Label DescriptionTitle = new System.Windows.Forms.Label();
-            DescriptionTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            DescriptionTitle.ForeColor = System.Drawing.SystemColors.Control;
-            DescriptionTitle.Location = new System.Drawing.Point(20, 220);
-            DescriptionTitle.Name = "DescriptionTitle";
-            DescriptionTitle.Size = new System.Drawing.Size(150, 25);
-            DescriptionTitle.Text = "Description :";
-            this.modManager.Controls.Add(DescriptionTitle);
-            p.addControl(DescriptionTitle);
-
             TextBox DescriptionLabel = new System.Windows.Forms.TextBox();
             DescriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             DescriptionLabel.ForeColor = System.Drawing.SystemColors.Control;
             DescriptionLabel.BackColor = System.Drawing.SystemColors.WindowText;
             DescriptionLabel.BorderStyle = BorderStyle.FixedSingle;
-            DescriptionLabel.Location = new System.Drawing.Point(20, 250);
+            DescriptionLabel.Location = new System.Drawing.Point(20, 260);
             DescriptionLabel.Name = "DescriptionLabel";
             DescriptionLabel.Size = new System.Drawing.Size(1245, 300);
             DescriptionLabel.ScrollBars = ScrollBars.Vertical;
@@ -366,60 +552,119 @@ namespace ModManager
             this.modManager.Controls.Add(DescriptionLabel);
             p.addControl(DescriptionLabel);
 
-            Button InstallModButton = new System.Windows.Forms.Button();
+            PictureBox RemoveModsPic = new System.Windows.Forms.PictureBox();
+            RemoveModsPic.Image = global::ModManager.Properties.Resources.uninstallAll;
+            RemoveModsPic.Location = new System.Drawing.Point(20, 565);
+            RemoveModsPic.Name = "RemoveModsPic";
+            RemoveModsPic.Size = new System.Drawing.Size(32, 32);
+            RemoveModsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            RemoveModsPic.TabStop = false;
+            RemoveModsPic.Cursor = Cursors.Hand;
+            RemoveModsPic.Click += new EventHandler(this.modManager.modlist.uninstallMods);
+            this.modManager.Controls.Add(RemoveModsPic);
+            p.addControl(RemoveModsPic);
+
+            Label RemoveModsButton = new System.Windows.Forms.Label();
+            RemoveModsButton.TextAlign = ContentAlignment.MiddleRight;
+            RemoveModsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            RemoveModsButton.Location = new System.Drawing.Point(20, 567);
+            RemoveModsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            RemoveModsButton.Name = "RemoveModsButton";
+            RemoveModsButton.ForeColor = System.Drawing.SystemColors.Control;
+            RemoveModsButton.TabStop = false;
+            RemoveModsButton.Cursor = Cursors.Hand;
+            RemoveModsButton.Size = new System.Drawing.Size(130, 32);
+            RemoveModsButton.TabIndex = 16;
+            RemoveModsButton.Text = "Uninstall all";
+            RemoveModsButton.ForeColor = System.Drawing.Color.Red;
+            RemoveModsButton.Click += new EventHandler(this.modManager.modlist.uninstallMods);
+            this.modManager.Controls.Add(RemoveModsButton);
+            p.addControl(RemoveModsButton);
+
+            PictureBox InstallModPic = new System.Windows.Forms.PictureBox();
+            InstallModPic.Image = global::ModManager.Properties.Resources.install;
+            InstallModPic.Location = new System.Drawing.Point(170, 565);
+            InstallModPic.Name = "InstallModPic";
+            InstallModPic.Size = new System.Drawing.Size(32, 32);
+            InstallModPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            InstallModPic.TabStop = false;
+            InstallModPic.Cursor = Cursors.Hand;
+            InstallModPic.Click += new EventHandler(this.modManager.modlist.uninstallMods);
+            this.modManager.Controls.Add(InstallModPic);
+            p.addControl(InstallModPic);
+
+            Label InstallModButton = new System.Windows.Forms.Label();
+            InstallModButton.TextAlign = ContentAlignment.MiddleRight;
             InstallModButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             InstallModButton.ForeColor = System.Drawing.SystemColors.Control;
-            InstallModButton.Location = new System.Drawing.Point(20, 565);
+            InstallModButton.Location = new System.Drawing.Point(170, 567);
             InstallModButton.Name = "InstallModButton";
-            InstallModButton.Size = new System.Drawing.Size(150, 32);
-            InstallModButton.Text = "Install mod";
-            InstallModButton.BackColor = Color.Blue;
+            InstallModButton.Size = new System.Drawing.Size(85, 32);
+            InstallModButton.Text = "Install";
+            InstallModButton.TabStop = false;
+            InstallModButton.Cursor = Cursors.Hand;
             InstallModButton.Click += new EventHandler(this.modManager.modlist.installMod);
             this.modManager.Controls.Add(InstallModButton);
             p.addControl(InstallModButton);
 
-            Button UninstallModButton = new System.Windows.Forms.Button();
+            PictureBox UninstallModPic = new System.Windows.Forms.PictureBox();
+            UninstallModPic.Image = global::ModManager.Properties.Resources.uninstall;
+            UninstallModPic.Location = new System.Drawing.Point(170, 565);
+            UninstallModPic.Name = "UninstallModPic";
+            UninstallModPic.Size = new System.Drawing.Size(32, 32);
+            UninstallModPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            UninstallModPic.TabStop = false;
+            UninstallModPic.Cursor = Cursors.Hand;
+            UninstallModPic.Click += new EventHandler(this.modManager.modlist.uninstallMods);
+            this.modManager.Controls.Add(UninstallModPic);
+            p.addControl(UninstallModPic);
+
+            Label UninstallModButton = new System.Windows.Forms.Label();
+            UninstallModButton.TextAlign = ContentAlignment.MiddleRight;
             UninstallModButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            UninstallModButton.ForeColor = System.Drawing.SystemColors.ControlText;
-            UninstallModButton.Location = new System.Drawing.Point(20, 565);
+            UninstallModButton.ForeColor = System.Drawing.SystemColors.Control;
+            UninstallModButton.Location = new System.Drawing.Point(170, 567);
             UninstallModButton.Name = "UninstallModButton";
-            UninstallModButton.Size = new System.Drawing.Size(150, 32);
-            UninstallModButton.Text = "Uninstall mod";
-            UninstallModButton.BackColor = Color.Red;
+            UninstallModButton.Size = new System.Drawing.Size(115, 32);
+            UninstallModButton.TabStop = false;
+            UninstallModButton.Cursor = Cursors.Hand;
+            UninstallModButton.Text = "Uninstall";
             UninstallModButton.Click += new EventHandler(this.modManager.modlist.uninstallMod);
             this.modManager.Controls.Add(UninstallModButton);
             p.addControl(UninstallModButton);
 
-            Button UpdateModButton = new System.Windows.Forms.Button();
+            PictureBox UpdateModPic = new System.Windows.Forms.PictureBox();
+            UpdateModPic.Image = global::ModManager.Properties.Resources.update;
+            UpdateModPic.Location = new System.Drawing.Point(300, 565);
+            UpdateModPic.Name = "UpdateModPic";
+            UpdateModPic.Size = new System.Drawing.Size(32, 32);
+            UpdateModPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            UpdateModPic.TabStop = false;
+            UpdateModPic.Cursor = Cursors.Hand;
+            UpdateModPic.Click += new EventHandler(this.modManager.modlist.updateMod);
+            this.modManager.Controls.Add(UpdateModPic);
+            p.addControl(UpdateModPic);
+
+            Label UpdateModButton = new System.Windows.Forms.Label();
+            UpdateModButton.TextAlign = ContentAlignment.MiddleRight;
             UpdateModButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UpdateModButton.Visible = false;
             UpdateModButton.ForeColor = System.Drawing.SystemColors.Control;
-            UpdateModButton.Location = new System.Drawing.Point(220, 565);
+            UpdateModButton.Location = new System.Drawing.Point(300, 567);
             UpdateModButton.Name = "UpdateModButton";
-            UpdateModButton.Size = new System.Drawing.Size(150, 32);
-            UpdateModButton.Text = "Update mod";
-            UpdateModButton.BackColor = Color.Purple;
+            UpdateModButton.Size = new System.Drawing.Size(100, 32);
+            UpdateModButton.TabStop = false;
+            UpdateModButton.Cursor = Cursors.Hand;
+            UpdateModButton.Text = "Update";
             UpdateModButton.Click += new EventHandler(this.modManager.modlist.updateMod);
             this.modManager.Controls.Add(UpdateModButton);
             p.addControl(UpdateModButton);
+            
 
             this.pages.Add(p);
 
             // Installed Mods
             p = new Page("Installed");
-
-            PictureBox BackPic4 = new System.Windows.Forms.PictureBox();
-            BackPic4.Image = Properties.Resources.back;
-            BackPic4.Location = new System.Drawing.Point(30, 20);
-            BackPic4.Name = "BackPic4";
-            BackPic4.Size = new System.Drawing.Size(25, 25);
-            BackPic4.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            BackPic4.TabIndex = 27;
-            BackPic4.TabStop = false;
-            BackPic4.Cursor = Cursors.Hand;
-            BackPic4.Click += new EventHandler(this.backToMods);
-            this.modManager.Controls.Add(BackPic4);
-            p.addControl(BackPic4);
 
             System.Windows.Forms.Label InstalledTitle = new System.Windows.Forms.Label();
             InstalledTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -503,23 +748,97 @@ namespace ModManager
             this.modManager.Controls.Add(UploadCodeButton);
             p.addControl(UploadCodeButton);
 
+            PictureBox InfoPic = new System.Windows.Forms.PictureBox();
+            InfoPic.Image = global::ModManager.Properties.Resources.info;
+            InfoPic.Location = new System.Drawing.Point(20, 340);
+            InfoPic.Name = "InfoPic";
+            InfoPic.Size = new System.Drawing.Size(32, 32);
+            InfoPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            InfoPic.TabStop = false;
+            InfoPic.Cursor = Cursors.Hand;
+            InfoPic.Click += new EventHandler(this.modManager.modlist.uninstallMods);
+            this.modManager.Controls.Add(InfoPic);
+            p.addControl(InfoPic);
+
+            System.Windows.Forms.Label InfoCodeLabel = new System.Windows.Forms.Label();
+            InfoCodeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            InfoCodeLabel.ForeColor = System.Drawing.SystemColors.Control;
+            InfoCodeLabel.Location = new System.Drawing.Point(60, 335);
+            InfoCodeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            InfoCodeLabel.Name = "InfoCodeLabel";
+            InfoCodeLabel.Size = new System.Drawing.Size(1150, 50);
+            InfoCodeLabel.Text = "You can send your code to someone. After using it, there will be same mods for both.\nYou can also enter someone's code.";
+            this.modManager.Controls.Add(InfoCodeLabel);
+            p.addControl(InfoCodeLabel);
+
+            this.pages.Add(p);
+
+            // Textures
+            p = new Page("Textures");
+
+            System.Windows.Forms.Label TexturesTitle = new System.Windows.Forms.Label();
+            TexturesTitle.TextAlign = ContentAlignment.MiddleCenter;
+            TexturesTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            TexturesTitle.ForeColor = System.Drawing.SystemColors.Control;
+            TexturesTitle.Location = new System.Drawing.Point(20, 80);
+            TexturesTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            TexturesTitle.Name = "TexturesTitle";
+            TexturesTitle.Size = new System.Drawing.Size(1245, 40);
+            TexturesTitle.Text = "Textures packs";
+            this.modManager.Controls.Add(TexturesTitle);
+            p.addControl(TexturesTitle);
+
+            System.Windows.Forms.Label TexturesContent = new System.Windows.Forms.Label();
+            TexturesContent.AutoSize = false;
+            TexturesContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            TexturesContent.ForeColor = System.Drawing.SystemColors.Control;
+            TexturesContent.BackColor = System.Drawing.SystemColors.ControlText;
+            TexturesContent.BorderStyle = BorderStyle.None;
+            TexturesContent.Location = new System.Drawing.Point(20, 130);
+            TexturesContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            TexturesContent.Name = "TexturesContent";
+            TexturesContent.Size = new System.Drawing.Size(1245, 90);
+            TexturesContent.Cursor = Cursors.Arrow;
+            TexturesContent.Text = "Coming soon ...";
+            this.modManager.Controls.Add(TexturesContent);
+            p.addControl(TexturesContent);
+
+            this.pages.Add(p);
+
+            // Textures
+            p = new Page("Servers");
+
+            System.Windows.Forms.Label ServersTitle = new System.Windows.Forms.Label();
+            ServersTitle.TextAlign = ContentAlignment.MiddleCenter;
+            ServersTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 20F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServersTitle.ForeColor = System.Drawing.SystemColors.Control;
+            ServersTitle.Location = new System.Drawing.Point(20, 80);
+            ServersTitle.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            ServersTitle.Name = "ServersTitle";
+            ServersTitle.Size = new System.Drawing.Size(1245, 40);
+            ServersTitle.Text = "Servers";
+            this.modManager.Controls.Add(ServersTitle);
+            p.addControl(ServersTitle);
+
+            System.Windows.Forms.Label ServersContent = new System.Windows.Forms.Label();
+            ServersContent.AutoSize = false;
+            ServersContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServersContent.ForeColor = System.Drawing.SystemColors.Control;
+            ServersContent.BackColor = System.Drawing.SystemColors.ControlText;
+            ServersContent.BorderStyle = BorderStyle.None;
+            ServersContent.Location = new System.Drawing.Point(20, 130);
+            ServersContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            ServersContent.Name = "ServersContent";
+            ServersContent.Size = new System.Drawing.Size(1245, 90);
+            ServersContent.Cursor = Cursors.Arrow;
+            ServersContent.Text = "Coming soon ...";
+            this.modManager.Controls.Add(ServersContent);
+            p.addControl(ServersContent);
+
             this.pages.Add(p);
 
             // Announce
             p = new Page("Announce");
-
-            PictureBox BackPic3 = new System.Windows.Forms.PictureBox();
-            BackPic3.Image = Properties.Resources.back;
-            BackPic3.Location = new System.Drawing.Point(30, 20);
-            BackPic3.Name = "BackPic3";
-            BackPic3.Size = new System.Drawing.Size(25, 25);
-            BackPic3.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            BackPic3.TabIndex = 27;
-            BackPic3.TabStop = false;
-            BackPic3.Cursor = Cursors.Hand;
-            BackPic3.Click += new EventHandler(this.backToMods);
-            this.modManager.Controls.Add(BackPic3);
-            p.addControl(BackPic3);
 
             System.Windows.Forms.Label AnnounceTitle = new System.Windows.Forms.Label();
             AnnounceTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -545,10 +864,17 @@ namespace ModManager
             AnnounceContent.Size = new System.Drawing.Size(1245, 330);
             AnnounceContent.Cursor = Cursors.Arrow;
 
-            using (var client = new WebClient())
+            try { 
+                using (var client = new WebClient())
+                {
+                    string news = client.DownloadString(this.modManager.serverURL + "/news.txt");
+                    AnnounceContent.Text = news;
+                }
+            }
+            catch
             {
-                string news = client.DownloadString(this.modManager.serverURL + "/news.txt");
-                AnnounceContent.Text = news;
+                MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Environment.Exit(0);
             }
 
             this.modManager.Controls.Add(AnnounceContent);
@@ -558,19 +884,6 @@ namespace ModManager
 
             // Settings
             p = new Page("Settings");
-
-            PictureBox BackPic = new System.Windows.Forms.PictureBox();
-            BackPic.Image = Properties.Resources.back;
-            BackPic.Location = new System.Drawing.Point(30, 20);
-            BackPic.Name = "BackPic";
-            BackPic.Size = new System.Drawing.Size(25, 25);
-            BackPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            BackPic.TabIndex = 27;
-            BackPic.TabStop = false;
-            BackPic.Cursor = Cursors.Hand;
-            BackPic.Click += new EventHandler(this.backToMods);
-            this.modManager.Controls.Add(BackPic);
-            p.addControl(BackPic);
 
             System.Windows.Forms.Label SettingsTitle = new System.Windows.Forms.Label();
             SettingsTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -587,7 +900,7 @@ namespace ModManager
             System.Windows.Forms.Label AmongUsDirSwitchLabel = new System.Windows.Forms.Label();
             AmongUsDirSwitchLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsDirSwitchLabel.ForeColor = System.Drawing.SystemColors.Control;
-            AmongUsDirSwitchLabel.Location = new System.Drawing.Point(20, 130);
+            AmongUsDirSwitchLabel.Location = new System.Drawing.Point(20, 150);
             AmongUsDirSwitchLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             AmongUsDirSwitchLabel.Name = "AmongUsDirSwitchLabel";
             AmongUsDirSwitchLabel.Size = new System.Drawing.Size(200, 20);
@@ -598,7 +911,7 @@ namespace ModManager
 
             Button AmongUsDirSwitchButton = new System.Windows.Forms.Button();
             AmongUsDirSwitchButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            AmongUsDirSwitchButton.Location = new System.Drawing.Point(250, 130);
+            AmongUsDirSwitchButton.Location = new System.Drawing.Point(250, 150);
             AmongUsDirSwitchButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             AmongUsDirSwitchButton.Name = "AmongUsDirSwitchButton";
             AmongUsDirSwitchButton.Size = new System.Drawing.Size(150, 30);
@@ -611,7 +924,7 @@ namespace ModManager
 
             Button OpenAmongUs = new System.Windows.Forms.Button();
             OpenAmongUs.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            OpenAmongUs.Location = new System.Drawing.Point(450, 130);
+            OpenAmongUs.Location = new System.Drawing.Point(450, 150);
             OpenAmongUs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             OpenAmongUs.Name = "OpenAmongUs";
             OpenAmongUs.Size = new System.Drawing.Size(150, 30);
@@ -623,7 +936,7 @@ namespace ModManager
             p.addControl(OpenAmongUs);
 
             System.Windows.Forms.Label TextureLabel = new System.Windows.Forms.Label();
-            TextureLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            /*TextureLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             TextureLabel.ForeColor = System.Drawing.SystemColors.Control;
             TextureLabel.Location = new System.Drawing.Point(20, 180);
             TextureLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -655,12 +968,12 @@ namespace ModManager
             TextureWaitLabel.TabIndex = 12;
             TextureWaitLabel.Text = "";
             this.modManager.Controls.Add(TextureWaitLabel);
-            p.addControl(TextureWaitLabel);
+            p.addControl(TextureWaitLabel);*/
 
             System.Windows.Forms.Label ForegreenFixLabel = new System.Windows.Forms.Label();
             ForegreenFixLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ForegreenFixLabel.ForeColor = System.Drawing.SystemColors.Control;
-            ForegreenFixLabel.Location = new System.Drawing.Point(20, 230);
+            ForegreenFixLabel.Location = new System.Drawing.Point(20, 200);
             ForegreenFixLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ForegreenFixLabel.Name = "ForegreenFixLabel";
             ForegreenFixLabel.Size = new System.Drawing.Size(200, 20);
@@ -670,7 +983,7 @@ namespace ModManager
 
             Button ForegreenFixButton = new System.Windows.Forms.Button();
             ForegreenFixButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ForegreenFixButton.Location = new System.Drawing.Point(250, 230);
+            ForegreenFixButton.Location = new System.Drawing.Point(250, 200);
             ForegreenFixButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ForegreenFixButton.Name = "ForegreenFixButton";
             ForegreenFixButton.Size = new System.Drawing.Size(150, 30);
@@ -684,18 +997,6 @@ namespace ModManager
 
             // Credits
             p = new Page("Credits");
-
-            PictureBox BackPic2 = new System.Windows.Forms.PictureBox();
-            BackPic2.Image = Properties.Resources.back;
-            BackPic2.Location = new System.Drawing.Point(30, 20);
-            BackPic2.Name = "BackPic2";
-            BackPic2.Size = new System.Drawing.Size(25, 25);
-            BackPic2.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            BackPic2.TabStop = false;
-            BackPic2.Cursor = Cursors.Hand;
-            BackPic2.Click += new EventHandler(this.backToMods);
-            this.modManager.Controls.Add(BackPic);
-            p.addControl(BackPic);
 
             System.Windows.Forms.Label CreditsTitle = new System.Windows.Forms.Label();
             CreditsTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -722,48 +1023,39 @@ namespace ModManager
             CreditsContent.Size = new System.Drawing.Size(1245, 330);
             CreditsContent.Cursor = Cursors.Arrow;
 
-
-            using (var client = new WebClient())
+            try {
+                using (var client = new WebClient())
+                {
+                    string credits = client.DownloadString(this.modManager.serverURL + "/credits.txt");
+                    CreditsContent.Text = credits;
+                }
+            }
+            catch
             {
-                string credits = client.DownloadString(this.modManager.serverURL + "/credits.txt");
-                CreditsContent.Text = credits;
+                MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Environment.Exit(0);
             }
 
             this.modManager.Controls.Add(CreditsContent);
             p.addControl(CreditsContent);
-
-            PictureBox MatuxGithubLabel = new System.Windows.Forms.PictureBox();
-            MatuxGithubLabel.Image = Properties.Resources.github;
-            MatuxGithubLabel.Location = new System.Drawing.Point(20, 625);
-            MatuxGithubLabel.Name = "MatuxGithubLabel";
-            MatuxGithubLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            MatuxGithubLabel.TabStop = false;
-            MatuxGithubLabel.Cursor = Cursors.Hand;
-            MatuxGithubLabel.Size = new System.Drawing.Size(25, 25);
-            MatuxGithubLabel.Click += new EventHandler(this.openMatuxGithub);
-            this.modManager.Controls.Add(MatuxGithubLabel);
-            p.addControl(MatuxGithubLabel);
-
-            PictureBox MMDiscordLabel = new System.Windows.Forms.PictureBox();
-            MMDiscordLabel.Image = Properties.Resources.discord;
-            MMDiscordLabel.Location = new System.Drawing.Point(70, 625);
-            MMDiscordLabel.Name = "MMDiscordLabel";
-            MMDiscordLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            MMDiscordLabel.TabStop = false;
-            MMDiscordLabel.Cursor = Cursors.Hand;
-            MMDiscordLabel.Size = new System.Drawing.Size(25, 25);
-            MMDiscordLabel.Click += new EventHandler(this.openMMDiscord);
-            this.modManager.Controls.Add(MMDiscordLabel);
-            p.addControl(MMDiscordLabel);
 
             this.pages.Add(p);
         }
 
         public void renderPage(string page)
         {
+            if (page != "PathSelection" && this.modManager.firstStart == true)
+            {
+                this.enableHeader();
+                this.modManager.firstStart = false;
+            }
             foreach (Page p in this.pages)
             {
                 p.hide();
+            }
+            if (page == "PathSelection" && this.modManager.firstStart == true)
+            {
+                this.disableHeader();
             }
             this.get(page).show();
             if (page == "PathSelection")
@@ -778,6 +1070,42 @@ namespace ModManager
                 this.modManager.modlist.load();
                 this.modManager.modlist.changeModWorker();
             }
+        }
+
+        private void disableHeader()
+        {
+            foreach (Control c in this.modManager.Controls)
+            {
+                if (c.Name != "mainTitle" && c.Name != "Version" && c.Name != "separator1" && c.Name != "separator2" && c.Name != "VersionField" && c.Name != "AmongUsSelectionPopup")
+                {
+                    c.Hide();
+                }
+            }
+        }
+
+        private void enableHeader()
+        {
+            List<string> pagesControls = this.getAllPagesNames();
+            foreach (Control c in this.modManager.Controls)
+            {
+                if (!pagesControls.Contains(c.Name))
+                {
+                    c.Show();
+                }
+            }
+        }
+
+        public List<string> getAllPagesNames()
+        {
+            List<string> retour = new List<string>();
+            foreach (Page p in this.pages)
+            {
+                foreach (Control c in p.controls)
+                {
+                    retour.Add(c.Name);
+                }
+            }
+            return retour;
         }
 
         public Page get(string name)
@@ -818,7 +1146,6 @@ namespace ModManager
                 this.modManager.config = new Config(pathSelect.Text, new List<InstalledMod>(), new List<string>(), "None");
                 string json = JsonConvert.SerializeObject(this.modManager.config);
                 File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager\\config3.conf", json);
-
                 this.renderPage("ModSelection");
             }
         }
@@ -866,16 +1193,23 @@ namespace ModManager
 
         public void launchGame(object sender, EventArgs e)
         {
+            
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
-                return;
+                if (MessageBox.Show("Among Us is already running or is starting.\nDo you really want to open it again ?", "Among Us already running", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+                {
+                    return;
+                }
             }
-
+            /*
             string batpath = this.modManager.appPath + "\\openGame.cmd";
             this.modManager.utils.FileDelete(batpath);
             File.WriteAllText(batpath, "explorer.exe \"" + this.modManager.config.amongUsPath + "\\Among Us.exe" + "\"");
             Process.Start(batpath);
-            
+            */
+
+            Process.Start("steam://rungameid/945360");
+
         }
         public void openAnnounce(object sender, EventArgs e)
         {
@@ -886,6 +1220,16 @@ namespace ModManager
             this.renderPage("Settings");
         }
 
+        public void openServers(object sender, EventArgs e)
+        {
+            this.renderPage("Servers");
+        }
+
+        public void openTextures(object sender, EventArgs e)
+        {
+            this.renderPage("Textures");
+        }
+
         public void backToMods(object sender, EventArgs e)
         {
             this.renderPage("ModSelection");
@@ -893,8 +1237,14 @@ namespace ModManager
 
         public void fixForegreen(object sender, EventArgs e)
         {
-            string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\..\\LocalLow\\Innersloth\\Among Us\\playerPrefs";
-            this.modManager.utils.FileDelete(path);
+            if (MessageBox.Show("Be careful ! Don't use this button if you don't have this issue !\n\n" +
+                "This option will only help you if you can't use settings in game creation and your skin is green.\n" +
+                "This will also reset all your game settings like pseudo, color, hat, ..." +
+                "There is no consequence on your stats tho.", "Fix foregreen skin", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            {
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\..\\LocalLow\\Innersloth\\Among Us\\playerPrefs";
+                this.modManager.utils.FileDelete(path);
+            }
         }
 
 

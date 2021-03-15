@@ -88,7 +88,6 @@ namespace ModManager
         public Boolean isUpTodate(string id, string version) {
             foreach (InstalledMod m in this.installedMods)
             {
-                
                 if (m.id == id && m.version == version)
                 {
                     return true;

@@ -32,18 +32,24 @@ namespace ModManager
         public ServerList serverList;
 
         public Release currentRelease;
-        public Boolean isNewMods;
+        public bool isNewMods;
+        public bool firstStart;
         public ModManager()
         {
             InitializeComponent();
+
+            this.firstStart = true;
 
             this.Size = new Size(1300, 700);
 
             // Exit if Mod Manager already running
             if (System.Diagnostics.Process.GetProcessesByName("ModManager").Length > 1)
             {
+                MessageBox.Show("Mod Manager is already running", "Mod Manager running", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
+
+            this.updateStatus("");
 
             this.serverURL = "https://mm.matux.fr";
             this.curVersion = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
@@ -57,23 +63,33 @@ namespace ModManager
             // Remove unused files directory
             this.utils.DirectoryDelete(this.appPath + "\\files");
 
-            using (WebClient client = new WebClient())
+            try
             {
-                string version = client.DownloadString(this.serverURL+"/version.txt");
-                if (Version.Parse(version) > curVersion)
+
+                using (WebClient client = new WebClient())
                 {
-                    if (MessageBox.Show("There is a new version of Mod Manager available, would you like to download it ?", "Mod Manager Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    string version = client.DownloadString(this.serverURL + "/version.txt");
+                    if (Version.Parse(version) > curVersion)
                     {
-                        FileInfo installer = new FileInfo(this.appPath + "\\ModManagerInstaller.exe");
-                        if (installer.Exists)
+                        if (MessageBox.Show("There is a new version of Mod Manager available, would you like to download it ?", "Mod Manager Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                         {
-                            this.utils.FileDelete(this.appPath + "\\ModManagerInstaller.exe");
+                            FileInfo installer = new FileInfo(this.appPath + "\\ModManagerInstaller.exe");
+                            if (installer.Exists)
+                            {
+                                this.utils.FileDelete(this.appPath + "\\ModManagerInstaller.exe");
+                            }
+                            client.DownloadFile(this.serverURL + "/ModManagerInstaller.exe", this.appPath + "\\ModManagerInstaller.exe");
+                            Process.Start(this.appPath + "\\ModManagerInstaller.exe");
+                            Environment.Exit(0);
                         }
-                        client.DownloadFile(this.serverURL + "/ModManagerInstaller.exe", this.appPath + "\\ModManagerInstaller.exe");
-                        Process.Start(this.appPath + "\\ModManagerInstaller.exe");
-                        Environment.Exit(0);
                     }
                 }
+
+            }
+            catch
+            {
+                MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Environment.Exit(0);
             }
 
             this.config = new Config();
@@ -85,8 +101,7 @@ namespace ModManager
             this.modlist.currentMod = this.modlist.mods.First();
             this.pagelist = new PageList(this);
             this.modlist.show();
-            this.textureList.show();
-
+            //this.textureList.show();
 
             this.serverList = new ServerList(this);
             this.serverList.update();
@@ -98,6 +113,7 @@ namespace ModManager
             }
             else
             {
+                this.firstStart = false;
                 this.pagelist.renderPage("ModSelection");
             }
 
@@ -126,6 +142,17 @@ namespace ModManager
         public void debug(string s)
         {
             MessageBox.Show(s, "DEBUG", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public void updateStatus(string content)
+        {
+            foreach (Control c in this.Controls)
+            {
+                if (c.Name == "Status")
+                {
+                    c.Text = content;
+                }
+            }
         }
 
     }

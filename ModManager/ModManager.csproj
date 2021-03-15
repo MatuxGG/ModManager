@@ -142,6 +142,9 @@
     </Content>
     <Content Include="modmanager.ico" />
     <Content Include="readme.txt" />
+    <None Include="Resources\uninstallAll.png" />
+    <None Include="Resources\update.png" />
+    <None Include="Resources\uninstall.png" />
     <None Include="Resources\back.png" />
     <None Include="Resources\thanks.png" />
     <None Include="Resources\arrow-right.png" />
@@ -149,6 +152,12 @@
     <None Include="Resources\github.png" />
     <None Include="Resources\discord.png" />
     <None Include="Resources\announce.png" />
+    <None Include="Resources\play.png" />
+    <None Include="Resources\install.png" />
+    <None Include="Resources\local.png" />
+    <None Include="Resources\list.png" />
+    <None Include="Resources\art.png" />
+    <None Include="Resources\info.png" />
     <Content Include="Resources\step1.png" />
     <Content Include="Resources\step2.png" />
     <None Include="Resources\among-us-blue.ico" />

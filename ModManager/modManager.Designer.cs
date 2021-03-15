@@ -40,7 +40,8 @@ namespace ModManager
             this.VersionField = new System.Windows.Forms.Label();
             this.AmongUsSelectionPopup = new System.Windows.Forms.FolderBrowserDialog();
             this.separator1 = new System.Windows.Forms.Label();
-            this.label1 = new System.Windows.Forms.Label();
+            this.separator2 = new System.Windows.Forms.Label();
+            this.Status = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // mainTitle
@@ -69,19 +70,26 @@ namespace ModManager
             resources.ApplyResources(this.separator1, "separator1");
             this.separator1.Name = "separator1";
             // 
-            // label1
+            // separator2
             // 
-            this.label1.BackColor = System.Drawing.SystemColors.Control;
-            this.label1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            resources.ApplyResources(this.label1, "label1");
-            this.label1.Name = "label1";
+            this.separator2.BackColor = System.Drawing.SystemColors.Control;
+            this.separator2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            resources.ApplyResources(this.separator2, "separator2");
+            this.separator2.Name = "separator2";
+            // 
+            // Status
+            // 
+            resources.ApplyResources(this.Status, "Status");
+            this.Status.ForeColor = System.Drawing.SystemColors.Control;
+            this.Status.Name = "Status";
             // 
             // ModManager
             // 
             resources.ApplyResources(this, "$this");
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.ControlText;
-            this.Controls.Add(this.label1);
+            this.Controls.Add(this.Status);
+            this.Controls.Add(this.separator2);
             this.Controls.Add(this.separator1);
             this.Controls.Add(this.VersionField);
             this.Controls.Add(this.mainTitle);
@@ -98,7 +106,8 @@ namespace ModManager
         private System.Windows.Forms.FolderBrowserDialog AmongUsSelectionPopup;
         public System.Windows.Forms.Label VersionField;
         private Label separator1;
-        private Label label1;
+        private Label separator2;
+        private Label Status;
     }
 }
 
