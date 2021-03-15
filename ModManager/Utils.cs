@@ -68,7 +68,7 @@ namespace ModManager
 
         public void FileCopy(string source, string destination)
         {
-            if (File.Exists(source) && File.Exists(destination))
+            if (File.Exists(source) && !File.Exists(destination))
             {
                 File.Copy(source, destination);
             }
