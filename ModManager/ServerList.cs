@@ -25,11 +25,7 @@ namespace ModManager
                 "",
                 "# Setting type: String",
                 "# Default value:",
-                "IP = "+ "152.228.160.91",
-                "",
-                "# Setting type: UInt16",
-                "# Default value: 22023",
-                "Port = 22023" };
+                "IP = "+ "152.228.160.91" };
 
             File.WriteAllLines(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager\\daemon.unify.reactor.cfg", content);
 

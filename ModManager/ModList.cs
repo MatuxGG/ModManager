@@ -43,7 +43,7 @@ namespace ModManager
             {
                 using (var client = new WebClient())
                 {
-                    client.DownloadFile(this.url+"/modlist.json", this.path);
+                    client.DownloadFile(this.url+"/modlist2.json", this.path);
                 }
             }
             catch
@@ -232,13 +232,33 @@ namespace ModManager
             this.modManager.currentRelease = await client.Repository.Release.GetLatest(author, repository);
         }
 
-        public void installDependencies()
+        public bool installDependencies()
         {
             try { 
                 using (var client = new WebClient())
                 {
+                    bool essentialsInstalled = false;
                     List<string> dependencies = new List<string>();
-                    dependencies.Add("BepInEx");
+                    dependencies.Add("BepInEx-2021.3.5s");
+                    foreach (string s in this.currentMod.dependencies)
+                    {
+                        if (s.Contains("Essentials"))
+                        {
+                            essentialsInstalled = true;
+                        }
+                        dependencies.Add(s);
+                    }
+                    if (essentialsInstalled == true)
+                    {
+                        foreach (string instD in this.modManager.config.installedDependencies)
+                        {
+                            if (instD.Contains("Essentials"))
+                            {
+                                return false;
+                            }
+                        }
+                    }
+
                     foreach (string dependencie in dependencies)
                     {
                         if (this.modManager.config.installedDependencies.Contains(dependencie) == false)
@@ -248,7 +268,7 @@ namespace ModManager
                             Directory.CreateDirectory(tempPath);
                             this.modManager.utils.FileDelete(tempPath + "\\" + dependencie + ".zip");
                     
-                            client.DownloadFile(this.modManager.serverURL + "/" + dependencie + ".zip", tempPath + "\\" + dependencie + ".zip");
+                            client.DownloadFile(this.modManager.serverURL + "/dependencies/" + dependencie + ".zip", tempPath + "\\" + dependencie + ".zip");
                     
                             ZipFile.ExtractToDirectory(tempPath + "\\" + dependencie + ".zip", this.modManager.config.amongUsPath);
                             this.modManager.config.installedDependencies.Add(dependencie);
@@ -262,6 +282,7 @@ namespace ModManager
                 MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
+            return true;
         }
 
         public void uninstallMod(object sender, EventArgs e)
@@ -291,8 +312,27 @@ namespace ModManager
 
         public void uninstallModWorker()
         {
+            
+
             InstalledMod installedMod = this.modManager.config.getInstalledModById(this.currentMod.id);
             string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
+
+            foreach (string modDep in this.currentMod.dependencies)
+            {
+                if (modDep.Contains("Essentials"))
+                {
+                    FileInfo[] files = new DirectoryInfo(pluginsPath).GetFiles();
+                    foreach (FileInfo plugin in files)
+                    {
+                        if (plugin.Name.Contains("Essentials"))
+                        {
+                            this.modManager.utils.FileDelete(plugin.FullName);
+                        }
+                    }
+                    this.modManager.config.installedDependencies.Remove(modDep);
+                }
+            }
+
             foreach (string plugin in installedMod.plugins)
             {
                 this.modManager.utils.FileDelete(pluginsPath + "\\" + plugin);
@@ -315,7 +355,11 @@ namespace ModManager
             }
             this.modManager.updateStatus("Update in progress. Please wait ...");
             this.uninstallModWorker();
-            this.installModWorker();
+            bool canInstall = this.installModWorker();
+            if (canInstall == false)
+            {
+                // Nothing right ?
+            }
             this.modManager.pagelist.get("ModSelection").getControl("UpdateModButton").Visible = false;
             this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").Visible = false;
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").Visible = true;
@@ -335,7 +379,13 @@ namespace ModManager
                 return;
             }
             this.modManager.updateStatus("Install in progress. Please wait ...");
-            this.installModWorker();
+            bool canInstall = this.installModWorker();
+            if (canInstall == false)
+            {
+                this.modManager.updateStatus("");
+                MessageBox.Show("Sorry, Mod Manager cannot install this mod. It is incompatible with a mod already installed", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             this.modManager.pagelist.get("ModSelection").getControl("InstallModButton").Visible = false;
             this.modManager.pagelist.get("ModSelection").getControl("InstallModPic").Visible = false;
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").Visible = true;
@@ -345,42 +395,57 @@ namespace ModManager
             return;
         }
 
-        public void installModWorker()
+        public bool installModWorker()
         {
             if (this.modManager.config.containsMod(this.currentMod.id) == false)
             {
-                this.installDependencies();
+                bool isCompat = this.installDependencies();
+                if (isCompat == false)
+                {
+                    return false;
+                }
+                
                 string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
-                List<string> plugins = new List<string>();
+                bool foundZip = false;
                 foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
+                {
+                    string fileName = tab.Name;
+                    if (fileName.Contains(".zip") && !fileName.Contains("2020.12.9s"))
                     {
-                        string fileName = tab.Name;
-                        if (fileName.Contains(".dll"))
-                        {
-                            plugins.Add(fileName);
-                            this.installDll(this.modManager.currentRelease, tab);
-                        }
+                        foundZip = true;
+                        this.installZip(this.modManager.currentRelease, tab);
+                        return true;
                     }
+                }
+
+                if (foundZip == true)
+                {
+                    return true;
+                }
+
+                List<string> plugins = new List<string>();
+
+                foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
+                {
+                    string fileName = tab.Name;
+                    if (fileName.Contains(".dll"))
+                    {
+                        plugins.Add(fileName);
+                        this.installDll(this.modManager.currentRelease, tab);
+                    }
+                }
 
                 if (plugins.Count != 0)
                 {
                     InstalledMod newMod = new InstalledMod(this.currentMod.id, this.modManager.currentRelease.TagName, new List<string>(), plugins);
                     this.modManager.config.installedMods.Add(newMod);
                     this.modManager.config.update();
-                    return;
+                    return true;
                 }
-                foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
-                    {
-                        string fileName = tab.Name;
-                        if (fileName.Contains(".zip"))
-                        {
-                            this.installZip(this.modManager.currentRelease, tab);
-                        return;
-                        }
-                    }
 
-                return;
             }
+
+            return true;
         }
 
         public void installDll(Release jObject, ReleaseAsset file)
