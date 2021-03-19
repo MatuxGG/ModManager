@@ -68,7 +68,11 @@ namespace ModManager
 
                 using (WebClient client = new WebClient())
                 {
-                    string version = client.DownloadString(this.serverURL + "/version.txt");
+                	//Add a User-Agent since GitHub returns 403 on the default
+                	client.Headers.Add("User-Agent", "Among Us ModManager");
+                	string githubResponse = client.DownloadString("https://api.github.com/repos/MatuxGG/ModManager/releases/latest");
+                	JObject parsedResponse = JObject.Parse(githubResponse);
+                	string version = (string)parsedResponse["tag_name"];
                     if (Version.Parse(version) > curVersion)
                     {
                         if (MessageBox.Show("There is a new version of Mod Manager available, would you like to download it ?", "Mod Manager Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -78,7 +82,7 @@ namespace ModManager
                             {
                                 this.utils.FileDelete(this.appPath + "\\ModManagerInstaller.exe");
                             }
-                            client.DownloadFile(this.serverURL + "/ModManagerInstaller.exe", this.appPath + "\\ModManagerInstaller.exe");
+                            client.DownloadFile((string)parsedResponse["assets"][1]["browser_download_url"], this.appPath + "\\ModManagerInstaller.exe");
                             Process.Start(this.appPath + "\\ModManagerInstaller.exe");
                             Environment.Exit(0);
                         }
