@@ -23,6 +23,7 @@ namespace ModManager
     {
         public string serverURL;
         public Version curVersion;
+        public Version lastVersion;
         public string appPath;
         public ModList modlist;
         public Config config;
@@ -32,8 +33,10 @@ namespace ModManager
         public ServerList serverList;
 
         public Release currentRelease;
+        public Release latestRelease;
         public bool isNewMods;
         public bool firstStart;
+        public string token;
         public ModManager()
         {
             InitializeComponent();
@@ -42,9 +45,12 @@ namespace ModManager
 
             this.Size = new Size(1300, 700);
 
+            this.log("\nMod Manager starts");
+
             // Exit if Mod Manager already running
             if (System.Diagnostics.Process.GetProcessesByName("ModManager").Length > 1)
             {
+                this.log("Mod Manager already running");
                 MessageBox.Show("Mod Manager is already running", "Mod Manager running", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
@@ -60,42 +66,15 @@ namespace ModManager
             this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager");
 
-            // Remove unused files directory
-            this.utils.DirectoryDelete(this.appPath + "\\files");
+            this.token = System.IO.File.ReadAllText(this.appPath + "\\token.txt");
 
-            try
-            {
-
-                using (WebClient client = new WebClient())
-                {
-                    string version = client.DownloadString(this.serverURL + "/version.txt");
-                    if (Version.Parse(version) > curVersion)
-                    {
-                        if (MessageBox.Show("There is a new version of Mod Manager available, would you like to download it ?", "Mod Manager Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                        {
-                            FileInfo installer = new FileInfo(this.appPath + "\\ModManagerInstaller.exe");
-                            if (installer.Exists)
-                            {
-                                this.utils.FileDelete(this.appPath + "\\ModManagerInstaller.exe");
-                            }
-                            client.DownloadFile(this.serverURL + "/ModManagerInstaller.exe", this.appPath + "\\ModManagerInstaller.exe");
-                            Process.Start(this.appPath + "\\ModManagerInstaller.exe");
-                            Environment.Exit(0);
-                        }
-                    }
-                }
-
-            }
-            catch
-            {
-                MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Environment.Exit(0);
-            }
+            this.checkNewVersion();
 
             this.config = new Config();
             this.config.load();
             this.textureList = new TextureList(this.serverURL + "/textures", this.appPath + "\\textures.json", this);
-            
+
+            this.log("Config loaded : \n" + this.config.log()); 
 
             this.modlist = new ModList(this.serverURL, this.appPath + "\\modlist.json", this);
             this.modlist.currentMod = this.modlist.mods.First();
@@ -103,8 +82,8 @@ namespace ModManager
             this.modlist.show();
             //this.textureList.show();
 
-            this.serverList = new ServerList(this);
-            this.serverList.update();
+            //this.serverList = new ServerList(this);
+            //this.serverList.update();
 
             // Choose folder if needed
             if (this.config == null || this.config.amongUsPath == null)
@@ -117,6 +96,62 @@ namespace ModManager
                 this.pagelist.renderPage("ModSelection");
             }
 
+        }
+
+        public async void checkNewVersion()
+        {
+            this.log("Check new release");
+            await this.checkNewVersionWorker();
+        }
+
+        public async Task checkNewVersionWorker()
+        {
+            await this.GetGithubVersion();
+
+            if (this.lastVersion > curVersion)
+            {
+                if (MessageBox.Show("There is a new version of Mod Manager available, would you like to download it ?", "Mod Manager Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    this.log("New release found > install");
+                    this.utils.FileDelete(this.appPath + "\\ModManagerInstaller.exe");
+                    foreach (ReleaseAsset ra in this.latestRelease.Assets)
+                    {
+                        if (ra.Name == "ModManagerInstaller.exe")
+                        {
+                            try
+                            {
+                                using (WebClient client = new WebClient())
+                                {
+                                    client.DownloadFile(ra.BrowserDownloadUrl, this.appPath + "\\ModManagerInstaller.exe");
+                                }
+                            }
+                            catch
+                            {
+                                this.log("Update Mod Manager > Server unreachable");
+                                MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                Environment.Exit(0);
+                            }
+                            Process.Start(this.appPath + "\\ModManagerInstaller.exe");
+                            Environment.Exit(0);
+                        }
+                    }
+                }
+                else
+                {
+                    this.log("New release found > no install");
+                }
+            }
+        }
+
+        public async Task GetGithubVersion()
+        {
+            var client = new GitHubClient(new ProductHeaderValue("ModManager"));
+            var tokenAuth = new Credentials(this.token);
+            client.Credentials = tokenAuth;
+            this.lastVersion = null;
+            Release r = await client.Repository.Release.GetLatest("MatuxGG", "ModManager");
+            this.latestRelease = r;
+            this.lastVersion = Version.Parse(r.TagName);
         }
 
         public void chooseAmongUsDirectory(object sender, EventArgs e)
@@ -142,6 +177,11 @@ namespace ModManager
         public void debug(string s)
         {
             MessageBox.Show(s, "DEBUG", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public void log(string line)
+        {
+            File.AppendAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager\\log.txt", line + Environment.NewLine);
         }
 
         public void updateStatus(string content)

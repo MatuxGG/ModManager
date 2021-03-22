@@ -434,6 +434,7 @@ namespace ModManager
             CatListCombo.Size = new System.Drawing.Size(300, 30);
             CatListCombo.DropDownStyle = ComboBoxStyle.DropDownList;
             CatListCombo.SelectedIndexChanged += new EventHandler(this.modManager.modlist.changeCat);
+            CatListCombo.TabStop = false;
             this.modManager.Controls.Add(CatListCombo);
             p.addControl(CatListCombo);
 
@@ -454,6 +455,7 @@ namespace ModManager
             ModListCombo.Size = new System.Drawing.Size(300, 30);
             ModListCombo.DropDownStyle = ComboBoxStyle.DropDownList;
             ModListCombo.SelectedIndexChanged += new EventHandler(this.modManager.modlist.changeMod);
+            ModListCombo.TabStop = false;
             this.modManager.Controls.Add(ModListCombo);
             p.addControl(ModListCombo);
 
@@ -531,6 +533,7 @@ namespace ModManager
             GithubLabel.Location = new System.Drawing.Point(200, 230);
             GithubLabel.Name = "GithubLabel";
             GithubLabel.Size = new System.Drawing.Size(500, 25);
+            GithubLabel.TabStop = false;
             GithubLabel.Click += new EventHandler(this.openGithub);
             this.modManager.Controls.Add(GithubLabel);
             p.addControl(GithubLabel);
@@ -547,6 +550,7 @@ namespace ModManager
             DescriptionLabel.Multiline = true;
             DescriptionLabel.WordWrap = true;
             DescriptionLabel.ReadOnly = true;
+            DescriptionLabel.TabStop = false;
             DescriptionLabel.Cursor = Cursors.Arrow;
             DescriptionLabel.Text = "";
             this.modManager.Controls.Add(DescriptionLabel);
@@ -710,6 +714,7 @@ namespace ModManager
             DownloadCodeTextbox.Location = new System.Drawing.Point(270, 240);
             DownloadCodeTextbox.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             DownloadCodeTextbox.Name = "DownloadCodeTextbox";
+            DownloadCodeTextbox.TabStop = false;
             DownloadCodeTextbox.Size = new System.Drawing.Size(100, 20);
             this.modManager.Controls.Add(DownloadCodeTextbox);
             p.addControl(DownloadCodeTextbox);
@@ -732,6 +737,7 @@ namespace ModManager
             UploadCodeTextbox.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             UploadCodeTextbox.Name = "UploadCodeTextbox";
             UploadCodeTextbox.Text = "";
+            UploadCodeTextbox.TabStop = false;
             UploadCodeTextbox.Size = new System.Drawing.Size(100, 30);
             this.modManager.Controls.Add(UploadCodeTextbox);
             p.addControl(UploadCodeTextbox);
@@ -743,6 +749,7 @@ namespace ModManager
             UploadCodeButton.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             UploadCodeButton.Name = "UploadCodeButton";
             UploadCodeButton.Text = "Load";
+            UploadCodeButton.TabStop = false;
             UploadCodeButton.Click += new EventHandler(this.modManager.modlist.enterCode);
             UploadCodeButton.Size = new System.Drawing.Size(100, 30);
             this.modManager.Controls.Add(UploadCodeButton);
@@ -873,6 +880,7 @@ namespace ModManager
             }
             catch
             {
+                this.modManager.log("News text > Server unreachable");
                 MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
@@ -918,6 +926,7 @@ namespace ModManager
             AmongUsDirSwitchButton.TabIndex = 11;
             AmongUsDirSwitchButton.Text = "Change";
             AmongUsDirSwitchButton.UseVisualStyleBackColor = true;
+            AmongUsDirSwitchButton.TabStop = false;
             AmongUsDirSwitchButton.Click += new EventHandler(this.backToDirectorySelection);
             this.modManager.Controls.Add(AmongUsDirSwitchButton);
             p.addControl(AmongUsDirSwitchButton);
@@ -930,6 +939,7 @@ namespace ModManager
             OpenAmongUs.Size = new System.Drawing.Size(150, 30);
             OpenAmongUs.TabIndex = 13;
             OpenAmongUs.Text = "Open";
+            OpenAmongUs.TabStop = false;
             OpenAmongUs.UseVisualStyleBackColor = true;
             OpenAmongUs.Click += new EventHandler(this.openAmongUsDirectory);
             this.modManager.Controls.Add(OpenAmongUs);
@@ -989,9 +999,34 @@ namespace ModManager
             ForegreenFixButton.Size = new System.Drawing.Size(150, 30);
             ForegreenFixButton.Text = "Fix";
             ForegreenFixButton.UseVisualStyleBackColor = true;
+            ForegreenFixButton.TabStop = false;
             ForegreenFixButton.Click += new EventHandler(this.fixForegreen);
             this.modManager.Controls.Add(ForegreenFixButton);
             p.addControl(ForegreenFixButton);
+
+            System.Windows.Forms.Label OpenLogsLabel = new System.Windows.Forms.Label();
+            OpenLogsLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            OpenLogsLabel.ForeColor = System.Drawing.SystemColors.Control;
+            OpenLogsLabel.Location = new System.Drawing.Point(20, 250);
+            OpenLogsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            OpenLogsLabel.Name = "OpenLogsLabel";
+            OpenLogsLabel.Size = new System.Drawing.Size(200, 20);
+            OpenLogsLabel.Text = "Open logs folder :";
+            this.modManager.Controls.Add(OpenLogsLabel);
+            p.addControl(OpenLogsLabel);
+
+            Button OpenLogsButton = new System.Windows.Forms.Button();
+            OpenLogsButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            OpenLogsButton.Location = new System.Drawing.Point(250, 250);
+            OpenLogsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            OpenLogsButton.Name = "OpenLogsButton";
+            OpenLogsButton.Size = new System.Drawing.Size(150, 30);
+            OpenLogsButton.Text = "Open";
+            OpenLogsButton.UseVisualStyleBackColor = true;
+            OpenLogsButton.Click += new EventHandler(this.openLogs);
+            OpenLogsButton.TabStop = false;
+            this.modManager.Controls.Add(OpenLogsButton);
+            p.addControl(OpenLogsButton);
 
             this.pages.Add(p);
 
@@ -1032,6 +1067,7 @@ namespace ModManager
             }
             catch
             {
+                this.modManager.log("Credits text > Server unreachable");
                 MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
@@ -1044,6 +1080,7 @@ namespace ModManager
 
         public void renderPage(string page)
         {
+            this.modManager.log("Render page "+page);
             if (page != "PathSelection" && this.modManager.firstStart == true)
             {
                 this.enableHeader();
@@ -1124,16 +1161,19 @@ namespace ModManager
         {
             LinkLabel clickedLink = ((LinkLabel)sender);
             string link = clickedLink.Text;
+            this.modManager.log("Open Github "+link);
             System.Diagnostics.Process.Start(link);
         }
 
         public void openMatuxGithub(object sender, EventArgs e)
         {
+            this.modManager.log("Open Matux Github");
             System.Diagnostics.Process.Start("https://github.com/MatuxGG/ModManager");
         }
 
         public void openMMDiscord(object sender, EventArgs e)
         {
+            this.modManager.log("Open Mod Manager discord");
             System.Diagnostics.Process.Start("https://discord.gg/yBNgKuGjNw");
         }
 
@@ -1193,10 +1233,11 @@ namespace ModManager
 
         public void launchGame(object sender, EventArgs e)
         {
-            
+            this.modManager.log("Start game");
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
-                if (MessageBox.Show("Among Us is already running or is starting.\nDo you really want to open it again ?", "Among Us already running", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+                this.modManager.log("Game already started");
+                if (MessageBox.Show("Among Us is already running or is starting.\nDo you want to retry launching it ?", "Among Us already running", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                 {
                     return;
                 }
@@ -1234,14 +1275,44 @@ namespace ModManager
         {
             this.renderPage("ModSelection");
         }
+        /*
+        public void quickFix(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Please, only use this option if you encounter a bug !\n\n" +
+                "This will will uninstall all mods are reset your settings.\n\n" +
+                "Do you still want to apply it ?", "Open logs folder", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            {
+                this.modManager.log("Quick fix");
+            }
+        }*/
+
+        public void openLogs(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("Please, don't touch anything in this folder !\n\n" +
+                "This option should only be used to create a support ticket.\n\n" +
+                "Do you still want to open it ?", "Open logs folder", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            {
+                this.modManager.log("Open logs folder");
+                string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager";
+                System.Diagnostics.Process.Start("explorer.exe", path);
+            }
+        }
 
         public void fixForegreen(object sender, EventArgs e)
         {
+            if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
+            {
+                this.modManager.log("Fix foregreen skin > Game open");
+                MessageBox.Show("Close Among Us to use this option", "Can't use fix", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
             if (MessageBox.Show("Be careful ! Don't use this button if you don't have this issue !\n\n" +
                 "This option will only help you if you can't use settings in game creation and your skin is green.\n" +
                 "This will also reset all your game settings like pseudo, color, hat, ..." +
-                "There is no consequence on your stats tho.", "Fix foregreen skin", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                "There is no consequence on your stats tho.\n\n" +
+                "Do you still want to apply this fix ?", "Fix foregreen skin", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
+                this.modManager.log("Fix foregreen skin");
                 string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\..\\LocalLow\\Innersloth\\Among Us\\playerPrefs";
                 this.modManager.utils.FileDelete(path);
             }

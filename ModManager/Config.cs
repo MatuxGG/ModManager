@@ -114,5 +114,57 @@ namespace ModManager
             return f.Exists;
         }
 
+        public string log()
+        {
+            string ret = "Among Us Path = "+this.amongUsPath+"\nDependencies :\n";
+            foreach (string dep in this.installedDependencies)
+            {
+                ret = ret + "- "+ dep + "\n";
+            }
+            ret = ret + "Mods :\n";
+            foreach (InstalledMod m in this.installedMods)
+            {
+                ret = ret + "- " + m.id + "\n";
+                foreach (string plugin in m.plugins)
+                {
+                    ret = ret + "- - " + plugin + "\n";
+                }
+            }
+            if (this.amongUsPath != null)
+            {
+                if (Directory.Exists(this.amongUsPath+"\\BepInEx"))
+                {
+                    ret = ret + "BepInEx folder : OK\n";
+                } else
+                {
+                    ret = ret + "BepInEx folder : KO\n";
+                }
+                if (Directory.Exists(this.amongUsPath + "\\Assets"))
+                {
+                    ret = ret + "Assets folder : OK\n";
+                }
+                else
+                {
+                    ret = ret + "Assets folder : KO\n";
+                }
+                if (Directory.Exists(this.amongUsPath + "\\BepInEx\\plugins"))
+                {
+                    ret = ret + "Plugins folder : OK\n";
+                    ret = ret + "Plugins in folder :\n";
+                    DirectoryInfo di = new DirectoryInfo(this.amongUsPath + "\\BepInEx\\plugins");
+                    foreach (FileInfo fi in di.GetFiles())
+                    {
+                        ret = ret + "- " + fi.Name + "\n";
+                    }
+                }
+                else
+                {
+                    ret = ret + "Plugins folder : KO\n";
+                }
+            }
+
+            return ret;
+        }
+
     }
 }

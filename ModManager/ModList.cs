@@ -24,7 +24,6 @@ namespace ModManager
 
         public ModManager modManager;
 
-        public string token;
 
 
         public ModList(string url, string path, ModManager modManager)
@@ -37,28 +36,32 @@ namespace ModManager
 
         public void load()
         {
-            
-            this.token = System.IO.File.ReadAllText(this.modManager.appPath+"\\token.txt");
+            this.modManager.log("Load modlist");
+            string modlistPath = this.url + "/modlist.json";
+
+            this.modManager.utils.FileDelete(this.path + "\\modlist.json");
             try
             {
                 using (var client = new WebClient())
                 {
-                    client.DownloadFile(this.url+"/modlist2.json", this.path);
+                    client.DownloadFile(modlistPath, this.path);
                 }
             }
             catch
             {
+                this.modManager.log("Load modlist > Server unreachable");
                 MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
             string json = System.IO.File.ReadAllText(this.path);
             this.mods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(json);
             File.Delete(this.path);
-            
-}
+
+        }
 
         public void show()
         {
+            this.modManager.log("Show modlist");
             ComboBox comboCats = (ComboBox)this.modManager.pagelist.get("ModSelection").getControl("CatListCombo");
             comboCats.Items.Clear();
             int i = 0;
@@ -77,11 +80,12 @@ namespace ModManager
             }
 
             this.changeModsForCategory();
-            
+
         }
 
         public void changeModsForCategory()
         {
+            this.modManager.log("Change mods for category " + this.currentCat);
             ComboBox comboMods = (ComboBox)this.modManager.pagelist.get("ModSelection").getControl("ModListCombo");
             comboMods.Items.Clear();
             int i = 0;
@@ -117,7 +121,7 @@ namespace ModManager
         public List<Mod> getByCategory(string category)
         {
             List<Mod> retour = new List<Mod>();
-            foreach(Mod m in this.mods)
+            foreach (Mod m in this.mods)
             {
                 if (m.category == category)
                 {
@@ -157,6 +161,7 @@ namespace ModManager
             ComboBox changedBox = ((ComboBox)sender);
             this.currentCat = changedBox.SelectedItem.ToString();
 
+            this.modManager.log("Change category to " + this.currentCat);
             this.currentMod = this.getByCategory(this.currentCat)[0];
 
             this.changeModsForCategory();
@@ -168,6 +173,8 @@ namespace ModManager
         {
             ComboBox changedBox = ((ComboBox)sender);
             this.currentMod = this.getModFromName(changedBox.SelectedItem.ToString());
+
+            this.modManager.log("Change mod to " + this.currentMod.name);
             this.changeModWorker();
         }
 
@@ -178,55 +185,44 @@ namespace ModManager
             modSelectionPage.getControl("AuthorLabel").Text = this.modManager.modlist.currentMod.author;
 
             await this.GetGithubInfos(this.modManager.modlist.currentMod.author, this.modManager.modlist.currentMod.github);
-
-            try { 
-                using (WebClient wc = new WebClient())
+            string version = this.modManager.currentRelease.TagName;
+            modSelectionPage.getControl("VersionLabel").Text = version;
+            //modSelectionPage.getControl("GameVersionLabel").Text = this.currentMod.gameVersion;
+            modSelectionPage.getControl("GithubLabel").Text = "https://github.com/" + this.currentMod.author + "/" + this.currentMod.github;
+            modSelectionPage.getControl("DescriptionLabel").Text = this.currentMod.description;
+            System.Windows.Forms.Label installButton = (System.Windows.Forms.Label)modSelectionPage.getControl("InstallModButton");
+            System.Windows.Forms.Label uninstallButton = (System.Windows.Forms.Label)modSelectionPage.getControl("UninstallModButton");
+            System.Windows.Forms.Label updateButton = (System.Windows.Forms.Label)modSelectionPage.getControl("UpdateModButton");
+            PictureBox installPic = (PictureBox)modSelectionPage.getControl("InstallModPic");
+            PictureBox uninstallPic = (PictureBox)modSelectionPage.getControl("UninstallModPic");
+            PictureBox updatePic = (PictureBox)modSelectionPage.getControl("UpdateModPic");
+            updateButton.Visible = false;
+            installButton.Visible = false;
+            uninstallButton.Visible = false;
+            updatePic.Visible = false;
+            installPic.Visible = false;
+            uninstallPic.Visible = false;
+            if (this.modManager.config.containsMod(this.currentMod.id))
+            {
+                uninstallButton.Visible = true;
+                uninstallPic.Visible = true;
+                if (!this.modManager.config.isUpTodate(this.currentMod.id, version))
                 {
-                    string version = this.modManager.currentRelease.TagName;
-                    modSelectionPage.getControl("VersionLabel").Text = version;
-                    //modSelectionPage.getControl("GameVersionLabel").Text = this.currentMod.gameVersion;
-                    modSelectionPage.getControl("GithubLabel").Text = "https://github.com/" + this.currentMod.author + "/" + this.currentMod.github;
-                    modSelectionPage.getControl("DescriptionLabel").Text = this.currentMod.description;
-                    System.Windows.Forms.Label installButton = (System.Windows.Forms.Label)modSelectionPage.getControl("InstallModButton");
-                    System.Windows.Forms.Label uninstallButton = (System.Windows.Forms.Label)modSelectionPage.getControl("UninstallModButton");
-                    System.Windows.Forms.Label updateButton = (System.Windows.Forms.Label)modSelectionPage.getControl("UpdateModButton");
-                    PictureBox installPic = (PictureBox)modSelectionPage.getControl("InstallModPic");
-                    PictureBox uninstallPic = (PictureBox)modSelectionPage.getControl("UninstallModPic");
-                    PictureBox updatePic = (PictureBox)modSelectionPage.getControl("UpdateModPic");
-                    updateButton.Visible = false;
-                    installButton.Visible = false;
-                    uninstallButton.Visible = false;
-                    updatePic.Visible = false;
-                    installPic.Visible = false;
-                    uninstallPic.Visible = false;
-                    if (this.modManager.config.containsMod(this.currentMod.id))
-                    {
-                        uninstallButton.Visible = true;
-                        uninstallPic.Visible = true;
-                        if (!this.modManager.config.isUpTodate(this.currentMod.id, version))
-                        {
-                            updateButton.Visible = true;
-                            updatePic.Visible = true;
-                        }
-                    }
-                    else if (this.modManager.config.amongUsPath != null)
-                    {
-                        installButton.Visible = true;
-                        installPic.Visible = true;
-                    }
+                    updateButton.Visible = true;
+                    updatePic.Visible = true;
                 }
             }
-            catch
+            else if (this.modManager.config.amongUsPath != null)
             {
-                MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Environment.Exit(0);
+                installButton.Visible = true;
+                installPic.Visible = true;
             }
         }
 
         public async Task GetGithubInfos(string author, string repository)
         {
             var client = new GitHubClient(new ProductHeaderValue("ModManager"));
-            var tokenAuth = new Credentials(this.token);
+            var tokenAuth = new Credentials(this.modManager.token);
             client.Credentials = tokenAuth;
             this.modManager.currentRelease = null;
             this.modManager.currentRelease = await client.Repository.Release.GetLatest(author, repository);
@@ -234,61 +230,68 @@ namespace ModManager
 
         public bool installDependencies()
         {
-            try { 
-                using (var client = new WebClient())
-                {
-                    bool essentialsInstalled = false;
-                    List<string> dependencies = new List<string>();
-                    dependencies.Add("BepInEx-2021.3.5s");
-                    foreach (string s in this.currentMod.dependencies)
-                    {
-                        if (s.Contains("Essentials"))
-                        {
-                            essentialsInstalled = true;
-                        }
-                        dependencies.Add(s);
-                    }
-                    if (essentialsInstalled == true)
-                    {
-                        foreach (string instD in this.modManager.config.installedDependencies)
-                        {
-                            if (instD.Contains("Essentials"))
-                            {
-                                return false;
-                            }
-                        }
-                    }
 
-                    foreach (string dependencie in dependencies)
+            this.modManager.log("Install dependencies");
+            bool essentialsInstalled = false;
+            List<string> dependencies = new List<string>();
+            dependencies.Add("BepInEx-2021.3.5s");
+            foreach (string s in this.currentMod.dependencies)
+            {
+                if (s.Contains("Essentials"))
+                {
+                    essentialsInstalled = true;
+                }
+                dependencies.Add(s);
+            }
+            if (essentialsInstalled == true)
+            {
+                foreach (string instD in this.modManager.config.installedDependencies)
+                {
+                    if (instD.Contains("Essentials"))
                     {
-                        if (this.modManager.config.installedDependencies.Contains(dependencie) == false)
-                        {
-                            string tempPath = Path.GetTempPath() + "\\ModManager";
-                            this.modManager.utils.DirectoryDelete(tempPath);
-                            Directory.CreateDirectory(tempPath);
-                            this.modManager.utils.FileDelete(tempPath + "\\" + dependencie + ".zip");
-                    
-                            client.DownloadFile(this.modManager.serverURL + "/dependencies/" + dependencie + ".zip", tempPath + "\\" + dependencie + ".zip");
-                    
-                            ZipFile.ExtractToDirectory(tempPath + "\\" + dependencie + ".zip", this.modManager.config.amongUsPath);
-                            this.modManager.config.installedDependencies.Add(dependencie);
-                        }
+                        return false;
                     }
-                    this.modManager.config.update();
                 }
             }
-            catch
+
+            foreach (string dependencie in dependencies)
             {
-                MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Environment.Exit(0);
+                if (this.modManager.config.installedDependencies.Contains(dependencie) == false)
+                {
+                    string tempPath = Path.GetTempPath() + "\\ModManager";
+                    this.modManager.utils.DirectoryDelete(tempPath);
+                    Directory.CreateDirectory(tempPath);
+                    this.modManager.utils.FileDelete(tempPath + "\\" + dependencie + ".zip");
+                    try
+                    {
+                        using (var client = new WebClient())
+                        {
+                            client.DownloadFile(this.modManager.serverURL + "/dependencies/" + dependencie + ".zip", tempPath + "\\" + dependencie + ".zip");
+                        }
+                        this.modManager.log("Install dependency " + dependencie + " > Worked");
+                    }
+                    catch
+                    {
+                        this.modManager.log("Install dependencie " + dependencie + " > Server unreachable");
+                        MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Environment.Exit(0);
+                    }
+                    ZipFile.ExtractToDirectory(tempPath + "\\" + dependencie + ".zip", this.modManager.config.amongUsPath);
+                    this.modManager.config.installedDependencies.Add(dependencie);
+                }
             }
+            this.modManager.config.update();
+
+            this.modManager.log("Install dependencies > Worked");
             return true;
         }
 
         public void uninstallMod(object sender, EventArgs e)
         {
+            this.modManager.log("Uninstall mod " + this.currentMod);
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
+                this.modManager.log("Uninstall mods > Game open");
                 MessageBox.Show("Close Among Us to uninstall this mod", "Can't uninstall mod", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -306,13 +309,13 @@ namespace ModManager
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").Visible = false;
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModPic").Visible = false;
 
+            this.modManager.log("Uninstall mod " + this.currentMod + " > Worked");
             this.modManager.updateStatus("");
             MessageBox.Show("The mod have been uninstalled !", "Mod uninstalled", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void uninstallModWorker()
         {
-            
 
             InstalledMod installedMod = this.modManager.config.getInstalledModById(this.currentMod.id);
             string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
@@ -348,8 +351,10 @@ namespace ModManager
 
         public void updateMod(object sender, EventArgs e)
         {
+            this.modManager.log("Update mod " + this.currentMod);
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
+                this.modManager.log("Update mod " + this.currentMod + " > Game open");
                 MessageBox.Show("Close Among Us to update this mod", "Can't update mod", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -367,14 +372,17 @@ namespace ModManager
             this.modManager.pagelist.get("ModSelection").getControl("InstallModPic").Visible = false;
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModPic").Visible = true;
 
+            this.modManager.log("Update mod " + this.currentMod + " > Worked");
             this.modManager.updateStatus("");
             MessageBox.Show("The mod have been updated !", "Mod updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void installMod(object sender, EventArgs e)
         {
+            this.modManager.log("Install mod " + this.currentMod);
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
+                this.modManager.log("Install mod " + this.currentMod + " > Game open");
                 MessageBox.Show("Close Among Us to install this mod", "Can't install mod", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -391,6 +399,7 @@ namespace ModManager
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").Visible = true;
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModPic").Visible = true;
             this.modManager.updateStatus("");
+            this.modManager.log("Install mod " + this.currentMod + " > Worked");
             MessageBox.Show("The mod have been installed !", "Mod installed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
@@ -404,7 +413,7 @@ namespace ModManager
                 {
                     return false;
                 }
-                
+
                 string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
                 bool foundZip = false;
                 foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
@@ -451,9 +460,11 @@ namespace ModManager
         public void installDll(Release jObject, ReleaseAsset file)
         {
             string fileName = file.Name;
+            this.modManager.log("Install DLL " + fileName);
             string fileUrl = file.BrowserDownloadUrl;
             string fileTag = jObject.TagName;
             string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
+            this.modManager.utils.FileDelete(pluginsPath + "\\" + fileName);
             try {
                 using (var client = new WebClient())
                 {
@@ -462,21 +473,25 @@ namespace ModManager
             }
             catch
             {
+                this.modManager.log("Install DLL > Server unreachable");
                 MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
+            this.modManager.log("Install DLL " + fileName + " > Worked");
             return;
         }
 
         public void installZip(Release jObject, ReleaseAsset file)
         {
             string fileName = file.Name;
+            this.modManager.log("Install ZIP " + fileName);
             string fileUrl = file.BrowserDownloadUrl;
             string fileTag = jObject.TagName;
             string tempPath = Path.GetTempPath() + "\\ModManager";
             this.modManager.utils.DirectoryDelete(tempPath);
             Directory.CreateDirectory(tempPath);
             string zipPath = tempPath + "\\" + fileName;
+            this.modManager.utils.FileDelete(zipPath);
             try {
                 using (var client = new WebClient())
                 {
@@ -485,6 +500,7 @@ namespace ModManager
             }
             catch
             {
+                this.modManager.log("Install ZIP > Server unreachable");
                 MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
@@ -523,11 +539,13 @@ namespace ModManager
             InstalledMod newMod = new InstalledMod(this.currentMod.id, fileTag, assets, plugins);
             this.modManager.config.installedMods.Add(newMod);
             this.modManager.config.update();
+            this.modManager.log("Install ZIP " + fileName + " > Worked");
             return;
         }
 
         public void uninstallMods(object sender, EventArgs e)
         {
+            this.modManager.log("Uninstall mods");
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
                 MessageBox.Show("Close Among Us to uninstall mods", "Can't uninstall mods", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -565,6 +583,7 @@ namespace ModManager
                 uninstallPic.Visible = false;
             }
 
+            this.modManager.log("Uninstall mods > Worked");
             this.modManager.updateStatus("");
             MessageBox.Show("All Mods have been uninstalled !", "Mods uninstalled", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -597,6 +616,7 @@ namespace ModManager
 
         public string getCode()
         {
+            this.modManager.log("Get code");
             string code = "";
             foreach (Mod m in this.mods)
             {
@@ -608,13 +628,17 @@ namespace ModManager
                     code = code + "0";
                 }
             }
-            return this.BinaryStringToHex(code);
+            string ret = this.BinaryStringToHex(code);
+            this.modManager.log("Code : " + code);
+            return ret;
         }
 
-        public void enterCode(object sender, EventArgs e)
+        public async void enterCode(object sender, EventArgs e)
         {
+            this.modManager.log("Enter code");
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
+                this.modManager.log("Enter code > Game open");
                 MessageBox.Show("Close Among Us to use a code", "Can't enter code", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -623,25 +647,26 @@ namespace ModManager
             {
                 return;
             }
-            List<char> chars = new List<char>(new char[] { 'A', 'B', 'C', 'D', 'E', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6' }); 
-            foreach(char c in code)
+            List<char> chars = new List<char>(new char[] { 'A', 'B', 'C', 'D', 'E', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', '1', '2', '3', '4', '5', '6' });
+            foreach (char d in code)
             {
+                char c = d;
+                if (d != '1' && d != '2' && d != '3' && d != '4' && d != '5' && d != '6')
+                {
+                    c = Char.ToUpper(d);
+                }
                 if (!chars.Contains(c))
                 {
                     MessageBox.Show("Invalid code !\nPlease enter a valid one !", "Invalid code", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                     return;
                 }
             }
-            this.modManager.pagelist.get("Installed").getControl("UploadCodeButton").BackColor = System.Drawing.Color.Orange;
-            if (this.installFromCode(code))
-            {
-                MessageBox.Show("Mods from code have been installed", "Mods installed", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            this.modManager.pagelist.get("Installed").getControl("UploadCodeButton").BackColor = System.Drawing.SystemColors.ControlText;
+            await this.installFromCode(code);
         }
 
-        public bool installFromCode(string code)
+        public async Task installFromCode(string code)
         {
+            this.modManager.updateStatus("Install in progress. Please wait ...");
             string binary = HexStringToBinary(code);
             int supCount = this.mods.Count;
             while (supCount % 5 != 0)
@@ -651,21 +676,31 @@ namespace ModManager
             if (binary.Length != supCount)
             {
                 MessageBox.Show("Invalid code !\nPlease enter a valid one !", "Invalid code", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                return false;
+                return;
             }
             this.uninstallModsWorker();
             int i = 0;
-            foreach(Mod m in this.mods)
+            foreach (Mod m in this.mods)
             {
                 if (binary[i] == '1')
                 {
-                    this.currentMod = m;
-                    this.installModWorker();
+                    await this.installModFromCode(m);
                 }
                 i++;
             }
             this.modManager.pagelist.openInstalledWorker();
-            return true;
+            this.modManager.log("Enter code > Worked");
+            this.modManager.updateStatus("");
+            MessageBox.Show("Mods from code have been installed", "Mods installed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return;
+        }
+
+        public async Task installModFromCode(Mod m) {
+            this.modManager.log("Install mod " + m.name + " from code ");
+            this.currentMod = m;
+            await this.GetGithubInfos(this.modManager.modlist.currentMod.author, this.modManager.modlist.currentMod.github);
+            this.installModWorker();
+            this.modManager.log("Install mod " + m.name + " from code > Worked");
         }
 
         private static readonly Dictionary<char, string> hexCharacterToBinary = new Dictionary<char, string> {
