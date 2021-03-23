@@ -6,7 +6,7 @@ Join the discord : https://discord.gg/yBNgKuGjNw
 
 ## How to install ?
 
-- Download the latest "ModManagerInstaller.exe" in the release section (or on my website : https://mm.matux.fr/ModManagerInstaller.exe).
+- Download the latest "ModManagerInstaller.exe" in the release section.
 - Launch the installer and choose a location for the software. (You shouldn't select your Among Us directory !)
 - Everything is set up ! :)
 
@@ -27,6 +27,7 @@ Join the discord : https://discord.gg/yBNgKuGjNw
 - Your friends have to enter the code in this page
 - All mods will be installed in a few seconds
 - Everyone is ready to play then ! :)
+
 ## Features
 
 - Among Us directory auto detection
@@ -41,14 +42,21 @@ Join the discord : https://discord.gg/yBNgKuGjNw
 - Server switch and 10+ players games available
 - Code system to allow people to share their configuration
 
+## Making a mod compatible with Mod Manager
+
+Publish a release in a public github repository for your mod. In this release, you can add either or both :
+- The dll file of the mod
+- A zip with of the Among Us modded directory
+- Then, join the discord and give me your repository link. It will be a pleasure adding your mod :)
+
 ## Credits & Resources
 
 [BepInExReactor](https://github.com/NuclearPowered/BepInEx) - The main dependency of every mod\
-[Essentials](https://github.com/DorCoMaNdO/Reactor-Essentials) - For custom game options\
+[Essentials](https://github.com/DorCoMaNdO/Reactor-Essentials) - For custom game options
 
+Thanks to every mod creator. Go check their respective github repositories directly in Mod Manager !
 
-Thanks to every mod creator. Go check their respective github repositories directly in Mod Manager !\
-Thanks to translators for their time.
+If you're a mod creator, your mod is on Mod Manager and you don't want me to include it, just send me a message in a github issue or in discord DM. I will remove them without asking any question.
 
 ## License
 
