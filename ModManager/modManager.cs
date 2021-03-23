@@ -45,6 +45,8 @@ namespace ModManager
 
             this.Size = new Size(1300, 700);
 
+            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager");
+
             this.log("\nMod Manager starts");
 
             // Exit if Mod Manager already running
@@ -64,7 +66,6 @@ namespace ModManager
 
             // Create AppData if doesn't exist already
             this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
-            Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager");
 
             this.token = System.IO.File.ReadAllText(this.appPath + "\\token.txt");
 
