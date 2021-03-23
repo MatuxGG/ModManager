@@ -6,7 +6,7 @@ Join the discord : https://discord.gg/yBNgKuGjNw
 
 ## How to install ?
 
-- Download the latest "ModManagerInstaller.exe" in the release section (or on my website : https://mm.matux.fr/ModManagerInstaller.exe).
+- Download the latest "ModManagerInstaller.exe" in the release section.
 - Launch the installer and choose a location for the software. (You shouldn't select your Among Us directory !)
 - Everything is set up ! :)
 
