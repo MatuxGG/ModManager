@@ -37,7 +37,7 @@ namespace ModManager
         public void load()
         {
             this.modManager.log("Load modlist");
-            string modlistPath = this.url + "/modlist.json";
+            string modlistPath = this.url + "/modlist2.json";
 
             this.modManager.utils.FileDelete(this.path + "\\modlist.json");
             try
@@ -232,26 +232,11 @@ namespace ModManager
         {
 
             this.modManager.log("Install dependencies");
-            bool essentialsInstalled = false;
             List<string> dependencies = new List<string>();
             dependencies.Add("BepInEx-2021.3.5s");
             foreach (string s in this.currentMod.dependencies)
             {
-                if (s.Contains("Essentials"))
-                {
-                    essentialsInstalled = true;
-                }
                 dependencies.Add(s);
-            }
-            if (essentialsInstalled == true)
-            {
-                foreach (string instD in this.modManager.config.installedDependencies)
-                {
-                    if (instD.Contains("Essentials"))
-                    {
-                        return false;
-                    }
-                }
             }
 
             foreach (string dependencie in dependencies)
@@ -288,7 +273,7 @@ namespace ModManager
 
         public void uninstallMod(object sender, EventArgs e)
         {
-            this.modManager.log("Uninstall mod " + this.currentMod);
+            this.modManager.log("Uninstall mod " + this.currentMod.name);
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
                 this.modManager.log("Uninstall mods > Game open");
@@ -309,7 +294,7 @@ namespace ModManager
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").Visible = false;
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModPic").Visible = false;
 
-            this.modManager.log("Uninstall mod " + this.currentMod + " > Worked");
+            this.modManager.log("Uninstall mod " + this.currentMod.name + " > Worked");
             this.modManager.updateStatus("");
             MessageBox.Show("The mod have been uninstalled !", "Mod uninstalled", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
@@ -351,10 +336,10 @@ namespace ModManager
 
         public void updateMod(object sender, EventArgs e)
         {
-            this.modManager.log("Update mod " + this.currentMod);
+            this.modManager.log("Update mod " + this.currentMod.name);
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
-                this.modManager.log("Update mod " + this.currentMod + " > Game open");
+                this.modManager.log("Update mod " + this.currentMod.name + " > Game open");
                 MessageBox.Show("Close Among Us to update this mod", "Can't update mod", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -372,17 +357,17 @@ namespace ModManager
             this.modManager.pagelist.get("ModSelection").getControl("InstallModPic").Visible = false;
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModPic").Visible = true;
 
-            this.modManager.log("Update mod " + this.currentMod + " > Worked");
+            this.modManager.log("Update mod " + this.currentMod.name + " > Worked");
             this.modManager.updateStatus("");
             MessageBox.Show("The mod have been updated !", "Mod updated", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void installMod(object sender, EventArgs e)
         {
-            this.modManager.log("Install mod " + this.currentMod);
+            this.modManager.log("Install mod " + this.currentMod.name);
             if (System.Diagnostics.Process.GetProcessesByName("Among Us").Length > 0)
             {
-                this.modManager.log("Install mod " + this.currentMod + " > Game open");
+                this.modManager.log("Install mod " + this.currentMod.name + " > Game open");
                 MessageBox.Show("Close Among Us to install this mod", "Can't install mod", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
@@ -399,7 +384,7 @@ namespace ModManager
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModButton").Visible = true;
             this.modManager.pagelist.get("ModSelection").getControl("UninstallModPic").Visible = true;
             this.modManager.updateStatus("");
-            this.modManager.log("Install mod " + this.currentMod + " > Worked");
+            this.modManager.log("Install mod " + this.currentMod.name + " > Worked");
             MessageBox.Show("The mod have been installed !", "Mod installed", MessageBoxButtons.OK, MessageBoxIcon.Information);
             return;
         }
@@ -415,21 +400,13 @@ namespace ModManager
                 }
 
                 string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
-                bool foundZip = false;
                 foreach (ReleaseAsset tab in this.modManager.currentRelease.Assets)
                 {
                     string fileName = tab.Name;
                     if (fileName.Contains(".zip") && !fileName.Contains("2020.12.9s"))
                     {
-                        foundZip = true;
-                        this.installZip(this.modManager.currentRelease, tab);
-                        return true;
+                        return this.installZip(this.modManager.currentRelease, tab);
                     }
-                }
-
-                if (foundZip == true)
-                {
-                    return true;
                 }
 
                 List<string> plugins = new List<string>();
@@ -481,7 +458,26 @@ namespace ModManager
             return;
         }
 
-        public void installZip(Release jObject, ReleaseAsset file)
+        public string getBepInExInsideRec(string path)
+        {
+            if (Directory.Exists(path + "\\BepInEx"))
+            {
+                return path;
+            }
+
+            DirectoryInfo dirInfo = new DirectoryInfo(path);
+            DirectoryInfo[] dirs = dirInfo.GetDirectories();
+            foreach (DirectoryInfo dir in dirs)
+            {
+                if (this.getBepInExInsideRec(dir.FullName) != null)
+                {
+                    return dir.FullName;
+                }
+            }
+            return null;
+        }
+
+        public bool installZip(Release jObject, ReleaseAsset file)
         {
             string fileName = file.Name;
             this.modManager.log("Install ZIP " + fileName);
@@ -504,28 +500,49 @@ namespace ModManager
                 MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
-            this.modManager.utils.DirectoryDelete(tempPath + "\\BepInEx");
-            this.modManager.utils.DirectoryDelete(tempPath + "\\Assets");
-            this.modManager.utils.DirectoryDelete(tempPath + "\\mono");
-            this.modManager.utils.FileDelete(tempPath + "\\doorstop_config.ini");
-            this.modManager.utils.FileDelete(tempPath + "\\winhttp.dll");
-            ZipFile.ExtractToDirectory(zipPath, tempPath);
+            string tempPathZip = tempPath + "\\ModZip";
+
+            Directory.CreateDirectory(tempPathZip);
+            ZipFile.ExtractToDirectory(zipPath, tempPathZip);
+
+            tempPathZip = this.getBepInExInsideRec(tempPathZip);
+
+            DirectoryInfo dirPlugins = new DirectoryInfo(this.modManager.config.amongUsPath + "\\BepInEx\\plugins");
+            
             // Install dll
-            DirectoryInfo dirInfo = new DirectoryInfo(tempPath + "\\BepInEx\\plugins");
+            DirectoryInfo dirInfo = new DirectoryInfo(tempPathZip + "\\BepInEx\\plugins");
+
             List<string> plugins = new List<string>();
             if (dirInfo.Exists)
             {
                 FileInfo[] files = dirInfo.GetFiles("*.dll");
+
+                // Essentials plugin management
+                foreach (FileInfo fileToCheck2 in files)
+                {
+                    if (!fileToCheck2.Name.Contains("Reactor-") && dirPlugins.Exists)
+                    {
+                        FileInfo[] pluginsInstalled = dirPlugins.GetFiles();
+                        foreach (FileInfo fileToCheck in pluginsInstalled)
+                        {
+                            if (!fileToCheck.Name.Contains("Reactor-") && fileToCheck.Name == fileToCheck2.Name)
+                            {
+                                return false;
+                            }
+                        }
+                    }
+                }
+                
                 foreach (FileInfo f in files)
                 {
-                    if (!(f.Name.Contains("Essentials-") || f.Name.Contains("Reactor-")))
+                    if (!f.Name.Contains("Reactor-"))
                     {
                         this.modManager.utils.FileCopy(f.FullName, this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + f.Name);
                         plugins.Add(f.Name);
                     }
                 }
             }
-            DirectoryInfo dirInfo2 = new DirectoryInfo(tempPath + "\\Assets");
+            DirectoryInfo dirInfo2 = new DirectoryInfo(tempPathZip + "\\Assets");
             List<string> assets = new List<string>();
             if (dirInfo2.Exists)
             {
@@ -540,7 +557,7 @@ namespace ModManager
             this.modManager.config.installedMods.Add(newMod);
             this.modManager.config.update();
             this.modManager.log("Install ZIP " + fileName + " > Worked");
-            return;
+            return true;
         }
 
         public void uninstallMods(object sender, EventArgs e)

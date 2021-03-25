@@ -103,6 +103,7 @@
     <Compile Include="PageList.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ServerConfig.cs" />
     <Compile Include="ServerList.cs" />
     <Compile Include="Texture.cs" />
     <Compile Include="TextureList.cs" />

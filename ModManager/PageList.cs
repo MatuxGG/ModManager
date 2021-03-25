@@ -304,8 +304,8 @@ namespace ModManager
             AmongUsDirectoryLabel.Location = new System.Drawing.Point(20, 100);
             AmongUsDirectoryLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             AmongUsDirectoryLabel.Name = "AmongUsDirectoryLabel";
+            AmongUsDirectoryLabel.TabStop = false;
             AmongUsDirectoryLabel.Size = new System.Drawing.Size(400, 50);
-            AmongUsDirectoryLabel.TabIndex = 5;
             AmongUsDirectoryLabel.Text = "Please select your Among Us directory";
             this.modManager.Controls.Add(AmongUsDirectoryLabel);
             p.addControl(AmongUsDirectoryLabel);
@@ -316,8 +316,8 @@ namespace ModManager
             AmongUsDirectorySelection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             AmongUsDirectorySelection.Name = "AmongUsDirectorySelection";
             AmongUsDirectorySelection.Size = new System.Drawing.Size(400, 50);
-            AmongUsDirectorySelection.TabIndex = 6;
             AmongUsDirectorySelection.Text = "Select directory";
+            AmongUsDirectorySelection.TabStop = false;
             AmongUsDirectorySelection.Click += new EventHandler(this.modManager.chooseAmongUsDirectory);
             AmongUsDirectorySelection.UseVisualStyleBackColor = true;
             this.modManager.Controls.Add(AmongUsDirectorySelection);
@@ -330,8 +330,8 @@ namespace ModManager
             AmongUsPathLabel.Location = new System.Drawing.Point(20, 250);
             AmongUsPathLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             AmongUsPathLabel.Name = "AmongUsPathLabel";
+            AmongUsPathLabel.TabStop = false;
             AmongUsPathLabel.Size = new System.Drawing.Size(400, 50);
-            AmongUsPathLabel.TabIndex = 8;
             AmongUsPathLabel.Text = "Or enter Among Us directory path here (see steps on screenshots on the side)";
             this.modManager.Controls.Add(AmongUsPathLabel);
             p.addControl(AmongUsPathLabel);
@@ -342,8 +342,8 @@ namespace ModManager
             AmongUsPathSelection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             AmongUsPathSelection.Name = "AmongUsPathSelection";
             AmongUsPathSelection.Multiline = true;
+            AmongUsPathSelection.TabStop = false;
             AmongUsPathSelection.Size = new System.Drawing.Size(400, 50);
-            AmongUsPathSelection.TabIndex = 7;
             this.modManager.Controls.Add(AmongUsPathSelection);
             p.addControl(AmongUsPathSelection);
 
@@ -353,8 +353,8 @@ namespace ModManager
             AmongUsDirectoryConfirm.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             AmongUsDirectoryConfirm.Name = "AmongUsDirectoryConfirm";
             AmongUsDirectoryConfirm.Size = new System.Drawing.Size(400, 50);
-            AmongUsDirectoryConfirm.TabIndex = 19;
             AmongUsDirectoryConfirm.Text = "Confirm directory";
+            AmongUsDirectoryConfirm.TabStop = false;
             AmongUsDirectoryConfirm.Click += new EventHandler(this.textChangedAmongUsPath);
             AmongUsDirectoryConfirm.UseVisualStyleBackColor = true;
             this.modManager.Controls.Add(AmongUsDirectoryConfirm);
@@ -578,7 +578,6 @@ namespace ModManager
             RemoveModsButton.TabStop = false;
             RemoveModsButton.Cursor = Cursors.Hand;
             RemoveModsButton.Size = new System.Drawing.Size(130, 32);
-            RemoveModsButton.TabIndex = 16;
             RemoveModsButton.Text = "Uninstall all";
             RemoveModsButton.ForeColor = System.Drawing.Color.Red;
             RemoveModsButton.Click += new EventHandler(this.modManager.modlist.uninstallMods);
@@ -703,7 +702,6 @@ namespace ModManager
             DownloadCodeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             DownloadCodeLabel.Name = "DownloadCodeLabel";
             DownloadCodeLabel.Size = new System.Drawing.Size(250, 20);
-            DownloadCodeLabel.TabIndex = 12;
             DownloadCodeLabel.Text = "Current configuration code :";
             this.modManager.Controls.Add(DownloadCodeLabel);
             p.addControl(DownloadCodeLabel);
@@ -762,8 +760,6 @@ namespace ModManager
             InfoPic.Size = new System.Drawing.Size(32, 32);
             InfoPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             InfoPic.TabStop = false;
-            InfoPic.Cursor = Cursors.Hand;
-            InfoPic.Click += new EventHandler(this.modManager.modlist.uninstallMods);
             this.modManager.Controls.Add(InfoPic);
             p.addControl(InfoPic);
 
@@ -795,20 +791,26 @@ namespace ModManager
             this.modManager.Controls.Add(TexturesTitle);
             p.addControl(TexturesTitle);
 
-            System.Windows.Forms.Label TexturesContent = new System.Windows.Forms.Label();
-            TexturesContent.AutoSize = false;
-            TexturesContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            TexturesContent.ForeColor = System.Drawing.SystemColors.Control;
-            TexturesContent.BackColor = System.Drawing.SystemColors.ControlText;
-            TexturesContent.BorderStyle = BorderStyle.None;
-            TexturesContent.Location = new System.Drawing.Point(20, 130);
-            TexturesContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            TexturesContent.Name = "TexturesContent";
-            TexturesContent.Size = new System.Drawing.Size(1245, 90);
-            TexturesContent.Cursor = Cursors.Arrow;
-            TexturesContent.Text = "Coming soon ...";
-            this.modManager.Controls.Add(TexturesContent);
-            p.addControl(TexturesContent);
+            if (this.modManager.serverConfig.texturesEnabled == true)
+            {
+
+            } else
+            {
+                System.Windows.Forms.Label TexturesContent = new System.Windows.Forms.Label();
+                TexturesContent.AutoSize = false;
+                TexturesContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                TexturesContent.ForeColor = System.Drawing.SystemColors.Control;
+                TexturesContent.BackColor = System.Drawing.SystemColors.ControlText;
+                TexturesContent.BorderStyle = BorderStyle.None;
+                TexturesContent.Location = new System.Drawing.Point(20, 130);
+                TexturesContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+                TexturesContent.Name = "TexturesContent";
+                TexturesContent.Size = new System.Drawing.Size(1245, 90);
+                TexturesContent.Cursor = Cursors.Arrow;
+                TexturesContent.Text = "Textures have been disabled for now.\n\nThis feature will be back as soon as possible !";
+                this.modManager.Controls.Add(TexturesContent);
+                p.addControl(TexturesContent);
+            }
 
             this.pages.Add(p);
 
@@ -827,20 +829,29 @@ namespace ModManager
             this.modManager.Controls.Add(ServersTitle);
             p.addControl(ServersTitle);
 
-            System.Windows.Forms.Label ServersContent = new System.Windows.Forms.Label();
-            ServersContent.AutoSize = false;
-            ServersContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ServersContent.ForeColor = System.Drawing.SystemColors.Control;
-            ServersContent.BackColor = System.Drawing.SystemColors.ControlText;
-            ServersContent.BorderStyle = BorderStyle.None;
-            ServersContent.Location = new System.Drawing.Point(20, 130);
-            ServersContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            ServersContent.Name = "ServersContent";
-            ServersContent.Size = new System.Drawing.Size(1245, 90);
-            ServersContent.Cursor = Cursors.Arrow;
-            ServersContent.Text = "Coming soon ...";
-            this.modManager.Controls.Add(ServersContent);
-            p.addControl(ServersContent);
+            if (this.modManager.serverConfig.serversEnabled == true)
+            {
+
+            }
+            else
+            {
+                System.Windows.Forms.Label ServersContent = new System.Windows.Forms.Label();
+                ServersContent.AutoSize = false;
+                ServersContent.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                ServersContent.ForeColor = System.Drawing.SystemColors.Control;
+                ServersContent.BackColor = System.Drawing.SystemColors.ControlText;
+                ServersContent.BorderStyle = BorderStyle.None;
+                ServersContent.Location = new System.Drawing.Point(20, 130);
+                ServersContent.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+                ServersContent.Name = "ServersContent";
+                ServersContent.Size = new System.Drawing.Size(1245, 90);
+                ServersContent.Cursor = Cursors.Arrow;
+                ServersContent.Text = "Coming soon ...";
+                this.modManager.Controls.Add(ServersContent);
+                p.addControl(ServersContent);
+            }
+
+            
 
             this.pages.Add(p);
 
@@ -912,7 +923,6 @@ namespace ModManager
             AmongUsDirSwitchLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             AmongUsDirSwitchLabel.Name = "AmongUsDirSwitchLabel";
             AmongUsDirSwitchLabel.Size = new System.Drawing.Size(200, 20);
-            AmongUsDirSwitchLabel.TabIndex = 12;
             AmongUsDirSwitchLabel.Text = "Among Us directory :";
             this.modManager.Controls.Add(AmongUsDirSwitchLabel);
             p.addControl(AmongUsDirSwitchLabel);
@@ -923,7 +933,6 @@ namespace ModManager
             AmongUsDirSwitchButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             AmongUsDirSwitchButton.Name = "AmongUsDirSwitchButton";
             AmongUsDirSwitchButton.Size = new System.Drawing.Size(150, 30);
-            AmongUsDirSwitchButton.TabIndex = 11;
             AmongUsDirSwitchButton.Text = "Change";
             AmongUsDirSwitchButton.UseVisualStyleBackColor = true;
             AmongUsDirSwitchButton.TabStop = false;
@@ -937,7 +946,6 @@ namespace ModManager
             OpenAmongUs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             OpenAmongUs.Name = "OpenAmongUs";
             OpenAmongUs.Size = new System.Drawing.Size(150, 30);
-            OpenAmongUs.TabIndex = 13;
             OpenAmongUs.Text = "Open";
             OpenAmongUs.TabStop = false;
             OpenAmongUs.UseVisualStyleBackColor = true;
@@ -1107,6 +1115,7 @@ namespace ModManager
                 this.modManager.modlist.load();
                 this.modManager.modlist.changeModWorker();
             }
+            this.modManager.ActiveControl = null;
         }
 
         private void disableHeader()

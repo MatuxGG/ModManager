@@ -31,6 +31,7 @@ namespace ModManager
         public Utils utils;
         public TextureList textureList;
         public ServerList serverList;
+        public ServerConfig serverConfig;
 
         public Release currentRelease;
         public Release latestRelease;
@@ -46,6 +47,8 @@ namespace ModManager
             this.Size = new Size(1300, 700);
 
             Directory.CreateDirectory(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager");
+            string tempPath = Path.GetTempPath() + "\\ModManager";
+            Directory.CreateDirectory(tempPath);
 
             this.log("\nMod Manager starts");
 
@@ -64,7 +67,34 @@ namespace ModManager
 
             this.utils = new Utils();
 
-            // Create AppData if doesn't exist already
+            string serverConfigPath = tempPath + "\\serverConfig.json";
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(this.serverURL+"/serverConfig.json", serverConfigPath);
+                }
+            }
+            catch
+            {
+                this.log("Load ServerConfig > Server unreachable");
+                MessageBox.Show("Can't reach Mod Manager server.\nPlease verify your internet connection and try again !", "Mod Manager server unavailable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Environment.Exit(0);
+            }
+            string json = System.IO.File.ReadAllText(serverConfigPath);
+            this.serverConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<ServerConfig>(json);
+            File.Delete(serverConfigPath);
+
+            if (serverConfig.enabled == false)
+            {
+                this.log("Mod Manager disabled");
+                MessageBox.Show("Mod Manager has been disabled.\n\n" +
+                    "This is most-likely related to an Among Us update. Mod Manager will be back again soon !\n\n" +
+                    "Please, consider joining the discord (link on github) to get notified when it goes live again.\n\n" +
+                    "Thanks for your patience !", "Mod Manager has been disabled", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Environment.Exit(0);
+            }
+
             this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
 
             this.token = System.IO.File.ReadAllText(this.appPath + "\\token.txt");
@@ -73,7 +103,7 @@ namespace ModManager
 
             this.config = new Config();
             this.config.load();
-            this.textureList = new TextureList(this.serverURL + "/textures", this.appPath + "\\textures.json", this);
+            //this.textureList = new TextureList(this.serverURL + "/textures", this.appPath + "\\textures.json", this);
 
             this.log("Config loaded : \n" + this.config.log()); 
 
@@ -96,6 +126,7 @@ namespace ModManager
                 this.firstStart = false;
                 this.pagelist.renderPage("ModSelection");
             }
+
 
         }
 
