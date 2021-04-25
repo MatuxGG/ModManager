@@ -71,7 +71,7 @@ namespace ModManager4.Class
             VersionField.Location = new System.Drawing.Point(400, 145);
             VersionField.Size = new System.Drawing.Size(500, 30);
             string version = this.modManager.version.ToString();
-            VersionField.Text = "Version " + version.Remove(version.Length - 2) + " Beta";
+            VersionField.Text = "Version " + version.Remove(version.Length - 2);
             VersionField.Visible = false;
             this.modManager.Controls.Add(VersionField);
             c.addControl(VersionField);
@@ -680,6 +680,7 @@ namespace ModManager4.Class
             ModNameField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ModNameField.Name = "ModNameField";
             ModNameField.Text = "";
+            ModNameField.TabStop = false;
             ModNameField.Size = new System.Drawing.Size(300, 25);
             PagePanelLocal.Controls.Add(ModNameField);
 
@@ -702,6 +703,7 @@ namespace ModManager4.Class
                 ModDepCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepCheckbox.Location = new System.Drawing.Point(20 + 200*(offset%4), 170 + 40*(offset/4));
                 ModDepCheckbox.Name = d.name;
+                ModDepCheckbox.TabStop = false;
                 ModDepCheckbox.Size = new System.Drawing.Size(25, 25);
                 
                 if (offset == 0)
@@ -1023,9 +1025,9 @@ namespace ModManager4.Class
             PictureBox AddLocalPic = new System.Windows.Forms.PictureBox();
             AddLocalPic.Image = global::ModManager4.Properties.Resources.localadd;
             AddLocalPic.BackColor = System.Drawing.Color.Transparent;
-            AddLocalPic.Location = new System.Drawing.Point(1115, 250);
+            AddLocalPic.Location = new System.Drawing.Point(1130, 250);
             AddLocalPic.Name = "AddLocalPic";
-            AddLocalPic.Size = new System.Drawing.Size(150, 138);
+            AddLocalPic.Size = new System.Drawing.Size(110, 110);
             AddLocalPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             AddLocalPic.TabStop = false;
             AddLocalPic.Cursor = Cursors.Hand;
@@ -1037,9 +1039,9 @@ namespace ModManager4.Class
             PictureBox ToolsPic = new System.Windows.Forms.PictureBox();
             ToolsPic.Image = global::ModManager4.Properties.Resources.tools;
             ToolsPic.BackColor = System.Drawing.Color.Transparent;
-            ToolsPic.Location = new System.Drawing.Point(1140, 460);
+            ToolsPic.Location = new System.Drawing.Point(1150, 460);
             ToolsPic.Name = "ToolsPic";
-            ToolsPic.Size = new System.Drawing.Size(100, 100);
+            ToolsPic.Size = new System.Drawing.Size(80, 80);
             ToolsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             ToolsPic.TabStop = false;
             ToolsPic.Cursor = Cursors.Hand;
@@ -1047,6 +1049,20 @@ namespace ModManager4.Class
             ToolsPic.Visible = false;
             this.modManager.Controls.Add(ToolsPic);
             c.addControl(ToolsPic);
+
+            System.Windows.Forms.Label ToolsText = new System.Windows.Forms.Label();
+            ToolsText.Font = new System.Drawing.Font("Arial", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ToolsText.BackColor = Color.Transparent;
+            ToolsText.ForeColor = SystemColors.Control;
+            ToolsText.Location = new System.Drawing.Point(1155, 550);
+            ToolsText.Name = "ToolsText";
+            ToolsText.Size = new System.Drawing.Size(150, 20);
+            ToolsText.Text = "Tools";
+            ToolsText.Cursor = Cursors.Hand;
+            ToolsText.Click += new EventHandler(this.events.openTools);
+            ToolsText.Visible = false;
+            this.modManager.Controls.Add(ToolsText);
+            c.addControl(ToolsText);
 
             Panel PagePanel = new Panel();
             PagePanel.Location = new System.Drawing.Point(184, 190);
@@ -1102,7 +1118,7 @@ namespace ModManager4.Class
             Panel ModsGroupbox = new Panel();
             ModsGroupbox.Location = new System.Drawing.Point(20, 45);
             ModsGroupbox.Name = "ModsGroupbox";
-            ModsGroupbox.Size = new System.Drawing.Size(876, 420);
+            ModsGroupbox.Size = new System.Drawing.Size(876, 410);
             ModsGroupbox.AutoScroll = false;
             ModsGroupbox.HorizontalScroll.Enabled = false;
             ModsGroupbox.HorizontalScroll.Visible = false;
@@ -1136,6 +1152,7 @@ namespace ModManager4.Class
                     ModCheckbox.Location = new System.Drawing.Point(10, offset);
                     //ModCheckbox.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                     ModCheckbox.Name = mod.id;
+                    ModCheckbox.TabStop = false;
                     ModCheckbox.Size = new System.Drawing.Size(20, 20);
                     ModCheckbox.Click += new EventHandler(this.events.checkBox);
 
@@ -1192,6 +1209,7 @@ namespace ModManager4.Class
                         //ModGithubField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                         ModGithubField.Name = "ModGithubField=" + mod.id;
                         ModGithubField.Size = new System.Drawing.Size(350, 20);
+                        ModGithubField.TabStop = false;
                         ModGithubField.Text = "https://github.com/" + mod.author + "/" + mod.github;
                         ModGithubField.Click += new EventHandler(this.events.openGithub);
 
@@ -1301,6 +1319,7 @@ namespace ModManager4.Class
                     ToolLink.Name = "ToolLink=" + t.name;
                     ToolLink.Size = new System.Drawing.Size(150, 20);
                     ToolLink.Text = "Download";
+                    ToolLink.TabStop = false;
                     ToolLink.Click += new EventHandler(this.events.downloadTool);
                     PagePanelTools.Controls.Add(ToolLink);
                 }

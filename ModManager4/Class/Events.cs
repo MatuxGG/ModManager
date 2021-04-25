@@ -321,6 +321,10 @@ namespace ModManager4.Class
 
         public void removeLocalMods(object sender, EventArgs e)
         {
+            if (MessageBox.Show("This option will remove and uninstall all current local mods from Mod Manager.\n\nDo you really want to do that ?", "Remove local mods", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+            {
+                return;
+            }
             foreach (Mod m in this.modManager.modlist.getLocalMods())
             {
                 this.modManager.modWorker.removeLocalMod(m);
