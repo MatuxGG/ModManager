@@ -32,8 +32,8 @@ Publish a release in a public github repository for your mod. In this release, y
 
 ## Credits & Resources
 
-[BepInExReactor](https://github.com/NuclearPowered/BepInEx) - The main dependency of every mod\
-[Essentials](https://github.com/DorCoMaNdO/Reactor-Essentials) - For custom game options
+[BepInEx](https://github.com/NuclearPowered/BepInEx) - The main dependency of every mod\
+[Reactor](https://github.com/NuclearPowered/Reactor) - The most used modding API for Among Us\
 
 Thanks to every mod creator. Go check their respective github repositories directly in Mod Manager !
 
