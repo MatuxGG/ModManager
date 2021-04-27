@@ -1173,14 +1173,19 @@ namespace ModManager4.Class
                     ModNameField.Text = mod.name;
                     ModsGroupbox.Controls.Add(ModNameField);
 
-                    System.Windows.Forms.Label ModAuthorField = new System.Windows.Forms.Label();
+                    
+
+                    System.Windows.Forms.LinkLabel ModAuthorField = new System.Windows.Forms.LinkLabel();
                     ModAuthorField.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    ModAuthorField.LinkColor = System.Drawing.SystemColors.Control;
                     ModAuthorField.ForeColor = System.Drawing.SystemColors.Control;
                     ModAuthorField.Location = new System.Drawing.Point(190, offset);
                     //ModAuthorField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                     ModAuthorField.Name = "ModAuthorField=" + mod.id;
+                    ModAuthorField.TabStop = false;
                     ModAuthorField.Size = new System.Drawing.Size(150, 20);
                     ModAuthorField.Text = mod.author;
+                    ModAuthorField.Click += new EventHandler(this.events.openAuthorGithub);
                     ModsGroupbox.Controls.Add(ModAuthorField);
 
                     System.Windows.Forms.Label ModVersionField = new System.Windows.Forms.Label();

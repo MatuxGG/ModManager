@@ -20,6 +20,8 @@ namespace ModManager4.Class
         public BackgroundWorker backgroundWorker;
         public BackgroundWorker backgroundWorkerCode;
         public string codeToInstall;
+        public Boolean startAfterUpdate;
+
         public ModWorker(ModManager modManager)
         {
             this.modManager = modManager;
@@ -144,9 +146,10 @@ namespace ModManager4.Class
             }
         }
 
-        public void updateMods()
+        public void updateMods(Boolean startAfterUpdate)
         {
             this.modManager.logs.log("Update mods process");
+            this.startAfterUpdate = startAfterUpdate;
             this.backgroundWorker = new BackgroundWorker();
             this.backgroundWorker.WorkerReportsProgress = true;
             this.InitializeBackgroundWorker();
@@ -201,6 +204,10 @@ namespace ModManager4.Class
             this.modManager.modlist.resetChanged();
             this.modManager.modlist.setCode();
             this.modManager.logs.log("Update mods successful");
+            if (this.startAfterUpdate == true)
+            {
+                this.modManager.componentlist.events.startGame();
+            }
             this.modManager.pagelist.renderPage("ModSelection");
         }
 

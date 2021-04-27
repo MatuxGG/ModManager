@@ -48,7 +48,7 @@ namespace ModManager4.Class
 
             }
 
-            
+            modManager.logs.log("- Mods integrity checked");
         }
 
         public Boolean checkWorker(ModManager modManager)
@@ -86,29 +86,38 @@ namespace ModManager4.Class
             return false;
         }
 
-        public void load()
+        public void load(ModManager modManager)
         {
+            modManager.logs.log("- start");
             FileInfo f = new FileInfo(this.path);
 
             if (f.Exists)
             {
+                modManager.logs.log("- config exists");
                 string json = System.IO.File.ReadAllText(this.path);
                 Config temp = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(json);
                 FileInfo f2 = new FileInfo(temp.amongUsPath + "\\Among Us.exe");
                 if (f2.Exists)
                 {
+                    modManager.logs.log("- Among Us exists");
                     this.amongUsPath = temp.amongUsPath;
                     this.installedDependencies = temp.installedDependencies;
                     this.installedMods = temp.installedMods;
                     return;
                 }
             }
-
+            modManager.logs.log("- Config or Among Us doesn't exists");
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
+            modManager.logs.log("- Getting path");
             this.amongUsPath = null;
-            this.amongUsPath = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 945360", "InstallLocation", null).ToString();
+            RegistryKey myKey  = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 945360", false);
+            this.amongUsPath = (String)myKey.GetValue("InstallLocation");
+            
+            modManager.logs.log("- Among Us path detection : " + this.amongUsPath);
             this.update();
+            modManager.logs.log("- Config updated");
+
             return;
         }
 

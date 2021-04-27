@@ -28,6 +28,7 @@ namespace ModManager4.Class
 
         public async Task load()
         {
+            this.modManager.logs.log("Loading modlist");
             string modlistURL = this.modManager.serverURL + "/modlist.json";
             string modlist = "";
             try
@@ -94,6 +95,8 @@ namespace ModManager4.Class
             }
 
             progress.Visible = false;
+
+            this.modManager.logs.log("- Modlist loaded successfully");
         }
 
         public void updateLocalMods()

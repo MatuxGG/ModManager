@@ -66,6 +66,7 @@ namespace ModManager4
             this.modWorker = new ModWorker(this);
 
             this.logs.log("Mod Manager loading\n");
+            this.logs.log("- Version " + this.version.ToString().Remove(this.version.ToString().Length - 2));
 
             if (System.Diagnostics.Process.GetProcessesByName("ModManager4").Length > 1)
             {
@@ -73,6 +74,10 @@ namespace ModManager4
                 MessageBox.Show("Mod Manager is already running.", "Mod Manager already opened", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
+
+            //Check update
+            this.updater = new Updater(this);
+            await this.updater.checkUpdate();
 
             //Get Server Config
             this.logs.log("ServerConfig");
@@ -100,10 +105,6 @@ namespace ModManager4
             }
             this.serverConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<ServerConfig>(config);
 
-            //Check update
-            this.updater = new Updater(this);
-            await this.updater.checkUpdate();
-
             // Load mods from server
             this.modlist = new Modlist(this);
             await this.modlist.load();
@@ -117,7 +118,9 @@ namespace ModManager4
             // Load local config or create one (find AU folder if possible)
             this.config = new Config();
             this.config.setPath(this.appDataPath);
-            this.config.load();
+            this.logs.log("Loading config");
+            this.config.load(this);
+            this.logs.log("- Config loaded successfully\n");
             this.config.check(this);
             this.logs.log(this.config.toString());
 

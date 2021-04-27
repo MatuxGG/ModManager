@@ -30,6 +30,16 @@ namespace ModManager4.Class
             Process.Start("explorer", link);
         }
 
+        public void openAuthorGithub(object sender, EventArgs e)
+        {
+            LinkLabel clickedLink = ((LinkLabel)sender);
+            string modId = clickedLink.Name.Substring(clickedLink.Name.IndexOf("=") + 1);
+            Mod m = this.modManager.modlist.getModById(modId);
+            string link = "https://github.com/" + m.author;
+            this.modManager.logs.log("Event : Open Author github at link " + link + "\n");
+            Process.Start("explorer", link);
+        }
+
         public void openAnnounce(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Render page News\n");
@@ -87,7 +97,7 @@ namespace ModManager4.Class
             string toolFieldName = ((PictureBox)sender).Name;
             string toolName = toolFieldName.Substring(toolFieldName.IndexOf("=") + 1);
             Tool t = this.modManager.toollist.getToolByName(toolName);
-            if (t.path == "")
+            if (t.path == "" || File.Exists(t.path) == false)
             {
                 if (MessageBox.Show("Please select a path for " + t.name, "Select tool path", MessageBoxButtons.OK, MessageBoxIcon.Exclamation) == DialogResult.OK)
                 {
@@ -229,7 +239,7 @@ namespace ModManager4.Class
             }
 
             this.modManager.pagelist.renderPage("BeforeUpdateMods");
-            this.modManager.modWorker.updateMods();
+            this.modManager.modWorker.updateMods(false);
             this.modManager.logs.log("- Update mods completed\n");
         }
 
@@ -364,8 +374,7 @@ namespace ModManager4.Class
         {
             this.modManager.logs.log("Event : Save and Start\n");
             this.modManager.pagelist.renderPage("BeforeUpdateMods");
-            this.modManager.modWorker.updateMods();
-            this.startGame();
+            this.modManager.modWorker.updateMods(true);
         }
 
         public void startAnyway(object sender, EventArgs e)

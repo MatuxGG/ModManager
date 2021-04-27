@@ -22,6 +22,7 @@ namespace ModManager4.Class
 
         public void load()
         {
+            this.modManager.logs.log("Loading toollist");
             string localToollistPath = this.modManager.appDataPath + "\\toollist.json";
             this.tools = new List<Tool> { };
             if (File.Exists(localToollistPath))
@@ -83,6 +84,7 @@ namespace ModManager4.Class
                 }
             }
             this.update();
+            this.modManager.logs.log("- Toolist loaded successfully");
         }
 
         public void update()
