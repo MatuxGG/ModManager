@@ -6,6 +6,7 @@ Join the discord : https://discord.gg/yBNgKuGjNw
 
 ## How to install ?
 
+- Download and install the .net 5.0 runtime  [](https://dotnet.microsoft.com/download/dotnet/5.0/runtime)
 - Download the latest "ModManagerInstaller.exe" in the release section.
 - Launch the installer and choose a location for the software. (You shouldn't select your Among Us directory !)
 - Everything is set up ! :)
