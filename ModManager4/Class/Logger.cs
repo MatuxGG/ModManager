@@ -14,6 +14,16 @@ namespace ModManager4.Class
         public Logger()
         {
             this.logFile = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager\\log.txt";
+            
+            if (File.Exists(logFile))
+            {
+                var lineCount = File.ReadLines(logFile).Count();
+                if (lineCount > 10000)
+                {
+                    DateTime utcDate = DateTime.UtcNow;
+                    File.WriteAllText(logFile, "Logs cleaned (Date : "+ utcDate + ")\n");
+                }
+            }
         }
 
         public void log(string line)

@@ -35,7 +35,7 @@ namespace ModManager4.Class
                 this.modManager.logs.log("- New version available");
                 if (userAction == DialogResult.OK)
                 {
-                    this.modManager.utils.FileDelete(this.modManager.appPath + "\\ModManagerInstaller.exe");
+                    this.modManager.utils.FileDelete(this.modManager.tempPath + "\\ModManagerInstaller.exe");
                     foreach (ReleaseAsset ra in this.latestRelease.Assets)
                     {
                         if (ra.Name == "ModManagerInstaller.exe")
@@ -44,7 +44,7 @@ namespace ModManager4.Class
                             {
                                 using (WebClient client = new WebClient())
                                 {
-                                    client.DownloadFile(ra.BrowserDownloadUrl, this.modManager.appPath + "\\ModManagerInstaller.exe");
+                                    client.DownloadFile(ra.BrowserDownloadUrl, this.modManager.tempPath + "\\ModManagerInstaller.exe");
                                 }
                             }
                             catch

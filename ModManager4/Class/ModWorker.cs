@@ -140,7 +140,7 @@ namespace ModManager4.Class
                 {
                     this.modManager.config.installedMods.Clear();
                 }
-                this.modManager.config.update();
+                this.modManager.config.update(this.modManager);
                 
                 this.modManager.logs.log("Uninstall successful");
             }
@@ -219,7 +219,7 @@ namespace ModManager4.Class
                 {
                     this.modManager.logs.log("- - Install dependency " + dependencie);
                     string tempPath = this.modManager.tempPath;
-                    this.modManager.utils.DirectoryDelete(tempPath);
+                    //this.modManager.utils.DirectoryDelete(tempPath);
                     Directory.CreateDirectory(tempPath);
                     this.modManager.utils.FileDelete(tempPath + "\\" + dependencie + ".zip");
                     try
@@ -238,7 +238,7 @@ namespace ModManager4.Class
                     this.modManager.config.installedDependencies.Add(dependencie);
                 }
             }
-            this.modManager.config.update();
+            this.modManager.config.update(this.modManager);
         }
 
         public void installMod(Mod m)
@@ -283,7 +283,7 @@ namespace ModManager4.Class
                     {
                         InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion, new List<string>(), plugins);
                         this.modManager.config.installedMods.Add(newMod);
-                        this.modManager.config.update();
+                        this.modManager.config.update(this.modManager);
                         return;
                     }
                 } else
@@ -307,7 +307,7 @@ namespace ModManager4.Class
                     {
                         InstalledMod newMod = new InstalledMod(m.id, "1.0", m.gameVersion, new List<string>(), plugins);
                         this.modManager.config.installedMods.Add(newMod);
-                        this.modManager.config.update();
+                        this.modManager.config.update(this.modManager);
                         return;
                     }
                 }
@@ -329,6 +329,7 @@ namespace ModManager4.Class
             string tempPathZip = tempPath + "\\ModZip";
 
             Directory.CreateDirectory(tempPathZip);
+
             ZipFile.ExtractToDirectory(m.github, tempPathZip);
 
             tempPathZip = this.getBepInExInsideRec(tempPathZip);
@@ -355,6 +356,21 @@ namespace ModManager4.Class
                     this.modManager.utils.FileCopy(f.FullName, target);
                     plugins.Add(newName);
                 }
+
+                DirectoryInfo[] dirs = dirInfo.GetDirectories("*");
+
+                foreach (DirectoryInfo d in dirs)
+                {
+                    string target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + d.Name;
+                    string newName = d.Name;
+                    if (Directory.Exists(target))
+                    {
+                        newName = m.id + "-" + d.Name.Remove(d.Name.Length);
+                        target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + newName;
+                    }
+                    this.modManager.utils.DirectoryCopy(d.FullName, target, true);
+                    plugins.Add(newName);
+                }
             }
             DirectoryInfo dirInfo2 = new DirectoryInfo(tempPathZip + "\\Assets");
             List<string> assets = new List<string>();
@@ -369,7 +385,7 @@ namespace ModManager4.Class
             }
             InstalledMod newMod = new InstalledMod(m.id, "1.0", m.gameVersion, assets, plugins);
             this.modManager.config.installedMods.Add(newMod);
-            this.modManager.config.update();
+            this.modManager.config.update(this.modManager);
             return;
         }
 
@@ -409,24 +425,55 @@ namespace ModManager4.Class
             string fileUrl = file.BrowserDownloadUrl;
             string fileTag = m.release.TagName;
             string tempPath = this.modManager.tempPath;
-            this.modManager.utils.DirectoryDelete(tempPath);
+            //this.modManager.utils.DirectoryDelete(tempPath);
             Directory.CreateDirectory(tempPath);
             string zipPath = tempPath + "\\" + fileName;
-            this.modManager.utils.FileDelete(zipPath);
-            try
+            
+            if (this.modManager.config.enableCache == true)
             {
-                using (var client = new WebClient())
+                this.modManager.logs.log("- Cache enabled");
+                if (File.Exists(zipPath) && File.Exists(tempPath+"\\"+fileName + "-" + fileTag + ".cache"))
                 {
-                    client.DownloadFile(fileUrl, zipPath);
+                    this.modManager.logs.log("- Mod found in cache");
+                } else
+                {
+                    this.modManager.logs.log("- Mod not found in cache");
+                    this.modManager.utils.FileDelete(zipPath);
+                    try
+                    {
+                        using (var client = new WebClient())
+                        {
+                            client.DownloadFile(fileUrl, zipPath);
+                        }
+                    }
+                    catch
+                    {
+                        this.modManager.logs.log("Error : Disconnected during ZIP install (" + fileName + ")");
+                        this.modManager.componentlist.events.exitMM();
+                    }
+                    File.Create(tempPath + "\\" + fileName +"-"+fileTag+ ".cache");
+                }
+            } else
+            {
+                this.modManager.logs.log("- Cache disabled");
+                this.modManager.utils.FileDelete(zipPath);
+                try
+                {
+                    using (var client = new WebClient())
+                    {
+                        client.DownloadFile(fileUrl, zipPath);
+                    }
+                }
+                catch
+                {
+                    this.modManager.logs.log("Error : Disconnected during ZIP install (" + fileName + ")");
+                    this.modManager.componentlist.events.exitMM();
                 }
             }
-            catch
-            {
-                this.modManager.logs.log("Error : Disconnected during ZIP install (" + fileName + ")");
-                this.modManager.componentlist.events.exitMM();
-            }
+                        
             string tempPathZip = tempPath + "\\ModZip";
 
+            this.modManager.utils.DirectoryDelete(tempPathZip);
             Directory.CreateDirectory(tempPathZip);
             ZipFile.ExtractToDirectory(zipPath, tempPathZip);
 
@@ -454,6 +501,21 @@ namespace ModManager4.Class
                     this.modManager.utils.FileCopy(f.FullName, target);
                     plugins.Add(newName);
                 }
+
+                DirectoryInfo[] dirs = dirInfo.GetDirectories("*");
+
+                foreach (DirectoryInfo d in dirs)
+                {
+                    string target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + d.Name;
+                    string newName = d.Name;
+                    if (Directory.Exists(target))
+                    {
+                        newName = m.id + "-" + d.Name.Remove(d.Name.Length);
+                        target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + newName;
+                    }
+                    this.modManager.utils.DirectoryCopy(d.FullName, target, true);
+                    plugins.Add(newName);
+                }
             }
             DirectoryInfo dirInfo2 = new DirectoryInfo(tempPathZip + "\\Assets");
             List<string> assets = new List<string>();
@@ -468,7 +530,7 @@ namespace ModManager4.Class
             }
             InstalledMod newMod = new InstalledMod(m.id, fileTag, m.gameVersion, assets, plugins);
             this.modManager.config.installedMods.Add(newMod);
-            this.modManager.config.update();
+            this.modManager.config.update(this.modManager);
             return;
         }
 
@@ -511,7 +573,14 @@ namespace ModManager4.Class
                 }
                 if (canRemove == true)
                 {
-                    this.modManager.utils.FileDelete(pluginsPath + "\\" + plugin);
+                    if (File.Exists(pluginsPath + "\\" + plugin))
+                    {
+                        this.modManager.utils.FileDelete(pluginsPath + "\\" + plugin);
+                    }
+                    if (Directory.Exists(pluginsPath + "\\" + plugin))
+                    {
+                        this.modManager.utils.DirectoryDelete(pluginsPath + "\\" + plugin);
+                    }
                 }
             }
             string assetsPath = this.modManager.config.amongUsPath + "\\Assets";
@@ -520,7 +589,7 @@ namespace ModManager4.Class
                 this.modManager.utils.FileDelete(assetsPath + "\\" + asset);
             }
             this.modManager.config.installedMods.Remove(installedMod);
-            this.modManager.config.update();
+            this.modManager.config.update(this.modManager);
 
             this.modManager.logs.log("- Uninstall mod " + m.name + " completed");
         }

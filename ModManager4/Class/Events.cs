@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
@@ -86,6 +87,12 @@ namespace ModManager4.Class
             this.modManager.pagelist.renderPage("Info");
         }
 
+        public void openServers(object sender, EventArgs e)
+        {
+            this.modManager.logs.log("Event : Render page Servers\n");
+            this.modManager.pagelist.renderPage("Servers");
+        }
+
         public void openTools(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Render page Tools\n");
@@ -126,6 +133,22 @@ namespace ModManager4.Class
             string toolName = toolFieldName.Substring(toolFieldName.IndexOf("=") + 1);
             Tool t = this.modManager.toollist.getToolByName(toolName);
             Process.Start("explorer", t.downloadLink);
+            
+        }
+
+        public void enableCache(object sender, EventArgs e)
+        {
+            CheckBox checkbox = ((CheckBox)sender);
+            if (checkbox.Checked)
+            {
+                this.modManager.logs.log("Event : Enable cache \n");
+                this.modManager.config.enableCache = true;
+            } else
+            {
+                this.modManager.logs.log("Event : Disable cache \n");
+                this.modManager.config.enableCache = false;
+            }
+            this.modManager.config.update(this.modManager);
         }
 
         public void openLogs(object sender, EventArgs e)
@@ -156,6 +179,10 @@ namespace ModManager4.Class
         public void selectFolder(object sender, EventArgs e) {
             this.modManager.logs.log("Event : Open popup to select Among Us folder\n");
             OpenFileDialog folderBrowser = new OpenFileDialog();
+            if (this.modManager.config != null && this.modManager.config.amongUsPath != null)
+            {
+                folderBrowser.InitialDirectory = this.modManager.config.amongUsPath;
+            }
             folderBrowser.ValidateNames = false;
             folderBrowser.CheckFileExists = false;
             folderBrowser.CheckPathExists = true;
@@ -170,10 +197,9 @@ namespace ModManager4.Class
                 if (this.modManager.config == null)
                 {
                     this.modManager.config = new Config();
-                    this.modManager.config.setPath(this.modManager.serverURL);
                 }
                 this.modManager.config.amongUsPath = folderPath;
-                this.modManager.config.update();
+                this.modManager.config.update(this.modManager);
                 this.modManager.pagelist.renderPage("ModSelection");
             }
         }
@@ -202,6 +228,24 @@ namespace ModManager4.Class
                     this.modManager.modlist.toUninstall.Add(m.id);
                 }
             }
+        }
+
+        public void changeResolution(object sender, EventArgs e)
+        {
+            ComboBox comboBox = ((ComboBox)sender);
+            string selectedRes = comboBox.Text;
+            int resX = int.Parse(selectedRes.Substring(0, selectedRes.IndexOf("x")));
+            int resY = int.Parse(selectedRes.Substring(selectedRes.IndexOf("x") + 1));
+            this.modManager.config.resolutionX = resX;
+            this.modManager.config.resolutionY = resY;
+            this.modManager.config.update(this.modManager);
+            this.modManager.componentlist = new Componentlist(this.modManager);
+            this.modManager.componentlist.load();
+            this.modManager.modlist.setCode();
+            this.modManager.Size = new Size(resX, resY);
+            this.modManager.centerToScreenPub();
+            this.modManager.logs.log(this.modManager.componentlist.toString());
+            this.modManager.pagelist.renderPage("Settings");
         }
 
         public void uninstallMods(object sender, EventArgs e)
@@ -279,10 +323,40 @@ namespace ModManager4.Class
             // Always default to Folder Selection.
             folderBrowser.FileName = "";
 
+            Panel p = (Panel)this.modManager.componentlist.get("LocalAdd").getControl("PagePanelLocal");
+            Label l = (Label)p.Controls["ModAddFileName"];
+
+            if (l.Text != "")
+            {
+                folderBrowser.InitialDirectory = Path.GetDirectoryName(l.Text);
+            }
+
             if (folderBrowser.ShowDialog() == DialogResult.OK)
             {
-                Panel p = (Panel)this.modManager.componentlist.get("LocalAdd").getControl("PagePanelLocal");
-                Label l = (Label)p.Controls["ModAddFileName"];
+                l.Text = Path.GetFullPath(folderBrowser.FileName);
+            }
+        }
+
+        public void editMod(object sender, EventArgs e)
+        {
+            OpenFileDialog folderBrowser = new OpenFileDialog();
+            folderBrowser.ValidateNames = false;
+            folderBrowser.CheckFileExists = false;
+            folderBrowser.CheckPathExists = true;
+            folderBrowser.Filter = "ZIP mod file|*.zip|DLL mod file|*.dll";
+            // Always default to Folder Selection.
+            folderBrowser.FileName = "";
+
+            Panel p = (Panel)this.modManager.componentlist.get("LocalEdit").getControl("PagePanelLocalEdit");
+            Label l = (Label)p.Controls["ModAddFileNameEdit"];
+
+            if (l.Text != "")
+            {
+                folderBrowser.InitialDirectory = Path.GetDirectoryName(l.Text);
+            }
+
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
                 l.Text = Path.GetFullPath(folderBrowser.FileName);
             }
         }
@@ -318,15 +392,72 @@ namespace ModManager4.Class
             this.modManager.pagelist.renderPage("ModSelection");
         }
 
-        //Temporary disabled
+        public void validEditMod(object sender, EventArgs e)
+        {
+            Panel p = (Panel)this.modManager.componentlist.get("LocalEdit").getControl("PagePanelLocalEdit");
+            string name = p.Controls["ModNameFieldEdit"].Text;
+            string fileName = p.Controls["ModAddFileNameEdit"].Text;
+            if (fileName == "No file selected" || name == "")
+            {
+                return;
+            }
+
+            System.Windows.Forms.Label LocalEditId = (System.Windows.Forms.Label)p.Controls["LocalEditId"];
+            Mod m = this.modManager.modlist.getModById(LocalEditId.Text);
+
+
+
+            List<string> dependencies = new List<string>();
+            foreach (Control c in p.Controls)
+            {
+                if (c is CheckBox)
+                {
+                    CheckBox cb = (CheckBox)c;
+                    if (cb.CheckState == CheckState.Checked)
+                    {
+                        dependencies.Add(cb.Name);
+                    }
+                }
+            }
+
+
+            string newPath = this.modManager.appDataPath + "\\localMods\\" + Path.GetFileName(fileName);
+            this.modManager.utils.FileCopy(fileName, newPath);
+
+            m.name = name;
+            this.modManager.utils.FileDelete(m.github);
+            m.dependencies = dependencies;
+            m.github = newPath;
+
+            this.modManager.modlist.updateLocalMods();
+            this.modManager.componentlist.refreshModSelection();
+            this.modManager.pagelist.renderPage("ModSelection");
+        }
+
+        public void editLocalMod(object sender, EventArgs e)
+        {
+            string edit = ((PictureBox)sender).Name;
+            string modId = edit.Substring(edit.IndexOf("=") + 1);
+            Mod m = this.modManager.modlist.getModById(modId);
+            this.modManager.componentlist.loadEditModPage(m);
+            this.modManager.pagelist.renderPage("LocalEdit");
+        }
+
         public void removeLocalMod(object sender, EventArgs e)
         {
-            string cross = ((Label)sender).Name;
+            string cross = ((PictureBox)sender).Name;
             string modId = cross.Substring(cross.IndexOf("=") + 1);
             Mod m = this.modManager.modlist.getModById(modId);
             this.modManager.modWorker.removeLocalMod(m);
-            this.modManager.componentlist.refreshModSelection();
+
+            this.modManager.componentlist = new Componentlist(this.modManager);
+            this.modManager.componentlist.load();
+            this.modManager.modlist.setCode();
+            this.modManager.logs.log(this.modManager.componentlist.toString());
             this.modManager.pagelist.renderPage("ModSelection");
+
+            //this.modManager.componentlist.refreshModSelection();
+            //this.modManager.pagelist.renderPage("ModSelection");
         }
 
         public void removeLocalMods(object sender, EventArgs e)

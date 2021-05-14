@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ModManager4.Class
 {
@@ -14,14 +15,20 @@ namespace ModManager4.Class
         public string amongUsPath { get; set; }
         public List<InstalledMod> installedMods { get; set; }
         public List<string> installedDependencies { get; set; }
-        public string path { get; set; }
 
-        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies)
+        public Boolean enableCache { get; set; }
+
+        public int resolutionX { get; set; }
+        public int resolutionY { get; set; }
+
+        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, Boolean enableCache, int resolutionX, int resolutionY)
         {
             this.amongUsPath = amongUsPath;
             this.installedMods = installedMods;
             this.installedDependencies = installedDependencies;
-            this.path = null;
+            this.enableCache = enableCache;
+            this.resolutionX = resolutionX;
+            this.resolutionY = resolutionY;
         }
 
         public Config()
@@ -29,12 +36,17 @@ namespace ModManager4.Class
             this.amongUsPath = "";
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
-            this.path = "";
+            this.enableCache = true;
+            this.resolutionX = 1300;
+            this.resolutionY = 810;
         }
 
-        public void setPath(string path)
+        public List<int[]> getResolutions()
         {
-            this.path = path + "\\config4.conf";
+            List<int[]> res = new List<int[]>();
+            res.Add(new int[] { 1300, 810 });
+            res.Add(new int[] { 1920, 1200 });
+            return res;
         }
 
         
@@ -75,7 +87,7 @@ namespace ModManager4.Class
                 }
                 foreach (string plugin in mod.plugins)
                 {
-                    if (File.Exists(pluginPath + "\\" + plugin) == false)
+                    if (File.Exists(pluginPath + "\\" + plugin) == false && Directory.Exists(pluginPath + "\\" + plugin) == false)
                     {
                         modManager.logs.log("- Uninstall mod " + m.name + " (missing plugin " + plugin + ")");
                         modManager.modWorker.uninstallMod(m);
@@ -88,25 +100,44 @@ namespace ModManager4.Class
 
         public void load(ModManager modManager)
         {
+            modManager.logs.log(this.toString());
             modManager.logs.log("- start");
-            FileInfo f = new FileInfo(this.path);
 
-            if (f.Exists)
+            string path = modManager.appDataPath + "\\config4.conf";
+            modManager.logs.log("- Path = " + path);
+
+            if (File.Exists(path))
             {
                 modManager.logs.log("- config exists");
-                string json = System.IO.File.ReadAllText(this.path);
+                string json = System.IO.File.ReadAllText(path);
                 Config temp = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(json);
-                FileInfo f2 = new FileInfo(temp.amongUsPath + "\\Among Us.exe");
-                if (f2.Exists)
+                modManager.logs.log("- Among Us Path = " + temp.amongUsPath + "\\Among Us.exe");
+                if (File.Exists(temp.amongUsPath + "\\Among Us.exe"))
                 {
                     modManager.logs.log("- Among Us exists");
                     this.amongUsPath = temp.amongUsPath;
                     this.installedDependencies = temp.installedDependencies;
                     this.installedMods = temp.installedMods;
+                    this.enableCache = temp.enableCache;
+
+                    if (this.getResolutions().Contains(new int[] {temp.resolutionX, temp.resolutionY}) == false)
+                    {
+                        temp.resolutionX = 1300;
+                        temp.resolutionY = 810;
+                    }
+
+                    this.resolutionX = temp.resolutionX;
+                    this.resolutionY = temp.resolutionY;
+                    this.update(modManager);
                     return;
+                } else
+                {
+                    modManager.logs.log("- Among Us doesn't exists in stored config");
                 }
+            } else
+            {
+                modManager.logs.log("- Config doesn't exists");
             }
-            modManager.logs.log("- Config or Among Us doesn't exists");
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
             modManager.logs.log("- Getting path");
@@ -115,16 +146,17 @@ namespace ModManager4.Class
             this.amongUsPath = (String)myKey.GetValue("InstallLocation");
             
             modManager.logs.log("- Among Us path detection : " + this.amongUsPath);
-            this.update();
+
+            this.update(modManager);
             modManager.logs.log("- Config updated");
 
             return;
         }
 
-        public void update()
+        public void update(ModManager modManager)
         {
             string json = JsonConvert.SerializeObject(this);
-            File.WriteAllText(this.path, json);
+            File.WriteAllText(modManager.appDataPath + "\\config4.conf", json);
         }
 
         public Boolean containsMod(string id)
@@ -163,15 +195,16 @@ namespace ModManager4.Class
             return null;
         }
 
-        public bool exists()
+        public bool exists(ModManager modManager)
         {
-            FileInfo f = new FileInfo(this.path);
+            FileInfo f = new FileInfo(modManager.appDataPath + "\\config4.conf");
             return f.Exists;
         }
 
         public string toString()
         {
-            string ret = "Config :\n- Among Us path : " + this.amongUsPath + "\n- Installed dependencies :\n";
+            
+            string ret = "Config :\n- OS Version : " + System.Environment.OSVersion.ToString() + "\n- Among Us path : " + this.amongUsPath + "\n- Cache enabled : " + this.enableCache + "\n- Resolution : " + this.resolutionX + "x" + this.resolutionY + "\n- Installed dependencies :\n";
             foreach (string d in this.installedDependencies)
             {
                 ret = ret + "- - Installed dependency " + d;

@@ -27,9 +27,11 @@ namespace ModManager4.Class
             this.pages.Add(new Page("BeforeUpdateMods", new string[] { "HeaderPub", "BeforeUpdateMods" }));
             this.pages.Add(new Page("BeforeApplyCode", new string[] { "HeaderPub", "BeforeApplyCode" }));
             this.pages.Add(new Page("LocalAdd", new string[] { "Header", "HeaderPub", "BackToMods", "LocalAdd", "Footer" }));
+            this.pages.Add(new Page("LocalEdit", new string[] { "Header", "HeaderPub", "BackToMods", "LocalEdit", "Footer" }));
             this.pages.Add(new Page("Info", new string[] { "Header", "HeaderPub", "BackToMods", "Info", "Footer" }));
             this.pages.Add(new Page("UnsavedChanges", new string[] { "Header", "HeaderPub", "BackToMods", "UnsavedChanges", "Footer" }));
             this.pages.Add(new Page("ModTools", new string[] { "Header", "HeaderPub", "BackToMods", "ModTools", "Footer" }));
+            this.pages.Add(new Page("Servers", new string[] { "Header", "HeaderPub", "BackToMods", "Servers", "Footer" }));
 
             this.pages.Add(new Page("Disabled", new string[] { "HeaderPub", "Disabled" }));
         }
@@ -48,7 +50,7 @@ namespace ModManager4.Class
                     this.modManager.componentlist.renderComponents(p.components);
                 } else
                 {
-
+                    
                 }
             }
         }

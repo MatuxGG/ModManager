@@ -34,12 +34,14 @@ namespace ModManager4
         public Config config;
         public Componentlist componentlist;
         public Pagelist pagelist;
+        public Serverlist serverlist;
 
         public ModManager()
         {
             InitializeComponent();
 
             this.Size = new Size(1300, 810);
+            this.CenterToScreen();
 
             _ = this.Start();
         }
@@ -117,17 +119,19 @@ namespace ModManager4
 
             // Load local config or create one (find AU folder if possible)
             this.config = new Config();
-            this.config.setPath(this.appDataPath);
             this.logs.log("Loading config");
             this.config.load(this);
             this.logs.log("- Config loaded successfully\n");
             this.config.check(this);
             this.logs.log(this.config.toString());
+            this.serverlist = new Serverlist();
+            this.serverlist.load(this);
+            this.logs.log(this.serverlist.toString());
 
             // Load pages
             this.componentlist = new Componentlist(this);
             this.componentlist.load();
-            this.logs.log(this.componentlist.toString());
+            this.logs.log(this.componentlist.toString()); 
 
             this.pagelist = new Pagelist(this);
             this.pagelist.load();
@@ -136,6 +140,9 @@ namespace ModManager4
             this.modlist.setCode();
 
             this.BackgroundImage = global::ModManager4.Properties.Resources.titlefond;
+
+            this.Size = new Size(this.config.resolutionX, this.config.resolutionY);
+            this.CenterToScreen();
 
             this.logs.log("Mod Manager loaded successfully\n");
 
@@ -154,6 +161,11 @@ namespace ModManager4
             }
         }
 
+
+        public void centerToScreenPub()
+        {
+            this.CenterToScreen();
+        }
 
     }
 }

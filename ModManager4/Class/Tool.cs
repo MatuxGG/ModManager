@@ -16,12 +16,29 @@ namespace ModManager4.Class
 
         public string downloadLink;
 
-        public Tool(string name, string path, string image, string downloadLink)
+        public string type;
+
+        public string installMethod;
+
+        public string author;
+
+        public string repository;
+
+        public string installFile;
+
+        public string appFile;
+
+        public Tool(string name, string path, string image, string downloadLink, string type, string installMethod, string author, string repository, string installFile, string appFile)
         {
             this.name = name;
             this.path = path;
             this.image = image;
             this.downloadLink = downloadLink;
+            this.type = type;
+            this.installMethod = installMethod;
+            this.repository = repository;
+            this.installFile = installFile;
+            this.appFile = appFile;
         }
     }
 }
