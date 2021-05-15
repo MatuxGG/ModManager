@@ -29,13 +29,14 @@ namespace ModManager4.Class
 
             if (this.latestVersion > this.modManager.version)
             {
+                string installerPath = this.modManager.tempPath + "\\ModManagerInstaller.exe";
                 this.modManager.logs.log("- Update available");
                 DialogResult userAction = MessageBox.Show("There is a new version of Mod Manager available. Mod Manager will auto update.\n\n" +
                     "Press OK to continue.", "Mod Manager Update", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
                 this.modManager.logs.log("- New version available");
                 if (userAction == DialogResult.OK)
                 {
-                    this.modManager.utils.FileDelete(this.modManager.tempPath + "\\ModManagerInstaller.exe");
+                    this.modManager.utils.FileDelete(installerPath);
                     foreach (ReleaseAsset ra in this.latestRelease.Assets)
                     {
                         if (ra.Name == "ModManagerInstaller.exe")
@@ -44,7 +45,7 @@ namespace ModManager4.Class
                             {
                                 using (WebClient client = new WebClient())
                                 {
-                                    client.DownloadFile(ra.BrowserDownloadUrl, this.modManager.tempPath + "\\ModManagerInstaller.exe");
+                                    client.DownloadFile(ra.BrowserDownloadUrl, installerPath);
                                 }
                             }
                             catch
@@ -61,7 +62,7 @@ namespace ModManager4.Class
                                 Environment.Exit(0);
                             }
                             this.modManager.logs.log("- Launching installer");
-                            Process.Start(this.modManager.appPath + "\\ModManagerInstaller.exe");
+                            Process.Start(installerPath);
                             Environment.Exit(0);
                         }
                     }
@@ -72,6 +73,15 @@ namespace ModManager4.Class
             {
                 this.modManager.logs.log("- No update available");
             }
+        }
+
+        public void ExecuteAsAdmin(string fileName)
+        {
+            Process proc = new Process();
+            proc.StartInfo.FileName = fileName;
+            proc.StartInfo.UseShellExecute = true;
+            proc.StartInfo.Verb = "runas";
+            proc.Start();
         }
 
         public async Task GetGithubVersion()
