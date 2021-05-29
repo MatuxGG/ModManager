@@ -32,6 +32,8 @@ namespace ModManager4.Class
 
             this.modManager.Controls.Clear();
 
+            Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
+
             double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
             double ratioY = (double)this.modManager.config.resolutionY / 810.0;
 
@@ -74,7 +76,7 @@ namespace ModManager4.Class
             VersionField.ForeColor = System.Drawing.Color.Yellow;
             VersionField.Name = "VersionField";
             VersionField.TextAlign = ContentAlignment.MiddleCenter;
-            VersionField.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            VersionField.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             VersionField.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(145 * ratioY));
             VersionField.Size = new System.Drawing.Size((int)(500 * ratioX), (int)(30 * ratioY));
             string version = this.modManager.version.ToString();
@@ -88,7 +90,7 @@ namespace ModManager4.Class
             ByMatuxField.ForeColor = System.Drawing.Color.Yellow;
             ByMatuxField.Name = "ByMatuxField";
             ByMatuxField.TextAlign = ContentAlignment.MiddleLeft;
-            ByMatuxField.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ByMatuxField.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ByMatuxField.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(20 * ratioY));
             ByMatuxField.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(30 * ratioY));
             ByMatuxField.Text = "By Matux";
@@ -170,7 +172,7 @@ namespace ModManager4.Class
             c.addControl(CodePic);
 
             System.Windows.Forms.TextBox CodeTextbox = new System.Windows.Forms.TextBox();
-            CodeTextbox.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            CodeTextbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             CodeTextbox.ForeColor = SystemColors.ControlText;
             CodeTextbox.Location = new System.Drawing.Point((int)(340 * ratioX), (int)(700 * ratioY));
             CodeTextbox.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -212,7 +214,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelPath);
 
             System.Windows.Forms.Label AmongFolderTitle = new System.Windows.Forms.Label();
-            AmongFolderTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AmongFolderTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongFolderTitle.BackColor = Color.Transparent;
             AmongFolderTitle.ForeColor = SystemColors.Control;
             AmongFolderTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -223,7 +225,7 @@ namespace ModManager4.Class
             PagePanelPath.Controls.Add(AmongFolderTitle);
 
             System.Windows.Forms.Label AmongUsFolderInfo = new System.Windows.Forms.Label();
-            AmongUsFolderInfo.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AmongUsFolderInfo.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsFolderInfo.ForeColor = System.Drawing.SystemColors.Control;
             AmongUsFolderInfo.TextAlign = ContentAlignment.MiddleCenter;
             AmongUsFolderInfo.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
@@ -234,7 +236,7 @@ namespace ModManager4.Class
             PagePanelPath.Controls.Add(AmongUsFolderInfo);
 
             Button AmongUsDirectorySelection = new System.Windows.Forms.Button();
-            AmongUsDirectorySelection.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AmongUsDirectorySelection.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsDirectorySelection.Location = new System.Drawing.Point((int)(258 * ratioX), (int)(300 * ratioY));
             AmongUsDirectorySelection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             AmongUsDirectorySelection.Name = "AmongUsDirectorySelection";
@@ -285,7 +287,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelInfo);
 
             System.Windows.Forms.Label InfoTitle = new System.Windows.Forms.Label();
-            InfoTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            InfoTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             InfoTitle.BackColor = Color.Transparent;
             InfoTitle.ForeColor = SystemColors.Control;
             InfoTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -308,7 +310,7 @@ namespace ModManager4.Class
             PagePanelInfo.Controls.Add(ContentPanelInfo);
 
             System.Windows.Forms.Label InfoLabel = new System.Windows.Forms.Label();
-            InfoLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            InfoLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             InfoLabel.ForeColor = System.Drawing.SystemColors.Control;
             InfoLabel.TextAlign = ContentAlignment.TopLeft;
             InfoLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(0 * ratioY));
@@ -348,7 +350,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelSettings);
 
             System.Windows.Forms.Label SettingsTitle = new System.Windows.Forms.Label();
-            SettingsTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            SettingsTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             SettingsTitle.BackColor = Color.Transparent;
             SettingsTitle.ForeColor = SystemColors.Control;
             SettingsTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -359,7 +361,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(SettingsTitle);
 
             System.Windows.Forms.Label AmongUsDirSwitchLabel = new System.Windows.Forms.Label();
-            AmongUsDirSwitchLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AmongUsDirSwitchLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsDirSwitchLabel.ForeColor = System.Drawing.SystemColors.Control;
             AmongUsDirSwitchLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
             AmongUsDirSwitchLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -369,7 +371,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(AmongUsDirSwitchLabel);
 
             Button AmongUsDirSwitchButton = new System.Windows.Forms.Button();
-            AmongUsDirSwitchButton.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AmongUsDirSwitchButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsDirSwitchButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(150 * ratioY));
             AmongUsDirSwitchButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             AmongUsDirSwitchButton.Name = "AmongUsDirSwitchButton";
@@ -381,7 +383,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(AmongUsDirSwitchButton);
 
             Button OpenAmongUs = new System.Windows.Forms.Button();
-            OpenAmongUs.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            OpenAmongUs.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             OpenAmongUs.Location = new System.Drawing.Point((int)(450 * ratioX), (int)(150 * ratioY));
             OpenAmongUs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             OpenAmongUs.Name = "OpenAmongUs";
@@ -393,7 +395,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(OpenAmongUs);
 
             System.Windows.Forms.Label RemoveLocalLabel = new System.Windows.Forms.Label();
-            RemoveLocalLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            RemoveLocalLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             RemoveLocalLabel.ForeColor = System.Drawing.SystemColors.Control;
             RemoveLocalLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(200 * ratioY));
             RemoveLocalLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -403,7 +405,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(RemoveLocalLabel);
 
             Button RemoveLocalButton = new System.Windows.Forms.Button();
-            RemoveLocalButton.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            RemoveLocalButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             RemoveLocalButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(200 * ratioY));
             RemoveLocalButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             RemoveLocalButton.Name = "RemoveLocalButton";
@@ -415,7 +417,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(RemoveLocalButton);
 
             System.Windows.Forms.Label OpenLogsLabel = new System.Windows.Forms.Label();
-            OpenLogsLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            OpenLogsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             OpenLogsLabel.ForeColor = System.Drawing.SystemColors.Control;
             OpenLogsLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(350 * ratioY));
             OpenLogsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -425,7 +427,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(OpenLogsLabel);
 
             Button OpenLogsButton = new System.Windows.Forms.Button();
-            OpenLogsButton.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            OpenLogsButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             OpenLogsButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(350 * ratioY));
             OpenLogsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             OpenLogsButton.Name = "OpenLogsButton";
@@ -437,7 +439,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(OpenLogsButton);
 
             System.Windows.Forms.Label EnableCacheLabel = new System.Windows.Forms.Label();
-            EnableCacheLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            EnableCacheLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             EnableCacheLabel.ForeColor = System.Drawing.SystemColors.Control;
             EnableCacheLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(300 * ratioY));
             EnableCacheLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -447,7 +449,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(EnableCacheLabel);
 
             CheckBox EnableCacheCheckbox = new System.Windows.Forms.CheckBox();
-            EnableCacheCheckbox.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            EnableCacheCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             EnableCacheCheckbox.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(300 * ratioY));
             EnableCacheCheckbox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             EnableCacheCheckbox.Name = "EnableCacheCheckbox";
@@ -467,7 +469,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(EnableCacheCheckbox);
 
             System.Windows.Forms.Label ResolutionLabel = new System.Windows.Forms.Label();
-            ResolutionLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ResolutionLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ResolutionLabel.ForeColor = System.Drawing.SystemColors.Control;
             ResolutionLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(250 * ratioY));
             ResolutionLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -477,7 +479,7 @@ namespace ModManager4.Class
             PagePanelSettings.Controls.Add(ResolutionLabel);
 
             ComboBox ResolutionComboBox = new ComboBox();
-            ResolutionComboBox.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ResolutionComboBox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ResolutionComboBox.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(250 * ratioY));
             ResolutionComboBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ResolutionComboBox.Name = "ResolutionComboBox";
@@ -514,7 +516,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelNews);
 
             System.Windows.Forms.Label NewsTitle = new System.Windows.Forms.Label();
-            NewsTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            NewsTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             NewsTitle.BackColor = Color.Transparent;
             NewsTitle.ForeColor = SystemColors.Control;
             NewsTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -537,7 +539,7 @@ namespace ModManager4.Class
             PagePanelNews.Controls.Add(ContentPanelNews);
 
             System.Windows.Forms.Label NewsLabel = new System.Windows.Forms.Label();
-            NewsLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            NewsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             NewsLabel.ForeColor = System.Drawing.SystemColors.Control;
             NewsLabel.TextAlign = ContentAlignment.TopLeft;
             NewsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(0 * ratioY));
@@ -577,7 +579,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelUnMods);
 
             System.Windows.Forms.Label UninstallModsTitle = new System.Windows.Forms.Label();
-            UninstallModsTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            UninstallModsTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UninstallModsTitle.BackColor = Color.Transparent;
             UninstallModsTitle.ForeColor = SystemColors.Control;
             UninstallModsTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -588,7 +590,7 @@ namespace ModManager4.Class
             PagePanelUnMods.Controls.Add(UninstallModsTitle);
 
             System.Windows.Forms.Label UninstallModsLabel = new System.Windows.Forms.Label();
-            UninstallModsLabel.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            UninstallModsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UninstallModsLabel.ForeColor = System.Drawing.SystemColors.Control;
             UninstallModsLabel.TextAlign = ContentAlignment.MiddleCenter;
             UninstallModsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
@@ -599,7 +601,7 @@ namespace ModManager4.Class
             PagePanelUnMods.Controls.Add(UninstallModsLabel);
 
             Button UninstallModsButton = new System.Windows.Forms.Button();
-            UninstallModsButton.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            UninstallModsButton.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UninstallModsButton.Location = new System.Drawing.Point((int)(258 * ratioX), (int)(300 * ratioY));
             UninstallModsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             UninstallModsButton.Name = "UninstallModsButton";
@@ -627,7 +629,7 @@ namespace ModManager4.Class
             c.addControl(PagePaneBefUp);
 
             System.Windows.Forms.Label UpdateModsTitle = new System.Windows.Forms.Label();
-            UpdateModsTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            UpdateModsTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UpdateModsTitle.BackColor = Color.Transparent;
             UpdateModsTitle.ForeColor = SystemColors.Control;
             UpdateModsTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -638,7 +640,7 @@ namespace ModManager4.Class
             PagePaneBefUp.Controls.Add(UpdateModsTitle);
 
             System.Windows.Forms.Label UpdateModsLabel = new System.Windows.Forms.Label();
-            UpdateModsLabel.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            UpdateModsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UpdateModsLabel.ForeColor = System.Drawing.SystemColors.Control;
             UpdateModsLabel.TextAlign = ContentAlignment.MiddleCenter;
             UpdateModsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
@@ -674,7 +676,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelApplyCode);
 
             System.Windows.Forms.Label ApplyCodeTitle = new System.Windows.Forms.Label();
-            ApplyCodeTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ApplyCodeTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ApplyCodeTitle.BackColor = Color.Transparent;
             ApplyCodeTitle.ForeColor = SystemColors.Control;
             ApplyCodeTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -685,7 +687,7 @@ namespace ModManager4.Class
             PagePanelApplyCode.Controls.Add(ApplyCodeTitle);
 
             System.Windows.Forms.Label ApplyCodeLabel = new System.Windows.Forms.Label();
-            ApplyCodeLabel.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ApplyCodeLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ApplyCodeLabel.ForeColor = System.Drawing.SystemColors.Control;
             ApplyCodeLabel.TextAlign = ContentAlignment.MiddleCenter;
             ApplyCodeLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
@@ -721,7 +723,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelLocal);
 
             System.Windows.Forms.Label LocalTitle = new System.Windows.Forms.Label();
-            LocalTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            LocalTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             LocalTitle.BackColor = Color.Transparent;
             LocalTitle.ForeColor = SystemColors.Control;
             LocalTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -732,7 +734,7 @@ namespace ModManager4.Class
             PagePanelLocal.Controls.Add(LocalTitle);
 
             System.Windows.Forms.Label ModNameLabel = new System.Windows.Forms.Label();
-            ModNameLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModNameLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameLabel.ForeColor = System.Drawing.SystemColors.Control;
             ModNameLabel.TextAlign = ContentAlignment.MiddleLeft;
             ModNameLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(90 * ratioY));
@@ -743,7 +745,7 @@ namespace ModManager4.Class
             PagePanelLocal.Controls.Add(ModNameLabel);
 
             System.Windows.Forms.TextBox ModNameField = new System.Windows.Forms.TextBox();
-            ModNameField.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameField.ForeColor = System.Drawing.SystemColors.ControlText;
             ModNameField.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(90 * ratioY));
             ModNameField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -754,7 +756,7 @@ namespace ModManager4.Class
             PagePanelLocal.Controls.Add(ModNameField);
 
             System.Windows.Forms.Label ModDepsLabel = new System.Windows.Forms.Label();
-            ModDepsLabel.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModDepsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModDepsLabel.ForeColor = System.Drawing.SystemColors.Control;
             ModDepsLabel.TextAlign = ContentAlignment.MiddleLeft;
             ModDepsLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(130 * ratioY));
@@ -768,7 +770,7 @@ namespace ModManager4.Class
             foreach (Dependency d in this.modManager.modlist.availableDependencies)
             {
                 System.Windows.Forms.CheckBox ModDepCheckbox = new System.Windows.Forms.CheckBox();
-                ModDepCheckbox.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                ModDepCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepCheckbox.Location = new System.Drawing.Point((int)((20 + 200*(offset%4)) * ratioX), (int)((170 + 40*(offset/4)) * ratioY));
                 ModDepCheckbox.Name = d.name;
@@ -783,7 +785,7 @@ namespace ModManager4.Class
                 PagePanelLocal.Controls.Add(ModDepCheckbox);
 
                 System.Windows.Forms.Label ModDepField = new System.Windows.Forms.Label();
-                ModDepField.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                ModDepField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepField.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepField.TextAlign = ContentAlignment.MiddleLeft;
                 ModDepField.Location = new System.Drawing.Point((int)((50 + 200*(offset%4)) * ratioX), (int)((170 + 40*(offset/4)) * ratioY));
@@ -797,7 +799,7 @@ namespace ModManager4.Class
             }
 
             System.Windows.Forms.Label ModAddField = new System.Windows.Forms.Label();
-            ModAddField.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModAddField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAddField.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(300 * ratioY));
             ModAddField.ForeColor = System.Drawing.SystemColors.Control;
             ModAddField.Name = "ModAddField";
@@ -807,7 +809,7 @@ namespace ModManager4.Class
             PagePanelLocal.Controls.Add(ModAddField);
 
             Button ModAddButton = new System.Windows.Forms.Button();
-            ModAddButton.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModAddButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAddButton.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(300 * ratioY));
             ModAddButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ModAddButton.Name = "ModAddButton";
@@ -820,7 +822,7 @@ namespace ModManager4.Class
             PagePanelLocal.Controls.Add(ModAddButton);
 
             System.Windows.Forms.Label ModAddFileName = new System.Windows.Forms.Label();
-            ModAddFileName.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModAddFileName.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAddFileName.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(300 * ratioY));
             ModAddFileName.TextAlign = ContentAlignment.MiddleLeft;
             ModAddFileName.ForeColor = System.Drawing.SystemColors.Control;
@@ -831,7 +833,7 @@ namespace ModManager4.Class
             PagePanelLocal.Controls.Add(ModAddFileName);
 
             Button ModAddValid = new System.Windows.Forms.Button();
-            ModAddValid.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModAddValid.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAddValid.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(410 * ratioY));
             ModAddValid.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ModAddValid.Name = "ModAddValid";
@@ -859,7 +861,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelLocalEdit);
 
             System.Windows.Forms.Label LocalEditTitle = new System.Windows.Forms.Label();
-            LocalEditTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            LocalEditTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             LocalEditTitle.BackColor = Color.Transparent;
             LocalEditTitle.ForeColor = SystemColors.Control;
             LocalEditTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -870,7 +872,7 @@ namespace ModManager4.Class
             PagePanelLocalEdit.Controls.Add(LocalEditTitle);
 
             System.Windows.Forms.Label LocalEditId = new System.Windows.Forms.Label();
-            LocalEditId.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            LocalEditId.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             LocalEditId.BackColor = Color.Transparent;
             LocalEditId.ForeColor = SystemColors.Control;
             LocalEditId.TextAlign = ContentAlignment.MiddleCenter;
@@ -882,7 +884,7 @@ namespace ModManager4.Class
             PagePanelLocalEdit.Controls.Add(LocalEditId);
 
             System.Windows.Forms.Label ModNameLabelEdit = new System.Windows.Forms.Label();
-            ModNameLabelEdit.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModNameLabelEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameLabelEdit.ForeColor = System.Drawing.SystemColors.Control;
             ModNameLabelEdit.TextAlign = ContentAlignment.MiddleLeft;
             ModNameLabelEdit.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(90 * ratioY));
@@ -893,7 +895,7 @@ namespace ModManager4.Class
             PagePanelLocalEdit.Controls.Add(ModNameLabelEdit);
 
             System.Windows.Forms.TextBox ModNameFieldEdit = new System.Windows.Forms.TextBox();
-            ModNameFieldEdit.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModNameFieldEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameFieldEdit.ForeColor = System.Drawing.SystemColors.ControlText;
             ModNameFieldEdit.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(90 * ratioY));
             ModNameFieldEdit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -904,7 +906,7 @@ namespace ModManager4.Class
             PagePanelLocalEdit.Controls.Add(ModNameFieldEdit);
 
             System.Windows.Forms.Label ModDepsLabelEdit = new System.Windows.Forms.Label();
-            ModDepsLabelEdit.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModDepsLabelEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModDepsLabelEdit.ForeColor = System.Drawing.SystemColors.Control;
             ModDepsLabelEdit.TextAlign = ContentAlignment.MiddleLeft;
             ModDepsLabelEdit.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(130 * ratioY));
@@ -918,7 +920,7 @@ namespace ModManager4.Class
             foreach (Dependency d in this.modManager.modlist.availableDependencies)
             {
                 System.Windows.Forms.CheckBox ModDepCheckbox = new System.Windows.Forms.CheckBox();
-                ModDepCheckbox.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                ModDepCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepCheckbox.Location = new System.Drawing.Point((int)((20 + 200 * (offset % 4)) * ratioX), (int)((170 + 40 * (offset / 4)) * ratioY));
                 ModDepCheckbox.Name = d.name;
@@ -928,7 +930,7 @@ namespace ModManager4.Class
                 PagePanelLocalEdit.Controls.Add(ModDepCheckbox);
 
                 System.Windows.Forms.Label ModDepField = new System.Windows.Forms.Label();
-                ModDepField.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                ModDepField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepField.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepField.TextAlign = ContentAlignment.MiddleLeft;
                 ModDepField.Location = new System.Drawing.Point((int)((50 + 200 * (offset % 4)) * ratioX), (int)((170 + 40 * (offset / 4)) * ratioY));
@@ -942,7 +944,7 @@ namespace ModManager4.Class
             }
 
             System.Windows.Forms.Label ModAddFieldEdit = new System.Windows.Forms.Label();
-            ModAddFieldEdit.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModAddFieldEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAddFieldEdit.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(300 * ratioY));
             ModAddFieldEdit.ForeColor = System.Drawing.SystemColors.Control;
             ModAddFieldEdit.Name = "ModAddFieldEdit";
@@ -952,7 +954,7 @@ namespace ModManager4.Class
             PagePanelLocalEdit.Controls.Add(ModAddFieldEdit);
 
             Button ModAddButtonEdit = new System.Windows.Forms.Button();
-            ModAddButtonEdit.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModAddButtonEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAddButtonEdit.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(300 * ratioY));
             ModAddButtonEdit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ModAddButtonEdit.Name = "ModAddButtonEdit";
@@ -964,7 +966,7 @@ namespace ModManager4.Class
             PagePanelLocalEdit.Controls.Add(ModAddButtonEdit);
 
             System.Windows.Forms.Label ModAddFileNameEdit = new System.Windows.Forms.Label();
-            ModAddFileNameEdit.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModAddFileNameEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAddFileNameEdit.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(300 * ratioY));
             ModAddFileNameEdit.TextAlign = ContentAlignment.MiddleLeft;
             ModAddFileNameEdit.ForeColor = System.Drawing.SystemColors.Control;
@@ -975,7 +977,7 @@ namespace ModManager4.Class
             PagePanelLocalEdit.Controls.Add(ModAddFileNameEdit);
 
             Button ModEditValid = new System.Windows.Forms.Button();
-            ModEditValid.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModEditValid.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModEditValid.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(410 * ratioY));
             ModEditValid.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ModEditValid.Name = "ModEditValid";
@@ -1003,7 +1005,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelUnreacheable);
 
             System.Windows.Forms.Label UnreacheableTitle = new System.Windows.Forms.Label();
-            UnreacheableTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            UnreacheableTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UnreacheableTitle.BackColor = Color.Transparent;
             UnreacheableTitle.ForeColor = SystemColors.Control;
             UnreacheableTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -1014,7 +1016,7 @@ namespace ModManager4.Class
             PagePanelUnreacheable.Controls.Add(UnreacheableTitle);
 
             System.Windows.Forms.Label UnreacheableLabel = new System.Windows.Forms.Label();
-            UnreacheableLabel.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            UnreacheableLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UnreacheableLabel.ForeColor = System.Drawing.SystemColors.Control;
             UnreacheableLabel.TextAlign = ContentAlignment.TopLeft;
             UnreacheableLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
@@ -1048,7 +1050,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelUnsavedChanges);
 
             System.Windows.Forms.Label UnsavedChangesTitle = new System.Windows.Forms.Label();
-            UnsavedChangesTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            UnsavedChangesTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UnsavedChangesTitle.BackColor = Color.Transparent;
             UnsavedChangesTitle.ForeColor = SystemColors.Control;
             UnsavedChangesTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -1059,7 +1061,7 @@ namespace ModManager4.Class
             PagePanelUnsavedChanges.Controls.Add(UnsavedChangesTitle);
 
             System.Windows.Forms.Label UnsavedChangesLabel = new System.Windows.Forms.Label();
-            UnsavedChangesLabel.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            UnsavedChangesLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UnsavedChangesLabel.ForeColor = System.Drawing.SystemColors.Control;
             UnsavedChangesLabel.TextAlign = ContentAlignment.TopCenter;
             UnsavedChangesLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
@@ -1071,7 +1073,7 @@ namespace ModManager4.Class
             PagePanelUnsavedChanges.Controls.Add(UnsavedChangesLabel);
 
             PictureBox SaveChanges = new System.Windows.Forms.PictureBox();
-            SaveChanges.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            SaveChanges.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             SaveChanges.Location = new System.Drawing.Point((int)(30 * ratioX), (int)(300 * ratioY));
             SaveChanges.BackgroundImage = global::ModManager4.Properties.Resources.save;
             SaveChanges.BackgroundImageLayout = ImageLayout.Stretch;
@@ -1084,7 +1086,7 @@ namespace ModManager4.Class
             PagePanelUnsavedChanges.Controls.Add(SaveChanges);
 
             PictureBox StartAnyway = new System.Windows.Forms.PictureBox();
-            StartAnyway.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            StartAnyway.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             StartAnyway.Location = new System.Drawing.Point((int)(450 * ratioX), (int)(300 * ratioY));
             StartAnyway.BackgroundImage = global::ModManager4.Properties.Resources.dontsave;
             StartAnyway.BackgroundImageLayout = ImageLayout.Stretch;
@@ -1106,110 +1108,7 @@ namespace ModManager4.Class
 
             c = new Component("Servers");
 
-            Panel PagePanelServers = new Panel();
-            PagePanelServers.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
-            PagePanelServers.Name = "PagePanelServers";
-            PagePanelServers.BackColor = Color.Black;
-            PagePanelServers.BorderStyle = BorderStyle.Fixed3D;
-            PagePanelServers.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelServers.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
-            PagePanelServers.TabStop = false;
-            PagePanelServers.Visible = false;
-            this.modManager.Controls.Add(PagePanelServers);
-            c.addControl(PagePanelServers);
-
-            System.Windows.Forms.Label ServersTitle = new System.Windows.Forms.Label();
-            ServersTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ServersTitle.BackColor = Color.Transparent;
-            ServersTitle.ForeColor = SystemColors.Control;
-            ServersTitle.TextAlign = ContentAlignment.MiddleCenter;
-            ServersTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
-            ServersTitle.Name = "ServersTitle";
-            ServersTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
-            ServersTitle.Text = "Servers";
-            PagePanelServers.Controls.Add(ServersTitle);
-
-            System.Windows.Forms.Label ServerNameTitle = new System.Windows.Forms.Label();
-            ServerNameTitle.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ServerNameTitle.BackColor = Color.Transparent;
-            ServerNameTitle.ForeColor = SystemColors.Control;
-            ServerNameTitle.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(80 * ratioY));
-            ServerNameTitle.Name = "ServerNameTitle";
-            ServerNameTitle.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
-            ServerNameTitle.Text = "Name";
-            PagePanelServers.Controls.Add(ServerNameTitle);
-
-            System.Windows.Forms.Label ServerIPTitle = new System.Windows.Forms.Label();
-            ServerIPTitle.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ServerIPTitle.BackColor = Color.Transparent;
-            ServerIPTitle.ForeColor = SystemColors.Control;
-            ServerIPTitle.Location = new System.Drawing.Point((int)(220 * ratioX), (int)(80 * ratioY));
-            ServerIPTitle.Name = "ServerIPTitle";
-            ServerIPTitle.Size = new System.Drawing.Size((int)(450 * ratioX), (int)(20 * ratioY));
-            ServerIPTitle.Text = "IP Address";
-            PagePanelServers.Controls.Add(ServerIPTitle);
-
-            System.Windows.Forms.Label ServerPortTitle = new System.Windows.Forms.Label();
-            ServerPortTitle.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ServerPortTitle.BackColor = Color.Transparent;
-            ServerPortTitle.ForeColor = SystemColors.Control;
-            ServerPortTitle.Location = new System.Drawing.Point((int)(670 * ratioX), (int)(80 * ratioY));
-            ServerPortTitle.Name = "ServerPortTitle";
-            ServerPortTitle.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
-            ServerPortTitle.Text = "Port";
-            PagePanelServers.Controls.Add(ServerPortTitle);
-
-            Panel ServersPanel = new Panel();
-            ServersPanel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(130 * ratioY));
-            ServersPanel.Name = "ServersPanel";
-            ServersPanel.BackColor = Color.Transparent;
-            ServersPanel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(300 * ratioY));
-            ServersPanel.AutoScroll = false;
-            ServersPanel.HorizontalScroll.Enabled = false;
-            ServersPanel.HorizontalScroll.Visible = false;
-            ServersPanel.HorizontalScroll.Maximum = 0;
-            ServersPanel.AutoScroll = true;
-            ServersPanel.TabStop = false;
-            PagePanelServers.Controls.Add(ServersPanel);
-
-            offset = 0;
-            foreach (Server s in this.modManager.serverlist.Regions)
-            {
-                System.Windows.Forms.Label ServerName = new System.Windows.Forms.Label();
-                ServerName.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                ServerName.BackColor = Color.Transparent;
-                ServerName.ForeColor = SystemColors.Control;
-                ServerName.TextAlign = ContentAlignment.MiddleLeft;
-                ServerName.Location = new System.Drawing.Point((int)(20 * ratioX), (int)((40 * offset) * ratioY));
-                ServerName.Name = "ServerName="+s.name;
-                ServerName.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
-                ServerName.Text = s.name;
-                ServersPanel.Controls.Add(ServerName);
-
-                System.Windows.Forms.Label ServerIP = new System.Windows.Forms.Label();
-                ServerIP.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                ServerIP.BackColor = Color.Transparent;
-                ServerIP.ForeColor = SystemColors.Control;
-                ServerIP.TextAlign = ContentAlignment.MiddleLeft;
-                ServerIP.Location = new System.Drawing.Point((int)(220 * ratioX), (int)((40 * offset) * ratioY));
-                ServerIP.Name = "ServerIP=" + s.DefaultIp;
-                ServerIP.Size = new System.Drawing.Size((int)(450 * ratioX), (int)(20 * ratioY)); 
-                ServerIP.Text = s.DefaultIp;
-                ServersPanel.Controls.Add(ServerIP);
-
-                System.Windows.Forms.Label ServerPort = new System.Windows.Forms.Label();
-                ServerPort.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                ServerPort.BackColor = Color.Transparent;
-                ServerPort.ForeColor = SystemColors.Control;
-                ServerPort.TextAlign = ContentAlignment.MiddleLeft;
-                ServerPort.Location = new System.Drawing.Point((int)(670 * ratioX), (int)((40 * offset) * ratioY));
-                ServerPort.Name = "ServerPort=" + s.port;
-                ServerPort.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
-                ServerPort.Text = s.port.ToString();
-                ServersPanel.Controls.Add(ServerPort);
-
-                offset++;
-            }
+            c = this.loadServers(c);
 
             this.components.Add(c);
 
@@ -1228,7 +1127,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelWIP);
 
             System.Windows.Forms.Label WIPTitle = new System.Windows.Forms.Label();
-            WIPTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            WIPTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             WIPTitle.BackColor = Color.Transparent;
             WIPTitle.ForeColor = SystemColors.Control;
             WIPTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -1239,7 +1138,7 @@ namespace ModManager4.Class
             PagePanelWIP.Controls.Add(WIPTitle);
 
             System.Windows.Forms.Label WIPLabel = new System.Windows.Forms.Label();
-            WIPLabel.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            WIPLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             WIPLabel.ForeColor = System.Drawing.SystemColors.Control;
             WIPLabel.TextAlign = ContentAlignment.MiddleCenter;
             WIPLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
@@ -1266,7 +1165,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelDisabled);
 
             System.Windows.Forms.Label DisabledTitle = new System.Windows.Forms.Label();
-            DisabledTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            DisabledTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             DisabledTitle.BackColor = Color.Transparent;
             DisabledTitle.ForeColor = SystemColors.Control;
             DisabledTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -1277,7 +1176,7 @@ namespace ModManager4.Class
             PagePanelDisabled.Controls.Add(DisabledTitle);
 
             System.Windows.Forms.Label DisabledLabel = new System.Windows.Forms.Label();
-            DisabledLabel.Font = new System.Drawing.Font("Arial", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            DisabledLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             DisabledLabel.ForeColor = System.Drawing.SystemColors.Control;
             DisabledLabel.TextAlign = ContentAlignment.MiddleCenter;
             DisabledLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
@@ -1315,8 +1214,17 @@ namespace ModManager4.Class
             c = this.loadModPage(c);
         }
 
-        public Component loadModPage(Component c)
+        public void refreshServers()
         {
+            Component c = this.get("Servers");
+            c.removeControls();
+            c = this.loadServers(c);
+        }
+
+        public Component loadModPage(Component c) { 
+        
+            Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
+
             double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
             double ratioY = (double)this.modManager.config.resolutionY / 810.0;
 
@@ -1405,7 +1313,7 @@ namespace ModManager4.Class
             c.addControl(PagePanel);
 
             System.Windows.Forms.Label ModNameTitle = new System.Windows.Forms.Label();
-            ModNameTitle.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModNameTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameTitle.BackColor = Color.Transparent;
             ModNameTitle.ForeColor = SystemColors.Control;
             ModNameTitle.Location = new System.Drawing.Point((int)(60 * ratioX), (int)(20 * ratioY));
@@ -1415,7 +1323,7 @@ namespace ModManager4.Class
             PagePanel.Controls.Add(ModNameTitle);
 
             System.Windows.Forms.Label ModAuthorTitle = new System.Windows.Forms.Label();
-            ModAuthorTitle.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModAuthorTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAuthorTitle.BackColor = Color.Transparent;
             ModAuthorTitle.ForeColor = SystemColors.Control;
             ModAuthorTitle.Location = new System.Drawing.Point((int)(210 * ratioX), (int)(20 * ratioY));
@@ -1425,7 +1333,7 @@ namespace ModManager4.Class
             PagePanel.Controls.Add(ModAuthorTitle);
 
             System.Windows.Forms.Label ModVersionTitle = new System.Windows.Forms.Label();
-            ModVersionTitle.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModVersionTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModVersionTitle.BackColor = Color.Transparent;
             ModVersionTitle.ForeColor = SystemColors.Control;
             ModVersionTitle.Location = new System.Drawing.Point((int)(360 * ratioX), (int)(20 * ratioY));
@@ -1435,7 +1343,7 @@ namespace ModManager4.Class
             PagePanel.Controls.Add(ModVersionTitle);
 
             System.Windows.Forms.Label ModGithubTitle = new System.Windows.Forms.Label();
-            ModGithubTitle.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModGithubTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModGithubTitle.ForeColor = SystemColors.Control;
             ModGithubTitle.Location = new System.Drawing.Point((int)(510 * ratioX), (int)(20 * ratioY));
             ModGithubTitle.Name = "ModGithubTitle";
@@ -1461,7 +1369,7 @@ namespace ModManager4.Class
             {
                 // Affichage Mod
                 System.Windows.Forms.Label CategoryField = new System.Windows.Forms.Label();
-                CategoryField.Font = new System.Drawing.Font("Arial", 12F, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                CategoryField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 CategoryField.ForeColor = System.Drawing.SystemColors.Control;
                 CategoryField.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
                 CategoryField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -1475,7 +1383,7 @@ namespace ModManager4.Class
                 foreach (Mod mod in this.modManager.modlist.getAvailableModsByCategory(cat))
                 {
                     System.Windows.Forms.CheckBox ModCheckbox = new System.Windows.Forms.CheckBox();
-                    ModCheckbox.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    ModCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     ModCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                     ModCheckbox.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
                     //ModCheckbox.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -1492,7 +1400,7 @@ namespace ModManager4.Class
                     ModsGroupbox.Controls.Add(ModCheckbox);
 
                     System.Windows.Forms.Label ModNameField = new System.Windows.Forms.Label();
-                    ModNameField.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     ModNameField.ForeColor = System.Drawing.SystemColors.Control;
                     ModNameField.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(offset * ratioY));
                     //ModNameField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -1504,7 +1412,7 @@ namespace ModManager4.Class
                     
 
                     System.Windows.Forms.LinkLabel ModAuthorField = new System.Windows.Forms.LinkLabel();
-                    ModAuthorField.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    ModAuthorField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     ModAuthorField.LinkColor = System.Drawing.SystemColors.Control;
                     ModAuthorField.ForeColor = System.Drawing.SystemColors.Control;
                     ModAuthorField.Location = new System.Drawing.Point((int)(190 * ratioX), (int)(offset * ratioY));
@@ -1525,7 +1433,7 @@ namespace ModManager4.Class
                     ModsGroupbox.Controls.Add(ModAuthorField);
 
                     System.Windows.Forms.Label ModVersionField = new System.Windows.Forms.Label();
-                    ModVersionField.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    ModVersionField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     ModVersionField.ForeColor = System.Drawing.SystemColors.Control;
                     ModVersionField.Location = new System.Drawing.Point((int)(340 * ratioX), (int)(offset * ratioY));
                     //ModVersionField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -1543,7 +1451,7 @@ namespace ModManager4.Class
                     if (mod.type == "mod")
                     {
                         System.Windows.Forms.LinkLabel ModGithubField = new System.Windows.Forms.LinkLabel();
-                        ModGithubField.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        ModGithubField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         ModGithubField.LinkColor = System.Drawing.SystemColors.Control;
                         ModGithubField.ForeColor = System.Drawing.SystemColors.Control;
                         ModGithubField.Location = new System.Drawing.Point((int)(490 * ratioX), (int)(offset * ratioY));
@@ -1598,6 +1506,274 @@ namespace ModManager4.Class
             return c;
         }
 
+        public Component loadServers(Component c)
+        {
+
+            Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
+
+            double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
+            double ratioY = (double)this.modManager.config.resolutionY / 810.0;
+
+            Panel PagePanelServers = new Panel();
+            PagePanelServers.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelServers.Name = "PagePanelServers";
+            PagePanelServers.BackColor = Color.Black;
+            PagePanelServers.BorderStyle = BorderStyle.Fixed3D;
+            PagePanelServers.BackgroundImageLayout = ImageLayout.Stretch;
+            PagePanelServers.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelServers.TabStop = false;
+            PagePanelServers.Visible = false;
+            this.modManager.Controls.Add(PagePanelServers);
+            c.addControl(PagePanelServers);
+
+            System.Windows.Forms.Label ServersTitle = new System.Windows.Forms.Label();
+            ServersTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServersTitle.BackColor = Color.Transparent;
+            ServersTitle.ForeColor = SystemColors.Control;
+            ServersTitle.TextAlign = ContentAlignment.MiddleCenter;
+            ServersTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            ServersTitle.Name = "ServersTitle";
+            ServersTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            ServersTitle.Text = "Servers";
+            PagePanelServers.Controls.Add(ServersTitle);
+
+            System.Windows.Forms.Label ServerNameTitle = new System.Windows.Forms.Label();
+            ServerNameTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServerNameTitle.BackColor = Color.Transparent;
+            ServerNameTitle.ForeColor = SystemColors.Control;
+            ServerNameTitle.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(80 * ratioY));
+            ServerNameTitle.Name = "ServerNameTitle";
+            ServerNameTitle.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            ServerNameTitle.Text = "Name";
+            PagePanelServers.Controls.Add(ServerNameTitle);
+
+            System.Windows.Forms.Label ServerIPTitle = new System.Windows.Forms.Label();
+            ServerIPTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServerIPTitle.BackColor = Color.Transparent;
+            ServerIPTitle.ForeColor = SystemColors.Control;
+            ServerIPTitle.Location = new System.Drawing.Point((int)(220 * ratioX), (int)(80 * ratioY));
+            ServerIPTitle.Name = "ServerIPTitle";
+            ServerIPTitle.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(20 * ratioY));
+            ServerIPTitle.Text = "IP Address";
+            PagePanelServers.Controls.Add(ServerIPTitle);
+
+            System.Windows.Forms.Label ServerPortTitle = new System.Windows.Forms.Label();
+            ServerPortTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServerPortTitle.BackColor = Color.Transparent;
+            ServerPortTitle.ForeColor = SystemColors.Control;
+            ServerPortTitle.Location = new System.Drawing.Point((int)(620 * ratioX), (int)(80 * ratioY));
+            ServerPortTitle.Name = "ServerPortTitle";
+            ServerPortTitle.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(20 * ratioY));
+            ServerPortTitle.Text = "Port";
+            PagePanelServers.Controls.Add(ServerPortTitle);
+
+            Panel ServersPanel = new Panel();
+            ServersPanel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(130 * ratioY));
+            ServersPanel.Name = "ServersPanel";
+            ServersPanel.BackColor = Color.Transparent;
+            ServersPanel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(280 * ratioY));
+            ServersPanel.AutoScroll = false;
+            ServersPanel.HorizontalScroll.Enabled = false;
+            ServersPanel.HorizontalScroll.Visible = false;
+            ServersPanel.HorizontalScroll.Maximum = 0;
+            ServersPanel.AutoScroll = true;
+            ServersPanel.TabStop = false;
+            PagePanelServers.Controls.Add(ServersPanel);
+
+            int offset = 0;
+            foreach (Server s in this.modManager.serverlist.Regions)
+            {
+                this.addServer(s, offset, ServersPanel);
+
+                offset++;
+            }
+
+            Button ServersReset = new System.Windows.Forms.Button();
+            ServersReset.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServersReset.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(430 * ratioY));
+            ServersReset.Name = "ServersReset";
+            ServersReset.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+            ServersReset.Text = "Reset to default";
+            ServersReset.TabStop = false;
+            ServersReset.Click += new EventHandler(this.events.resetServers);
+            ServersReset.UseVisualStyleBackColor = true;
+            PagePanelServers.Controls.Add(ServersReset);
+
+            Button AddServer = new System.Windows.Forms.Button();
+            AddServer.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            AddServer.Location = new System.Drawing.Point((int)(220 * ratioX), (int)(430 * ratioY));
+            AddServer.Name = "AddServer";
+            AddServer.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+            AddServer.Text = "Add Server";
+            AddServer.TabStop = false;
+            AddServer.Click += new EventHandler(this.events.addServer);
+            AddServer.UseVisualStyleBackColor = true;
+            PagePanelServers.Controls.Add(AddServer);
+
+            return c;
+        }
+
+        public void addServer(Server s, int offset, Panel p)
+        {
+
+            Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
+
+            double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
+            double ratioY = (double)this.modManager.config.resolutionY / 810.0;
+
+            System.Windows.Forms.TextBox ServerName = new System.Windows.Forms.TextBox();
+            ServerName.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServerName.BackColor = SystemColors.ControlText;
+            ServerName.ForeColor = SystemColors.Control;
+            ServerName.BorderStyle = BorderStyle.None;
+            ServerName.Location = new System.Drawing.Point((int)(20 * ratioX), (int)((40 * offset) * ratioY));
+            ServerName.Name = "ServerName=" + offset;
+            ServerName.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            ServerName.Text = s.name;
+            ServerName.TextChanged += new EventHandler(this.events.showSaveServer);
+
+            if (offset < 3)
+            {
+                ServerName.Enabled = false;
+            }
+
+            p.Controls.Add(ServerName);
+
+            string visibleIp = this.processIP(s.DefaultIp);
+
+            System.Windows.Forms.MaskedTextBox ServerIP = new System.Windows.Forms.MaskedTextBox();
+            ServerIP.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServerIP.BackColor = SystemColors.ControlText;
+            ServerIP.ForeColor = SystemColors.Control;
+            ServerIP.BorderStyle = BorderStyle.None;
+            ServerIP.Location = new System.Drawing.Point((int)(220 * ratioX), (int)((40 * offset) * ratioY));
+            ServerIP.Name = "ServerIP=" + offset;
+            ServerIP.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(20 * ratioY));
+            ServerIP.Mask = @"###\.###\.###\.###";
+            ServerIP.Text = visibleIp;
+            ServerIP.ValidatingType = typeof(System.Net.IPAddress);
+            ServerIP.TextChanged += new EventHandler(this.events.showSaveServer);
+
+            if (offset < 3)
+            {
+                ServerIP.Enabled = false;
+            }
+
+            p.Controls.Add(ServerIP);
+
+            System.Windows.Forms.NumericUpDown ServerPort = new System.Windows.Forms.NumericUpDown();
+            ServerPort.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServerPort.BackColor = SystemColors.ControlText;
+            ServerPort.ForeColor = SystemColors.Control;
+            ServerPort.BorderStyle = BorderStyle.None;
+            ServerPort.Location = new System.Drawing.Point((int)(620 * ratioX), (int)((40 * offset) * ratioY));
+            ServerPort.Name = "ServerPort=" + offset;
+            ServerPort.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(20 * ratioY));
+            ServerPort.Minimum = 0;
+            ServerPort.Maximum = 65536;
+            ServerPort.Value = s.port;
+            ServerPort.Controls[0].Visible = false;
+            ServerPort.TextChanged += new EventHandler(this.events.showSaveServer);
+
+            if (offset < 3)
+            {
+                ServerPort.Enabled = false;
+            }
+
+            p.Controls.Add(ServerPort);
+
+            if (offset >= 3)
+            {
+                PictureBox ServerValidPic = new System.Windows.Forms.PictureBox();
+                ServerValidPic.Image = global::ModManager4.Properties.Resources.valid;
+                ServerValidPic.BackColor = System.Drawing.Color.Transparent;
+                ServerValidPic.Location = new System.Drawing.Point((int)(770 * ratioX), (int)(((40 * offset) - 5) * ratioY));
+                ServerValidPic.Name = "ServerValidPic=" + offset;
+                ServerValidPic.Cursor = Cursors.Hand;
+                ServerValidPic.Size = new System.Drawing.Size((int)(25 * ratioX), (int)(25 * ratioY));
+                ServerValidPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                ServerValidPic.TabStop = false;
+                ServerValidPic.Hide();
+                ServerValidPic.Click += new EventHandler(this.events.saveServer);
+                p.Controls.Add(ServerValidPic);
+
+                PictureBox ServerRemovePic = new System.Windows.Forms.PictureBox();
+                ServerRemovePic.Image = global::ModManager4.Properties.Resources.remove;
+                ServerRemovePic.BackColor = System.Drawing.Color.Transparent;
+                ServerRemovePic.Location = new System.Drawing.Point((int)(815 * ratioX), (int)(((40 * offset) - 5) * ratioY));
+                ServerRemovePic.Name = "ServerRemovePic=" + offset;
+                ServerRemovePic.Cursor = Cursors.Hand;
+                ServerRemovePic.Size = new System.Drawing.Size((int)(25 * ratioX), (int)(25 * ratioY));
+                ServerRemovePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                ServerRemovePic.TabStop = false;
+                ServerRemovePic.Click += new EventHandler(this.events.removeServer);
+                p.Controls.Add(ServerRemovePic);
+            }
+        }
+
+        public string processIP(string ip)
+        {
+            string ret = "";
+            string toProcess = ip;
+            bool isLast = false;
+            int part = 1;
+            while (toProcess.Length > 0 || part <= 4)
+            {
+                int i = toProcess.IndexOf(".");
+                if (i != -1)
+                {
+                    string start = toProcess.Substring(0, i);
+                    string next = toProcess.Substring(i + 1);
+                    string output = "";
+                    for (int j = 0; j<3; j++)
+                    {
+                        if (j < start.Length)
+                        {
+                            if (start[j] == ' ')
+                            {
+                                output = output + "0";
+                            } else
+                            {
+                                output = output + start[j];
+                            }
+                        } else
+                        {
+                            output = output + "0";
+                        }
+                    }
+                    ret = ret + output + ".";
+                    toProcess = next;
+                } else
+                {
+                    string start = toProcess;
+                    string output = "";
+                    for (int j = 0; j < 3; j++)
+                    {
+                        if (j < start.Length)
+                        {
+                            if (start[j] == ' ')
+                            {
+                                output = output + "0";
+                            }
+                            else
+                            {
+                                output = output + start[j];
+                            }
+                        }
+                        else
+                        {
+                            output = output + "0";
+                        }
+                    }
+                    ret = ret + output;
+                    toProcess = "";
+                }
+                part++;
+            }
+            
+            return ret;
+        }
+
         public void loadEditModPage(Mod m)
         {
             Component c = this.get("LocalEdit");
@@ -1634,6 +1810,8 @@ namespace ModManager4.Class
         public void loadTools(Component c)
         {
 
+            Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
+
             double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
             double ratioY = (double)this.modManager.config.resolutionY / 810.0;
 
@@ -1660,7 +1838,7 @@ namespace ModManager4.Class
             c.addControl(PagePanelTools);
 
             System.Windows.Forms.Label ToolsTitle = new System.Windows.Forms.Label();
-            ToolsTitle.Font = new System.Drawing.Font("Arial", 20F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ToolsTitle.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ToolsTitle.BackColor = Color.Transparent;
             ToolsTitle.ForeColor = SystemColors.Control;
             ToolsTitle.TextAlign = ContentAlignment.MiddleCenter;
@@ -1674,7 +1852,7 @@ namespace ModManager4.Class
             foreach ( Tool t in this.modManager.toollist.tools)
             {
                 System.Windows.Forms.Label ToolNameField = new System.Windows.Forms.Label();
-                ToolNameField.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                ToolNameField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ToolNameField.ForeColor = System.Drawing.SystemColors.Control;
                 ToolNameField.TextAlign = ContentAlignment.MiddleCenter;
                 ToolNameField.Location = new System.Drawing.Point((int)((40 + 220*(i%4)) * ratioX), (int)((80 + 170*(i/4)) * ratioY));
@@ -1705,7 +1883,7 @@ namespace ModManager4.Class
                 if (t.downloadLink != "" && (t.path == "" || File.Exists(t.path) == false ))
                 {
                     System.Windows.Forms.LinkLabel ToolLink = new System.Windows.Forms.LinkLabel();
-                    ToolLink.Font = new System.Drawing.Font("Arial", 10F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                    ToolLink.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     ToolLink.LinkColor = System.Drawing.SystemColors.Control;
                     ToolLink.ForeColor = System.Drawing.SystemColors.Control;
                     ToolLink.TextAlign = ContentAlignment.MiddleCenter;

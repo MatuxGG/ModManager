@@ -43,6 +43,34 @@ namespace ModManager4.Class
             string json = JsonConvert.SerializeObject(this);
             File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\..\\LocalLow\\Innersloth\\Among Us\\regionInfo.json", json);
         }
+
+        public void removeRegion(int regionId)
+        {
+            this.Regions.RemoveAt(regionId);
+            this.CurrentRegionIdx--;
+        }
+
+        public void reset(ModManager modManager)
+        {
+            List<Server> temp = new List<Server>();
+            temp.Add(this.Regions[0]);
+            temp.Add(this.Regions[1]);
+            temp.Add(this.Regions[2]);
+            Server matux = new Server("DnsRegionInfo, Assembly-CSharp", "152.228.160.91", "152.228.160.91", 22023, "matux.fr", 1003);
+            temp.Add(matux);
+            this.Regions = temp;
+            this.CurrentRegionIdx = 1;
+            this.update(modManager);
+        }
+        public void add(ModManager modManager)
+        {
+            Server newServ = new Server("DnsRegionInfo, Assembly-CSharp", "0.0.0.0", "0.0.0.0", 22023, "New Server", 1003);
+            this.Regions.Add(newServ);
+            this.CurrentRegionIdx = CurrentRegionIdx + 1;
+            this.update(modManager);
+        }
+
+
         /*
         public void updateUnify(ModManager modManager)
         {

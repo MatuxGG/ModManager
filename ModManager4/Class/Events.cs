@@ -177,6 +177,88 @@ namespace ModManager4.Class
         }
 
         public void selectFolder(object sender, EventArgs e) {
+            this.selectFolderWorker();
+        }
+
+        public void saveServer(object sender, EventArgs e)
+        {
+            string picName = ((PictureBox)sender).Name;
+            int serverId = int.Parse(picName.Substring(picName.IndexOf("=") + 1));
+
+            Panel ServersPanel = (Panel) this.modManager.componentlist.get("Servers").getControl("PagePanelServers").Controls["ServersPanel"];
+
+            string name = ServersPanel.Controls["ServerName=" + serverId].Text;
+            string ip = ServersPanel.Controls["ServerIP=" + serverId].Text;
+            string port = ServersPanel.Controls["ServerPort=" + serverId].Text;
+
+            this.modManager.serverlist.Regions[serverId].name = name;
+            this.modManager.serverlist.Regions[serverId].DefaultIp = this.modManager.componentlist.processIP(ip);
+            this.modManager.serverlist.Regions[serverId].port = int.Parse(port);
+
+            this.modManager.serverlist.update(this.modManager);
+            ((PictureBox)sender).Hide();
+        }
+
+        public void showSaveServer(object sender, EventArgs e)
+        {
+            string controlName;
+            if (sender is TextBox)
+            {
+                controlName = ((TextBox)sender).Name;
+            } else if (sender is MaskedTextBox)
+            {
+                controlName = ((MaskedTextBox)sender).Name;
+            } else
+            {
+                controlName = ((NumericUpDown)sender).Name;
+            }
+            int serverId = int.Parse(controlName.Substring(controlName.IndexOf("=") + 1));
+
+            Panel ServersPanel = (Panel)this.modManager.componentlist.get("Servers").getControl("PagePanelServers").Controls["ServersPanel"];
+            ServersPanel.Controls["ServerValidPic=" + serverId].Visible = true;
+        }
+
+        public void removeServer(object sender, EventArgs e)
+        {
+            string picName = ((PictureBox)sender).Name;
+            int serverId = int.Parse(picName.Substring(picName.IndexOf("=") + 1));
+
+            this.modManager.serverlist.removeRegion(serverId);
+            this.modManager.serverlist.update(this.modManager);
+
+            this.clearWithBlink();
+
+            this.modManager.pagelist.renderPage("Servers");
+        }
+
+        public void resetServers(object sender, EventArgs e)
+        {
+            this.modManager.serverlist.reset(this.modManager);
+            //this.modManager.componentlist.refreshServers();
+
+            this.clearWithBlink();
+
+            this.modManager.pagelist.renderPage("Servers");
+        }
+
+        public void clearWithBlink()
+        {
+            this.modManager.componentlist = new Componentlist(this.modManager);
+            this.modManager.componentlist.load();
+            this.modManager.modlist.setCode();
+        }
+
+        public void addServer(object sender, EventArgs e)
+        {
+            this.modManager.serverlist.add(this.modManager);
+
+            Server newServ = new Server("DnsRegionInfo, Assembly-CSharp", "0.0.0.0", "0.0.0.0", 22023, "New Server", 1003);
+            Panel ServersPanel = (Panel)this.modManager.componentlist.get("Servers").getControl("PagePanelServers").Controls["ServersPanel"];
+            this.modManager.componentlist.addServer(newServ, this.modManager.serverlist.Regions.Count() - 1, ServersPanel);
+        }
+
+        public void selectFolderWorker()
+        {
             this.modManager.logs.log("Event : Open popup to select Among Us folder\n");
             OpenFileDialog folderBrowser = new OpenFileDialog();
             if (this.modManager.config != null && this.modManager.config.amongUsPath != null)
@@ -450,9 +532,8 @@ namespace ModManager4.Class
             Mod m = this.modManager.modlist.getModById(modId);
             this.modManager.modWorker.removeLocalMod(m);
 
-            this.modManager.componentlist = new Componentlist(this.modManager);
-            this.modManager.componentlist.load();
-            this.modManager.modlist.setCode();
+            this.clearWithBlink();
+
             this.modManager.logs.log(this.modManager.componentlist.toString());
             this.modManager.pagelist.renderPage("ModSelection");
 

@@ -44,8 +44,11 @@ namespace ModManager4.Class
         public List<int[]> getResolutions()
         {
             List<int[]> res = new List<int[]>();
-            res.Add(new int[] { 1300, 810 });
+            res.Add(new int[] { 2560, 1600 });
             res.Add(new int[] { 1920, 1200 });
+            res.Add(new int[] { 1680, 1050 });
+            res.Add(new int[] { 1440, 900 });
+            res.Add(new int[] { 1280, 800 });
             return res;
         }
 
@@ -112,20 +115,13 @@ namespace ModManager4.Class
                 string json = System.IO.File.ReadAllText(path);
                 Config temp = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(json);
                 modManager.logs.log("- Among Us Path = " + temp.amongUsPath + "\\Among Us.exe");
-                if (File.Exists(temp.amongUsPath + "\\Among Us.exe"))
+                if (File.Exists(temp.amongUsPath + "\\Among Us.exe")) // Exists in config
                 {
                     modManager.logs.log("- Among Us exists");
                     this.amongUsPath = temp.amongUsPath;
                     this.installedDependencies = temp.installedDependencies;
                     this.installedMods = temp.installedMods;
                     this.enableCache = temp.enableCache;
-
-                    if (this.getResolutions().Contains(new int[] {temp.resolutionX, temp.resolutionY}) == false)
-                    {
-                        temp.resolutionX = 1300;
-                        temp.resolutionY = 810;
-                    }
-
                     this.resolutionX = temp.resolutionX;
                     this.resolutionY = temp.resolutionY;
                     this.update(modManager);
@@ -137,20 +133,99 @@ namespace ModManager4.Class
             } else
             {
                 modManager.logs.log("- Config doesn't exists");
+                foreach (int[] size in this.getResolutions())
+                {
+                    if (Screen.PrimaryScreen.Bounds.Width > size[0] + 100 && Screen.PrimaryScreen.Bounds.Height > size[1] + 100)
+                    {
+                        this.resolutionX = size[0];
+                        this.resolutionY = size[1];
+                        break;
+                    }
+                }
             }
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
-            modManager.logs.log("- Getting path");
             this.amongUsPath = null;
+
+            // Detection from Steam
+            modManager.logs.log("- Getting Among Us path from Steam");
             RegistryKey myKey  = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 945360", false);
-            this.amongUsPath = (String)myKey.GetValue("InstallLocation");
             
-            modManager.logs.log("- Among Us path detection : " + this.amongUsPath);
+            if (myKey != null)
+            {
+                modManager.logs.log("- Among Us detected on Steam");
+                this.amongUsPath = (String)myKey.GetValue("InstallLocation");
 
-            this.update(modManager);
-            modManager.logs.log("- Config updated");
+                modManager.logs.log("- Saving Among Us path : " + this.amongUsPath);
 
+                this.update(modManager);
+                modManager.logs.log("- Config updated");
+                return;
+            } else
+            {
+                modManager.logs.log("- Among Us not detected on Steam");
+            }
+
+            
+            // Detection from Epic Games Store
+
+            modManager.logs.log("- Getting Among Us path from Epic Games Store");
+
+            foreach (DriveInfo d in DriveInfo.GetDrives())
+            {
+                string egsPath = d.Name + "Program Files\\Epic Games\\AmongUs";
+                if (File.Exists(egsPath + "\\Among Us.exe"))
+                {
+                    modManager.logs.log("- Among Us detected on Epic Games Store");
+                    this.amongUsPath = egsPath;
+
+                    modManager.logs.log("- Saving Among Us path : " + this.amongUsPath);
+                    this.update(modManager);
+                    modManager.logs.log("- Config updated");
+                    return;
+                }
+            }
+            modManager.logs.log("- Among Us not detected on Epic Games Store");
+            
+
+            // No Among Us found
+
+            while (this.amongUsPath == null || File.Exists(this.amongUsPath + "\\Among Us.exe") == false)
+            {
+                if (MessageBox.Show("Among Us not found ! Please, select the Among Us executable", "Among Us not found", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.Cancel) {
+                    Environment.Exit(0);
+                }
+                this.selectFolderWorker(modManager);
+            }
             return;
+        }
+
+        public void selectFolderWorker(ModManager modManager)
+        {
+            modManager.logs.log("Event : Open popup to select Among Us folder on startup\n");
+            OpenFileDialog folderBrowser = new OpenFileDialog();
+            if (modManager.config != null && modManager.config.amongUsPath != null)
+            {
+                folderBrowser.InitialDirectory = modManager.config.amongUsPath;
+            }
+            folderBrowser.ValidateNames = false;
+            folderBrowser.CheckFileExists = false;
+            folderBrowser.CheckPathExists = true;
+            folderBrowser.Filter = "Among Us file|Among Us.exe";
+            // Always default to Folder Selection.
+            folderBrowser.FileName = "Among Us.exe";
+
+            if (folderBrowser.ShowDialog() == DialogResult.OK)
+            {
+                string folderPath = Path.GetDirectoryName(folderBrowser.FileName);
+                modManager.logs.log("- Folder selected : " + folderPath + "\n");
+                if (modManager.config == null)
+                {
+                    modManager.config = new Config();
+                }
+                modManager.config.amongUsPath = folderPath;
+                modManager.config.update(modManager);
+            }
         }
 
         public void update(ModManager modManager)

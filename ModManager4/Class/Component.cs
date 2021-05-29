@@ -28,7 +28,17 @@ namespace ModManager4.Class
         {
             foreach (Control c in this.controls)
             {
-                c.Show();
+                if (c is Panel)
+                {
+                    c.Show();
+                    foreach (Control subC in c.Controls)
+                    {
+                        subC.Show();
+                    } 
+                } else
+                {
+                    c.Show();
+                }
             }
         }
 
@@ -48,7 +58,18 @@ namespace ModManager4.Class
         {
             foreach (Control c in this.controls)
             {
-                c.Hide();
+                if (c is Panel)
+                {
+                    c.Hide();
+                    foreach (Control subC in c.Controls)
+                    {
+                        subC.Hide();
+                    }
+                }
+                else
+                {
+                    c.Hide();
+                }
             }
         }
 

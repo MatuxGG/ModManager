@@ -40,8 +40,9 @@ namespace ModManager4
         {
             InitializeComponent();
 
-            this.Size = new Size(1300, 810);
+            this.Size = new Size(0, 0);
             this.CenterToScreen();
+            this.Hide();
 
             _ = this.Start();
         }
@@ -107,6 +108,21 @@ namespace ModManager4
             }
             this.serverConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<ServerConfig>(config);
 
+            // Load local config or create one (find AU folder if possible)
+            this.config = new Config();
+            this.logs.log("Loading config (1/2)");
+            this.config.load(this);
+            this.logs.log("- Config loaded successfully\n");
+
+            this.Size = new Size(this.config.resolutionX, this.config.resolutionY);
+            this.CenterToScreen();
+            this.Show();
+
+            double ratioX = (double)this.config.resolutionX / 1300.0;
+            double ratioY = (double)this.config.resolutionY / 810.0;
+            this.InitProgressBar.Location = new System.Drawing.Point((int)(484 * ratioX), (int)(569 * ratioY));
+            this.InitProgressBar.Size = new System.Drawing.Size((int)(313 * ratioX), (int)(23 * ratioY));
+
             // Load mods from server
             this.modlist = new Modlist(this);
             await this.modlist.load();
@@ -118,10 +134,7 @@ namespace ModManager4
             this.logs.log(this.toollist.toString());
 
             // Load local config or create one (find AU folder if possible)
-            this.config = new Config();
-            this.logs.log("Loading config");
-            this.config.load(this);
-            this.logs.log("- Config loaded successfully\n");
+            this.logs.log("Loading config (2/2)");
             this.config.check(this);
             this.logs.log(this.config.toString());
             this.serverlist = new Serverlist();
@@ -131,7 +144,7 @@ namespace ModManager4
             // Load pages
             this.componentlist = new Componentlist(this);
             this.componentlist.load();
-            this.logs.log(this.componentlist.toString()); 
+            this.logs.log(this.componentlist.toString());
 
             this.pagelist = new Pagelist(this);
             this.pagelist.load();
