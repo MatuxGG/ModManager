@@ -59,14 +59,14 @@ namespace ModManager4.Class
             Server matux = new Server("DnsRegionInfo, Assembly-CSharp", "152.228.160.91", "152.228.160.91", 22023, "matux.fr", 1003);
             temp.Add(matux);
             this.Regions = temp;
-            this.CurrentRegionIdx = 1;
+            //this.CurrentRegionIdx = 1;
             this.update(modManager);
         }
         public void add(ModManager modManager)
         {
-            Server newServ = new Server("DnsRegionInfo, Assembly-CSharp", "0.0.0.0", "0.0.0.0", 22023, "New Server", 1003);
+            Server newServ = new Server("DnsRegionInfo, Assembly-CSharp", "127.0.0.1", "127.0.0.1", 22023, "New Server", 1003);
             this.Regions.Add(newServ);
-            this.CurrentRegionIdx = CurrentRegionIdx + 1;
+            //this.CurrentRegionIdx = CurrentRegionIdx + 1;
             this.update(modManager);
         }
 

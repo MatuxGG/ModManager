@@ -301,10 +301,6 @@ namespace ModManager4.Class
             ContentPanelInfo.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(70 * ratioY));
             ContentPanelInfo.Name = "ContentPanelInfo";
             ContentPanelInfo.Size = new System.Drawing.Size((int)(876 * ratioX), (int)(390 * ratioY));
-            ContentPanelInfo.AutoScroll = false;
-            ContentPanelInfo.HorizontalScroll.Enabled = false;
-            ContentPanelInfo.HorizontalScroll.Visible = false;
-            ContentPanelInfo.HorizontalScroll.Maximum = 0;
             ContentPanelInfo.AutoScroll = true;
             ContentPanelInfo.TabStop = false;
             PagePanelInfo.Controls.Add(ContentPanelInfo);
@@ -314,9 +310,9 @@ namespace ModManager4.Class
             InfoLabel.ForeColor = System.Drawing.SystemColors.Control;
             InfoLabel.TextAlign = ContentAlignment.TopLeft;
             InfoLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(0 * ratioY));
-            InfoLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            InfoLabel.Name = "InfoLabel";
             InfoLabel.AutoSize = true;
+            InfoLabel.MaximumSize = new Size((int)(800 * ratioX), 0);
+            InfoLabel.Name = "InfoLabel";
             ContentPanelInfo.Controls.Add(InfoLabel);
 
             try
@@ -530,10 +526,6 @@ namespace ModManager4.Class
             ContentPanelNews.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(70 * ratioY));
             ContentPanelNews.Name = "ContentPanelNews";
             ContentPanelNews.Size = new System.Drawing.Size((int)(876 * ratioX), (int)(390 * ratioY));
-            ContentPanelNews.AutoScroll = false;
-            ContentPanelNews.HorizontalScroll.Enabled = false;
-            ContentPanelNews.HorizontalScroll.Visible = false;
-            ContentPanelNews.HorizontalScroll.Maximum = 0;
             ContentPanelNews.AutoScroll = true;
             ContentPanelNews.TabStop = false;
             PagePanelNews.Controls.Add(ContentPanelNews);
@@ -543,9 +535,9 @@ namespace ModManager4.Class
             NewsLabel.ForeColor = System.Drawing.SystemColors.Control;
             NewsLabel.TextAlign = ContentAlignment.TopLeft;
             NewsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(0 * ratioY));
-            NewsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             NewsLabel.Name = "NewsLabel";
             NewsLabel.AutoSize = true;
+            NewsLabel.MaximumSize = new Size((int)(800 * ratioX), 0);
             ContentPanelNews.Controls.Add(NewsLabel);
 
             try
@@ -1639,9 +1631,7 @@ namespace ModManager4.Class
 
             p.Controls.Add(ServerName);
 
-            string visibleIp = this.processIP(s.DefaultIp);
-
-            System.Windows.Forms.MaskedTextBox ServerIP = new System.Windows.Forms.MaskedTextBox();
+            System.Windows.Forms.TextBox ServerIP = new System.Windows.Forms.TextBox();
             ServerIP.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ServerIP.BackColor = SystemColors.ControlText;
             ServerIP.ForeColor = SystemColors.Control;
@@ -1649,9 +1639,7 @@ namespace ModManager4.Class
             ServerIP.Location = new System.Drawing.Point((int)(220 * ratioX), (int)((40 * offset) * ratioY));
             ServerIP.Name = "ServerIP=" + offset;
             ServerIP.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(20 * ratioY));
-            ServerIP.Mask = @"###\.###\.###\.###";
-            ServerIP.Text = visibleIp;
-            ServerIP.ValidatingType = typeof(System.Net.IPAddress);
+            ServerIP.Text = s.DefaultIp;
             ServerIP.TextChanged += new EventHandler(this.events.showSaveServer);
 
             if (offset < 3)
@@ -1711,8 +1699,12 @@ namespace ModManager4.Class
             }
         }
 
-        public string processIP(string ip)
+        /*public string processIP(string ip)
         {
+            if (ip == "")
+            {
+                return "";
+            }
             string ret = "";
             string toProcess = ip;
             bool isLast = false;
@@ -1725,7 +1717,7 @@ namespace ModManager4.Class
                     string start = toProcess.Substring(0, i);
                     string next = toProcess.Substring(i + 1);
                     string output = "";
-                    for (int j = 0; j<3; j++)
+                    for (int j = 0; j < 3; j++)
                     {
                         if (j < start.Length)
                         {
@@ -1738,7 +1730,7 @@ namespace ModManager4.Class
                             }
                         } else
                         {
-                            output = output + "0";
+                            output = "0" + output;
                         }
                     }
                     ret = ret + output + ".";
@@ -1757,12 +1749,12 @@ namespace ModManager4.Class
                             }
                             else
                             {
-                                output = output + start[j];
+                                output = output + start[j] ;
                             }
                         }
                         else
                         {
-                            output = output + "0";
+                            output = "0" + output;
                         }
                     }
                     ret = ret + output;
@@ -1773,6 +1765,7 @@ namespace ModManager4.Class
             
             return ret;
         }
+        */
 
         public void loadEditModPage(Mod m)
         {

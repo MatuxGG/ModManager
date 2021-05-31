@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -191,8 +192,17 @@ namespace ModManager4.Class
             string ip = ServersPanel.Controls["ServerIP=" + serverId].Text;
             string port = ServersPanel.Controls["ServerPort=" + serverId].Text;
 
+            Regex ipReg = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
+            MatchCollection result = ipReg.Matches(ip);
+
+            if (result.Count() == 0)
+            {
+                return;
+            }
+
             this.modManager.serverlist.Regions[serverId].name = name;
-            this.modManager.serverlist.Regions[serverId].DefaultIp = this.modManager.componentlist.processIP(ip);
+            this.modManager.serverlist.Regions[serverId].DefaultIp = result[0].Value;
+            this.modManager.serverlist.Regions[serverId].Fqdn = result[0].Value;
             this.modManager.serverlist.Regions[serverId].port = int.Parse(port);
 
             this.modManager.serverlist.update(this.modManager);
@@ -205,9 +215,9 @@ namespace ModManager4.Class
             if (sender is TextBox)
             {
                 controlName = ((TextBox)sender).Name;
-            } else if (sender is MaskedTextBox)
+            } else if (sender is TextBox)
             {
-                controlName = ((MaskedTextBox)sender).Name;
+                controlName = ((TextBox)sender).Name;
             } else
             {
                 controlName = ((NumericUpDown)sender).Name;
@@ -252,7 +262,7 @@ namespace ModManager4.Class
         {
             this.modManager.serverlist.add(this.modManager);
 
-            Server newServ = new Server("DnsRegionInfo, Assembly-CSharp", "0.0.0.0", "0.0.0.0", 22023, "New Server", 1003);
+            Server newServ = new Server("DnsRegionInfo, Assembly-CSharp", "", "", 22023, "New Server", 1003);
             Panel ServersPanel = (Panel)this.modManager.componentlist.get("Servers").getControl("PagePanelServers").Controls["ServersPanel"];
             this.modManager.componentlist.addServer(newServ, this.modManager.serverlist.Regions.Count() - 1, ServersPanel);
         }

@@ -43,12 +43,21 @@ namespace ModManager4.Class
 
         public List<int[]> getResolutions()
         {
+            List<int[]> temp = new List<int[]>();
+            temp.Add(new int[] { 2560, 1600 });
+            temp.Add(new int[] { 1920, 1200 });
+            temp.Add(new int[] { 1680, 1050 });
+            temp.Add(new int[] { 1440, 900 });
+            temp.Add(new int[] { 1280, 800 });
+
             List<int[]> res = new List<int[]>();
-            res.Add(new int[] { 2560, 1600 });
-            res.Add(new int[] { 1920, 1200 });
-            res.Add(new int[] { 1680, 1050 });
-            res.Add(new int[] { 1440, 900 });
-            res.Add(new int[] { 1280, 800 });
+            foreach (int[] r in temp)
+            {
+                if (r[0] + 100 < Screen.PrimaryScreen.Bounds.Width && r[1] + 100 < Screen.PrimaryScreen.Bounds.Height)
+                {
+                    res.Add(r);
+                }
+            }
             return res;
         }
 
@@ -133,15 +142,10 @@ namespace ModManager4.Class
             } else
             {
                 modManager.logs.log("- Config doesn't exists");
-                foreach (int[] size in this.getResolutions())
-                {
-                    if (Screen.PrimaryScreen.Bounds.Width > size[0] + 100 && Screen.PrimaryScreen.Bounds.Height > size[1] + 100)
-                    {
-                        this.resolutionX = size[0];
-                        this.resolutionY = size[1];
-                        break;
-                    }
-                }
+
+                int[] size = this.getResolutions().First();
+                this.resolutionX = size[0];
+                this.resolutionY = size[1];
             }
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
