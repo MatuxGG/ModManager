@@ -47,7 +47,7 @@ namespace ModManager4
             this.BackColor = System.Drawing.SystemColors.ControlText;
             this.BackgroundImage = global::ModManager4.Properties.Resources.titlefondbig;
             this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            this.ClientSize = new System.Drawing.Size(1284, 771);
+            this.ClientSize = new System.Drawing.Size(704, 411);
             this.Controls.Add(this.InitProgressBar);
             this.DoubleBuffered = true;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;

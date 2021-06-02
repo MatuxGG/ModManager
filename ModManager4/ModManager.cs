@@ -40,9 +40,7 @@ namespace ModManager4
         {
             InitializeComponent();
 
-            this.Size = new Size(0, 0);
             this.CenterToScreen();
-            this.Hide();
 
             _ = this.Start();
         }

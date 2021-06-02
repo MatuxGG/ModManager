@@ -44,11 +44,14 @@ namespace ModManager4.Class
         public List<int[]> getResolutions()
         {
             List<int[]> temp = new List<int[]>();
-            temp.Add(new int[] { 2560, 1600 });
-            temp.Add(new int[] { 1920, 1200 });
-            temp.Add(new int[] { 1680, 1050 });
-            temp.Add(new int[] { 1440, 900 });
-            temp.Add(new int[] { 1280, 800 });
+            int x = 2560;
+            int y = 1600;
+            while (y >= 450)
+            {
+                temp.Add(new int[] { x, y });
+                x = (x * (y - 50)) / y;
+                y = y - 50;
+            }
 
             List<int[]> res = new List<int[]>();
             foreach (int[] r in temp)

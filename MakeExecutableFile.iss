@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define MyAppName "ModManager"
-#define MyAppVersion "4.0.6"
+#define MyAppVersion "4.0.7"
 #define MyAppPublisher "Matux"
 #define MyAppURL "https://matux.fr"
 #define MyAppExeName "ModManager4.exe"
