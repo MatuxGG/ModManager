@@ -1094,7 +1094,7 @@ namespace ModManager4.Class
 
             c = new Component("ModTools");
 
-            this.loadTools(c);
+            c = this.loadTools(c);
 
             this.components.Add(c);
 
@@ -1211,6 +1211,13 @@ namespace ModManager4.Class
             Component c = this.get("Servers");
             c.removeControls();
             c = this.loadServers(c);
+        }
+
+        public void refreshTools()
+        {
+            Component c = this.get("ModTools");
+            c.removeControls();
+            c = this.loadTools(c);
         }
 
         public Component loadModPage(Component c) { 
@@ -1800,7 +1807,7 @@ namespace ModManager4.Class
 
         }
 
-        public void loadTools(Component c)
+        public Component loadTools(Component c)
         {
 
             Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
@@ -1873,7 +1880,7 @@ namespace ModManager4.Class
                 }
                 PagePanelTools.Controls.Add(ToolPic);
 
-                if (t.downloadLink != "" && (t.path == "" || File.Exists(t.path) == false ))
+                if (this.modManager.config.installedTools.Contains(t.name) == false)
                 {
                     System.Windows.Forms.LinkLabel ToolLink = new System.Windows.Forms.LinkLabel();
                     ToolLink.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1883,7 +1890,7 @@ namespace ModManager4.Class
                     ToolLink.Location = new System.Drawing.Point((int)((40 + 220 * (i % 4)) * ratioX), (int)((220 + 170 * (i / 4)) * ratioY));
                     ToolLink.Name = "ToolLink=" + t.name;
                     ToolLink.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
-                    ToolLink.Text = "Download";
+                    ToolLink.Text = "Install";
                     ToolLink.TabStop = false;
                     ToolLink.Click += new EventHandler(this.events.downloadTool);
                     PagePanelTools.Controls.Add(ToolLink);
@@ -1891,6 +1898,7 @@ namespace ModManager4.Class
 
                 i++;
             }
+            return c;
         }
 
         public Component get(string name)

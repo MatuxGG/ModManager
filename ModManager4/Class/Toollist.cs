@@ -53,26 +53,8 @@ namespace ModManager4.Class
                                     "If this problem persists, please send a ticket on Mod Manager's discord.", "Server unreacheable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
-            List<Tool> remoteTools = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Tool>>(toollist);
-            if (this.tools.Count == 0)
-            {
-                this.tools = remoteTools;
-            } else
-            {
-                List<Tool> mergedTools = new List<Tool> { };
-                foreach (Tool t in remoteTools)
-                {
-                    Tool mergedTool = t;
-                    Tool tool = this.getToolByName(t.name);
-                    if (tool != null && tool.path != "")
-                    {
-                        mergedTool.path = tool.path;
-                    }
-                    mergedTools.Add(mergedTool);
-                }
-                this.tools = mergedTools;
-            }
-
+            this.tools = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Tool>>(toollist);
+            /*
             if (Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null) != null)
             {
                 foreach (Tool t in this.tools)
@@ -84,6 +66,7 @@ namespace ModManager4.Class
                 }
             }
             this.update();
+            */
             this.modManager.logs.log("- Toolist loaded successfully");
         }
 
@@ -110,7 +93,7 @@ namespace ModManager4.Class
             string ret = "Toollist :\n";
             foreach (Tool t in this.tools)
             {
-                ret = ret + "- Tool " + t.name + " : Path = " + t.path + " / Download link = " + t.downloadLink + "\n";
+                ret = ret + "- Tool " + t.name + "\n";
             }
             return ret;
         }

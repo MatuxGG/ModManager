@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -105,7 +106,17 @@ namespace ModManager4.Class
             string toolFieldName = ((PictureBox)sender).Name;
             string toolName = toolFieldName.Substring(toolFieldName.IndexOf("=") + 1);
             Tool t = this.modManager.toollist.getToolByName(toolName);
-            if (t.path == "" || File.Exists(t.path) == false)
+            string path = "";
+            if (t.name == "Better Crewlink")
+            {
+                path = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null).ToString() + "\\Better-CrewLink.exe";
+            } else
+            {
+                path = this.modManager.appDataPath + "\\tools\\" + t.name + "\\" + t.appFile;
+            }
+            Process.Start("explorer", path);
+            /*
+             * if (t.path == "" || File.Exists(t.path) == false)
             {
                 if (MessageBox.Show("Please select a path for " + t.name, "Select tool path", MessageBoxButtons.OK, MessageBoxIcon.Exclamation) == DialogResult.OK)
                 {
@@ -124,8 +135,9 @@ namespace ModManager4.Class
                 }
             } else
             {
-                Process.Start("explorer", t.path);
+                
             }
+            */
         }
 
         public void downloadTool(object sender, EventArgs e)
@@ -133,7 +145,31 @@ namespace ModManager4.Class
             string toolFieldName = ((LinkLabel)sender).Name;
             string toolName = toolFieldName.Substring(toolFieldName.IndexOf("=") + 1);
             Tool t = this.modManager.toollist.getToolByName(toolName);
-            Process.Start("explorer", t.downloadLink);
+            string path = this.modManager.appDataPath + "\\tools\\" + t.name;
+            if (t.name != "Better Crewlink")
+            {
+                Directory.CreateDirectory(path);
+            }
+            if (t.type == "github")
+            {
+                this.downloadGithubTool(t);
+            } else if (t.type == "directLink")
+            {
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(t.downloadLink, path + "\\" + t.appFile);
+                }
+                this.modManager.config.installedTools.Add(t.name);
+                this.modManager.config.update(this.modManager);
+                this.clearWithBlink();
+                this.modManager.pagelist.renderPage("ModTools");
+            }
+            //this.modManager.componentlist.refreshTools();
+
+        }
+
+        public async Task downloadGithubTool(Tool t)
+        {
             
         }
 

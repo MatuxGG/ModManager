@@ -18,14 +18,17 @@ namespace ModManager4.Class
 
         public Boolean enableCache { get; set; }
 
+        public List<string> installedTools { get; set; }
+
         public int resolutionX { get; set; }
         public int resolutionY { get; set; }
 
-        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, Boolean enableCache, int resolutionX, int resolutionY)
+        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, List<string> installedTools, Boolean enableCache, int resolutionX, int resolutionY)
         {
             this.amongUsPath = amongUsPath;
             this.installedMods = installedMods;
             this.installedDependencies = installedDependencies;
+            this.installedTools = installedTools;
             this.enableCache = enableCache;
             this.resolutionX = resolutionX;
             this.resolutionY = resolutionY;
@@ -36,6 +39,7 @@ namespace ModManager4.Class
             this.amongUsPath = "";
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
+            this.installedTools = new List<string>();
             this.enableCache = true;
             this.resolutionX = 1300;
             this.resolutionY = 810;
@@ -132,6 +136,7 @@ namespace ModManager4.Class
                     modManager.logs.log("- Among Us exists");
                     this.amongUsPath = temp.amongUsPath;
                     this.installedDependencies = temp.installedDependencies;
+                    this.installedTools = temp.installedTools;
                     this.installedMods = temp.installedMods;
                     this.enableCache = temp.enableCache;
                     this.resolutionX = temp.resolutionX;
@@ -152,6 +157,7 @@ namespace ModManager4.Class
             }
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
+            this.installedTools = new List<string>();
             this.amongUsPath = null;
 
             // Detection from Steam

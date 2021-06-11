@@ -58,6 +58,7 @@ namespace ModManager4
             // Create AppData folder if necessary
             Directory.CreateDirectory(this.appDataPath);
             Directory.CreateDirectory(this.appDataPath + "\\localMods");
+            Directory.CreateDirectory(this.appDataPath + "\\tools");
             //Create Temp folder if necessary
             Directory.CreateDirectory(this.tempPath);
 
