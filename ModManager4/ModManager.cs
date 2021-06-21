@@ -30,7 +30,6 @@ namespace ModManager4
 
         public ServerConfig serverConfig;
         public Modlist modlist;
-        public Toollist toollist;
         public Config config;
         public Componentlist componentlist;
         public Pagelist pagelist;
@@ -58,7 +57,8 @@ namespace ModManager4
             // Create AppData folder if necessary
             Directory.CreateDirectory(this.appDataPath);
             Directory.CreateDirectory(this.appDataPath + "\\localMods");
-            Directory.CreateDirectory(this.appDataPath + "\\tools");
+            Directory.CreateDirectory(this.appDataPath + "\\allInOneMods");
+            Directory.CreateDirectory(this.appDataPath + "\\modsData");
             //Create Temp folder if necessary
             Directory.CreateDirectory(this.tempPath);
 
@@ -126,11 +126,6 @@ namespace ModManager4
             this.modlist = new Modlist(this);
             await this.modlist.load();
             this.logs.log(this.modlist.toString());
-
-            //Load tools from server
-            this.toollist = new Toollist(this);
-            this.toollist.load();
-            this.logs.log(this.toollist.toString());
 
             // Load local config or create one (find AU folder if possible)
             this.logs.log("Loading config (2/2)");

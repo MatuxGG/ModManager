@@ -95,84 +95,6 @@ namespace ModManager4.Class
             this.modManager.pagelist.renderPage("Servers");
         }
 
-        public void openTools(object sender, EventArgs e)
-        {
-            this.modManager.logs.log("Event : Render page Tools\n");
-            this.modManager.pagelist.renderPage("ModTools");
-        }
-
-        public void openTool(object sender, EventArgs e)
-        {
-            string toolFieldName = ((PictureBox)sender).Name;
-            string toolName = toolFieldName.Substring(toolFieldName.IndexOf("=") + 1);
-            Tool t = this.modManager.toollist.getToolByName(toolName);
-            string path = "";
-            if (t.name == "Better Crewlink")
-            {
-                path = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null).ToString() + "\\Better-CrewLink.exe";
-            } else
-            {
-                path = this.modManager.appDataPath + "\\tools\\" + t.name + "\\" + t.appFile;
-            }
-            Process.Start("explorer", path);
-            /*
-             * if (t.path == "" || File.Exists(t.path) == false)
-            {
-                if (MessageBox.Show("Please select a path for " + t.name, "Select tool path", MessageBoxButtons.OK, MessageBoxIcon.Exclamation) == DialogResult.OK)
-                {
-                    OpenFileDialog folderBrowser = new OpenFileDialog();
-                    folderBrowser.ValidateNames = false;
-                    folderBrowser.CheckFileExists = false;
-                    folderBrowser.CheckPathExists = true;
-                    folderBrowser.Filter = "Any|*";
-                    // Always default to Folder Selection.
-                    folderBrowser.FileName = "";
-                    if (folderBrowser.ShowDialog() == DialogResult.OK)
-                    {
-                        t.path = folderBrowser.FileName;
-                        this.modManager.toollist.update();
-                    }
-                }
-            } else
-            {
-                
-            }
-            */
-        }
-
-        public void downloadTool(object sender, EventArgs e)
-        {
-            string toolFieldName = ((LinkLabel)sender).Name;
-            string toolName = toolFieldName.Substring(toolFieldName.IndexOf("=") + 1);
-            Tool t = this.modManager.toollist.getToolByName(toolName);
-            string path = this.modManager.appDataPath + "\\tools\\" + t.name;
-            if (t.name != "Better Crewlink")
-            {
-                Directory.CreateDirectory(path);
-            }
-            if (t.type == "github")
-            {
-                this.downloadGithubTool(t);
-            } else if (t.type == "directLink")
-            {
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(t.downloadLink, path + "\\" + t.appFile);
-                }
-                this.modManager.config.installedTools.Add(t.name);
-                this.modManager.config.update(this.modManager);
-                this.clearWithBlink();
-                this.modManager.pagelist.renderPage("ModTools");
-            }
-            //this.modManager.componentlist.refreshTools();
-
-        }
-
-        public async Task downloadGithubTool(Tool t)
-        {
-            
-        }
-
         public void enableCache(object sender, EventArgs e)
         {
             CheckBox checkbox = ((CheckBox)sender);
@@ -197,6 +119,35 @@ namespace ModManager4.Class
             {
                 string path = this.modManager.appDataPath;
                 Process.Start("explorer.exe", path);
+            }
+        }
+
+        public void openBcl(object sender, EventArgs e)
+        {
+            PictureBox pic = ((PictureBox)sender);
+            string path = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null).ToString() + "\\Better-CrewLink.exe";
+
+            if (File.Exists(path))
+            {
+                Process.Start("explorer", path);
+            } else
+            {
+                pic.Enabled = false;
+                string dlPath = this.modManager.tempPath + "\\Better-CrewLink-Setup-2.6.4.exe";
+                try
+                {
+                    using (var client = new WebClient())
+                    {
+                        client.DownloadFile("https://github.com/OhMyGuus/BetterCrewLink/releases/download/v2.6.4/Better-CrewLink-Setup-2.6.4.exe", dlPath);
+                    }
+                }
+                catch
+                {
+                    this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
+                    this.modManager.componentlist.events.exitMM();
+                }
+                Process.Start("explorer.exe", dlPath);
+                pic.Enabled = true;
             }
         }
 
@@ -443,6 +394,7 @@ namespace ModManager4.Class
 
         public void addMod(object sender, EventArgs e)
         {
+            this.modManager.logs.log("Event : Add local mod\n");
             OpenFileDialog folderBrowser = new OpenFileDialog();
             folderBrowser.ValidateNames = false;
             folderBrowser.CheckFileExists = false;
@@ -463,10 +415,12 @@ namespace ModManager4.Class
             {
                 l.Text = Path.GetFullPath(folderBrowser.FileName);
             }
+            this.modManager.logs.log("- Added local mod successfully\n");
         }
 
         public void editMod(object sender, EventArgs e)
         {
+            this.modManager.logs.log("Event : Edit local mod\n");
             OpenFileDialog folderBrowser = new OpenFileDialog();
             folderBrowser.ValidateNames = false;
             folderBrowser.CheckFileExists = false;
@@ -487,10 +441,12 @@ namespace ModManager4.Class
             {
                 l.Text = Path.GetFullPath(folderBrowser.FileName);
             }
+            this.modManager.logs.log("Event : Edit local mod successfully\n");
         }
 
         public void validAddMod(object sender, EventArgs e)
         {
+            this.modManager.logs.log("Event : Valid add local mod\n");
             Panel p = (Panel)this.modManager.componentlist.get("LocalAdd").getControl("PagePanelLocal");
             string name = p.Controls["ModNameField"].Text;
             string fileName = p.Controls["ModAddFileName"].Text;
@@ -513,15 +469,18 @@ namespace ModManager4.Class
             string newPath = this.modManager.appDataPath + "\\localMods\\" + Path.GetFileName(fileName);
             this.modManager.utils.FileCopy(fileName, newPath);
             List<Mod> localMods = this.modManager.modlist.getLocalMods();
-            Mod newMod = new Mod("Localmod"+localMods.Count, name, "Local mods", "localMod", this.modManager.serverConfig.gameVersion, dependencies, "You", newPath);
+            Mod newMod = new Mod("Localmod" + localMods.Count, name, "Local mods", "localMod", this.modManager.serverConfig.gameVersion, dependencies, "You", newPath, new List<string>(){ }, new List<string>() { }, new List<string>() { });
             this.modManager.modlist.mods.Add(newMod);
             this.modManager.modlist.updateLocalMods();
             this.modManager.componentlist.refreshModSelection();
             this.modManager.pagelist.renderPage("ModSelection");
+
+            this.modManager.logs.log("Event : Valid add local mod successfully\n");
         }
 
         public void validEditMod(object sender, EventArgs e)
         {
+            this.modManager.logs.log("Event : Valid edit local mod\n");
             Panel p = (Panel)this.modManager.componentlist.get("LocalEdit").getControl("PagePanelLocalEdit");
             string name = p.Controls["ModNameFieldEdit"].Text;
             string fileName = p.Controls["ModAddFileNameEdit"].Text;
@@ -560,6 +519,7 @@ namespace ModManager4.Class
             this.modManager.modlist.updateLocalMods();
             this.modManager.componentlist.refreshModSelection();
             this.modManager.pagelist.renderPage("ModSelection");
+            this.modManager.logs.log("Event : Valid edit local mod successfully\n");
         }
 
         public void editLocalMod(object sender, EventArgs e)
@@ -573,6 +533,7 @@ namespace ModManager4.Class
 
         public void removeLocalMod(object sender, EventArgs e)
         {
+            this.modManager.logs.log("Event : Remove local mod\n");
             string cross = ((PictureBox)sender).Name;
             string modId = cross.Substring(cross.IndexOf("=") + 1);
             Mod m = this.modManager.modlist.getModById(modId);
@@ -583,12 +544,15 @@ namespace ModManager4.Class
             this.modManager.logs.log(this.modManager.componentlist.toString());
             this.modManager.pagelist.renderPage("ModSelection");
 
+            this.modManager.logs.log("Event : Removed local mod successfully\n");
+
             //this.modManager.componentlist.refreshModSelection();
             //this.modManager.pagelist.renderPage("ModSelection");
         }
 
         public void removeLocalMods(object sender, EventArgs e)
         {
+            this.modManager.logs.log("Event : Remove local mods\n");
             if (MessageBox.Show("This option will remove and uninstall all current local mods from Mod Manager.\n\nDo you really want to do that ?", "Remove local mods", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
             {
                 return;
@@ -599,6 +563,66 @@ namespace ModManager4.Class
             }
             this.modManager.componentlist.refreshModSelection();
             this.modManager.pagelist.renderPage("ModSelection");
+            this.modManager.logs.log("Event : Removed local mods successfully\n");
+        }
+
+        public void downloadAllInOne(object sender, EventArgs e)
+        {
+            string cross = ((PictureBox)sender).Name;
+            string modId = cross.Substring(cross.IndexOf("=") + 1);
+            Mod m = this.modManager.modlist.getModById(modId);
+            this.modManager.logs.log("Event : Downloading All In One Mod " + m.name + "\n");
+
+            if (m.id == "Skeld")
+            {
+                try
+                {
+                    Directory.CreateDirectory(this.modManager.appDataPath + "\\allInOneMods\\" + m.id);
+                    using (var client = new WebClient())
+                    {
+                        client.DownloadFile(this.modManager.serverURL + "/skeld", this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Skeld.exe");
+                    }
+                }
+                catch
+                {
+                    this.modManager.logs.log("Error : Disconnected during " + m.name + " install");
+                    this.modManager.componentlist.events.exitMM();
+                }
+                InstalledMod newMod = new InstalledMod(m.id, "1.0", m.gameVersion, new List<string>() { });
+                this.modManager.config.installedMods.Add(newMod);
+                this.modManager.config.update(this.modManager);
+
+                this.clearWithBlink();
+                this.modManager.pagelist.renderPage("ModSelection");
+            } else if (m.id == "Challenger")
+            {
+                Directory.CreateDirectory(this.modManager.appDataPath + "\\allInOneMods\\" + m.id);
+                this.modManager.pagelist.renderPage("BeforeUpdateMods");
+                this.modManager.modWorker.installChallenger();
+            }
+
+
+            this.modManager.logs.log("Event : Downloaded All In One Mod " + m.name + " successfully\n");
+
+        }
+
+        public void startAllInOne(object sender, EventArgs e)
+        {
+            string cross = ((PictureBox)sender).Name;
+            string modId = cross.Substring(cross.IndexOf("=") + 1);
+            Mod m = this.modManager.modlist.getModById(modId);
+            this.modManager.logs.log("Event : Starting All In One Mod " + m.name + "\n");
+
+            if (m.id == "Skeld")
+            {
+                Process.Start("explorer", this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Skeld.exe");
+            }
+            else if (m.id == "Challenger")
+            {
+                Process.Start("explorer", this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Among Us.exe");
+            }
+
+            this.modManager.logs.log("Event : Started All In One Mod " + m.name + " successfully\n");
         }
 
         public void launchGame(object sender, EventArgs e)

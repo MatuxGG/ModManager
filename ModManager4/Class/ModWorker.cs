@@ -19,6 +19,7 @@ namespace ModManager4.Class
         public ModManager modManager;
         public BackgroundWorker backgroundWorker;
         public BackgroundWorker backgroundWorkerCode;
+        public BackgroundWorker backgroundWorkerChallenger;
         public string codeToInstall;
         public Boolean startAfterUpdate;
 
@@ -124,9 +125,12 @@ namespace ModManager4.Class
             this.modManager.logs.log("Uninstall all mods process");
             if (this.modManager.config != null)
             {
-                // Saving The Other Roles settings
-                File.Delete(this.modManager.appDataPath + "\\me.eisbison.theotherroles.cfg");
-                this.modManager.utils.FileCopy(this.modManager.config.amongUsPath + "\\BepInEx\\config\\me.eisbison.theotherroles.cfg", this.modManager.appDataPath+ "\\me.eisbison.theotherroles.cfg");
+                foreach (InstalledMod im in this.modManager.config.installedMods)
+                {
+                    Mod m = this.modManager.modlist.getModById(im.id);
+                    this.saveData(m);
+                }
+
                 this.modManager.utils.DirectoryDelete(this.modManager.config.amongUsPath + "\\BepInEx");
                 this.modManager.utils.DirectoryDelete(this.modManager.config.amongUsPath + "\\Assets");
                 this.modManager.utils.DirectoryDelete(this.modManager.config.amongUsPath + "\\mono");
@@ -144,6 +148,142 @@ namespace ModManager4.Class
                 
                 this.modManager.logs.log("Uninstall successful");
             }
+        }
+
+        public void installChallenger()
+        {
+            this.modManager.logs.log("Install Challenger process");
+            this.backgroundWorkerChallenger = new BackgroundWorker();
+            this.backgroundWorkerChallenger.WorkerReportsProgress = true;
+            this.InitializeBackgroundWorkerChallenger();
+            this.backgroundWorkerChallenger.RunWorkerAsync();
+        }
+
+        private void InitializeBackgroundWorkerChallenger()
+        {
+            this.backgroundWorkerChallenger.DoWork += new DoWorkEventHandler(this.backgroundWorkerChallenger_DoWork);
+            this.backgroundWorkerChallenger.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorkerChallenger_RunWorkerCompleted);
+            this.backgroundWorkerChallenger.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorkerChallenger_ProgressChanged);
+        }
+
+        public void backgroundWorkerChallenger_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var backgroundWorker = sender as BackgroundWorker;
+
+            this.modManager.logs.log("Downloading Challenger Client");
+
+            backgroundWorker.ReportProgress(0);
+
+            ReleaseAsset asset = new ReleaseAsset();
+
+            foreach (ReleaseAsset ra in this.modManager.modlist.challengerClient.Assets)
+            {
+                if (ra.Name.Contains("zip"))
+                {
+                    asset = ra;
+                    break;
+                }
+            }
+
+            string path = this.modManager.tempPath + "\\" + asset.Name;
+            this.modManager.utils.FileDelete(path);
+
+            backgroundWorker.ReportProgress(5);
+
+            try
+            {
+                using (WebClient wc = new WebClient())
+                {
+                    wc.DownloadFile(new Uri(asset.BrowserDownloadUrl), path);
+                }
+            }
+            catch
+            {
+                this.modManager.logs.log("Error : Error when downloading client\n");
+                this.modManager.componentlist.events.exitMM();
+            }
+
+            backgroundWorker.ReportProgress(25);
+            this.modManager.logs.log("Challenger Client downloaded");
+            this.modManager.logs.log("Extracting Challenger Client");
+
+            string appPath = this.modManager.appDataPath + "\\allInOneMods\\Challenger";
+
+            this.modManager.utils.DirectoryDelete(appPath);
+            Directory.CreateDirectory(appPath);
+
+            ZipFile.ExtractToDirectory(path, appPath);
+
+            backgroundWorker.ReportProgress(50);
+            this.modManager.logs.log("Challenger Client extracted");
+
+            foreach (ReleaseAsset ra in this.modManager.modlist.challengerMod.Assets)
+            {
+                if (ra.Name.Contains("zip"))
+                {
+                    asset = ra;
+                    break;
+                }
+            }
+
+            path = this.modManager.tempPath + "\\" + asset.Name;
+
+            this.modManager.logs.log("Downloading Challenger Mod");
+
+            try
+            {
+                using (WebClient wc = new WebClient())
+                {
+                    wc.DownloadFile(new Uri(asset.BrowserDownloadUrl), path);
+                }
+            }
+            catch
+            {
+                this.modManager.logs.log("Error : Error when downloading mod\n");
+                this.modManager.componentlist.events.exitMM();
+            }
+
+            backgroundWorker.ReportProgress(75);
+
+            this.modManager.logs.log("Challenger Mod downloaded");
+            this.modManager.logs.log("Extracting Challenger Mod");
+
+            ZipFile.ExtractToDirectory(path, appPath);
+
+            this.modManager.logs.log("Challenger Mod extracted");
+
+            backgroundWorker.ReportProgress(100);
+            this.modManager.logs.log("Challenger Mod installed successfully");
+        }
+
+        private void backgroundWorkerChallenger_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            Panel p = (Panel)this.modManager.componentlist.get("BeforeUpdateMods").getControl("PagePaneBefUp");
+            ProgressBar prog = (ProgressBar)p.Controls["UpdateBar"];
+            prog.Value = e.ProgressPercentage;
+        }
+
+        private void backgroundWorkerChallenger_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Panel p = (Panel)this.modManager.componentlist.get("BeforeUpdateMods").getControl("PagePaneBefUp");
+            ProgressBar prog = (ProgressBar)p.Controls["UpdateBar"];
+            prog.Value = 100;
+
+            this.modManager.logs.log("Install of Challenger Mod successful");
+
+            if (this.modManager.config.containsMod("Challenger"))
+            {
+                this.modManager.config.getInstalledModById("Challenger").version = this.modManager.modlist.challengerMod.TagName;
+            } else
+            {
+                InstalledMod newMod = new InstalledMod("Challenger", this.modManager.modlist.challengerMod.TagName, this.modManager.serverConfig.gameVersion, new List<string>() { });
+                this.modManager.config.installedMods.Add(newMod);
+            }
+
+            this.modManager.config.update(this.modManager);
+
+            this.modManager.componentlist.events.clearWithBlink();
+            this.modManager.pagelist.renderPage("ModSelection");
         }
 
         public void updateMods(Boolean startAfterUpdate)
@@ -248,13 +388,10 @@ namespace ModManager4.Class
                 this.modManager.logs.log("- Install mod " + m.name);
                 this.installDependencies(m);
 
-                if (m.id == "TheOtherRoles")
-                {
-                    this.modManager.utils.FileCopy(this.modManager.appDataPath + "\\me.eisbison.theotherroles.cfg", this.modManager.config.amongUsPath + "\\BepInEx\\config\\me.eisbison.theotherroles.cfg");
-                }
+                this.restoreData(m);
 
                 string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
-                List<string> plugins = new List<string>();
+                List<string> files = new List<string>();
 
                 if (m.type == "mod") {
                     foreach (ReleaseAsset tab in m.release.Assets)
@@ -267,21 +404,20 @@ namespace ModManager4.Class
                             return;
                         }
                     }
-
                     foreach (ReleaseAsset tab in m.release.Assets)
                     {
                         string fileName = tab.Name;
                         if (fileName.Contains(".dll"))
                         {
                             this.modManager.logs.log("- - Install DLL mod " + fileName);
-                            plugins.Add(fileName);
+                            files.Add("BepInEx\\plugins\\" + fileName);
                             this.installDll(m, tab);
                         }
                     }
 
-                    if (plugins.Count != 0)
+                    if (files.Count != 0)
                     {
-                        InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion, new List<string>(), plugins);
+                        InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion, files);
                         this.modManager.config.installedMods.Add(newMod);
                         this.modManager.config.update(this.modManager);
                         return;
@@ -299,20 +435,18 @@ namespace ModManager4.Class
                     if (fileName.Contains(".dll"))
                     {
                         this.modManager.logs.log("- - Install DLL for local mod " + fileName);
-                        plugins.Add(fileName);
+                        files.Add("BepInEx\\plugins\\" + fileName);
                         this.installLocalDll(m);
                     }
 
-                    if (plugins.Count != 0)
+                    if (files.Count != 0)
                     {
-                        InstalledMod newMod = new InstalledMod(m.id, "1.0", m.gameVersion, new List<string>(), plugins);
+                        InstalledMod newMod = new InstalledMod(m.id, "1.0", m.gameVersion, files);
                         this.modManager.config.installedMods.Add(newMod);
                         this.modManager.config.update(this.modManager);
                         return;
                     }
                 }
-
-                
 
             }
 
@@ -373,17 +507,16 @@ namespace ModManager4.Class
                 }
             }
             DirectoryInfo dirInfo2 = new DirectoryInfo(tempPathZip + "\\Assets");
-            List<string> assets = new List<string>();
             if (dirInfo2.Exists)
             {
                 FileInfo[] files = dirInfo2.GetFiles();
                 foreach (FileInfo f in files)
                 {
                     this.modManager.utils.FileCopy(f.FullName, this.modManager.config.amongUsPath + "\\Assets\\" + f.Name);
-                    assets.Add(f.Name);
+                    plugins.Add(f.FullName);
                 }
             }
-            InstalledMod newMod = new InstalledMod(m.id, "1.0", m.gameVersion, assets, plugins);
+            InstalledMod newMod = new InstalledMod(m.id, "1.0", m.gameVersion, plugins);
             this.modManager.config.installedMods.Add(newMod);
             this.modManager.config.update(this.modManager);
             return;
@@ -479,56 +612,39 @@ namespace ModManager4.Class
 
             tempPathZip = this.getBepInExInsideRec(tempPathZip);
 
-            DirectoryInfo dirPlugins = new DirectoryInfo(this.modManager.config.amongUsPath + "\\BepInEx\\plugins");
-
             // Install dll
-            DirectoryInfo dirInfo = new DirectoryInfo(tempPathZip + "\\BepInEx\\plugins");
 
-            List<string> plugins = new List<string>();
-            if (dirInfo.Exists)
+            List<string> installedFiles = new List<string>();
+            foreach (string folder in m.folders)
             {
-                FileInfo[] files = dirInfo.GetFiles("*");
-
-                foreach (FileInfo f in files)
+                DirectoryInfo dirInfo = new DirectoryInfo(tempPathZip + "\\" + folder);
+                if (dirInfo.Exists)
                 {
-                    string target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + f.Name;
-                    string newName = f.Name;
-                    if (File.Exists(target))
+                    if (Directory.Exists(this.modManager.config.amongUsPath + "\\" + folder) == false)
                     {
-                        newName = m.id + "-" + f.Name.Remove(f.Name.Length - 4);
-                        target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + newName;
-                    } 
-                    this.modManager.utils.FileCopy(f.FullName, target);
-                    plugins.Add(newName);
-                }
-
-                DirectoryInfo[] dirs = dirInfo.GetDirectories("*");
-
-                foreach (DirectoryInfo d in dirs)
-                {
-                    string target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + d.Name;
-                    string newName = d.Name;
-                    if (Directory.Exists(target))
-                    {
-                        newName = m.id + "-" + d.Name.Remove(d.Name.Length);
-                        target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + newName;
+                        Directory.CreateDirectory(this.modManager.config.amongUsPath + "\\" + folder);
                     }
-                    this.modManager.utils.DirectoryCopy(d.FullName, target, true);
-                    plugins.Add(newName);
+
+                    FileInfo[] files = dirInfo.GetFiles("*");
+                    foreach (FileInfo f in files)
+                    { 
+                        if (m.excludeFiles.Contains(folder + "\\" + f.Name) == false)
+                        {
+                            string target = this.modManager.config.amongUsPath + "\\" + folder + "\\" + f.Name;
+                            string newName = f.Name;
+                            if (File.Exists(target))
+                            {
+                                newName = m.id + "-" + f.Name.Remove(f.Name.Length - 4);
+                                target = this.modManager.config.amongUsPath + "\\" + folder + "\\" + newName;
+                            }
+                            this.modManager.utils.FileCopy(f.FullName, target);
+                            installedFiles.Add(folder + "\\" + newName);
+                        }
+                    }
                 }
             }
-            DirectoryInfo dirInfo2 = new DirectoryInfo(tempPathZip + "\\Assets");
-            List<string> assets = new List<string>();
-            if (dirInfo2.Exists)
-            {
-                FileInfo[] files = dirInfo2.GetFiles();
-                foreach (FileInfo f in files)
-                {
-                    this.modManager.utils.FileCopy(f.FullName, this.modManager.config.amongUsPath + "\\Assets\\" + f.Name);
-                    assets.Add(f.Name);
-                }
-            }
-            InstalledMod newMod = new InstalledMod(m.id, fileTag, m.gameVersion, assets, plugins);
+
+            InstalledMod newMod = new InstalledMod(m.id, fileTag, m.gameVersion, installedFiles);
             this.modManager.config.installedMods.Add(newMod);
             this.modManager.config.update(this.modManager);
             return;
@@ -549,7 +665,7 @@ namespace ModManager4.Class
                 {
                     return dir.FullName;
                 }
-            }
+            } 
             return null;
         }
 
@@ -559,39 +675,82 @@ namespace ModManager4.Class
 
             InstalledMod installedMod = this.modManager.config.getInstalledModById(m.id);
 
-            string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
-            
-            foreach (string plugin in installedMod.plugins)
+            this.saveData(m);
+
+            foreach (string file in installedMod.files)
             {
                 Boolean canRemove = true;
                 foreach (InstalledMod im in this.modManager.config.installedMods)
                 {
-                    if (im.id != m.id && im.plugins.Contains(plugin))
+                    if (im.id != m.id && im.files.Contains(file))
                     {
                         canRemove = false;
                     }
                 }
                 if (canRemove == true)
                 {
-                    if (File.Exists(pluginsPath + "\\" + plugin))
+                    if (File.Exists(this.modManager.config.amongUsPath + "\\" + file))
                     {
-                        this.modManager.utils.FileDelete(pluginsPath + "\\" + plugin);
+                        this.modManager.utils.FileDelete(this.modManager.config.amongUsPath + "\\" + file);
                     }
-                    if (Directory.Exists(pluginsPath + "\\" + plugin))
+                    if (Directory.Exists(this.modManager.config.amongUsPath + "\\" + file))
                     {
-                        this.modManager.utils.DirectoryDelete(pluginsPath + "\\" + plugin);
+                        this.modManager.utils.DirectoryDelete(this.modManager.config.amongUsPath + "\\" + file);
                     }
                 }
             }
-            string assetsPath = this.modManager.config.amongUsPath + "\\Assets";
-            foreach (string asset in installedMod.assets)
-            {
-                this.modManager.utils.FileDelete(assetsPath + "\\" + asset);
-            }
+
+            
+
             this.modManager.config.installedMods.Remove(installedMod);
             this.modManager.config.update(this.modManager);
 
             this.modManager.logs.log("- Uninstall mod " + m.name + " completed");
+        }
+
+        public void saveData(Mod m)
+        {
+            if (m.data != null)
+            {
+                foreach (string dataFile in m.data)
+                {
+                    string dataPath = this.modManager.appDataPath + "\\modsData\\" + m.id + "\\";
+
+                    if (Directory.Exists(this.modManager.appDataPath + "\\modsData\\" + m.id) == false)
+                    {
+                        Directory.CreateDirectory(this.modManager.appDataPath + "\\modsData\\" + m.id);
+                    }
+
+                    if (Directory.Exists(this.modManager.config.amongUsPath + "\\" + dataFile))
+                    {
+                        this.modManager.utils.DirectoryCopy(this.modManager.config.amongUsPath + "\\" + dataFile, dataPath + Path.GetDirectoryName(dataFile), true);
+                    }
+                    if (File.Exists(this.modManager.config.amongUsPath + "\\" + dataFile))
+                    {
+                        this.modManager.utils.FileCopy(this.modManager.config.amongUsPath + "\\" + dataFile, dataPath + Path.GetFileName(dataFile));
+                    }
+                }
+            }
+            
+        }
+
+        public void restoreData(Mod m)
+        {
+            if (m.data != null)
+            {
+                foreach (string dataFile in m.data)
+                {
+                    string dataPath = this.modManager.appDataPath + "\\modsData\\" + m.id + "\\";
+                    if (Directory.Exists(dataPath + Path.GetDirectoryName(dataFile)))
+                    {
+                        this.modManager.utils.DirectoryCopy(dataPath + Path.GetDirectoryName(dataFile), this.modManager.config.amongUsPath + "\\" + dataFile, true);
+                    }
+                    if (File.Exists(dataPath + Path.GetFileName(dataFile)))
+                    {
+                        this.modManager.utils.FileCopy(dataPath + Path.GetFileName(dataFile), this.modManager.config.amongUsPath + "\\" + dataFile);
+                    }
+                }
+            }
         }
     }
 }

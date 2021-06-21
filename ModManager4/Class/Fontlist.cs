@@ -15,10 +15,19 @@ namespace ModManager4.Class
 
         public Fontlist(int height)
         {
-            sizeS = 18 - (int)((1600 - height) / 100);
-            sizeM = 20 - (int)((1600 - height) / 100);
-            sizeL = 22 - (int)((1600 - height) / 100);
-            sizeXL = 28 - (int)((1600 - height) / 50);
+            if (height >= 900)
+            {
+                sizeS = 18 - (int)((1600 - height) / 100);
+                sizeM = 20 - (int)((1600 - height) / 100);
+                sizeL = 22 - (int)((1600 - height) / 100);
+                sizeXL = 36 - (int)((1600 - height) / 50);
+            } else
+            {
+                sizeS = 18 - (int)((1600 - height) / 80);
+                sizeM = 20 - (int)((1600 - height) / 80);
+                sizeL = 22 - (int)((1600 - height) / 80);
+                sizeXL = 36 - (int)((1600 - height) / 40);
+            }
         }
     }
 }

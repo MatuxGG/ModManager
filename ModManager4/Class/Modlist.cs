@@ -19,7 +19,8 @@ namespace ModManager4.Class
         public string code;
         public List<string> toInstall;
         public List<string> toUninstall;
-
+        public Release challengerClient;
+        public Release challengerMod;
         public Modlist(ModManager modManager)
         {
             this.modManager = modManager;
@@ -29,7 +30,7 @@ namespace ModManager4.Class
         public async Task load()
         {
             this.modManager.logs.log("Loading modlist");
-            string modlistURL = this.modManager.serverURL + "/modlist.json";
+            string modlistURL = this.modManager.serverURL + "/modlist2.json";
             string modlist = "";
             try
             {
@@ -84,7 +85,13 @@ namespace ModManager4.Class
             {
                 i++;
                 progress.Value = (100 * i) / max;
-                await m.getGithubRelease(this.modManager.token);
+                if (m.type != "allInOne")
+                {
+                    await m.getGithubRelease(this.modManager.token);
+                } else if (m.id == "Challenger")
+                {
+                    await this.getChallengerReleases(m, this.modManager.token);
+                }
             }
             string localModsPath = this.modManager.appDataPath + "\\localMods.json";
             if (File.Exists(localModsPath))
@@ -97,6 +104,32 @@ namespace ModManager4.Class
             progress.Visible = false;
 
             this.modManager.logs.log("- Modlist loaded successfully");
+        }
+
+        public async Task getChallengerReleases(Mod m, string token)
+        {
+            var client = new GitHubClient(new ProductHeaderValue("ModManager"));
+            var tokenAuth = new Credentials(token);
+            client.Credentials = tokenAuth;
+            IReadOnlyList<Release> releases = await client.Repository.Release.GetAll(m.author, m.github);
+            this.challengerClient = null;
+            this.challengerMod = null;
+            foreach (Release r in releases)
+            {
+                if (r.TagName.Contains("C") && this.challengerClient == null)
+                {
+                    this.challengerClient = r;
+                }
+                if (r.TagName.Contains("C") == false && r.TagName.Contains("B") == false && r.TagName.Contains("L") == false && r.TagName.Contains("A") == false && this.challengerMod == null)
+                {
+                    this.challengerMod = r;
+                }
+                if (this.challengerMod != null && this.challengerClient != null)
+                {
+                    break;
+                }
+            }
+
         }
 
         public void updateLocalMods()

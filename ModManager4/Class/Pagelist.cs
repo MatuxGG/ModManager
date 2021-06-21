@@ -30,7 +30,6 @@ namespace ModManager4.Class
             this.pages.Add(new Page("LocalEdit", new string[] { "Header", "HeaderPub", "BackToMods", "LocalEdit", "Footer" }));
             this.pages.Add(new Page("Info", new string[] { "Header", "HeaderPub", "BackToMods", "Info", "Footer" }));
             this.pages.Add(new Page("UnsavedChanges", new string[] { "Header", "HeaderPub", "BackToMods", "UnsavedChanges", "Footer" }));
-            this.pages.Add(new Page("ModTools", new string[] { "Header", "HeaderPub", "BackToMods", "ModTools", "Footer" }));
             this.pages.Add(new Page("Servers", new string[] { "Header", "HeaderPub", "BackToMods", "Servers", "Footer" }));
 
             this.pages.Add(new Page("Disabled", new string[] { "HeaderPub", "Disabled" }));

@@ -18,17 +18,14 @@ namespace ModManager4.Class
 
         public Boolean enableCache { get; set; }
 
-        public List<string> installedTools { get; set; }
-
         public int resolutionX { get; set; }
         public int resolutionY { get; set; }
 
-        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, List<string> installedTools, Boolean enableCache, int resolutionX, int resolutionY)
+        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, Boolean enableCache, int resolutionX, int resolutionY)
         {
             this.amongUsPath = amongUsPath;
             this.installedMods = installedMods;
             this.installedDependencies = installedDependencies;
-            this.installedTools = installedTools;
             this.enableCache = enableCache;
             this.resolutionX = resolutionX;
             this.resolutionY = resolutionY;
@@ -39,7 +36,6 @@ namespace ModManager4.Class
             this.amongUsPath = "";
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
-            this.installedTools = new List<string>();
             this.enableCache = true;
             this.resolutionX = 1300;
             this.resolutionY = 810;
@@ -84,31 +80,25 @@ namespace ModManager4.Class
 
         public Boolean checkWorker(ModManager modManager)
         {
-            string pluginPath = this.amongUsPath + "\\BepInEx\\plugins";
             foreach (InstalledMod mod in this.installedMods)
             {
                 Mod m = modManager.modlist.getModById(mod.id);
 
-                if (mod.gameVersion != modManager.serverConfig.gameVersion || (m.type == "mod" && mod.version != m.release.TagName))
+                if (m.type != "allInOne")
                 {
-                    modManager.logs.log("- Uninstall mod " + m.name + " (wrong version or game version)");
-                    modManager.modWorker.uninstallMod(m);
-                    return true;
-                }
-                foreach (string asset in mod.assets)
-                {
-                    if (File.Exists(this.amongUsPath + "\\" + asset) == false)
+                    if (mod.gameVersion != modManager.serverConfig.gameVersion || (m.type == "mod" && mod.version != m.release.TagName))
                     {
-                        modManager.logs.log("- Uninstall mod " + m.name + " (missing asset " + asset + ")");
+                        modManager.logs.log("- Uninstall mod " + m.name + " (wrong version or game version)");
                         modManager.modWorker.uninstallMod(m);
                         return true;
                     }
                 }
-                foreach (string plugin in mod.plugins)
+                
+                foreach (string file in mod.files)
                 {
-                    if (File.Exists(pluginPath + "\\" + plugin) == false && Directory.Exists(pluginPath + "\\" + plugin) == false)
+                    if (File.Exists(this.amongUsPath + "\\" + file) == false && Directory.Exists(this.amongUsPath + "\\" + file) == false)
                     {
-                        modManager.logs.log("- Uninstall mod " + m.name + " (missing plugin " + plugin + ")");
+                        modManager.logs.log("- Uninstall mod " + m.name + " (missing file " + file + ")");
                         modManager.modWorker.uninstallMod(m);
                         return true;
                     }
@@ -136,7 +126,6 @@ namespace ModManager4.Class
                     modManager.logs.log("- Among Us exists");
                     this.amongUsPath = temp.amongUsPath;
                     this.installedDependencies = temp.installedDependencies;
-                    this.installedTools = temp.installedTools;
                     this.installedMods = temp.installedMods;
                     this.enableCache = temp.enableCache;
                     this.resolutionX = temp.resolutionX;
@@ -157,7 +146,6 @@ namespace ModManager4.Class
             }
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
-            this.installedTools = new List<string>();
             this.amongUsPath = null;
 
             // Detection from Steam
@@ -302,18 +290,7 @@ namespace ModManager4.Class
             {
                 ret = ret + "- - Installed mod " + m.id + " : Version = " + m.version + " / Game version = " + m.gameVersion + " / Assets = [";
                 int i = 0;
-                foreach (string a in m.assets)
-                {
-                    if (i != 0)
-                    {
-                        ret = ret + ", ";
-                    }
-                    ret = ret + a;
-                    i++;
-                }
-                ret = ret + "] / Plugins = [";
-                i = 0;
-                foreach (string p in m.plugins)
+                foreach (string p in m.files)
                 {
                     if (i != 0)
                     {
