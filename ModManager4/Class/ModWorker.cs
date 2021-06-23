@@ -479,10 +479,15 @@ namespace ModManager4.Class
 
             tempPathZip = this.getBepInExInsideRec(tempPathZip);
 
-            DirectoryInfo dirPlugins = new DirectoryInfo(this.modManager.config.amongUsPath + "\\BepInEx\\plugins");
+            string dirPlugins = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
 
             // Install dll
             DirectoryInfo dirInfo = new DirectoryInfo(tempPathZip + "\\BepInEx\\plugins");
+
+            if (Directory.Exists(dirPlugins) == false)
+            {
+                Directory.CreateDirectory(dirPlugins);
+            }
 
             List<string> plugins = new List<string>();
             if (dirInfo.Exists)
@@ -491,12 +496,12 @@ namespace ModManager4.Class
 
                 foreach (FileInfo f in files)
                 {
-                    string target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + f.Name;
+                    string target = dirPlugins + "\\" + f.Name;
                     string newName = f.Name;
                     if (File.Exists(target))
                     {
                         newName = m.id + "-" + f.Name.Remove(f.Name.Length - 4);
-                        target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + newName;
+                        target = dirPlugins + "\\" + newName;
                     }
                     this.modManager.utils.FileCopy(f.FullName, target);
                     plugins.Add(newName);
@@ -506,24 +511,33 @@ namespace ModManager4.Class
 
                 foreach (DirectoryInfo d in dirs)
                 {
-                    string target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + d.Name;
+                    string target = dirPlugins + "\\" + d.Name;
                     string newName = d.Name;
                     if (Directory.Exists(target))
                     {
                         newName = m.id + "-" + d.Name.Remove(d.Name.Length);
-                        target = this.modManager.config.amongUsPath + "\\BepInEx\\plugins\\" + newName;
+                        target = dirPlugins + "\\" + newName;
                     }
                     this.modManager.utils.DirectoryCopy(d.FullName, target, true);
                     plugins.Add(newName);
                 }
             }
+
+            string dirAssets = this.modManager.config.amongUsPath + "\\Assets";
+
+            if (Directory.Exists(dirAssets) == false)
+            {
+                Directory.CreateDirectory(dirAssets);
+            }
+
             DirectoryInfo dirInfo2 = new DirectoryInfo(tempPathZip + "\\Assets");
+
             if (dirInfo2.Exists)
             {
                 FileInfo[] files = dirInfo2.GetFiles();
                 foreach (FileInfo f in files)
                 {
-                    this.modManager.utils.FileCopy(f.FullName, this.modManager.config.amongUsPath + "\\Assets\\" + f.Name);
+                    this.modManager.utils.FileCopy(f.FullName, dirAssets + "\\" + f.Name);
                     plugins.Add(f.FullName);
                 }
             }
@@ -537,6 +551,12 @@ namespace ModManager4.Class
         {
             string fileName = Path.GetFileName(m.github);
             string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
+
+            if (Directory.Exists(pluginsPath) == false)
+            {
+                Directory.CreateDirectory(pluginsPath);
+            }
+
             this.modManager.utils.FileDelete(pluginsPath + "\\" + fileName);
             this.modManager.utils.FileCopy(m.github, pluginsPath + "\\" + fileName);
         }
@@ -547,6 +567,12 @@ namespace ModManager4.Class
             string fileUrl = file.BrowserDownloadUrl;
             string fileTag = m.release.TagName;
             string pluginsPath = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
+
+            if (Directory.Exists(pluginsPath) == false)
+            {
+                Directory.CreateDirectory(pluginsPath);
+            }
+
             this.modManager.utils.FileDelete(pluginsPath + "\\" + fileName);
             try
             {
