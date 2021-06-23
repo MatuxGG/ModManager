@@ -38,6 +38,26 @@ namespace ModManager4.Class
             this.folders = folders;
             this.data = data;
             this.excludeFiles = excludeFiles;
+
+            if (this.dependencies == null)
+            {
+                this.dependencies = new List<string>() { };
+            }
+
+            if (this.folders == null)
+            {
+                this.folders = new List<string>() { };
+            }
+
+            if (this.data == null)
+            {
+                this.data = new List<string>() { };
+            }
+
+            if (this.excludeFiles == null)
+            {
+                this.excludeFiles = new List<string>() { };
+            }
         }
 
         public async Task getGithubRelease(string token)

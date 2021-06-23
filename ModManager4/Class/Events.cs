@@ -62,13 +62,19 @@ namespace ModManager4.Class
         public void openMMDiscord(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager discord\n");
-            Process.Start("explorer", "https://discord.gg/yBNgKuGjNw");
+            Process.Start("explorer", this.modManager.serverURL + "/discord");
         }
 
         public void openMatuxGithub(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager github\n");
-            Process.Start("explorer", "https://github.com/MatuxGG/ModManager");
+            Process.Start("explorer", this.modManager.serverURL + "\\github");
+        }
+
+        public void openMatuxRoadmap(object sender, EventArgs e)
+        {
+            this.modManager.logs.log("Event : Open Mod Manager Roadmap\n");
+            Process.Start("explorer", this.modManager.serverURL + "\\roadmap");
         }
 
         public void openPathSelection(object sender, EventArgs e)
@@ -97,7 +103,7 @@ namespace ModManager4.Class
 
         public void enableCache(object sender, EventArgs e)
         {
-            CheckBox checkbox = ((CheckBox)sender);
+            MMCheckbox checkbox = ((MMCheckbox)sender);
             if (checkbox.Checked)
             {
                 this.modManager.logs.log("Event : Enable cache \n");
@@ -138,7 +144,7 @@ namespace ModManager4.Class
                 {
                     using (var client = new WebClient())
                     {
-                        client.DownloadFile("https://github.com/OhMyGuus/BetterCrewLink/releases/download/v2.6.4/Better-CrewLink-Setup-2.6.4.exe", dlPath);
+                        client.DownloadFile(this.modManager.serverURL + "\\bcl", dlPath);
                     }
                 }
                 catch
@@ -285,7 +291,7 @@ namespace ModManager4.Class
 
         public void checkBox(object sender, EventArgs e)
         {
-            CheckBox clickedBox = ((CheckBox)sender);
+            MMCheckbox clickedBox = ((MMCheckbox)sender);
             Mod m = this.modManager.modlist.getModById(clickedBox.Name);
             if (clickedBox.CheckState == CheckState.Checked)
             {
@@ -457,9 +463,9 @@ namespace ModManager4.Class
             List<string> dependencies = new List<string>();
             foreach (Control c in p.Controls)
             {
-                if (c is CheckBox)
+                if (c is MMCheckbox)
                 {
-                    CheckBox cb = (CheckBox)c;
+                    MMCheckbox cb = (MMCheckbox)c;
                     if (cb.CheckState == CheckState.Checked)
                     {
                         dependencies.Add(cb.Name);
@@ -497,9 +503,9 @@ namespace ModManager4.Class
             List<string> dependencies = new List<string>();
             foreach (Control c in p.Controls)
             {
-                if (c is CheckBox)
+                if (c is MMCheckbox)
                 {
-                    CheckBox cb = (CheckBox)c;
+                    MMCheckbox cb = (MMCheckbox)c;
                     if (cb.CheckState == CheckState.Checked)
                     {
                         dependencies.Add(cb.Name);

@@ -19,6 +19,11 @@ namespace ModManager4.Class
             this.version = version;
             this.gameVersion = gameVersion;
             this.files = files;
+
+            if (this.files == null)
+            {
+                this.files = new List<string>() { };
+            }
         }
     }
 }

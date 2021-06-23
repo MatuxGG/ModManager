@@ -142,7 +142,16 @@ namespace ModManager4.Class
                 }
                 if (this.modManager.config.installedMods != null)
                 {
+                    List<InstalledMod> allInOneTemp = new List<InstalledMod>() { };
+                    foreach (InstalledMod im in this.modManager.config.installedMods)
+                    {
+                        if (this.modManager.modlist.getModById(im.id).type == "allInOne")
+                        {
+                            allInOneTemp.Add(im);
+                        }
+                    }
                     this.modManager.config.installedMods.Clear();
+                    this.modManager.config.installedMods = allInOneTemp;
                 }
                 this.modManager.config.update(this.modManager);
                 
@@ -417,6 +426,8 @@ namespace ModManager4.Class
 
                     if (files.Count != 0)
                     {
+                        this.checkInstalledFiles(files);
+
                         InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion, files);
                         this.modManager.config.installedMods.Add(newMod);
                         this.modManager.config.update(this.modManager);
@@ -552,6 +563,26 @@ namespace ModManager4.Class
             return;
         }
 
+        public void checkInstalledFiles(List<string> files)
+        {
+            foreach (string f in files)
+            {
+                if (File.Exists(this.modManager.config.amongUsPath + "\\" + f) == false)
+                {
+                    this.modManager.logs.log("Check process after install : File not installed (" + f + ")");
+                    MessageBox.Show("Mod Manager was not able to install this mod\n" +
+                    "\n" +
+                    "There are many possible reasons for this :\n" +
+                    "- Your antivirus blocks access to the Among Us folder\n" +
+                    "- Another process is using the Among Us folder\n" +
+                    "- The Among Us folder is read only for other softwares\n" +
+                    "\n" +
+                    "If this problem persists, please send a ticket on Mod Manager's discord.", "Mod not installed", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Environment.Exit(0);
+                }
+            }
+        }
+
         public void installZip(Mod m, ReleaseAsset file)
         {
             string fileName = file.Name;
@@ -612,8 +643,6 @@ namespace ModManager4.Class
 
             tempPathZip = this.getBepInExInsideRec(tempPathZip);
 
-            // Install dll
-
             List<string> installedFiles = new List<string>();
             foreach (string folder in m.folders)
             {
@@ -643,6 +672,8 @@ namespace ModManager4.Class
                     }
                 }
             }
+
+            this.checkInstalledFiles(installedFiles);
 
             InstalledMod newMod = new InstalledMod(m.id, fileTag, m.gameVersion, installedFiles);
             this.modManager.config.installedMods.Add(newMod);

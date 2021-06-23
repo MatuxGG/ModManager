@@ -56,7 +56,7 @@ namespace ModManager4.Class
             PictureBox InfoPic = new System.Windows.Forms.PictureBox();
             InfoPic.Image = Properties.Resources.info;
             InfoPic.BackColor = System.Drawing.Color.Transparent;
-            InfoPic.Location = new System.Drawing.Point((int)(1070 * ratioX), (int)(20 * ratioY));
+            InfoPic.Location = new System.Drawing.Point((int)(1000 * ratioX), (int)(20 * ratioY));
             InfoPic.Name = "InfoPic";
             InfoPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             InfoPic.TabStop = false;
@@ -97,6 +97,20 @@ namespace ModManager4.Class
             ByMatuxField.Visible = false;
             this.modManager.Controls.Add(ByMatuxField);
             c.addControl(ByMatuxField);
+
+            PictureBox MatuxRoadmapLabel = new System.Windows.Forms.PictureBox();
+            MatuxRoadmapLabel.Image = Properties.Resources.roadmap;
+            MatuxRoadmapLabel.BackColor = System.Drawing.Color.Transparent;
+            MatuxRoadmapLabel.Location = new System.Drawing.Point((int)(1068 * ratioX), (int)(18 * ratioY));
+            MatuxRoadmapLabel.Name = "MatuxRoadmapLabel";
+            MatuxRoadmapLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            MatuxRoadmapLabel.TabStop = false;
+            MatuxRoadmapLabel.Cursor = Cursors.Hand;
+            MatuxRoadmapLabel.Size = new System.Drawing.Size((int)(55 * ratioX), (int)(55 * ratioY));
+            MatuxRoadmapLabel.Click += new EventHandler(this.events.openMatuxRoadmap);
+            MatuxRoadmapLabel.Visible = false;
+            this.modManager.Controls.Add(MatuxRoadmapLabel);
+            c.addControl(MatuxRoadmapLabel);
 
             PictureBox MMDiscordLabel = new System.Windows.Forms.PictureBox();
             MMDiscordLabel.Image = Properties.Resources.discord;
@@ -444,10 +458,9 @@ namespace ModManager4.Class
             EnableCacheLabel.Text = "Enable cache :";
             PagePanelSettings.Controls.Add(EnableCacheLabel);
 
-            CheckBox EnableCacheCheckbox = new System.Windows.Forms.CheckBox();
+            MMCheckbox EnableCacheCheckbox = new MMCheckbox(this.modManager);
             EnableCacheCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             EnableCacheCheckbox.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(300 * ratioY));
-            EnableCacheCheckbox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             EnableCacheCheckbox.Name = "EnableCacheCheckbox";
             EnableCacheCheckbox.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
             EnableCacheCheckbox.UseVisualStyleBackColor = true;
@@ -761,7 +774,7 @@ namespace ModManager4.Class
             int offset = 0;
             foreach (Dependency d in this.modManager.modlist.availableDependencies)
             {
-                System.Windows.Forms.CheckBox ModDepCheckbox = new System.Windows.Forms.CheckBox();
+                MMCheckbox ModDepCheckbox = new MMCheckbox(this.modManager);
                 ModDepCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepCheckbox.Location = new System.Drawing.Point((int)((20 + 200*(offset%4)) * ratioX), (int)((170 + 40*(offset/4)) * ratioY));
@@ -910,7 +923,7 @@ namespace ModManager4.Class
             offset = 0;
             foreach (Dependency d in this.modManager.modlist.availableDependencies)
             {
-                System.Windows.Forms.CheckBox ModDepCheckbox = new System.Windows.Forms.CheckBox();
+                MMCheckbox ModDepCheckbox = new MMCheckbox(this.modManager);
                 ModDepCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepCheckbox.Location = new System.Drawing.Point((int)((20 + 200 * (offset % 4)) * ratioX), (int)((170 + 40 * (offset / 4)) * ratioY));
@@ -1369,7 +1382,7 @@ namespace ModManager4.Class
                 {
                     if (mod.type == "mod" || mod.type == "localMod")
                     {
-                        System.Windows.Forms.CheckBox ModCheckbox = new System.Windows.Forms.CheckBox();
+                        MMCheckbox ModCheckbox = new MMCheckbox(this.modManager);
                         ModCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         ModCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                         ModCheckbox.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
@@ -1840,9 +1853,9 @@ namespace ModManager4.Class
 
             foreach (Control control in p.Controls)
             {
-                if (control is CheckBox)
+                if (control is MMCheckbox)
                 {
-                    CheckBox cb = (CheckBox)control;
+                    MMCheckbox cb = (MMCheckbox)control;
                     if (m.dependencies.Contains(control.Name))
                     {
                         cb.CheckState = CheckState.Checked;
