@@ -2,7 +2,7 @@
 
 Among us Mod Manager is an open source software for the popular game Among Us. It allows to switch between many known mods easily and much more !
 
-Join the discord : https://matux.fr/discord
+Join the discord : https://mm.matux.fr/discord
 
 ## How to install ?
 
