@@ -5,13 +5,25 @@
     <TargetFramework>net5.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>modmanager.ico</ApplicationIcon>
-    <AssemblyVersion>4.0.9.0</AssemblyVersion>
-    <FileVersion>4.0.8.0</FileVersion>
+    <AssemblyVersion>4.0.10.0</AssemblyVersion>
+    <FileVersion>4.0.10.0</FileVersion>
     <Authors>Matux</Authors>
     <PackageProjectUrl>https://github.com/MatuxGG/ModManager</PackageProjectUrl>
     <PackageIcon>modmanager.ico</PackageIcon>
     <RepositoryUrl>https://github.com/MatuxGG/ModManager</RepositoryUrl>
   </PropertyGroup>
+
+  <ItemGroup>
+    <COMReference Include="IWshRuntimeLibrary">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>f935dc20-1cf0-11d0-adb9-00c04fd58a0b</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
+  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="assets\" />

@@ -21,7 +21,9 @@ namespace ModManager4.Class
         public int resolutionX { get; set; }
         public int resolutionY { get; set; }
 
-        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, Boolean enableCache, int resolutionX, int resolutionY)
+        public string startMethod { get; set; }
+
+        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, Boolean enableCache, int resolutionX, int resolutionY, string startMethod)
         {
             this.amongUsPath = amongUsPath;
             this.installedMods = installedMods;
@@ -29,6 +31,7 @@ namespace ModManager4.Class
             this.enableCache = enableCache;
             this.resolutionX = resolutionX;
             this.resolutionY = resolutionY;
+            this.startMethod = startMethod;
         }
 
         public Config()
@@ -39,6 +42,7 @@ namespace ModManager4.Class
             this.enableCache = true;
             this.resolutionX = 1300;
             this.resolutionY = 810;
+            this.startMethod = "Direct Link";
         }
 
         public List<int[]> getResolutions()
@@ -130,6 +134,7 @@ namespace ModManager4.Class
                     this.enableCache = temp.enableCache;
                     this.resolutionX = temp.resolutionX;
                     this.resolutionY = temp.resolutionY;
+                    this.startMethod = temp.startMethod;
                     this.update(modManager);
                     return;
                 } else
@@ -147,6 +152,7 @@ namespace ModManager4.Class
             this.installedMods = new List<InstalledMod>();
             this.installedDependencies = new List<string>();
             this.amongUsPath = null;
+            this.startMethod = "Direct Link";
 
             // Detection from Steam
             modManager.logs.log("- Getting Among Us path from Steam");
@@ -156,6 +162,7 @@ namespace ModManager4.Class
             {
                 modManager.logs.log("- Among Us detected on Steam");
                 this.amongUsPath = (String)myKey.GetValue("InstallLocation");
+                this.startMethod = "Steam";
 
                 modManager.logs.log("- Saving Among Us path : " + this.amongUsPath);
 
@@ -179,6 +186,7 @@ namespace ModManager4.Class
                 {
                     modManager.logs.log("- Among Us detected on Epic Games Store");
                     this.amongUsPath = egsPath;
+                    //this.startMethod = "Epic Games Store";
 
                     modManager.logs.log("- Saving Among Us path : " + this.amongUsPath);
                     this.update(modManager);

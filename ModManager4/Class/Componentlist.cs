@@ -20,11 +20,14 @@ namespace ModManager4.Class
 
         public Events events;
 
+        public Tooltips tooltips;
+
         public Componentlist(ModManager modManager)
         {
             this.modManager = modManager;
             this.components = new List<Component>();
             this.events = new Events(this.modManager);
+            this.tooltips = new Tooltips(this.modManager);
         }
 
         public void load()
@@ -48,6 +51,8 @@ namespace ModManager4.Class
             AnnouncePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             AnnouncePic.TabStop = false;
             AnnouncePic.Cursor = Cursors.Hand;
+            AnnouncePic.MouseLeave += new EventHandler(this.tooltips.hide);
+            AnnouncePic.MouseHover += new EventHandler(this.tooltips.show);
             AnnouncePic.Click += new EventHandler(this.events.openAnnounce);
             AnnouncePic.Visible = false;
             this.modManager.Controls.Add(AnnouncePic);
@@ -62,6 +67,8 @@ namespace ModManager4.Class
             InfoPic.TabStop = false;
             InfoPic.Cursor = Cursors.Hand;
             InfoPic.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            InfoPic.MouseLeave += new EventHandler(this.tooltips.hide);
+            InfoPic.MouseHover += new EventHandler(this.tooltips.show);
             InfoPic.Click += new EventHandler(this.events.openInfo);
             InfoPic.Visible = false;
             this.modManager.Controls.Add(InfoPic);
@@ -107,6 +114,8 @@ namespace ModManager4.Class
             MatuxRoadmapLabel.TabStop = false;
             MatuxRoadmapLabel.Cursor = Cursors.Hand;
             MatuxRoadmapLabel.Size = new System.Drawing.Size((int)(55 * ratioX), (int)(55 * ratioY));
+            MatuxRoadmapLabel.MouseLeave += new EventHandler(this.tooltips.hide);
+            MatuxRoadmapLabel.MouseHover += new EventHandler(this.tooltips.show);
             MatuxRoadmapLabel.Click += new EventHandler(this.events.openMatuxRoadmap);
             MatuxRoadmapLabel.Visible = false;
             this.modManager.Controls.Add(MatuxRoadmapLabel);
@@ -121,6 +130,8 @@ namespace ModManager4.Class
             MMDiscordLabel.TabStop = false;
             MMDiscordLabel.Cursor = Cursors.Hand;
             MMDiscordLabel.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            MMDiscordLabel.MouseLeave += new EventHandler(this.tooltips.hide);
+            MMDiscordLabel.MouseHover += new EventHandler(this.tooltips.show);
             MMDiscordLabel.Click += new EventHandler(this.events.openMMDiscord);
             MMDiscordLabel.Visible = false;
             this.modManager.Controls.Add(MMDiscordLabel);
@@ -135,6 +146,8 @@ namespace ModManager4.Class
             MatuxGithubLabel.TabStop = false;
             MatuxGithubLabel.Cursor = Cursors.Hand;
             MatuxGithubLabel.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            MatuxGithubLabel.MouseLeave += new EventHandler(this.tooltips.hide);
+            MatuxGithubLabel.MouseHover += new EventHandler(this.tooltips.show);
             MatuxGithubLabel.Click += new EventHandler(this.events.openMatuxGithub);
             MatuxGithubLabel.Visible = false;
             this.modManager.Controls.Add(MatuxGithubLabel);
@@ -149,11 +162,13 @@ namespace ModManager4.Class
             PlayGameLabel.Image = global::ModManager4.Properties.Resources.start_game;
             PlayGameLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             PlayGameLabel.Name = "PlayGameLabel";
-            PlayGameLabel.Location = new System.Drawing.Point((int)(530 * ratioX), (int)(680 * ratioY));
+            PlayGameLabel.Location = new System.Drawing.Point((int)(570 * ratioX), (int)(680 * ratioY));
             PlayGameLabel.Size = new System.Drawing.Size((int)(240 * ratioX), (int)(80 * ratioY));
             PlayGameLabel.Cursor = Cursors.Hand;
             PlayGameLabel.Visible = false;
             PlayGameLabel.TabStop = false;
+            PlayGameLabel.MouseLeave += new EventHandler(this.tooltips.hide);
+            PlayGameLabel.MouseHover += new EventHandler(this.tooltips.show);
             PlayGameLabel.Click += new EventHandler(this.events.launchGame);
             PlayGameLabel.Visible = false;
             this.modManager.Controls.Add(PlayGameLabel);
@@ -162,12 +177,14 @@ namespace ModManager4.Class
             PictureBox SettingsPic = new System.Windows.Forms.PictureBox();
             SettingsPic.Image = global::ModManager4.Properties.Resources.settings;
             SettingsPic.BackColor = System.Drawing.Color.Transparent;
-            SettingsPic.Location = new System.Drawing.Point((int)(800 * ratioX), (int)(680 * ratioY));
+            SettingsPic.Location = new System.Drawing.Point((int)(850 * ratioX), (int)(680 * ratioY));
             SettingsPic.Name = "SettingsPic";
             SettingsPic.Size = new System.Drawing.Size((int)(210 * ratioX), (int)(70 * ratioY));
             SettingsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             SettingsPic.TabStop = false;
             SettingsPic.Cursor = Cursors.Hand;
+            SettingsPic.MouseLeave += new EventHandler(this.tooltips.hide);
+            SettingsPic.MouseHover += new EventHandler(this.tooltips.show);
             SettingsPic.Click += new EventHandler(this.events.openSettings);
             SettingsPic.Visible = false;
             this.modManager.Controls.Add(SettingsPic);
@@ -176,40 +193,60 @@ namespace ModManager4.Class
             PictureBox CodePic = new System.Windows.Forms.PictureBox();
             CodePic.Image = global::ModManager4.Properties.Resources.code;
             CodePic.BackColor = System.Drawing.Color.Transparent;
-            CodePic.Location = new System.Drawing.Point((int)(230 * ratioX), (int)(695 * ratioY));
+            CodePic.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(695 * ratioY));
             CodePic.Name = "CodePic";
             CodePic.Size = new System.Drawing.Size((int)(95 * ratioX), (int)(40 * ratioY));
             CodePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             CodePic.TabStop = false;
             CodePic.Visible = false;
             this.modManager.Controls.Add(CodePic);
+
             c.addControl(CodePic);
 
             System.Windows.Forms.TextBox CodeTextbox = new System.Windows.Forms.TextBox();
-            CodeTextbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            CodeTextbox.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             CodeTextbox.ForeColor = SystemColors.ControlText;
-            CodeTextbox.Location = new System.Drawing.Point((int)(340 * ratioX), (int)(700 * ratioY));
-            CodeTextbox.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            CodeTextbox.Location = new System.Drawing.Point((int)(310 * ratioX), (int)(700 * ratioY));
             CodeTextbox.Name = "CodeTextbox";
             CodeTextbox.TabStop = false;
             CodeTextbox.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(20 * ratioY));
             CodeTextbox.Visible = false;
+            CodeTextbox.MouseLeave += new EventHandler(this.tooltips.hide);
+            CodeTextbox.MouseHover += new EventHandler(this.tooltips.show);
             this.modManager.Controls.Add(CodeTextbox);
             c.addControl(CodeTextbox);
 
             PictureBox ValidCodePic = new System.Windows.Forms.PictureBox();
             ValidCodePic.Image = global::ModManager4.Properties.Resources.valid;
             ValidCodePic.BackColor = System.Drawing.Color.Transparent;
-            ValidCodePic.Location = new System.Drawing.Point((int)(450 * ratioX), (int)(695 * ratioY));
-            ValidCodePic.Name = "CodePic";
+            ValidCodePic.Location = new System.Drawing.Point((int)(420 * ratioX), (int)(695 * ratioY));
+            ValidCodePic.Name = "ValidCodePic";
             ValidCodePic.Cursor = Cursors.Hand;
             ValidCodePic.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
             ValidCodePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             ValidCodePic.TabStop = false;
             ValidCodePic.Visible = false;
             ValidCodePic.Click += new EventHandler(this.events.validCode);
+            ValidCodePic.MouseLeave += new EventHandler(this.tooltips.hide);
+            ValidCodePic.MouseHover += new EventHandler(this.tooltips.show);
             this.modManager.Controls.Add(ValidCodePic);
             c.addControl(ValidCodePic);
+
+            PictureBox ExportCodePic = new System.Windows.Forms.PictureBox();
+            ExportCodePic.Image = global::ModManager4.Properties.Resources.export;
+            ExportCodePic.BackColor = System.Drawing.Color.Transparent;
+            ExportCodePic.Location = new System.Drawing.Point((int)(480 * ratioX), (int)(695 * ratioY));
+            ExportCodePic.Name = "ExportCodePic";
+            ExportCodePic.Cursor = Cursors.Hand;
+            ExportCodePic.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
+            ExportCodePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            ExportCodePic.TabStop = false;
+            ExportCodePic.Visible = false;
+            ExportCodePic.Click += new EventHandler(this.events.exportCode);
+            ExportCodePic.MouseLeave += new EventHandler(this.tooltips.hide);
+            ExportCodePic.MouseHover += new EventHandler(this.tooltips.show);
+            this.modManager.Controls.Add(ExportCodePic);
+            c.addControl(ExportCodePic);
 
             this.components.Add(c);
 
@@ -243,7 +280,6 @@ namespace ModManager4.Class
             AmongUsFolderInfo.ForeColor = System.Drawing.SystemColors.Control;
             AmongUsFolderInfo.TextAlign = ContentAlignment.MiddleCenter;
             AmongUsFolderInfo.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
-            AmongUsFolderInfo.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             AmongUsFolderInfo.Name = "AmongUsFolderInfo";
             AmongUsFolderInfo.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(20 * ratioY));
             AmongUsFolderInfo.Text = "Please, select the folder where Among Us is installed !";
@@ -252,7 +288,6 @@ namespace ModManager4.Class
             Button AmongUsDirectorySelection = new System.Windows.Forms.Button();
             AmongUsDirectorySelection.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsDirectorySelection.Location = new System.Drawing.Point((int)(258 * ratioX), (int)(300 * ratioY));
-            AmongUsDirectorySelection.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             AmongUsDirectorySelection.Name = "AmongUsDirectorySelection";
             AmongUsDirectorySelection.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
             AmongUsDirectorySelection.Text = "Select folder";
@@ -373,8 +408,7 @@ namespace ModManager4.Class
             System.Windows.Forms.Label AmongUsDirSwitchLabel = new System.Windows.Forms.Label();
             AmongUsDirSwitchLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsDirSwitchLabel.ForeColor = System.Drawing.SystemColors.Control;
-            AmongUsDirSwitchLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
-            AmongUsDirSwitchLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
+            AmongUsDirSwitchLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(100 * ratioY));
             AmongUsDirSwitchLabel.Name = "AmongUsDirSwitchLabel";
             AmongUsDirSwitchLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
             AmongUsDirSwitchLabel.Text = "Among Us directory :";
@@ -382,33 +416,64 @@ namespace ModManager4.Class
 
             Button AmongUsDirSwitchButton = new System.Windows.Forms.Button();
             AmongUsDirSwitchButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            AmongUsDirSwitchButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(150 * ratioY));
-            AmongUsDirSwitchButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            AmongUsDirSwitchButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(100 * ratioY));
             AmongUsDirSwitchButton.Name = "AmongUsDirSwitchButton";
             AmongUsDirSwitchButton.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
             AmongUsDirSwitchButton.Text = "Change";
             AmongUsDirSwitchButton.UseVisualStyleBackColor = true;
             AmongUsDirSwitchButton.TabStop = false;
+            AmongUsDirSwitchButton.MouseLeave += new EventHandler(this.tooltips.hide);
+            AmongUsDirSwitchButton.MouseHover += new EventHandler(this.tooltips.show);
             AmongUsDirSwitchButton.Click += new EventHandler(this.events.openPathSelection);
             PagePanelSettings.Controls.Add(AmongUsDirSwitchButton);
 
             Button OpenAmongUs = new System.Windows.Forms.Button();
             OpenAmongUs.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            OpenAmongUs.Location = new System.Drawing.Point((int)(450 * ratioX), (int)(150 * ratioY));
-            OpenAmongUs.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
+            OpenAmongUs.Location = new System.Drawing.Point((int)(450 * ratioX), (int)(100 * ratioY));
             OpenAmongUs.Name = "OpenAmongUs";
             OpenAmongUs.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
             OpenAmongUs.Text = "Open";
             OpenAmongUs.TabStop = false;
             OpenAmongUs.UseVisualStyleBackColor = true;
+            OpenAmongUs.MouseLeave += new EventHandler(this.tooltips.hide);
+            OpenAmongUs.MouseHover += new EventHandler(this.tooltips.show);
             OpenAmongUs.Click += new EventHandler(this.events.openAmongUsDirectory);
             PagePanelSettings.Controls.Add(OpenAmongUs);
+
+            System.Windows.Forms.Label MethodLabel = new System.Windows.Forms.Label();
+            MethodLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            MethodLabel.ForeColor = System.Drawing.SystemColors.Control;
+            MethodLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
+            MethodLabel.Name = "MethodLabel";
+            MethodLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            MethodLabel.Text = "Change start method :";
+            PagePanelSettings.Controls.Add(MethodLabel);
+
+            ComboBox MethodComboBox = new ComboBox();
+            MethodComboBox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            MethodComboBox.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(150 * ratioY));
+            MethodComboBox.Name = "MethodComboBox";
+            MethodComboBox.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            MethodComboBox.TabStop = false;
+            MethodComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            MethodComboBox.MouseLeave += new EventHandler(this.tooltips.hide);
+            MethodComboBox.MouseHover += new EventHandler(this.tooltips.show);
+
+            MethodComboBox.Items.AddRange(new string[] { "Direct Link", "Steam" });
+            //MethodComboBox.Items.AddRange(new string[] { "Direct Link", "Steam", "Epic Games Store" });
+
+            string currentMethod = this.modManager.config.startMethod;
+
+            MethodComboBox.SelectedIndex = MethodComboBox.FindStringExact(currentMethod);
+
+            MethodComboBox.SelectedIndexChanged += new EventHandler(this.events.changeMethod);
+
+            PagePanelSettings.Controls.Add(MethodComboBox);
 
             System.Windows.Forms.Label RemoveLocalLabel = new System.Windows.Forms.Label();
             RemoveLocalLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             RemoveLocalLabel.ForeColor = System.Drawing.SystemColors.Control;
             RemoveLocalLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(200 * ratioY));
-            RemoveLocalLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             RemoveLocalLabel.Name = "RemoveLocalLabel";
             RemoveLocalLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
             RemoveLocalLabel.Text = "Remove local mods :";
@@ -417,71 +482,20 @@ namespace ModManager4.Class
             Button RemoveLocalButton = new System.Windows.Forms.Button();
             RemoveLocalButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             RemoveLocalButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(200 * ratioY));
-            RemoveLocalButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             RemoveLocalButton.Name = "RemoveLocalButton";
             RemoveLocalButton.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
             RemoveLocalButton.Text = "Remove";
             RemoveLocalButton.UseVisualStyleBackColor = true;
+            RemoveLocalButton.MouseLeave += new EventHandler(this.tooltips.hide);
+            RemoveLocalButton.MouseHover += new EventHandler(this.tooltips.show);
             RemoveLocalButton.Click += new EventHandler(this.events.removeLocalMods);
             RemoveLocalButton.TabStop = false;
             PagePanelSettings.Controls.Add(RemoveLocalButton);
-
-            System.Windows.Forms.Label OpenLogsLabel = new System.Windows.Forms.Label();
-            OpenLogsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            OpenLogsLabel.ForeColor = System.Drawing.SystemColors.Control;
-            OpenLogsLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(350 * ratioY));
-            OpenLogsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            OpenLogsLabel.Name = "OpenLogsLabel";
-            OpenLogsLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
-            OpenLogsLabel.Text = "Open logs folder :";
-            PagePanelSettings.Controls.Add(OpenLogsLabel);
-
-            Button OpenLogsButton = new System.Windows.Forms.Button();
-            OpenLogsButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            OpenLogsButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(350 * ratioY));
-            OpenLogsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
-            OpenLogsButton.Name = "OpenLogsButton";
-            OpenLogsButton.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
-            OpenLogsButton.Text = "Open";
-            OpenLogsButton.UseVisualStyleBackColor = true;
-            OpenLogsButton.Click += new EventHandler(this.events.openLogs);
-            OpenLogsButton.TabStop = false;
-            PagePanelSettings.Controls.Add(OpenLogsButton);
-
-            System.Windows.Forms.Label EnableCacheLabel = new System.Windows.Forms.Label();
-            EnableCacheLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            EnableCacheLabel.ForeColor = System.Drawing.SystemColors.Control;
-            EnableCacheLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(300 * ratioY));
-            EnableCacheLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            EnableCacheLabel.Name = "EnableCacheLabel";
-            EnableCacheLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
-            EnableCacheLabel.Text = "Enable cache :";
-            PagePanelSettings.Controls.Add(EnableCacheLabel);
-
-            MMCheckbox EnableCacheCheckbox = new MMCheckbox(this.modManager);
-            EnableCacheCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            EnableCacheCheckbox.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(300 * ratioY));
-            EnableCacheCheckbox.Name = "EnableCacheCheckbox";
-            EnableCacheCheckbox.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
-            EnableCacheCheckbox.UseVisualStyleBackColor = true;
-            EnableCacheCheckbox.Click += new EventHandler(this.events.enableCache);
-            EnableCacheCheckbox.TabStop = false;
-
-            if (this.modManager.config.enableCache == false)
-            {
-                EnableCacheCheckbox.CheckState = CheckState.Unchecked;
-            } else
-            {
-                EnableCacheCheckbox.CheckState = CheckState.Checked;
-            }
-
-            PagePanelSettings.Controls.Add(EnableCacheCheckbox);
 
             System.Windows.Forms.Label ResolutionLabel = new System.Windows.Forms.Label();
             ResolutionLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ResolutionLabel.ForeColor = System.Drawing.SystemColors.Control;
             ResolutionLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(250 * ratioY));
-            ResolutionLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ResolutionLabel.Name = "ResolutionLabel";
             ResolutionLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
             ResolutionLabel.Text = "Change resolution :";
@@ -490,11 +504,12 @@ namespace ModManager4.Class
             ComboBox ResolutionComboBox = new ComboBox();
             ResolutionComboBox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ResolutionComboBox.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(250 * ratioY));
-            ResolutionComboBox.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ResolutionComboBox.Name = "ResolutionComboBox";
             ResolutionComboBox.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
             ResolutionComboBox.TabStop = false;
             ResolutionComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
+            ResolutionComboBox.MouseLeave += new EventHandler(this.tooltips.hide);
+            ResolutionComboBox.MouseHover += new EventHandler(this.tooltips.show);
 
             foreach (int[] res in this.modManager.config.getResolutions())
             {
@@ -508,6 +523,59 @@ namespace ModManager4.Class
             ResolutionComboBox.SelectedIndexChanged += new EventHandler(this.events.changeResolution);
 
             PagePanelSettings.Controls.Add(ResolutionComboBox);
+
+
+            System.Windows.Forms.Label EnableCacheLabel = new System.Windows.Forms.Label();
+            EnableCacheLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            EnableCacheLabel.ForeColor = System.Drawing.SystemColors.Control;
+            EnableCacheLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(300 * ratioY));
+            EnableCacheLabel.Name = "EnableCacheLabel";
+            EnableCacheLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            EnableCacheLabel.Text = "Enable cache :";
+            PagePanelSettings.Controls.Add(EnableCacheLabel);
+
+            MMCheckbox EnableCacheCheckbox = new MMCheckbox(this.modManager);
+            EnableCacheCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            EnableCacheCheckbox.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(300 * ratioY));
+            EnableCacheCheckbox.Name = "EnableCacheCheckbox";
+            EnableCacheCheckbox.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            EnableCacheCheckbox.UseVisualStyleBackColor = true;
+            EnableCacheCheckbox.MouseLeave += new EventHandler(this.tooltips.hide);
+            EnableCacheCheckbox.MouseHover += new EventHandler(this.tooltips.show);
+            EnableCacheCheckbox.Click += new EventHandler(this.events.enableCache);
+            EnableCacheCheckbox.TabStop = false;
+
+            if (this.modManager.config.enableCache == false)
+            {
+                EnableCacheCheckbox.CheckState = CheckState.Unchecked;
+            } else
+            {
+                EnableCacheCheckbox.CheckState = CheckState.Checked;
+            }
+
+            PagePanelSettings.Controls.Add(EnableCacheCheckbox);
+
+            System.Windows.Forms.Label OpenLogsLabel = new System.Windows.Forms.Label();
+            OpenLogsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            OpenLogsLabel.ForeColor = System.Drawing.SystemColors.Control;
+            OpenLogsLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(350 * ratioY));
+            OpenLogsLabel.Name = "OpenLogsLabel";
+            OpenLogsLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            OpenLogsLabel.Text = "Open logs folder :";
+            PagePanelSettings.Controls.Add(OpenLogsLabel);
+
+            Button OpenLogsButton = new System.Windows.Forms.Button();
+            OpenLogsButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            OpenLogsButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(350 * ratioY));
+            OpenLogsButton.Name = "OpenLogsButton";
+            OpenLogsButton.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            OpenLogsButton.Text = "Open";
+            OpenLogsButton.UseVisualStyleBackColor = true;
+            OpenLogsButton.MouseLeave += new EventHandler(this.tooltips.hide);
+            OpenLogsButton.MouseHover += new EventHandler(this.tooltips.show);
+            OpenLogsButton.Click += new EventHandler(this.events.openLogs);
+            OpenLogsButton.TabStop = false;
+            PagePanelSettings.Controls.Add(OpenLogsButton);
 
             this.components.Add(c);
 
@@ -599,7 +667,6 @@ namespace ModManager4.Class
             UninstallModsLabel.ForeColor = System.Drawing.SystemColors.Control;
             UninstallModsLabel.TextAlign = ContentAlignment.MiddleCenter;
             UninstallModsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
-            UninstallModsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             UninstallModsLabel.Name = "UninstallModsLabel";
             UninstallModsLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(20 * ratioY));
             UninstallModsLabel.Text = "All mods have been succesfully uninstalled !";
@@ -608,7 +675,6 @@ namespace ModManager4.Class
             Button UninstallModsButton = new System.Windows.Forms.Button();
             UninstallModsButton.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UninstallModsButton.Location = new System.Drawing.Point((int)(258 * ratioX), (int)(300 * ratioY));
-            UninstallModsButton.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             UninstallModsButton.Name = "UninstallModsButton";
             UninstallModsButton.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
             UninstallModsButton.Text = "OK";
@@ -649,7 +715,6 @@ namespace ModManager4.Class
             UpdateModsLabel.ForeColor = System.Drawing.SystemColors.Control;
             UpdateModsLabel.TextAlign = ContentAlignment.MiddleCenter;
             UpdateModsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
-            UpdateModsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             UpdateModsLabel.Name = "UpdateModsLabel";
             UpdateModsLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(20 * ratioY));
             UpdateModsLabel.Text = "Mod Manager is updating your mods. Please wait ...";
@@ -696,7 +761,6 @@ namespace ModManager4.Class
             ApplyCodeLabel.ForeColor = System.Drawing.SystemColors.Control;
             ApplyCodeLabel.TextAlign = ContentAlignment.MiddleCenter;
             ApplyCodeLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
-            ApplyCodeLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ApplyCodeLabel.Name = "ApplyCodeLabel";
             ApplyCodeLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(20 * ratioY));
             ApplyCodeLabel.Text = "Mod Manager is updating your mods. Please wait ...";
@@ -743,7 +807,6 @@ namespace ModManager4.Class
             ModNameLabel.ForeColor = System.Drawing.SystemColors.Control;
             ModNameLabel.TextAlign = ContentAlignment.MiddleLeft;
             ModNameLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(90 * ratioY));
-            ModNameLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ModNameLabel.Name = "ModNameLabel";
             ModNameLabel.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
             ModNameLabel.Text = "Mod name :";
@@ -753,7 +816,6 @@ namespace ModManager4.Class
             ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameField.ForeColor = System.Drawing.SystemColors.ControlText;
             ModNameField.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(90 * ratioY));
-            ModNameField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ModNameField.Name = "ModNameField";
             ModNameField.Text = "";
             ModNameField.TabStop = false;
@@ -765,7 +827,6 @@ namespace ModManager4.Class
             ModDepsLabel.ForeColor = System.Drawing.SystemColors.Control;
             ModDepsLabel.TextAlign = ContentAlignment.MiddleLeft;
             ModDepsLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(130 * ratioY));
-            ModDepsLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ModDepsLabel.Name = "ModDepsLabel";
             ModDepsLabel.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
             ModDepsLabel.Text = "Mod dependencies :";
@@ -794,7 +855,6 @@ namespace ModManager4.Class
                 ModDepField.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepField.TextAlign = ContentAlignment.MiddleLeft;
                 ModDepField.Location = new System.Drawing.Point((int)((50 + 200*(offset%4)) * ratioX), (int)((170 + 40*(offset/4)) * ratioY));
-                ModDepField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                 ModDepField.Name = "ModDepField" + d.name;
                 ModDepField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
                 ModDepField.Text = d.name;
@@ -839,7 +899,6 @@ namespace ModManager4.Class
             Button ModAddValid = new System.Windows.Forms.Button();
             ModAddValid.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAddValid.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(410 * ratioY));
-            ModAddValid.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ModAddValid.Name = "ModAddValid";
             ModAddValid.Size = new System.Drawing.Size((int)(870 * ratioX), (int)(40 * ratioY));
             ModAddValid.Text = "Add mod";
@@ -892,7 +951,6 @@ namespace ModManager4.Class
             ModNameLabelEdit.ForeColor = System.Drawing.SystemColors.Control;
             ModNameLabelEdit.TextAlign = ContentAlignment.MiddleLeft;
             ModNameLabelEdit.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(90 * ratioY));
-            ModNameLabelEdit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ModNameLabelEdit.Name = "ModNameLabelEdit";
             ModNameLabelEdit.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
             ModNameLabelEdit.Text = "Mod name :";
@@ -902,7 +960,6 @@ namespace ModManager4.Class
             ModNameFieldEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameFieldEdit.ForeColor = System.Drawing.SystemColors.ControlText;
             ModNameFieldEdit.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(90 * ratioY));
-            ModNameFieldEdit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ModNameFieldEdit.Name = "ModNameFieldEdit";
             ModNameFieldEdit.Text = "";
             ModNameFieldEdit.TabStop = false;
@@ -914,7 +971,6 @@ namespace ModManager4.Class
             ModDepsLabelEdit.ForeColor = System.Drawing.SystemColors.Control;
             ModDepsLabelEdit.TextAlign = ContentAlignment.MiddleLeft;
             ModDepsLabelEdit.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(130 * ratioY));
-            ModDepsLabelEdit.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             ModDepsLabelEdit.Name = "ModDepsLabel";
             ModDepsLabelEdit.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
             ModDepsLabelEdit.Text = "Mod dependencies :";
@@ -938,7 +994,6 @@ namespace ModManager4.Class
                 ModDepField.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepField.TextAlign = ContentAlignment.MiddleLeft;
                 ModDepField.Location = new System.Drawing.Point((int)((50 + 200 * (offset % 4)) * ratioX), (int)((170 + 40 * (offset / 4)) * ratioY));
-                ModDepField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                 ModDepField.Name = "ModDepField" + d.name;
                 ModDepField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
                 ModDepField.Text = d.name;
@@ -960,7 +1015,6 @@ namespace ModManager4.Class
             Button ModAddButtonEdit = new System.Windows.Forms.Button();
             ModAddButtonEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAddButtonEdit.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(300 * ratioY));
-            ModAddButtonEdit.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ModAddButtonEdit.Name = "ModAddButtonEdit";
             ModAddButtonEdit.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
             ModAddButtonEdit.Text = "Select file";
@@ -983,7 +1037,6 @@ namespace ModManager4.Class
             Button ModEditValid = new System.Windows.Forms.Button();
             ModEditValid.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModEditValid.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(410 * ratioY));
-            ModEditValid.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             ModEditValid.Name = "ModEditValid";
             ModEditValid.Size = new System.Drawing.Size((int)(870 * ratioX), (int)(40 * ratioY));
             ModEditValid.Text = "Edit mod";
@@ -1024,7 +1077,6 @@ namespace ModManager4.Class
             UnreacheableLabel.ForeColor = System.Drawing.SystemColors.Control;
             UnreacheableLabel.TextAlign = ContentAlignment.TopLeft;
             UnreacheableLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
-            UnreacheableLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             UnreacheableLabel.Name = "UnreacheableLabel";
             UnreacheableLabel.Size = new System.Drawing.Size((int)(896 * ratioX), (int)(300 * ratioY));
             UnreacheableLabel.Text = "Mod Manager's server is unreacheable.\n" +
@@ -1069,7 +1121,6 @@ namespace ModManager4.Class
             UnsavedChangesLabel.ForeColor = System.Drawing.SystemColors.Control;
             UnsavedChangesLabel.TextAlign = ContentAlignment.TopCenter;
             UnsavedChangesLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
-            UnsavedChangesLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             UnsavedChangesLabel.Name = "UnsavedChangesLabel";
             UnsavedChangesLabel.Size = new System.Drawing.Size((int)(896 * ratioX), (int)(50 * ratioY));
             UnsavedChangesLabel.Text = "There are unsaved changes in your mod configuration.\n" +
@@ -1081,7 +1132,6 @@ namespace ModManager4.Class
             SaveChanges.Location = new System.Drawing.Point((int)(80 * ratioX), (int)(300 * ratioY));
             SaveChanges.BackgroundImage = global::ModManager4.Properties.Resources.save;
             SaveChanges.BackgroundImageLayout = ImageLayout.Stretch;
-            SaveChanges.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             SaveChanges.Name = "SaveChanges";
             SaveChanges.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(80 * ratioY));
             SaveChanges.Cursor = Cursors.Hand;
@@ -1094,7 +1144,6 @@ namespace ModManager4.Class
             StartAnyway.Location = new System.Drawing.Point((int)(450 * ratioX), (int)(300 * ratioY));
             StartAnyway.BackgroundImage = global::ModManager4.Properties.Resources.dontsave;
             StartAnyway.BackgroundImageLayout = ImageLayout.Stretch;
-            StartAnyway.Margin = new System.Windows.Forms.Padding(2, 3, 2, 3);
             StartAnyway.Name = "StartAnyway";
             StartAnyway.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(80 * ratioY));
             StartAnyway.Cursor = Cursors.Hand;
@@ -1140,7 +1189,6 @@ namespace ModManager4.Class
             WIPLabel.ForeColor = System.Drawing.SystemColors.Control;
             WIPLabel.TextAlign = ContentAlignment.MiddleCenter;
             WIPLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
-            WIPLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             WIPLabel.Name = "WIPLabel";
             WIPLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
             WIPLabel.Text = "This page is being developped and is unavailable for now.";
@@ -1178,7 +1226,6 @@ namespace ModManager4.Class
             DisabledLabel.ForeColor = System.Drawing.SystemColors.Control;
             DisabledLabel.TextAlign = ContentAlignment.MiddleCenter;
             DisabledLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
-            DisabledLabel.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             DisabledLabel.Name = "UpdateModsLabel";
             DisabledLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(150 * ratioY));
             DisabledLabel.Text = "Mod Manager has been temporary disabled !\n" +
@@ -1236,6 +1283,8 @@ namespace ModManager4.Class
             UpdateModsPic.TabStop = false;
             UpdateModsPic.Cursor = Cursors.Hand;
             UpdateModsPic.Click += new EventHandler(this.events.updateMods);
+            UpdateModsPic.MouseLeave += new EventHandler(this.tooltips.hide);
+            UpdateModsPic.MouseHover += new EventHandler(this.tooltips.show);
             UpdateModsPic.Visible = false;
             this.modManager.Controls.Add(UpdateModsPic);
             c.addControl(UpdateModsPic);
@@ -1249,6 +1298,8 @@ namespace ModManager4.Class
             RemoveModsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             RemoveModsPic.TabStop = false;
             RemoveModsPic.Cursor = Cursors.Hand;
+            RemoveModsPic.MouseLeave += new EventHandler(this.tooltips.hide);
+            RemoveModsPic.MouseHover += new EventHandler(this.tooltips.show);
             RemoveModsPic.Click += new EventHandler(this.events.uninstallMods);
             RemoveModsPic.Visible = false;
             this.modManager.Controls.Add(RemoveModsPic);
@@ -1263,6 +1314,8 @@ namespace ModManager4.Class
             AddLocalPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             AddLocalPic.TabStop = false;
             AddLocalPic.Cursor = Cursors.Hand;
+            AddLocalPic.MouseLeave += new EventHandler(this.tooltips.hide);
+            AddLocalPic.MouseHover += new EventHandler(this.tooltips.show);
             AddLocalPic.Click += new EventHandler(this.events.localAdd);
             AddLocalPic.Visible = false;
             this.modManager.Controls.Add(AddLocalPic);
@@ -1277,12 +1330,12 @@ namespace ModManager4.Class
             BetterCrewlinkPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             BetterCrewlinkPic.TabStop = false;
             BetterCrewlinkPic.Cursor = Cursors.Hand;
+            BetterCrewlinkPic.MouseLeave += new EventHandler(this.tooltips.hide);
+            BetterCrewlinkPic.MouseHover += new EventHandler(this.tooltips.show);
             BetterCrewlinkPic.Click += new EventHandler(this.events.openBcl);
             BetterCrewlinkPic.Visible = false;
             this.modManager.Controls.Add(BetterCrewlinkPic);
             c.addControl(BetterCrewlinkPic);
-
-            
 
             PictureBox ServersPic = new System.Windows.Forms.PictureBox();
             ServersPic.Image = global::ModManager4.Properties.Resources.server;
@@ -1293,6 +1346,8 @@ namespace ModManager4.Class
             ServersPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             ServersPic.TabStop = false;
             ServersPic.Cursor = Cursors.Hand;
+            ServersPic.MouseLeave += new EventHandler(this.tooltips.hide);
+            ServersPic.MouseHover += new EventHandler(this.tooltips.show);
             ServersPic.Click += new EventHandler(this.events.openServers);
             ServersPic.Visible = false;
             this.modManager.Controls.Add(ServersPic);
@@ -1370,7 +1425,6 @@ namespace ModManager4.Class
                 CategoryField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 CategoryField.ForeColor = System.Drawing.SystemColors.Control;
                 CategoryField.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
-                CategoryField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                 CategoryField.Name = "CategoryField" + i;
                 CategoryField.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(20 * ratioY));
                 CategoryField.Text = cat;
@@ -1386,7 +1440,6 @@ namespace ModManager4.Class
                         ModCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         ModCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                         ModCheckbox.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
-                        //ModCheckbox.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                         ModCheckbox.Name = mod.id;
                         ModCheckbox.TabStop = false;
                         ModCheckbox.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
@@ -1450,7 +1503,6 @@ namespace ModManager4.Class
                     ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     ModNameField.ForeColor = System.Drawing.SystemColors.Control;
                     ModNameField.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(offset * ratioY));
-                    //ModNameField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                     ModNameField.Name = "ModNameField=" + mod.id;
                     ModNameField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
                     ModNameField.Text = mod.name;
@@ -1464,7 +1516,6 @@ namespace ModManager4.Class
                         ModAuthorField.LinkColor = System.Drawing.SystemColors.Control;
                         ModAuthorField.ForeColor = System.Drawing.SystemColors.Control;
                         ModAuthorField.Location = new System.Drawing.Point((int)(190 * ratioX), (int)(offset * ratioY));
-                        //ModAuthorField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                         ModAuthorField.Name = "ModAuthorField=" + mod.id;
                         ModAuthorField.TabStop = false;
                         ModAuthorField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
@@ -1489,7 +1540,6 @@ namespace ModManager4.Class
                     ModVersionField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                     ModVersionField.ForeColor = System.Drawing.SystemColors.Control;
                     ModVersionField.Location = new System.Drawing.Point((int)(340 * ratioX), (int)(offset * ratioY));
-                    //ModVersionField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                     ModVersionField.Name = "ModVersionField=" + mod.id;
                     ModVersionField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
                     if (mod.type == "mod")
@@ -1508,7 +1558,6 @@ namespace ModManager4.Class
                         ModGithubField.LinkColor = System.Drawing.SystemColors.Control;
                         ModGithubField.ForeColor = System.Drawing.SystemColors.Control;
                         ModGithubField.Location = new System.Drawing.Point((int)(490 * ratioX), (int)(offset * ratioY));
-                        //ModGithubField.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
                         ModGithubField.Name = "ModGithubField=" + mod.id;
                         ModGithubField.Size = new System.Drawing.Size((int)(350 * ratioX), (int)(20 * ratioY));
                         ModGithubField.TabStop = false;

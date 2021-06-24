@@ -13,6 +13,7 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using IWshRuntimeLibrary;
 
 namespace ModManager4.Class
 {
@@ -133,7 +134,7 @@ namespace ModManager4.Class
             PictureBox pic = ((PictureBox)sender);
             string path = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null).ToString() + "\\Better-CrewLink.exe";
 
-            if (File.Exists(path))
+            if (System.IO.File.Exists(path))
             {
                 Process.Start("explorer", path);
             } else
@@ -333,6 +334,14 @@ namespace ModManager4.Class
             this.modManager.pagelist.renderPage("Settings");
         }
 
+        public void changeMethod(object sender, EventArgs e)
+        {
+            ComboBox comboBox = ((ComboBox)sender);
+            string selectedRes = comboBox.Text;
+            this.modManager.config.startMethod = selectedRes;
+            this.modManager.config.update(this.modManager);
+        }
+
         public void uninstallMods(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Uninstall all mods\n");
@@ -390,6 +399,39 @@ namespace ModManager4.Class
             this.modManager.pagelist.renderPage("BeforeApplyCode");
             this.modManager.modWorker.installFromCode(code);
             this.modManager.logs.log("- Install mods from code completed\n");
+        }
+
+        public void exportCode(object sender, EventArgs e)
+        {
+            object shDesktop = (object)"Desktop";
+            WshShell shell = new WshShell();
+            string title = "Mod Manager -";
+            string arguments = "";
+            foreach (InstalledMod mod in this.modManager.config.installedMods)
+            {
+                Mod m = this.modManager.modlist.getModById(mod.id);
+                if (m.type == "mod")
+                {
+                    title = title + " " + m.name + " &";
+                    arguments = arguments + m.id + " ";
+                }
+            }
+            if (title.Substring(title.Length - 1, 1) == "&")
+            {
+                title = title.Substring(0, title.Length - 2);
+                arguments = arguments.Substring(0, arguments.Length - 1);
+            } else
+            {
+                title = title + " Among Us";
+                arguments = "";
+            }
+            string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + "\\" + title + ".lnk";
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
+            shortcut.Description = "Mod Manager Set of mods";
+            shortcut.TargetPath = this.modManager.appPath + "\\ModManager4.exe";
+            shortcut.Arguments = arguments;
+            shortcut.Save();
+            MessageBox.Show("A shortcut has been created on your desktop !", "Shortcut created", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         public void localAdd(object sender, EventArgs e)
@@ -674,8 +716,35 @@ namespace ModManager4.Class
 
         public void startGame()
         {
+            Boolean worked = false;
             this.modManager.logs.log("Event : Start Game\n");
-            Process.Start("explorer", this.modManager.config.amongUsPath + "\\Among Us.exe");
+            if (this.modManager.config.startMethod == "Direct Link")
+            {
+                string path = this.modManager.config.amongUsPath + "\\Among Us.exe";
+                if (System.IO.File.Exists(path))
+                {
+                    Process.Start("explorer", path);
+                    worked = true;
+                } else
+                {
+                    worked = false;
+                }
+            } else if (this.modManager.config.startMethod == "Steam")
+            {
+                Process.Start("explorer", "steam://rungameid/945360");
+                worked = true;
+            } else if (this.modManager.config.startMethod == "Epic Games Store")
+            {
+                Process.Start("explorer", "com.epicgames.launcher://apps/33956bcb55d4452d8c47e16b94e294bd%3A729a86a5146640a2ace9e8c595414c56%3A963137e4c29d4c79a81323b8fab03a40?action=launch&silent=true");
+                worked = true;
+            }
+            if (worked == false)
+            {
+                MessageBox.Show("Apparently, Mod Manager was not able to start Among Us.\n" +
+                    "\n" +
+                    "Please, make sure you're using the correct Start Method.\n" +
+                    "Start Method can be changed in Mod Manager's settings !", "Among Us didn't start", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            }
         }
     }
 }

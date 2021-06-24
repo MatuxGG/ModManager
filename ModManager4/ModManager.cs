@@ -35,16 +35,17 @@ namespace ModManager4
         public Pagelist pagelist;
         public Serverlist serverlist;
 
-        public ModManager()
+        public ModManager(string[] args)
         {
+
             InitializeComponent();
 
             this.CenterToScreen();
 
-            _ = this.Start();
+            _ = this.Start(args);
         }
 
-        public async Task Start()
+        public async Task Start(string[] args)
         {
             // Constants declaration
             this.serverURL = "https://mm.matux.fr/mm4/";
@@ -113,30 +114,67 @@ namespace ModManager4
             this.config.load(this);
             this.logs.log("- Config loaded successfully\n");
 
-            this.Size = new Size(this.config.resolutionX, this.config.resolutionY);
-            this.CenterToScreen();
-            this.Show();
+            if (args.Count() == 0)
+            {
+                this.Size = new Size(this.config.resolutionX, this.config.resolutionY);
+                this.CenterToScreen();
+                this.Show();
 
-            double ratioX = (double)this.config.resolutionX / 1300.0;
-            double ratioY = (double)this.config.resolutionY / 810.0;
-            this.InitProgressBar.Location = new System.Drawing.Point((int)(484 * ratioX), (int)(569 * ratioY));
-            this.InitProgressBar.Size = new System.Drawing.Size((int)(313 * ratioX), (int)(23 * ratioY));
+                double ratioX = (double)this.config.resolutionX / 1300.0;
+                double ratioY = (double)this.config.resolutionY / 810.0;
+                this.InitProgressBar.Location = new System.Drawing.Point((int)(484 * ratioX), (int)(569 * ratioY));
+                this.InitProgressBar.Size = new System.Drawing.Size((int)(313 * ratioX), (int)(23 * ratioY));
+            }
+
+            if (args.Count() > 0)
+            {
+                this.modWorker.changeUI = false;
+                ProgressBar progress = (ProgressBar)this.Controls["InitProgressBar"];
+                progress.Visible = false;
+            }
 
             // Load mods from server
             this.modlist = new Modlist(this);
-            await this.modlist.load();
+            this.modlist.load();
+            await this.modlist.loadReleases();
             this.logs.log(this.modlist.toString());
 
             // Load local config or create one (find AU folder if possible)
             this.logs.log("Loading config (2/2)");
             this.config.check(this);
             this.logs.log(this.config.toString());
+
+            this.componentlist = new Componentlist(this);
+
+            if (args.Count() > 0)
+            {
+                List<string> modsToInstall = new List<string>() { };
+                foreach (string arg in args)
+                {
+                    if (this.modlist.getAvailableModById(arg) != null && modsToInstall.Contains(arg) == false)
+                    {
+                        modsToInstall.Add(arg);
+                    }
+                }
+                string code = this.modlist.getCodeFromList(modsToInstall);
+                string configCode = this.modlist.getCode();
+                if (code != configCode)
+                {
+                    this.modWorker.startAfterUpdate = true;
+                    this.modWorker.installFromCode(code);
+                } else
+                {
+                    this.componentlist.events.startGame();
+                    Environment.Exit(0);
+                }
+                return;
+            }
+
             this.serverlist = new Serverlist();
             this.serverlist.load(this);
             this.logs.log(this.serverlist.toString());
 
             // Load pages
-            this.componentlist = new Componentlist(this);
             this.componentlist.load();
             this.logs.log(this.componentlist.toString());
 
@@ -167,7 +205,6 @@ namespace ModManager4
                 this.pagelist.renderPage("FirstPathSelection");
             }
         }
-
 
         public void centerToScreenPub()
         {

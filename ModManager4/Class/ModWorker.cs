@@ -22,10 +22,12 @@ namespace ModManager4.Class
         public BackgroundWorker backgroundWorkerChallenger;
         public string codeToInstall;
         public Boolean startAfterUpdate;
+        public Boolean changeUI;
 
         public ModWorker(ModManager modManager)
         {
             this.modManager = modManager;
+            this.changeUI = true;
         }
 
         public void removeLocalMod(Mod m)
@@ -58,7 +60,6 @@ namespace ModManager4.Class
 
         public void backgroundWorkerCode_DoWork(object sender, DoWorkEventArgs e)
         {
-            
             var backgroundWorkerCode = sender as BackgroundWorker;
 
             string binary = this.modManager.modlist.HexStringToBinary(this.codeToInstall);
@@ -99,25 +100,39 @@ namespace ModManager4.Class
 
         private void backgroundWorkerCode_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            Panel p = (Panel)this.modManager.componentlist.get("BeforeApplyCode").getControl("PagePanelApplyCode");
-            ProgressBar prog = (ProgressBar)p.Controls["UpdateCodeBar"];
-            prog.Value = e.ProgressPercentage;
+            if (this.changeUI)
+            {
+                Panel p = (Panel)this.modManager.componentlist.get("BeforeApplyCode").getControl("PagePanelApplyCode");
+                ProgressBar prog = (ProgressBar)p.Controls["UpdateCodeBar"];
+                prog.Value = e.ProgressPercentage;
+            }
         }
 
         private void backgroundWorkerCode_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            Panel p = (Panel)this.modManager.componentlist.get("BeforeApplyCode").getControl("PagePanelApplyCode");
-            ProgressBar prog = (ProgressBar)p.Controls["UpdateCodeBar"];
-            prog.Value = 100;
+            if (this.changeUI)
+            {
+                Panel p = (Panel)this.modManager.componentlist.get("BeforeApplyCode").getControl("PagePanelApplyCode");
+                ProgressBar prog = (ProgressBar)p.Controls["UpdateCodeBar"];
+                prog.Value = 100;
+            }
             if (this.modManager.config.installedMods.Count == 0)
             {
                 this.uninstallMods();
             }
             this.modManager.modlist.resetChanged();
-            this.modManager.modlist.setCode();
-            this.modManager.componentlist.refreshModSelection();
-            this.modManager.logs.log("Install from code successful");
-            this.modManager.pagelist.renderPage("ModSelection");
+            if (this.changeUI)
+            {
+                this.modManager.modlist.setCode();
+                this.modManager.componentlist.refreshModSelection();
+                this.modManager.logs.log("Install from code successful");
+                this.modManager.pagelist.renderPage("ModSelection");
+            }
+            if (this.startAfterUpdate == true)
+            {
+                this.modManager.componentlist.events.startGame();
+                Environment.Exit(0);
+            }
         }
 
         public void uninstallMods()

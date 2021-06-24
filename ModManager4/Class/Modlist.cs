@@ -27,7 +27,7 @@ namespace ModManager4.Class
             this.resetChanged();
         }
 
-        public async Task load()
+        public void load()
         {
             this.modManager.logs.log("Loading modlist");
             string modlistURL = this.modManager.serverURL + "/modlist2.json";
@@ -78,6 +78,11 @@ namespace ModManager4.Class
             }
             this.availableDependencies = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dependency>>(dependencies);
 
+            this.modManager.logs.log("- Modlist loaded successfully");
+        }
+
+        public async Task loadReleases()
+        {
             ProgressBar progress = (ProgressBar)this.modManager.Controls["InitProgressBar"];
             int max = this.mods.Count();
             int i = 0;
@@ -85,13 +90,7 @@ namespace ModManager4.Class
             {
                 i++;
                 progress.Value = (100 * i) / max;
-                if (m.type != "allInOne")
-                {
-                    await m.getGithubRelease(this.modManager.token);
-                } else if (m.id == "Challenger")
-                {
-                    await this.getChallengerReleases(m, this.modManager.token);
-                }
+                await this.loadRelease(m);
             }
             string localModsPath = this.modManager.appDataPath + "\\localMods.json";
             if (File.Exists(localModsPath))
@@ -102,8 +101,18 @@ namespace ModManager4.Class
             }
 
             progress.Visible = false;
+        }
 
-            this.modManager.logs.log("- Modlist loaded successfully");
+        public async Task loadRelease(Mod m)
+        {
+            if (m.type != "allInOne")
+            {
+                await m.getGithubRelease(this.modManager.token);
+            }
+            else if (m.id == "Challenger")
+            {
+                await this.getChallengerReleases(m, this.modManager.token);
+            }
         }
 
         public async Task getChallengerReleases(Mod m, string token)
@@ -246,6 +255,24 @@ namespace ModManager4.Class
             return ret;
         }
 
+        public string getCodeFromList(List<string> modsToInstall)
+        {
+            string code = "";
+            foreach (Mod m in this.getAvailableRemoteMods())
+            {
+                if (modsToInstall.Contains(m.id))
+                {
+                    code = code + "1";
+                }
+                else
+                {
+                    code = code + "0";
+                }
+            }
+            string ret = this.BinaryStringToHex(code);
+            return ret;
+        }
+
         public void setCode()
         {
             this.code = this.getCode();
@@ -283,6 +310,18 @@ namespace ModManager4.Class
             foreach (Mod m in this.mods)
             {
                 if (m.id == id)
+                {
+                    return m;
+                }
+            }
+            return null;
+        }
+
+        public Mod getAvailableModById(string id)
+        {
+            foreach (Mod m in this.mods)
+            {
+                if (m.id == id && m.gameVersion == this.modManager.serverConfig.gameVersion)
                 {
                     return m;
                 }
