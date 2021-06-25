@@ -4,6 +4,8 @@ Among us Mod Manager is an open source software for the popular game Among Us. I
 
 Join the discord : https://mm.matux.fr/discord
 
+![ModManagerv4.0.10](https://amodsus.com/attachments/modmanager4-0-10-png.505/)
+
 ## How to install ?
 
 - Download and install .net 5 [here](https://matux.fr/dotnet64).
