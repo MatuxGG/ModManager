@@ -378,6 +378,7 @@ namespace ModManager4.Class
                     retour.Add(m);
                 }
             }
+            retour = this.sort(retour);
             return retour;
         }
 
@@ -405,6 +406,92 @@ namespace ModManager4.Class
                 }
             }
             return retour;
+        }
+
+        public List<Mod> sort(List<Mod> mods)
+        {
+            Mod[] res = mods.ToArray();
+            QuickSort(res, 0, res.Length - 1);
+            return new List<Mod>(res);
+        }
+
+        private void QuickSort(Mod[] arr, int start, int end)
+        {
+            int i;
+            if (start < end)
+            {
+                i = Partition(arr, start, end);
+
+                QuickSort(arr, start, i - 1);
+                QuickSort(arr, i + 1, end);
+            }
+        }
+
+        private int Partition(Mod[] arr, int start, int end)
+        {
+            Mod temp;
+            Mod p = arr[end];
+            int i = start - 1;
+
+            for (int j = start; j <= end - 1; j++)
+            {
+                if (this.inferior(arr[j],p))
+                {
+                    i++;
+                    temp = arr[i];
+                    arr[i] = arr[j];
+                    arr[j] = temp;
+                }
+            }
+
+            temp = arr[i + 1];
+            arr[i + 1] = arr[end];
+            arr[end] = temp;
+            return i + 1;
+        }
+
+        private Boolean inferior(Mod a, Mod b)
+        {
+            int i;
+            switch (this.modManager.config.sortType)
+            {
+                case "Author":
+                    i = String.Compare(a.author, b.author);
+                    break;
+                case "Version":
+                    if (a.type == "localMod" || a.type == "allInOne")
+                    {
+                        i = String.Compare(a.name, b.name);
+                    } else
+                    {
+                        i = String.Compare(a.release.TagName, b.release.TagName);
+                    }
+                    break;
+                case "Checked":
+                    Boolean installedA = this.modManager.config.containsMod(a.id);
+                    Boolean installedB = this.modManager.config.containsMod(b.id);
+                    if (installedA == true && installedB == false)
+                    {
+                        i = -1;
+                    } else if (installedA == false && installedB == true)
+                    {
+                        i = 1;
+                    } else
+                    {
+                        i = String.Compare(a.name, b.name);
+                    }
+                    break;
+                default:
+                    i = String.Compare(a.name, b.name);
+                    break;
+            }
+            if (this.modManager.config.sortOrder == "A")
+            {
+                return i < 0;
+            } else
+            {
+                return i > 0;
+            }
         }
 
         public string toString()

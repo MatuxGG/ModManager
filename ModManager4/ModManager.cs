@@ -51,7 +51,7 @@ namespace ModManager4
             this.serverURL = "https://mm.matux.fr/mm4/";
             this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
             this.appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager";
-            this.tempPath = Path.GetTempPath() + "\\ModManager";
+            this.tempPath = Path.GetTempPath() + "ModManager";
             this.version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
             this.token = System.IO.File.ReadAllText(this.appPath + "\\token.txt");
 

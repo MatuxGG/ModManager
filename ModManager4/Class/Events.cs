@@ -132,15 +132,15 @@ namespace ModManager4.Class
         public void openBcl(object sender, EventArgs e)
         {
             PictureBox pic = ((PictureBox)sender);
-            string path = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null).ToString() + "\\Better-CrewLink.exe";
+            object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
 
-            if (System.IO.File.Exists(path))
+            if (o!= null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
             {
-                Process.Start("explorer", path);
+                Process.Start("explorer", o.ToString() + "\\Better-CrewLink.exe");
             } else
             {
                 pic.Enabled = false;
-                string dlPath = this.modManager.tempPath + "\\Better-CrewLink-Setup-2.6.4.exe";
+                string dlPath = this.modManager.tempPath + "\\Better-CrewLink-Setup.exe";
                 try
                 {
                     using (var client = new WebClient())
@@ -153,6 +153,7 @@ namespace ModManager4.Class
                     this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
                     this.modManager.componentlist.events.exitMM();
                 }
+                this.modManager.logs.debug(dlPath);
                 Process.Start("explorer.exe", dlPath);
                 pic.Enabled = true;
             }
@@ -238,7 +239,6 @@ namespace ModManager4.Class
         public void resetServers(object sender, EventArgs e)
         {
             this.modManager.serverlist.reset(this.modManager);
-            //this.modManager.componentlist.refreshServers();
 
             this.clearWithBlink();
 
@@ -671,6 +671,48 @@ namespace ModManager4.Class
             }
 
             this.modManager.logs.log("Event : Started All In One Mod " + m.name + " successfully\n");
+        }
+
+        public void rollCategory(object sender, EventArgs e)
+        {
+            string cross = ((Control)sender).Name;
+            string categoryName = cross.Substring(cross.IndexOf("=") + 1);
+            if (this.modManager.config.hiddenCategories.Contains(categoryName))
+            {
+                this.modManager.config.hiddenCategories.Remove(categoryName);
+            } else
+            {
+                this.modManager.config.hiddenCategories.Add(categoryName);
+            }
+            this.modManager.config.update(this.modManager);
+
+            this.clearWithBlink();
+
+            this.modManager.pagelist.renderPage("ModSelection");
+
+        }
+        public void sortMods(object sender, EventArgs e)
+        {
+            string cross = ((Control)sender).Name;
+            string sortType = cross.Substring(cross.IndexOf("=") + 1);
+            if (this.modManager.config.sortType == sortType)
+            {
+                if (this.modManager.config.sortOrder == "A")
+                {
+                    this.modManager.config.sortOrder = "D";
+                } else
+                {
+                    this.modManager.config.sortOrder = "A";
+                }
+            } else
+            {
+                this.modManager.config.sortType = sortType;
+                this.modManager.config.sortOrder = "A";
+            }
+
+            this.clearWithBlink();
+
+            this.modManager.pagelist.renderPage("ModSelection");
         }
 
         public void launchGame(object sender, EventArgs e)

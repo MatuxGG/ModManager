@@ -57,62 +57,20 @@ namespace ModManager4.Class
             temp.Add(this.Regions[1]);
             temp.Add(this.Regions[2]);
             Server matux = new Server("DnsRegionInfo, Assembly-CSharp", "152.228.160.91", "152.228.160.91", 22023, "matux.fr", 1003);
+            Server challenger = new Server("DnsRegionInfo, Assembly-CSharp", "51.210.123.16", "51.210.123.16", 22023, "challenger", 1003);
+            Server skeld = new Server("DnsRegionInfo, Assembly-CSharp", "192.241.154.115", "192.241.154.115", 22023, "skeld.net", 1003);
             temp.Add(matux);
+            temp.Add(challenger);
+            temp.Add(skeld);
             this.Regions = temp;
-            //this.CurrentRegionIdx = 1;
             this.update(modManager);
         }
         public void add(ModManager modManager)
         {
             Server newServ = new Server("DnsRegionInfo, Assembly-CSharp", "127.0.0.1", "127.0.0.1", 22023, "New Server", 1003);
             this.Regions.Add(newServ);
-            //this.CurrentRegionIdx = CurrentRegionIdx + 1;
             this.update(modManager);
         }
-
-
-        /*
-        public void updateUnify(ModManager modManager)
-        {
-            if (modManager.config.containsMod("Unify") == false || Directory.Exists(modManager.config.amongUsPath + "\\BepInEx") == false || Directory.Exists(modManager.config.amongUsPath + "\\BepInEx\\config") == false)
-            {
-                return;
-            }
-            string str = "[Preferences]\n" +
-                "\n" +
-                "## If the official regions should be shown when displaying the regions menu\n" +
-                "# Setting type: Boolean\n" +
-                "# Default value: true\n" +
-                "Show Official Regions = " + this.showOfficialRegions + "\n" +
-                "\n" +
-                "## If the extra regions added by default in Unify should be shown when displaying the regions menu\n" +
-                "# Setting type: Boolean\n" +
-                "# Default value: true\n" +
-                "Show Extra Regions = " + this.showExtraRegions + "\n" +
-                "\n";
-            int i = 0;
-            foreach (Server s in this.servers)
-            {
-                i++;
-                string serverStr = "[Region " + i + "]\n" +
-                    "\n" +
-                    "# Setting type: String\n" +
-                    "# Default value: custom region\n" +
-                    "Name = " + s.name + "\n" +
-                    "\n" +
-                    "# Setting type: String\n" +
-                    "# Default value: \n" +
-                    "IP = " + s.ip + "\n" +
-                    "\n" +
-                    "# Setting type: UInt16\n" +
-                    "# Default value: 22023\n" +
-                    "Port = " + s.port + "\n" +
-                    "\n";
-                str = str + serverStr;
-            }
-            File.WriteAllText(modManager.config.amongUsPath + "\\BepInEx\\config\\daemon.unify.cfg", str);
-        }
-        */
 
         public string toString()
         {

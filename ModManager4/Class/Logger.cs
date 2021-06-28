@@ -28,7 +28,19 @@ namespace ModManager4.Class
 
         public void log(string line)
         {
-            File.AppendAllText(logFile, line + Environment.NewLine);
+            Boolean written = false;
+            while (written == false) {
+                try
+                {
+                    File.AppendAllText(logFile, line + Environment.NewLine);
+                    written = true;
+                }
+                catch
+                {
+                    written = false;
+                }
+            }
+            
         }
 
         public void debug(string s)

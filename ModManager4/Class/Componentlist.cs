@@ -1365,38 +1365,56 @@ namespace ModManager4.Class
             this.modManager.Controls.Add(PagePanel);
             c.addControl(PagePanel);
 
+            System.Windows.Forms.Label CheckedTitle = new System.Windows.Forms.Label();
+            CheckedTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            CheckedTitle.BackColor = Color.Transparent;
+            CheckedTitle.ForeColor = SystemColors.Control;
+            CheckedTitle.Location = new System.Drawing.Point((int)(30 * ratioX), (int)(20 * ratioY));
+            CheckedTitle.Name = "Sort=Checked";
+            CheckedTitle.Size = new System.Drawing.Size((int)(30 * ratioX), (int)(20 * ratioY));
+            CheckedTitle.Text = "X";
+            CheckedTitle.Click += new EventHandler(this.events.sortMods);
+            CheckedTitle.Cursor = Cursors.Hand;
+            PagePanel.Controls.Add(CheckedTitle);
+
             System.Windows.Forms.Label ModNameTitle = new System.Windows.Forms.Label();
-            ModNameTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModNameTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameTitle.BackColor = Color.Transparent;
             ModNameTitle.ForeColor = SystemColors.Control;
             ModNameTitle.Location = new System.Drawing.Point((int)(60 * ratioX), (int)(20 * ratioY));
-            ModNameTitle.Name = "ModNameTitle";
+            ModNameTitle.Name = "Sort=Name";
             ModNameTitle.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
             ModNameTitle.Text = "Name";
+            ModNameTitle.Click += new EventHandler(this.events.sortMods);
+            ModNameTitle.Cursor = Cursors.Hand;
             PagePanel.Controls.Add(ModNameTitle);
 
             System.Windows.Forms.Label ModAuthorTitle = new System.Windows.Forms.Label();
-            ModAuthorTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModAuthorTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAuthorTitle.BackColor = Color.Transparent;
             ModAuthorTitle.ForeColor = SystemColors.Control;
             ModAuthorTitle.Location = new System.Drawing.Point((int)(210 * ratioX), (int)(20 * ratioY));
-            ModAuthorTitle.Name = "ModAuthorTitle";
+            ModAuthorTitle.Name = "Sort=Author";
             ModAuthorTitle.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
             ModAuthorTitle.Text = "Author";
+            ModAuthorTitle.Click += new EventHandler(this.events.sortMods);
+            ModAuthorTitle.Cursor = Cursors.Hand;
             PagePanel.Controls.Add(ModAuthorTitle);
 
             System.Windows.Forms.Label ModVersionTitle = new System.Windows.Forms.Label();
-            ModVersionTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModVersionTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModVersionTitle.BackColor = Color.Transparent;
             ModVersionTitle.ForeColor = SystemColors.Control;
             ModVersionTitle.Location = new System.Drawing.Point((int)(360 * ratioX), (int)(20 * ratioY));
-            ModVersionTitle.Name = "ModVersionTitle";
+            ModVersionTitle.Name = "Sort=Version";
             ModVersionTitle.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
             ModVersionTitle.Text = "Version";
+            ModVersionTitle.Click += new EventHandler(this.events.sortMods);
+            ModVersionTitle.Cursor = Cursors.Hand;
             PagePanel.Controls.Add(ModVersionTitle);
 
             System.Windows.Forms.Label ModGithubTitle = new System.Windows.Forms.Label();
-            ModGithubTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModGithubTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModGithubTitle.ForeColor = SystemColors.Control;
             ModGithubTitle.Location = new System.Drawing.Point((int)(510 * ratioX), (int)(20 * ratioY));
             ModGithubTitle.Name = "ModGithubTitle";
@@ -1417,201 +1435,256 @@ namespace ModManager4.Class
             PagePanel.Controls.Add(ModsGroupbox);
 
             int i = 0;
-            int offset = 0;
+            int offset = 10;
             foreach (string cat in this.modManager.modlist.getAvailableCategories())
             {
+                Panel CategoryTitlePanel = new Panel();
+                CategoryTitlePanel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(offset * ratioY));
+                CategoryTitlePanel.Name = "CategoryTitlePanel=" + cat;
+                CategoryTitlePanel.BackColor = Color.Black;
+                CategoryTitlePanel.BorderStyle = BorderStyle.FixedSingle;
+                CategoryTitlePanel.BackgroundImageLayout = ImageLayout.Stretch;
+                CategoryTitlePanel.Size = new System.Drawing.Size((int)(850 * ratioX), (int)(30 * ratioY));
+                CategoryTitlePanel.Padding = new Padding(10);
+                CategoryTitlePanel.Click += new EventHandler(this.events.rollCategory);
+                CategoryTitlePanel.TabStop = false;
+                CategoryTitlePanel.Cursor = Cursors.Hand;
+                ModsGroupbox.Controls.Add(CategoryTitlePanel);
+
                 // Affichage Mod
                 System.Windows.Forms.Label CategoryField = new System.Windows.Forms.Label();
-                CategoryField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Underline, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                CategoryField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 CategoryField.ForeColor = System.Drawing.SystemColors.Control;
-                CategoryField.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
-                CategoryField.Name = "CategoryField" + i;
-                CategoryField.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(20 * ratioY));
+                CategoryField.Location = new System.Drawing.Point((int)(5 * ratioX), (int)(5 * ratioY));
+                CategoryField.Name = "CategoryField=" + cat;
+                CategoryField.Size = new System.Drawing.Size((int)(780 * ratioX), (int)(20 * ratioY));
                 CategoryField.Text = cat;
-                ModsGroupbox.Controls.Add(CategoryField);
+                CategoryField.Click += new EventHandler(this.events.rollCategory);
+                CategoryTitlePanel.Controls.Add(CategoryField);
 
-                offset = offset + 30;
+                PictureBox CategoryArrowPic = new System.Windows.Forms.PictureBox();
 
-                foreach (Mod mod in this.modManager.modlist.getAvailableModsByCategory(cat))
+                if (this.modManager.config.hiddenCategories.Contains(cat))
                 {
-                    if (mod.type == "mod" || mod.type == "localMod")
-                    {
-                        MMCheckbox ModCheckbox = new MMCheckbox(this.modManager);
-                        ModCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        ModCheckbox.ForeColor = System.Drawing.SystemColors.Control;
-                        ModCheckbox.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
-                        ModCheckbox.Name = mod.id;
-                        ModCheckbox.TabStop = false;
-                        ModCheckbox.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
-                        ModCheckbox.Click += new EventHandler(this.events.checkBox);
-
-                        if (this.modManager.config.containsMod(mod.id))
-                        {
-                            ModCheckbox.Checked = true;
-                        }
-
-                        ModsGroupbox.Controls.Add(ModCheckbox);
-
-                    } else
-                    {
-                        if (this.modManager.config.containsMod(mod.id) == false)
-                        {
-                            // Download
-                            PictureBox ModDownload = new System.Windows.Forms.PictureBox();
-                            ModDownload.Image = global::ModManager4.Properties.Resources.download;
-                            ModDownload.BackColor = System.Drawing.Color.Transparent;
-                            ModDownload.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
-                            ModDownload.Name = "ModDownload=" + mod.id;
-                            ModDownload.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
-                            ModDownload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                            ModDownload.TabStop = false;
-                            ModDownload.Cursor = Cursors.Hand;
-                            ModDownload.Click += new EventHandler(this.events.downloadAllInOne);
-                            ModsGroupbox.Controls.Add(ModDownload);
-                        } else if (mod.id == "Challenger" && this.modManager.config.getInstalledModById(mod.id).version != this.modManager.modlist.challengerMod.TagName)
-                        {
-                            // Update
-                            PictureBox ModDownload = new System.Windows.Forms.PictureBox();
-                            ModDownload.Image = global::ModManager4.Properties.Resources.updateMod;
-                            ModDownload.BackColor = System.Drawing.Color.Transparent;
-                            ModDownload.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
-                            ModDownload.Name = "ModDownload=" + mod.id;
-                            ModDownload.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
-                            ModDownload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                            ModDownload.TabStop = false;
-                            ModDownload.Cursor = Cursors.Hand;
-                            ModDownload.Click += new EventHandler(this.events.downloadAllInOne);
-                            ModsGroupbox.Controls.Add(ModDownload);
-                        } else
-                        {
-                            // Play
-                            PictureBox ModPlay = new System.Windows.Forms.PictureBox();
-                            ModPlay.Image = global::ModManager4.Properties.Resources.play;
-                            ModPlay.BackColor = System.Drawing.Color.Transparent;
-                            ModPlay.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
-                            ModPlay.Name = "ModPlay=" + mod.id;
-                            ModPlay.Size = new System.Drawing.Size((int)(15 * ratioX), (int)(15 * ratioY));
-                            ModPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                            ModPlay.TabStop = false;
-                            ModPlay.Cursor = Cursors.Hand;
-                            ModPlay.Click += new EventHandler(this.events.startAllInOne);
-                            ModsGroupbox.Controls.Add(ModPlay);
-                        }
-                    }
-
-                    System.Windows.Forms.Label ModNameField = new System.Windows.Forms.Label();
-                    ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    ModNameField.ForeColor = System.Drawing.SystemColors.Control;
-                    ModNameField.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(offset * ratioY));
-                    ModNameField.Name = "ModNameField=" + mod.id;
-                    ModNameField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
-                    ModNameField.Text = mod.name;
-                    ModsGroupbox.Controls.Add(ModNameField);
-
+                    CategoryArrowPic.Image = global::ModManager4.Properties.Resources.up;
+                } else
+                {
+                    CategoryArrowPic.Image = global::ModManager4.Properties.Resources.down;
+                }
                     
-                    if (mod.author != "")
-                    {
-                        System.Windows.Forms.LinkLabel ModAuthorField = new System.Windows.Forms.LinkLabel();
-                        ModAuthorField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        ModAuthorField.LinkColor = System.Drawing.SystemColors.Control;
-                        ModAuthorField.ForeColor = System.Drawing.SystemColors.Control;
-                        ModAuthorField.Location = new System.Drawing.Point((int)(190 * ratioX), (int)(offset * ratioY));
-                        ModAuthorField.Name = "ModAuthorField=" + mod.id;
-                        ModAuthorField.TabStop = false;
-                        ModAuthorField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
-                        ModAuthorField.Text = mod.author;
+                CategoryArrowPic.BackColor = System.Drawing.Color.Transparent;
+                CategoryArrowPic.Location = new System.Drawing.Point((int)(820 * ratioX), (int)(5 * ratioY));
+                CategoryArrowPic.Name = "CategoryArrowPic=" + cat;
+                CategoryArrowPic.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                CategoryArrowPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                CategoryArrowPic.TabStop = false;
+                CategoryArrowPic.Click += new EventHandler(this.events.rollCategory);
+                CategoryTitlePanel.Controls.Add(CategoryArrowPic);
 
-                        if (mod.type == "mod" || mod.id == "Challenger")
+                offset = offset + 50;
+
+                Panel CategoryPanel = new Panel();
+                CategoryPanel.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
+                CategoryPanel.Name = "CategoryPanel="+ cat;
+                CategoryPanel.BackColor = Color.Black;
+                CategoryPanel.BackgroundImageLayout = ImageLayout.Stretch;
+                CategoryPanel.TabStop = false;
+                ModsGroupbox.Controls.Add(CategoryPanel);
+
+                int categoryOffset = 0;
+
+                if (this.modManager.config.hiddenCategories.Contains(cat) == false)
+                {
+                    foreach (Mod mod in this.modManager.modlist.getAvailableModsByCategory(cat))
+                    {
+                        if (mod.type == "mod" || mod.type == "localMod")
                         {
-                            ModAuthorField.Click += new EventHandler(this.events.openAuthorGithub);
+                            MMCheckbox ModCheckbox = new MMCheckbox(this.modManager);
+                            ModCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                            ModCheckbox.ForeColor = System.Drawing.SystemColors.Control;
+                            ModCheckbox.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(categoryOffset * ratioY));
+                            ModCheckbox.Name = mod.id;
+                            ModCheckbox.TabStop = false;
+                            ModCheckbox.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                            ModCheckbox.Click += new EventHandler(this.events.checkBox);
+
+                            if ((this.modManager.config.containsMod(mod.id) && this.modManager.modlist.toUninstall.Contains(mod.id) == false) || this.modManager.modlist.toInstall.Contains(mod.id))
+                            {
+                                ModCheckbox.Checked = true;
+                            }
+
+                            CategoryPanel.Controls.Add(ModCheckbox);
+
                         }
-                        if (mod.type == "localMod")
+                        else
                         {
-                            ModAuthorField.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+                            if (this.modManager.config.containsMod(mod.id) == false)
+                            {
+                                // Download
+                                PictureBox ModDownload = new System.Windows.Forms.PictureBox();
+                                ModDownload.Image = global::ModManager4.Properties.Resources.download;
+                                ModDownload.BackColor = System.Drawing.Color.Transparent;
+                                ModDownload.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(categoryOffset * ratioY));
+                                ModDownload.Name = "ModDownload=" + mod.id;
+                                ModDownload.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                                ModDownload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                                ModDownload.TabStop = false;
+                                ModDownload.Cursor = Cursors.Hand;
+                                ModDownload.Click += new EventHandler(this.events.downloadAllInOne);
+                                CategoryPanel.Controls.Add(ModDownload);
+                            }
+                            else if (mod.id == "Challenger" && this.modManager.config.getInstalledModById(mod.id).version != this.modManager.modlist.challengerMod.TagName)
+                            {
+                                // Update
+                                PictureBox ModDownload = new System.Windows.Forms.PictureBox();
+                                ModDownload.Image = global::ModManager4.Properties.Resources.updateMod;
+                                ModDownload.BackColor = System.Drawing.Color.Transparent;
+                                ModDownload.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(categoryOffset * ratioY));
+                                ModDownload.Name = "ModDownload=" + mod.id;
+                                ModDownload.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                                ModDownload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                                ModDownload.TabStop = false;
+                                ModDownload.Cursor = Cursors.Hand;
+                                ModDownload.Click += new EventHandler(this.events.downloadAllInOne);
+                                CategoryPanel.Controls.Add(ModDownload);
+                            }
+                            else
+                            {
+                                // Play
+                                PictureBox ModPlay = new System.Windows.Forms.PictureBox();
+                                ModPlay.Image = global::ModManager4.Properties.Resources.play;
+                                ModPlay.BackColor = System.Drawing.Color.Transparent;
+                                ModPlay.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(categoryOffset * ratioY));
+                                ModPlay.Name = "ModPlay=" + mod.id;
+                                ModPlay.Size = new System.Drawing.Size((int)(15 * ratioX), (int)(15 * ratioY));
+                                ModPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                                ModPlay.TabStop = false;
+                                ModPlay.Cursor = Cursors.Hand;
+                                ModPlay.Click += new EventHandler(this.events.startAllInOne);
+                                CategoryPanel.Controls.Add(ModPlay);
+                            }
                         }
-                        if (mod.id == "Skeld")
+
+                        System.Windows.Forms.Label ModNameField = new System.Windows.Forms.Label();
+                        ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        ModNameField.ForeColor = System.Drawing.SystemColors.Control;
+                        ModNameField.Location = new System.Drawing.Point((int)(30 * ratioX), (int)(categoryOffset * ratioY));
+                        ModNameField.Name = "ModNameField=" + mod.id;
+                        ModNameField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
+                        ModNameField.Text = mod.name;
+                        CategoryPanel.Controls.Add(ModNameField);
+
+
+                        if (mod.author != "")
                         {
-                            ModAuthorField.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+                            System.Windows.Forms.LinkLabel ModAuthorField = new System.Windows.Forms.LinkLabel();
+                            ModAuthorField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                            ModAuthorField.LinkColor = System.Drawing.SystemColors.Control;
+                            ModAuthorField.ForeColor = System.Drawing.SystemColors.Control;
+                            ModAuthorField.Location = new System.Drawing.Point((int)(180 * ratioX), (int)(categoryOffset * ratioY));
+                            ModAuthorField.Name = "ModAuthorField=" + mod.id;
+                            ModAuthorField.TabStop = false;
+                            ModAuthorField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
+                            ModAuthorField.Text = mod.author;
+
+                            if (mod.type == "mod" || mod.id == "Challenger")
+                            {
+                                ModAuthorField.Click += new EventHandler(this.events.openAuthorGithub);
+                            }
+                            if (mod.type == "localMod")
+                            {
+                                ModAuthorField.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+                            }
+                            if (mod.id == "Skeld")
+                            {
+                                ModAuthorField.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+                            }
+                            CategoryPanel.Controls.Add(ModAuthorField);
                         }
-                        ModsGroupbox.Controls.Add(ModAuthorField);
-                    }
 
-                    System.Windows.Forms.Label ModVersionField = new System.Windows.Forms.Label();
-                    ModVersionField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    ModVersionField.ForeColor = System.Drawing.SystemColors.Control;
-                    ModVersionField.Location = new System.Drawing.Point((int)(340 * ratioX), (int)(offset * ratioY));
-                    ModVersionField.Name = "ModVersionField=" + mod.id;
-                    ModVersionField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
-                    if (mod.type == "mod")
-                    {
-                        ModVersionField.Text = mod.release.TagName;
-                    } else
-                    {
-                        ModVersionField.Text = "";
-                    }
-                    ModsGroupbox.Controls.Add(ModVersionField);
-
-                    if (mod.type == "mod" || mod.type == "allInOne")
-                    {
-                        System.Windows.Forms.LinkLabel ModGithubField = new System.Windows.Forms.LinkLabel();
-                        ModGithubField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                        ModGithubField.LinkColor = System.Drawing.SystemColors.Control;
-                        ModGithubField.ForeColor = System.Drawing.SystemColors.Control;
-                        ModGithubField.Location = new System.Drawing.Point((int)(490 * ratioX), (int)(offset * ratioY));
-                        ModGithubField.Name = "ModGithubField=" + mod.id;
-                        ModGithubField.Size = new System.Drawing.Size((int)(350 * ratioX), (int)(20 * ratioY));
-                        ModGithubField.TabStop = false;
-
+                        System.Windows.Forms.Label ModVersionField = new System.Windows.Forms.Label();
+                        ModVersionField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        ModVersionField.ForeColor = System.Drawing.SystemColors.Control;
+                        ModVersionField.Location = new System.Drawing.Point((int)(330 * ratioX), (int)(categoryOffset * ratioY));
+                        ModVersionField.Name = "ModVersionField=" + mod.id;
+                        ModVersionField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
                         if (mod.type == "mod")
                         {
-                            ModGithubField.Text = "https://github.com/" + mod.author + "/" + mod.github;
-                        } else if (mod.id == "Challenger")
+                            ModVersionField.Text = mod.release.TagName;
+                        }
+                        else
                         {
-                            ModGithubField.Text = "https://github.com/" + mod.author + "/" + mod.github;
-                        } else if (mod.id == "Skeld")
+                            ModVersionField.Text = "";
+                        }
+                        CategoryPanel.Controls.Add(ModVersionField);
+
+                        if (mod.type == "mod" || mod.type == "allInOne")
                         {
-                            ModGithubField.Text = mod.github;
+                            System.Windows.Forms.LinkLabel ModGithubField = new System.Windows.Forms.LinkLabel();
+                            ModGithubField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                            ModGithubField.LinkColor = System.Drawing.SystemColors.Control;
+                            ModGithubField.ForeColor = System.Drawing.SystemColors.Control;
+                            ModGithubField.Location = new System.Drawing.Point((int)(480 * ratioX), (int)(categoryOffset * ratioY));
+                            ModGithubField.Name = "ModGithubField=" + mod.id;
+                            ModGithubField.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(20 * ratioY));
+                            ModGithubField.TabStop = false;
+
+                            if (mod.type == "mod")
+                            {
+                                ModGithubField.Text = "https://github.com/" + mod.author + "/" + mod.github;
+                            }
+                            else if (mod.id == "Challenger")
+                            {
+                                ModGithubField.Text = "https://github.com/" + mod.author + "/" + mod.github;
+                            }
+                            else if (mod.id == "Skeld")
+                            {
+                                ModGithubField.Text = mod.github;
+                            }
+
+                            ModGithubField.Click += new EventHandler(this.events.openGithub);
+
+                            CategoryPanel.Controls.Add(ModGithubField);
                         }
 
-                        ModGithubField.Click += new EventHandler(this.events.openGithub);
+                        else
+                        {
 
-                        ModsGroupbox.Controls.Add(ModGithubField);
+                            PictureBox EditLocalField = new System.Windows.Forms.PictureBox();
+                            EditLocalField.Image = global::ModManager4.Properties.Resources.edit;
+                            EditLocalField.BackColor = System.Drawing.Color.Transparent;
+                            EditLocalField.Location = new System.Drawing.Point((int)(770 * ratioX), (int)(categoryOffset * ratioY));
+                            EditLocalField.Name = "EditLocalField=" + mod.id;
+                            EditLocalField.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                            EditLocalField.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                            EditLocalField.TabStop = false;
+                            EditLocalField.Cursor = Cursors.Hand;
+                            EditLocalField.Click += new EventHandler(this.events.editLocalMod);
+
+                            CategoryPanel.Controls.Add(EditLocalField);
+
+                            PictureBox RemoveLocalField = new System.Windows.Forms.PictureBox();
+                            RemoveLocalField.Image = global::ModManager4.Properties.Resources.remove;
+                            RemoveLocalField.BackColor = System.Drawing.Color.Transparent;
+                            RemoveLocalField.Location = new System.Drawing.Point((int)(800 * ratioX), (int)(categoryOffset * ratioY));
+                            RemoveLocalField.Name = "RemoveLocalField=" + mod.id;
+                            RemoveLocalField.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                            RemoveLocalField.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                            RemoveLocalField.TabStop = false;
+                            RemoveLocalField.Cursor = Cursors.Hand;
+                            RemoveLocalField.Click += new EventHandler(this.events.removeLocalMod);
+
+                            CategoryPanel.Controls.Add(RemoveLocalField);
+
+                        }
+
+
+                        categoryOffset = categoryOffset + 30;
                     }
-                    
-                    else
-                    {
-
-                        PictureBox EditLocalField = new System.Windows.Forms.PictureBox();
-                        EditLocalField.Image = global::ModManager4.Properties.Resources.edit;
-                        EditLocalField.BackColor = System.Drawing.Color.Transparent;
-                        EditLocalField.Location = new System.Drawing.Point((int)(800 * ratioX), (int)(offset * ratioY));
-                        EditLocalField.Name = "EditLocalField=" + mod.id;
-                        EditLocalField.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
-                        EditLocalField.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                        EditLocalField.TabStop = false;
-                        EditLocalField.Cursor = Cursors.Hand;
-                        EditLocalField.Click += new EventHandler(this.events.editLocalMod);
-
-                        ModsGroupbox.Controls.Add(EditLocalField);
-
-                        PictureBox RemoveLocalField = new System.Windows.Forms.PictureBox();
-                        RemoveLocalField.Image = global::ModManager4.Properties.Resources.remove;
-                        RemoveLocalField.BackColor = System.Drawing.Color.Transparent;
-                        RemoveLocalField.Location = new System.Drawing.Point((int)(830 * ratioX), (int)(offset * ratioY));
-                        RemoveLocalField.Name = "RemoveLocalField=" + mod.id;
-                        RemoveLocalField.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
-                        RemoveLocalField.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-                        RemoveLocalField.TabStop = false;
-                        RemoveLocalField.Cursor = Cursors.Hand;
-                        RemoveLocalField.Click += new EventHandler(this.events.removeLocalMod);
-
-                        ModsGroupbox.Controls.Add(RemoveLocalField);
-
-                    }
-                    
-
-                    offset = offset + 30;
                 }
+
+                CategoryPanel.Size = new System.Drawing.Size((int)(820 * ratioX), (int)(categoryOffset * ratioY));
+                offset = offset + categoryOffset;
 
                 i++;
             }

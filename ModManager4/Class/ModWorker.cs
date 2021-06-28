@@ -372,6 +372,7 @@ namespace ModManager4.Class
             {
                 this.modManager.componentlist.events.startGame();
             }
+            this.modManager.componentlist.events.clearWithBlink();
             this.modManager.pagelist.renderPage("ModSelection");
         }
 
@@ -447,6 +448,13 @@ namespace ModManager4.Class
                         this.modManager.config.installedMods.Add(newMod);
                         this.modManager.config.update(this.modManager);
                         return;
+                    } else
+                    {
+                        this.modManager.logs.log("Error : Mod release incorrect for mod " + m.name);
+                        MessageBox.Show("Mod release inccorect for mod " + m.name + "\n" +
+                        "\n" +
+                        "If this problem persists, please send a ticket on Mod Manager's discord.", "Mod release inccorect", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Environment.Exit(0);
                     }
                 } else
                 {

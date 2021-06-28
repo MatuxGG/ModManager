@@ -23,7 +23,12 @@ namespace ModManager4.Class
 
         public string startMethod { get; set; }
 
-        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, Boolean enableCache, int resolutionX, int resolutionY, string startMethod)
+        public List<string> hiddenCategories { get; set; }
+
+        public string sortType { get; set; }
+        public string sortOrder { get; set; }
+
+        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, Boolean enableCache, int resolutionX, int resolutionY, string startMethod, List<string> hiddenCategories, string sortType, string sortOrder)
         {
             this.amongUsPath = amongUsPath;
             this.installedMods = installedMods;
@@ -32,22 +37,28 @@ namespace ModManager4.Class
             this.resolutionX = resolutionX;
             this.resolutionY = resolutionY;
             this.startMethod = startMethod;
+            this.hiddenCategories = hiddenCategories;
+            this.sortType = sortType;
+            this.sortOrder = sortOrder;
         }
 
         public Config()
         {
             this.amongUsPath = "";
-            this.installedMods = new List<InstalledMod>();
-            this.installedDependencies = new List<string>();
+            this.installedMods = new List<InstalledMod>() { };
+            this.installedDependencies = new List<string>() { };
             this.enableCache = true;
             this.resolutionX = 1300;
             this.resolutionY = 810;
             this.startMethod = "Direct Link";
+            this.hiddenCategories = new List<string>() { };
+            this.sortType = "Checked";
+            this.sortOrder = "A";
         }
 
         public List<int[]> getResolutions()
         {
-            List<int[]> temp = new List<int[]>();
+            List<int[]> temp = new List<int[]>() { };
             int x = 2560;
             int y = 1600;
             while (y >= 450)
@@ -57,7 +68,7 @@ namespace ModManager4.Class
                 y = y - 50;
             }
 
-            List<int[]> res = new List<int[]>();
+            List<int[]> res = new List<int[]>() { };
             foreach (int[] r in temp)
             {
                 if (r[0] + 100 < Screen.PrimaryScreen.Bounds.Width && r[1] + 100 < Screen.PrimaryScreen.Bounds.Height)
@@ -72,7 +83,6 @@ namespace ModManager4.Class
         public void check(ModManager modManager)
         {
             modManager.logs.log("Check mods integrity");
-
 
             while (this.checkWorker(modManager) == true)
             {
@@ -135,6 +145,9 @@ namespace ModManager4.Class
                     this.resolutionX = temp.resolutionX;
                     this.resolutionY = temp.resolutionY;
                     this.startMethod = temp.startMethod;
+                    this.hiddenCategories = temp.hiddenCategories;
+                    this.sortType = temp.sortType;
+                    this.sortOrder = temp.sortOrder;
                     this.update(modManager);
                     return;
                 } else
@@ -149,10 +162,13 @@ namespace ModManager4.Class
                 this.resolutionX = size[0];
                 this.resolutionY = size[1];
             }
-            this.installedMods = new List<InstalledMod>();
-            this.installedDependencies = new List<string>();
+            this.installedMods = new List<InstalledMod>() { };
+            this.installedDependencies = new List<string>() { };
             this.amongUsPath = null;
             this.startMethod = "Direct Link";
+            this.hiddenCategories = new List<string>() { };
+            this.sortType = "Checked";
+            this.sortOrder = "A";
 
             // Detection from Steam
             modManager.logs.log("- Getting Among Us path from Steam");
