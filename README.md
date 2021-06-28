@@ -1,45 +1,53 @@
 # Mod Manager
+Among Us Mod Manager is an open-source software for the popular game Among Us. It allows you to switch between many established mods with only a few clicks!
 
-Among us Mod Manager is an open source software for the popular game Among Us. It allows to switch between many known mods easily and much more !
+Join the discord: https://mm.matux.fr/discord
 
-Join the discord : https://mm.matux.fr/discord
+![ModManagerv4.0.10](https://amodsus.com/attachments/modmanager4-0-10-png.505/)
+## How to install?
 
-## How to install ?
+1. Download and install .net 5 [here](https://matux.fr/dotnet64). (Or alternatively from [here](https://matux.fr/dotnet32) if you are using a 32bit system.)
 
-- Download and install .net 5 [here](https://matux.fr/dotnet64).
-  (Or alternatively from [here](https://matux.fr/dotnet32) if you're using a 32bit system)
-- Download the latest "ModManagerInstaller.exe" in the release section.
-- Launch the installer and choose a location for the software. (You shouldn't select your Among Us directory !)
-- Everything is set up ! :)
+2. Download the latest "ModManagerInstaller.exe" from this GitHub’s [release page](https://github.com/MatuxGG/ModManager/releases).
 
-## How to use it ?
+3. Launch the installer and choose a location for the software. (You should not select your Among Us directory!)
+
+4. Everything is set up! :)
+
+## How to use it?
 
 - Launch Mod Manager from windows (use the shortcut or the search bar).
+
 - A window will open.
-- You can select any number of mod just by checking them. Then, press update to process the install.
+
+- You can select any number of mods just by checking them; then, press update to install them.
+
 - If at any point, you want to remove all mods installed, you have a button to do so.
-- You're ready to play ! :)
 
-## How to synchronise your installed mods with your friends ?
+- You are ready to play! :)
 
-On the bottom side, there is a code that you can share to your friends.
-They just have to enter it in their own Mod Manager to have the same configuration you have.
+## How to synchronize your installed mods with your friends?
+
+Below the mod manager menu, there is a code that you can share with your friends. After your friends entered the code into their Mod Manager, they will have the same configurations as you.
 
 ## Making a mod compatible with Mod Manager
 
-Publish a release in a public github repository for your mod. In this release, you can add either or both :
-- The dll file of the mod
-- A zip with of the Among Us modded directory
-- Then, join the discord and give me your repository link. It will be a pleasure adding your mod :)
+Publish a release in a public GitHub repository for your mod. In this release, you can add either (or both):
+
+- The .dll file of the mod
+
+- A .zip with of the Among Us modded directory
+
+Then, join the [discord](https://mm.matux.fr/discord) and send your repository link. It will be a pleasure adding your mod. :)
 
 ## Credits & Resources
 
 [BepInEx](https://github.com/NuclearPowered/BepInEx) - The main dependency of every mod\
-[Reactor](https://github.com/NuclearPowered/Reactor) - The most used modding API for Among Us\
+[Reactor](https://github.com/NuclearPowered/Reactor) - The most used modding API for Among Us
 
-Thanks to every mod creator. Go check their respective github repositories directly in Mod Manager !
+Thanks to every mod creator. Go check their respective GitHub repositories directly in Mod Manager!
 
-If you're a mod creator, your mod is on Mod Manager and you don't want me to include it, just send me a message in a github issue or in discord DM. I will remove them without asking any question.
+If your mod is on Mod Manager and you do not want me to include it, just send me a message in a GitHub issue or in discord DM. I will remove them without asking any question.
 
 ## License
 
