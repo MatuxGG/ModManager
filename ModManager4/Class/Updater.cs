@@ -90,7 +90,25 @@ namespace ModManager4.Class
             var tokenAuth = new Credentials(this.modManager.token);
             client.Credentials = tokenAuth;
             this.latestVersion = null;
-            Release r = await client.Repository.Release.GetLatest("MatuxGG", "ModManager");
+            Release r = new Release() { };
+            try
+            {
+                r = await client.Repository.Release.GetLatest("MatuxGG", "ModManager");
+            }
+            catch
+            {
+                this.modManager.logs.log("Error : Can't get Mod Manager release\n");
+                MessageBox.Show("Mod Manager's server is unreacheable.\n" +
+                    "\n" +
+                    "There are many possible reasons for this :\n" +
+                    "- You are disconnected from internet\n" +
+                    "- Your antivirus blocks Mod Manager\n" +
+                    "- Mod Manager server is down. Check its status on matux.fr\n" +
+                    "\n" +
+                    "If this problem persists, please send a ticket on Mod Manager's discord.", "Server unreacheable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Environment.Exit(0);
+            }
+            
             this.latestRelease = r;
             this.latestVersion = Version.Parse(r.TagName);
         }

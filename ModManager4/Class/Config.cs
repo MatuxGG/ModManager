@@ -107,7 +107,8 @@ namespace ModManager4.Class
                         return true;
                     }
                 }
-                
+
+
                 foreach (string file in mod.files)
                 {
                     if (File.Exists(this.amongUsPath + "\\" + file) == false && Directory.Exists(this.amongUsPath + "\\" + file) == false)
@@ -118,6 +119,7 @@ namespace ModManager4.Class
                     }
                 }
             }
+
             return false;
         }
 
@@ -144,6 +146,12 @@ namespace ModManager4.Class
                     this.enableCache = temp.enableCache;
                     this.resolutionX = temp.resolutionX;
                     this.resolutionY = temp.resolutionY;
+                    int[] size = this.getResolutions().First();
+                    if (this.resolutionX > size[0] || this.resolutionY > size[1])
+                    {
+                        this.resolutionX = size[0];
+                        this.resolutionY = size[1];
+                    }
                     this.startMethod = temp.startMethod;
                     this.hiddenCategories = temp.hiddenCategories;
                     this.sortType = temp.sortType;
@@ -293,6 +301,32 @@ namespace ModManager4.Class
                 }
             }
             return null;
+        }
+
+        public List<InstalledMod> getInstalledModsForCategory(ModManager modManager, Category cat)
+        {
+            List<InstalledMod> ret = new List<InstalledMod>() { };
+            foreach (InstalledMod im in this.installedMods)
+            {
+                if (modManager.modlist.getAvailableModById(im.id).category == cat.id)
+                {
+                    ret.Add(im);
+                }
+            }
+            return ret;
+        }
+
+        public List<InstalledMod> getInstalledModsWithoutAllInOne(ModManager modManager)
+        {
+            List<InstalledMod> ret = new List<InstalledMod>() { };
+            foreach (InstalledMod im in this.installedMods)
+            {
+                if (modManager.modlist.getModById(im.id).type != "allInOne")
+                {
+                    ret.Add(im);
+                }
+            }
+            return ret;
         }
 
         public bool exists(ModManager modManager)

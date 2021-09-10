@@ -37,17 +37,17 @@ namespace ModManager4.Class
 
             Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
 
-            double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
-            double ratioY = (double)this.modManager.config.resolutionY / 810.0;
+            double ratioX = (double)this.modManager.config.resolutionX / 2560.0;
+            double ratioY = (double)this.modManager.config.resolutionY / 1600.0;
 
             Component c = new Component("Header");
 
             PictureBox AnnouncePic = new System.Windows.Forms.PictureBox();
             AnnouncePic.Image = global::ModManager4.Properties.Resources.news;
             AnnouncePic.BackColor = System.Drawing.Color.Transparent;
-            AnnouncePic.Location = new System.Drawing.Point((int)(50* ratioX), (int)(70* ratioY));
+            AnnouncePic.Location = new System.Drawing.Point((int)(100* ratioX), (int)(140* ratioY));
             AnnouncePic.Name = "AnnouncePic";
-            AnnouncePic.Size = new System.Drawing.Size((int)(64 * ratioX), (int)(64 * ratioY));
+            AnnouncePic.Size = new System.Drawing.Size((int)(128 * ratioX), (int)(128 * ratioY));
             AnnouncePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             AnnouncePic.TabStop = false;
             AnnouncePic.Cursor = Cursors.Hand;
@@ -61,12 +61,12 @@ namespace ModManager4.Class
             PictureBox InfoPic = new System.Windows.Forms.PictureBox();
             InfoPic.Image = Properties.Resources.info;
             InfoPic.BackColor = System.Drawing.Color.Transparent;
-            InfoPic.Location = new System.Drawing.Point((int)(1000 * ratioX), (int)(20 * ratioY));
+            InfoPic.Location = new System.Drawing.Point((int)(1960 * ratioX), (int)(40 * ratioY));
             InfoPic.Name = "InfoPic";
             InfoPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             InfoPic.TabStop = false;
             InfoPic.Cursor = Cursors.Hand;
-            InfoPic.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            InfoPic.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(100 * ratioY));
             InfoPic.MouseLeave += new EventHandler(this.tooltips.hide);
             InfoPic.MouseHover += new EventHandler(this.tooltips.show);
             InfoPic.Click += new EventHandler(this.events.openInfo);
@@ -84,13 +84,74 @@ namespace ModManager4.Class
             VersionField.Name = "VersionField";
             VersionField.TextAlign = ContentAlignment.MiddleCenter;
             VersionField.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            VersionField.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(145 * ratioY));
-            VersionField.Size = new System.Drawing.Size((int)(500 * ratioX), (int)(30 * ratioY));
+            VersionField.Location = new System.Drawing.Point((int)(800 * ratioX), (int)(290 * ratioY));
+            VersionField.Size = new System.Drawing.Size((int)(1000 * ratioX), (int)(60 * ratioY));
             string version = this.modManager.version.ToString();
             VersionField.Text = "Version " + version.Remove(version.Length - 2);
             VersionField.Visible = false;
             this.modManager.Controls.Add(VersionField);
             c.addControl(VersionField);
+
+            System.Windows.Forms.Label StatusField = new System.Windows.Forms.Label();
+            StatusField.BackColor = System.Drawing.Color.Transparent;
+            StatusField.ForeColor = System.Drawing.Color.Yellow;
+            StatusField.Name = "StatusField";
+            StatusField.TextAlign = ContentAlignment.MiddleLeft;
+            StatusField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            StatusField.Location = new System.Drawing.Point((int)(2170 * ratioX), (int)(1420 * ratioY));
+            StatusField.Size = new System.Drawing.Size((int)(180 * ratioX), (int)(40 * ratioY));
+            StatusField.Text = "Server status : ";
+            StatusField.Visible = false;
+            this.modManager.Controls.Add(StatusField);
+            c.addControl(StatusField);
+
+            System.Windows.Forms.Label StatusLabel = new System.Windows.Forms.Label();
+            StatusLabel.BackColor = System.Drawing.Color.Transparent;
+            StatusLabel.Name = "StatusLabel";
+            StatusLabel.TextAlign = ContentAlignment.MiddleLeft;
+            StatusLabel.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            StatusLabel.Location = new System.Drawing.Point((int)(2350 * ratioX), (int)(1420 * ratioY));
+            StatusLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(40 * ratioY));
+            
+            if (this.modManager.serverConfig.enabled)
+            {
+                StatusLabel.ForeColor = System.Drawing.Color.LightGreen;
+                StatusLabel.Text = "Online";
+            } else
+            {
+                StatusLabel.ForeColor = System.Drawing.Color.Red;
+                StatusLabel.Text = "Offline";
+            }
+
+            StatusLabel.Visible = false;
+            this.modManager.Controls.Add(StatusLabel);
+            c.addControl(StatusLabel);
+
+            System.Windows.Forms.Label GameVersionField = new System.Windows.Forms.Label();
+            GameVersionField.BackColor = System.Drawing.Color.Transparent;
+            GameVersionField.ForeColor = System.Drawing.Color.Yellow;
+            GameVersionField.Name = "GameVersionField";
+            GameVersionField.TextAlign = ContentAlignment.MiddleLeft;
+            GameVersionField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            GameVersionField.Location = new System.Drawing.Point((int)(2170 * ratioX), (int)(1460 * ratioY));
+            GameVersionField.Size = new System.Drawing.Size((int)(180 * ratioX), (int)(40 * ratioY));
+            GameVersionField.Text = "Game version : ";
+            GameVersionField.Visible = false;
+            this.modManager.Controls.Add(GameVersionField);
+            c.addControl(GameVersionField);
+
+            System.Windows.Forms.Label GameVersionLabel = new System.Windows.Forms.Label();
+            GameVersionLabel.BackColor = System.Drawing.Color.Transparent;
+            GameVersionLabel.ForeColor = System.Drawing.Color.Cyan;
+            GameVersionLabel.Name = "GameVersionLabel";
+            GameVersionLabel.TextAlign = ContentAlignment.MiddleLeft;
+            GameVersionLabel.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            GameVersionLabel.Location = new System.Drawing.Point((int)(2350 * ratioX), (int)(1460 * ratioY));
+            GameVersionLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(40 * ratioY));
+            GameVersionLabel.Text = this.modManager.serverConfig.gameVersion;
+            GameVersionLabel.Visible = false;
+            this.modManager.Controls.Add(GameVersionLabel);
+            c.addControl(GameVersionLabel);
 
             System.Windows.Forms.Label ByMatuxField = new System.Windows.Forms.Label();
             ByMatuxField.BackColor = System.Drawing.Color.Transparent;
@@ -98,8 +159,8 @@ namespace ModManager4.Class
             ByMatuxField.Name = "ByMatuxField";
             ByMatuxField.TextAlign = ContentAlignment.MiddleLeft;
             ByMatuxField.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ByMatuxField.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(20 * ratioY));
-            ByMatuxField.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(30 * ratioY));
+            ByMatuxField.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(40 * ratioY));
+            ByMatuxField.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(60 * ratioY));
             ByMatuxField.Text = "By Matux";
             ByMatuxField.Visible = false;
             this.modManager.Controls.Add(ByMatuxField);
@@ -108,12 +169,12 @@ namespace ModManager4.Class
             PictureBox MatuxRoadmapLabel = new System.Windows.Forms.PictureBox();
             MatuxRoadmapLabel.Image = Properties.Resources.roadmap;
             MatuxRoadmapLabel.BackColor = System.Drawing.Color.Transparent;
-            MatuxRoadmapLabel.Location = new System.Drawing.Point((int)(1068 * ratioX), (int)(18 * ratioY));
+            MatuxRoadmapLabel.Location = new System.Drawing.Point((int)(2100 * ratioX), (int)(36 * ratioY));
             MatuxRoadmapLabel.Name = "MatuxRoadmapLabel";
             MatuxRoadmapLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             MatuxRoadmapLabel.TabStop = false;
             MatuxRoadmapLabel.Cursor = Cursors.Hand;
-            MatuxRoadmapLabel.Size = new System.Drawing.Size((int)(55 * ratioX), (int)(55 * ratioY));
+            MatuxRoadmapLabel.Size = new System.Drawing.Size((int)(110 * ratioX), (int)(110 * ratioY));
             MatuxRoadmapLabel.MouseLeave += new EventHandler(this.tooltips.hide);
             MatuxRoadmapLabel.MouseHover += new EventHandler(this.tooltips.show);
             MatuxRoadmapLabel.Click += new EventHandler(this.events.openMatuxRoadmap);
@@ -123,13 +184,13 @@ namespace ModManager4.Class
 
             PictureBox MMDiscordLabel = new System.Windows.Forms.PictureBox();
             MMDiscordLabel.Image = Properties.Resources.discord;
-            MMDiscordLabel.Location = new System.Drawing.Point((int)(1140 * ratioX), (int)(20 * ratioY));
+            MMDiscordLabel.Location = new System.Drawing.Point((int)(2240 * ratioX), (int)(40 * ratioY));
             MMDiscordLabel.BackColor = System.Drawing.Color.Transparent;
             MMDiscordLabel.Name = "MMDiscordLabel";
             MMDiscordLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             MMDiscordLabel.TabStop = false;
             MMDiscordLabel.Cursor = Cursors.Hand;
-            MMDiscordLabel.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            MMDiscordLabel.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(100 * ratioY));
             MMDiscordLabel.MouseLeave += new EventHandler(this.tooltips.hide);
             MMDiscordLabel.MouseHover += new EventHandler(this.tooltips.show);
             MMDiscordLabel.Click += new EventHandler(this.events.openMMDiscord);
@@ -140,12 +201,12 @@ namespace ModManager4.Class
             PictureBox MatuxGithubLabel = new System.Windows.Forms.PictureBox();
             MatuxGithubLabel.Image = Properties.Resources.github;
             MatuxGithubLabel.BackColor = System.Drawing.Color.Transparent;
-            MatuxGithubLabel.Location = new System.Drawing.Point((int)(1210 * ratioX), (int)(20 * ratioY));
+            MatuxGithubLabel.Location = new System.Drawing.Point((int)(2380 * ratioX), (int)(40 * ratioY));
             MatuxGithubLabel.Name = "MatuxGithubLabel";
             MatuxGithubLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             MatuxGithubLabel.TabStop = false;
             MatuxGithubLabel.Cursor = Cursors.Hand;
-            MatuxGithubLabel.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            MatuxGithubLabel.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(100 * ratioY));
             MatuxGithubLabel.MouseLeave += new EventHandler(this.tooltips.hide);
             MatuxGithubLabel.MouseHover += new EventHandler(this.tooltips.show);
             MatuxGithubLabel.Click += new EventHandler(this.events.openMatuxGithub);
@@ -162,8 +223,8 @@ namespace ModManager4.Class
             PlayGameLabel.Image = global::ModManager4.Properties.Resources.start_game;
             PlayGameLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             PlayGameLabel.Name = "PlayGameLabel";
-            PlayGameLabel.Location = new System.Drawing.Point((int)(570 * ratioX), (int)(680 * ratioY));
-            PlayGameLabel.Size = new System.Drawing.Size((int)(240 * ratioX), (int)(80 * ratioY));
+            PlayGameLabel.Location = new System.Drawing.Point((int)(1140 * ratioX), (int)(1380 * ratioY));
+            PlayGameLabel.Size = new System.Drawing.Size((int)(480 * ratioX), (int)(160 * ratioY));
             PlayGameLabel.Cursor = Cursors.Hand;
             PlayGameLabel.Visible = false;
             PlayGameLabel.TabStop = false;
@@ -177,9 +238,9 @@ namespace ModManager4.Class
             PictureBox SettingsPic = new System.Windows.Forms.PictureBox();
             SettingsPic.Image = global::ModManager4.Properties.Resources.settings;
             SettingsPic.BackColor = System.Drawing.Color.Transparent;
-            SettingsPic.Location = new System.Drawing.Point((int)(850 * ratioX), (int)(680 * ratioY));
+            SettingsPic.Location = new System.Drawing.Point((int)(1700 * ratioX), (int)(1380 * ratioY));
             SettingsPic.Name = "SettingsPic";
-            SettingsPic.Size = new System.Drawing.Size((int)(210 * ratioX), (int)(70 * ratioY));
+            SettingsPic.Size = new System.Drawing.Size((int)(420 * ratioX), (int)(140 * ratioY));
             SettingsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             SettingsPic.TabStop = false;
             SettingsPic.Cursor = Cursors.Hand;
@@ -193,9 +254,9 @@ namespace ModManager4.Class
             PictureBox CodePic = new System.Windows.Forms.PictureBox();
             CodePic.Image = global::ModManager4.Properties.Resources.code;
             CodePic.BackColor = System.Drawing.Color.Transparent;
-            CodePic.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(695 * ratioY));
+            CodePic.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(1410 * ratioY));
             CodePic.Name = "CodePic";
-            CodePic.Size = new System.Drawing.Size((int)(95 * ratioX), (int)(40 * ratioY));
+            CodePic.Size = new System.Drawing.Size((int)(190 * ratioX), (int)(80 * ratioY));
             CodePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             CodePic.TabStop = false;
             CodePic.Visible = false;
@@ -206,10 +267,10 @@ namespace ModManager4.Class
             System.Windows.Forms.TextBox CodeTextbox = new System.Windows.Forms.TextBox();
             CodeTextbox.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             CodeTextbox.ForeColor = SystemColors.ControlText;
-            CodeTextbox.Location = new System.Drawing.Point((int)(310 * ratioX), (int)(700 * ratioY));
+            CodeTextbox.Location = new System.Drawing.Point((int)(620 * ratioX), (int)(1420 * ratioY));
             CodeTextbox.Name = "CodeTextbox";
             CodeTextbox.TabStop = false;
-            CodeTextbox.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(20 * ratioY));
+            CodeTextbox.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(40 * ratioY));
             CodeTextbox.Visible = false;
             CodeTextbox.MouseLeave += new EventHandler(this.tooltips.hide);
             CodeTextbox.MouseHover += new EventHandler(this.tooltips.show);
@@ -219,10 +280,10 @@ namespace ModManager4.Class
             PictureBox ValidCodePic = new System.Windows.Forms.PictureBox();
             ValidCodePic.Image = global::ModManager4.Properties.Resources.valid;
             ValidCodePic.BackColor = System.Drawing.Color.Transparent;
-            ValidCodePic.Location = new System.Drawing.Point((int)(420 * ratioX), (int)(695 * ratioY));
+            ValidCodePic.Location = new System.Drawing.Point((int)(840 * ratioX), (int)(1410 * ratioY));
             ValidCodePic.Name = "ValidCodePic";
             ValidCodePic.Cursor = Cursors.Hand;
-            ValidCodePic.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
+            ValidCodePic.Size = new System.Drawing.Size((int)(80 * ratioX), (int)(80 * ratioY));
             ValidCodePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             ValidCodePic.TabStop = false;
             ValidCodePic.Visible = false;
@@ -235,10 +296,10 @@ namespace ModManager4.Class
             PictureBox ExportCodePic = new System.Windows.Forms.PictureBox();
             ExportCodePic.Image = global::ModManager4.Properties.Resources.export;
             ExportCodePic.BackColor = System.Drawing.Color.Transparent;
-            ExportCodePic.Location = new System.Drawing.Point((int)(480 * ratioX), (int)(695 * ratioY));
+            ExportCodePic.Location = new System.Drawing.Point((int)(960 * ratioX), (int)(1410 * ratioY));
             ExportCodePic.Name = "ExportCodePic";
             ExportCodePic.Cursor = Cursors.Hand;
-            ExportCodePic.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
+            ExportCodePic.Size = new System.Drawing.Size((int)(80 * ratioX), (int)(80 * ratioY));
             ExportCodePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             ExportCodePic.TabStop = false;
             ExportCodePic.Visible = false;
@@ -253,12 +314,12 @@ namespace ModManager4.Class
             c = new Component("PathSelection");
 
             Panel PagePanelPath = new Panel();
-            PagePanelPath.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelPath.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelPath.Name = "PagePanelPath";
             PagePanelPath.BackColor = Color.Black;
             PagePanelPath.BorderStyle = BorderStyle.Fixed3D;
             PagePanelPath.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelPath.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelPath.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelPath.TabStop = false;
             PagePanelPath.Visible = false;
             this.modManager.Controls.Add(PagePanelPath);
@@ -269,9 +330,9 @@ namespace ModManager4.Class
             AmongFolderTitle.BackColor = Color.Transparent;
             AmongFolderTitle.ForeColor = SystemColors.Control;
             AmongFolderTitle.TextAlign = ContentAlignment.MiddleCenter;
-            AmongFolderTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            AmongFolderTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             AmongFolderTitle.Name = "AmongFolderTitle";
-            AmongFolderTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            AmongFolderTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             AmongFolderTitle.Text = "Among Us folder selection";
             PagePanelPath.Controls.Add(AmongFolderTitle);
 
@@ -279,17 +340,17 @@ namespace ModManager4.Class
             AmongUsFolderInfo.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsFolderInfo.ForeColor = System.Drawing.SystemColors.Control;
             AmongUsFolderInfo.TextAlign = ContentAlignment.MiddleCenter;
-            AmongUsFolderInfo.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
+            AmongUsFolderInfo.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(300 * ratioY));
             AmongUsFolderInfo.Name = "AmongUsFolderInfo";
-            AmongUsFolderInfo.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(20 * ratioY));
+            AmongUsFolderInfo.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(40 * ratioY));
             AmongUsFolderInfo.Text = "Please, select the folder where Among Us is installed !";
             PagePanelPath.Controls.Add(AmongUsFolderInfo);
 
             Button AmongUsDirectorySelection = new System.Windows.Forms.Button();
             AmongUsDirectorySelection.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            AmongUsDirectorySelection.Location = new System.Drawing.Point((int)(258 * ratioX), (int)(300 * ratioY));
+            AmongUsDirectorySelection.Location = new System.Drawing.Point((int)(520 * ratioX), (int)(600 * ratioY));
             AmongUsDirectorySelection.Name = "AmongUsDirectorySelection";
-            AmongUsDirectorySelection.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
+            AmongUsDirectorySelection.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(100 * ratioY));
             AmongUsDirectorySelection.Text = "Select folder";
             AmongUsDirectorySelection.TabStop = false;
             AmongUsDirectorySelection.Click += new EventHandler(this.events.selectFolder);
@@ -303,9 +364,9 @@ namespace ModManager4.Class
             PictureBox BackToMods = new System.Windows.Forms.PictureBox();
             BackToMods.Image = global::ModManager4.Properties.Resources.back;
             BackToMods.BackColor = System.Drawing.Color.Transparent;
-            BackToMods.Location = new System.Drawing.Point((int)(50 * ratioX), (int)(350 * ratioY));
+            BackToMods.Location = new System.Drawing.Point((int)(100 * ratioX), (int)(700 * ratioY));
             BackToMods.Name = "BackToMods";
-            BackToMods.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(100 * ratioY));
+            BackToMods.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(200 * ratioY));
             BackToMods.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             BackToMods.TabStop = false;
             BackToMods.Cursor = Cursors.Hand;
@@ -325,11 +386,11 @@ namespace ModManager4.Class
             c = new Component("Info");
 
             Panel PagePanelInfo = new Panel();
-            PagePanelInfo.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelInfo.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelInfo.Name = "PagePanelInfo";
             PagePanelInfo.BackColor = Color.Black;
             PagePanelInfo.BorderStyle = BorderStyle.Fixed3D;
-            PagePanelInfo.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelInfo.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelInfo.TabStop = false;
             PagePanelInfo.Visible = false;
             this.modManager.Controls.Add(PagePanelInfo);
@@ -340,16 +401,16 @@ namespace ModManager4.Class
             InfoTitle.BackColor = Color.Transparent;
             InfoTitle.ForeColor = SystemColors.Control;
             InfoTitle.TextAlign = ContentAlignment.MiddleCenter;
-            InfoTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            InfoTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             InfoTitle.Name = "InfoTitle";
-            InfoTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            InfoTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             InfoTitle.Text = "Information";
             PagePanelInfo.Controls.Add(InfoTitle);
 
             Panel ContentPanelInfo = new Panel();
-            ContentPanelInfo.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(70 * ratioY));
+            ContentPanelInfo.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(140 * ratioY));
             ContentPanelInfo.Name = "ContentPanelInfo";
-            ContentPanelInfo.Size = new System.Drawing.Size((int)(876 * ratioX), (int)(390 * ratioY));
+            ContentPanelInfo.Size = new System.Drawing.Size((int)(1750 * ratioX), (int)(780 * ratioY));
             ContentPanelInfo.AutoScroll = true;
             ContentPanelInfo.TabStop = false;
             PagePanelInfo.Controls.Add(ContentPanelInfo);
@@ -360,7 +421,7 @@ namespace ModManager4.Class
             InfoLabel.TextAlign = ContentAlignment.TopLeft;
             InfoLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(0 * ratioY));
             InfoLabel.AutoSize = true;
-            InfoLabel.MaximumSize = new Size((int)(800 * ratioX), 0);
+            InfoLabel.MaximumSize = new Size((int)(1620 * ratioX), 0);
             InfoLabel.Name = "InfoLabel";
             ContentPanelInfo.Controls.Add(InfoLabel);
 
@@ -383,12 +444,12 @@ namespace ModManager4.Class
             c = new Component("Settings");
 
             Panel PagePanelSettings = new Panel();
-            PagePanelSettings.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelSettings.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelSettings.Name = "PagePanelSettings";
             PagePanelSettings.BackColor = Color.Black;
             PagePanelSettings.BorderStyle = BorderStyle.Fixed3D;
             PagePanelSettings.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelSettings.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelSettings.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelSettings.TabStop = false;
             PagePanelSettings.Visible = false;
             this.modManager.Controls.Add(PagePanelSettings);
@@ -399,26 +460,26 @@ namespace ModManager4.Class
             SettingsTitle.BackColor = Color.Transparent;
             SettingsTitle.ForeColor = SystemColors.Control;
             SettingsTitle.TextAlign = ContentAlignment.MiddleCenter;
-            SettingsTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            SettingsTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             SettingsTitle.Name = "SettingsTitle";
-            SettingsTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            SettingsTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             SettingsTitle.Text = "Settings";
             PagePanelSettings.Controls.Add(SettingsTitle);
 
             System.Windows.Forms.Label AmongUsDirSwitchLabel = new System.Windows.Forms.Label();
             AmongUsDirSwitchLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsDirSwitchLabel.ForeColor = System.Drawing.SystemColors.Control;
-            AmongUsDirSwitchLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(100 * ratioY));
+            AmongUsDirSwitchLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(200 * ratioY));
             AmongUsDirSwitchLabel.Name = "AmongUsDirSwitchLabel";
-            AmongUsDirSwitchLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            AmongUsDirSwitchLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
             AmongUsDirSwitchLabel.Text = "Among Us directory :";
             PagePanelSettings.Controls.Add(AmongUsDirSwitchLabel);
 
             Button AmongUsDirSwitchButton = new System.Windows.Forms.Button();
             AmongUsDirSwitchButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            AmongUsDirSwitchButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(100 * ratioY));
+            AmongUsDirSwitchButton.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(200 * ratioY));
             AmongUsDirSwitchButton.Name = "AmongUsDirSwitchButton";
-            AmongUsDirSwitchButton.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            AmongUsDirSwitchButton.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
             AmongUsDirSwitchButton.Text = "Change";
             AmongUsDirSwitchButton.UseVisualStyleBackColor = true;
             AmongUsDirSwitchButton.TabStop = false;
@@ -429,9 +490,9 @@ namespace ModManager4.Class
 
             Button OpenAmongUs = new System.Windows.Forms.Button();
             OpenAmongUs.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            OpenAmongUs.Location = new System.Drawing.Point((int)(450 * ratioX), (int)(100 * ratioY));
+            OpenAmongUs.Location = new System.Drawing.Point((int)(900 * ratioX), (int)(200 * ratioY));
             OpenAmongUs.Name = "OpenAmongUs";
-            OpenAmongUs.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            OpenAmongUs.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
             OpenAmongUs.Text = "Open";
             OpenAmongUs.TabStop = false;
             OpenAmongUs.UseVisualStyleBackColor = true;
@@ -443,17 +504,17 @@ namespace ModManager4.Class
             System.Windows.Forms.Label MethodLabel = new System.Windows.Forms.Label();
             MethodLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             MethodLabel.ForeColor = System.Drawing.SystemColors.Control;
-            MethodLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
+            MethodLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(300 * ratioY));
             MethodLabel.Name = "MethodLabel";
-            MethodLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            MethodLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
             MethodLabel.Text = "Change start method :";
             PagePanelSettings.Controls.Add(MethodLabel);
 
             ComboBox MethodComboBox = new ComboBox();
             MethodComboBox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            MethodComboBox.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(150 * ratioY));
+            MethodComboBox.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(300 * ratioY));
             MethodComboBox.Name = "MethodComboBox";
-            MethodComboBox.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            MethodComboBox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
             MethodComboBox.TabStop = false;
             MethodComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             MethodComboBox.MouseLeave += new EventHandler(this.tooltips.hide);
@@ -473,17 +534,17 @@ namespace ModManager4.Class
             System.Windows.Forms.Label RemoveLocalLabel = new System.Windows.Forms.Label();
             RemoveLocalLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             RemoveLocalLabel.ForeColor = System.Drawing.SystemColors.Control;
-            RemoveLocalLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(200 * ratioY));
+            RemoveLocalLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(400 * ratioY));
             RemoveLocalLabel.Name = "RemoveLocalLabel";
-            RemoveLocalLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            RemoveLocalLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
             RemoveLocalLabel.Text = "Remove local mods :";
             PagePanelSettings.Controls.Add(RemoveLocalLabel);
 
             Button RemoveLocalButton = new System.Windows.Forms.Button();
             RemoveLocalButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            RemoveLocalButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(200 * ratioY));
+            RemoveLocalButton.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(400 * ratioY));
             RemoveLocalButton.Name = "RemoveLocalButton";
-            RemoveLocalButton.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            RemoveLocalButton.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
             RemoveLocalButton.Text = "Remove";
             RemoveLocalButton.UseVisualStyleBackColor = true;
             RemoveLocalButton.MouseLeave += new EventHandler(this.tooltips.hide);
@@ -495,17 +556,17 @@ namespace ModManager4.Class
             System.Windows.Forms.Label ResolutionLabel = new System.Windows.Forms.Label();
             ResolutionLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ResolutionLabel.ForeColor = System.Drawing.SystemColors.Control;
-            ResolutionLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(250 * ratioY));
+            ResolutionLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(500 * ratioY));
             ResolutionLabel.Name = "ResolutionLabel";
-            ResolutionLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            ResolutionLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
             ResolutionLabel.Text = "Change resolution :";
             PagePanelSettings.Controls.Add(ResolutionLabel);
 
             ComboBox ResolutionComboBox = new ComboBox();
             ResolutionComboBox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ResolutionComboBox.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(250 * ratioY));
+            ResolutionComboBox.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(500 * ratioY));
             ResolutionComboBox.Name = "ResolutionComboBox";
-            ResolutionComboBox.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            ResolutionComboBox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
             ResolutionComboBox.TabStop = false;
             ResolutionComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             ResolutionComboBox.MouseLeave += new EventHandler(this.tooltips.hide);
@@ -528,17 +589,17 @@ namespace ModManager4.Class
             System.Windows.Forms.Label EnableCacheLabel = new System.Windows.Forms.Label();
             EnableCacheLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             EnableCacheLabel.ForeColor = System.Drawing.SystemColors.Control;
-            EnableCacheLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(300 * ratioY));
+            EnableCacheLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(600 * ratioY));
             EnableCacheLabel.Name = "EnableCacheLabel";
-            EnableCacheLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            EnableCacheLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
             EnableCacheLabel.Text = "Enable cache :";
             PagePanelSettings.Controls.Add(EnableCacheLabel);
 
             MMCheckbox EnableCacheCheckbox = new MMCheckbox(this.modManager);
             EnableCacheCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            EnableCacheCheckbox.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(300 * ratioY));
+            EnableCacheCheckbox.Location = new System.Drawing.Point((int)(600 * ratioX), (int)(600 * ratioY));
             EnableCacheCheckbox.Name = "EnableCacheCheckbox";
-            EnableCacheCheckbox.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            EnableCacheCheckbox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
             EnableCacheCheckbox.UseVisualStyleBackColor = true;
             EnableCacheCheckbox.MouseLeave += new EventHandler(this.tooltips.hide);
             EnableCacheCheckbox.MouseHover += new EventHandler(this.tooltips.show);
@@ -558,17 +619,17 @@ namespace ModManager4.Class
             System.Windows.Forms.Label OpenLogsLabel = new System.Windows.Forms.Label();
             OpenLogsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             OpenLogsLabel.ForeColor = System.Drawing.SystemColors.Control;
-            OpenLogsLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(350 * ratioY));
+            OpenLogsLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(700 * ratioY));
             OpenLogsLabel.Name = "OpenLogsLabel";
-            OpenLogsLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            OpenLogsLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
             OpenLogsLabel.Text = "Open logs folder :";
             PagePanelSettings.Controls.Add(OpenLogsLabel);
 
             Button OpenLogsButton = new System.Windows.Forms.Button();
             OpenLogsButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            OpenLogsButton.Location = new System.Drawing.Point((int)(250 * ratioX), (int)(350 * ratioY));
+            OpenLogsButton.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(700 * ratioY));
             OpenLogsButton.Name = "OpenLogsButton";
-            OpenLogsButton.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            OpenLogsButton.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
             OpenLogsButton.Text = "Open";
             OpenLogsButton.UseVisualStyleBackColor = true;
             OpenLogsButton.MouseLeave += new EventHandler(this.tooltips.hide);
@@ -582,11 +643,11 @@ namespace ModManager4.Class
             c = new Component("News");
 
             Panel PagePanelNews = new Panel();
-            PagePanelNews.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelNews.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelNews.Name = "PagePanelNews";
             PagePanelNews.BackColor = Color.Black;
             PagePanelNews.BorderStyle = BorderStyle.Fixed3D;
-            PagePanelNews.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelNews.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelNews.TabStop = false;
             PagePanelNews.Visible = false;
             this.modManager.Controls.Add(PagePanelNews);
@@ -597,16 +658,16 @@ namespace ModManager4.Class
             NewsTitle.BackColor = Color.Transparent;
             NewsTitle.ForeColor = SystemColors.Control;
             NewsTitle.TextAlign = ContentAlignment.MiddleCenter;
-            NewsTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            NewsTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             NewsTitle.Name = "NewsTitle";
-            NewsTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            NewsTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             NewsTitle.Text = "News";
             PagePanelNews.Controls.Add(NewsTitle);
 
             Panel ContentPanelNews = new Panel();
-            ContentPanelNews.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(70 * ratioY));
+            ContentPanelNews.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(140 * ratioY));
             ContentPanelNews.Name = "ContentPanelNews";
-            ContentPanelNews.Size = new System.Drawing.Size((int)(876 * ratioX), (int)(390 * ratioY));
+            ContentPanelNews.Size = new System.Drawing.Size((int)(1750 * ratioX), (int)(780 * ratioY));
             ContentPanelNews.AutoScroll = true;
             ContentPanelNews.TabStop = false;
             PagePanelNews.Controls.Add(ContentPanelNews);
@@ -618,7 +679,7 @@ namespace ModManager4.Class
             NewsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(0 * ratioY));
             NewsLabel.Name = "NewsLabel";
             NewsLabel.AutoSize = true;
-            NewsLabel.MaximumSize = new Size((int)(800 * ratioX), 0);
+            NewsLabel.MaximumSize = new Size((int)(1620 * ratioX), 0);
             ContentPanelNews.Controls.Add(NewsLabel);
 
             try
@@ -640,12 +701,12 @@ namespace ModManager4.Class
             c = new Component("AfterUninstallMods");
 
             Panel PagePanelUnMods = new Panel();
-            PagePanelUnMods.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelUnMods.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelUnMods.Name = "PagePanelUnMods";
             PagePanelUnMods.BackColor = Color.Black;
             PagePanelUnMods.BorderStyle = BorderStyle.Fixed3D;
             PagePanelUnMods.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelUnMods.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelUnMods.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelUnMods.TabStop = false;
             PagePanelUnMods.Visible = false;
             this.modManager.Controls.Add(PagePanelUnMods);
@@ -656,9 +717,9 @@ namespace ModManager4.Class
             UninstallModsTitle.BackColor = Color.Transparent;
             UninstallModsTitle.ForeColor = SystemColors.Control;
             UninstallModsTitle.TextAlign = ContentAlignment.MiddleCenter;
-            UninstallModsTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            UninstallModsTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             UninstallModsTitle.Name = "UninstallModsTitle";
-            UninstallModsTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            UninstallModsTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             UninstallModsTitle.Text = "All mods uninstalled";
             PagePanelUnMods.Controls.Add(UninstallModsTitle);
 
@@ -666,17 +727,17 @@ namespace ModManager4.Class
             UninstallModsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UninstallModsLabel.ForeColor = System.Drawing.SystemColors.Control;
             UninstallModsLabel.TextAlign = ContentAlignment.MiddleCenter;
-            UninstallModsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
+            UninstallModsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(300 * ratioY));
             UninstallModsLabel.Name = "UninstallModsLabel";
-            UninstallModsLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(20 * ratioY));
+            UninstallModsLabel.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(40 * ratioY));
             UninstallModsLabel.Text = "All mods have been succesfully uninstalled !";
             PagePanelUnMods.Controls.Add(UninstallModsLabel);
 
             Button UninstallModsButton = new System.Windows.Forms.Button();
             UninstallModsButton.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            UninstallModsButton.Location = new System.Drawing.Point((int)(258 * ratioX), (int)(300 * ratioY));
+            UninstallModsButton.Location = new System.Drawing.Point((int)(520 * ratioX), (int)(600 * ratioY));
             UninstallModsButton.Name = "UninstallModsButton";
-            UninstallModsButton.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
+            UninstallModsButton.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(100 * ratioY));
             UninstallModsButton.Text = "OK";
             UninstallModsButton.TabStop = false;
             UninstallModsButton.Click += new EventHandler(this.events.openMods);
@@ -688,12 +749,12 @@ namespace ModManager4.Class
             c = new Component("BeforeUpdateMods");
 
             Panel PagePaneBefUp = new Panel();
-            PagePaneBefUp.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePaneBefUp.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePaneBefUp.Name = "PagePaneBefUp";
             PagePaneBefUp.BackColor = Color.Black;
             PagePaneBefUp.BorderStyle = BorderStyle.Fixed3D;
             PagePaneBefUp.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePaneBefUp.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePaneBefUp.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePaneBefUp.TabStop = false;
             PagePaneBefUp.Visible = false;
             this.modManager.Controls.Add(PagePaneBefUp);
@@ -704,9 +765,9 @@ namespace ModManager4.Class
             UpdateModsTitle.BackColor = Color.Transparent;
             UpdateModsTitle.ForeColor = SystemColors.Control;
             UpdateModsTitle.TextAlign = ContentAlignment.MiddleCenter;
-            UpdateModsTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            UpdateModsTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             UpdateModsTitle.Name = "UpdateModsTitle";
-            UpdateModsTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            UpdateModsTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             UpdateModsTitle.Text = "Updating mods";
             PagePaneBefUp.Controls.Add(UpdateModsTitle);
 
@@ -714,15 +775,15 @@ namespace ModManager4.Class
             UpdateModsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UpdateModsLabel.ForeColor = System.Drawing.SystemColors.Control;
             UpdateModsLabel.TextAlign = ContentAlignment.MiddleCenter;
-            UpdateModsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
+            UpdateModsLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(300 * ratioY));
             UpdateModsLabel.Name = "UpdateModsLabel";
-            UpdateModsLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(20 * ratioY));
+            UpdateModsLabel.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(40 * ratioY));
             UpdateModsLabel.Text = "Mod Manager is updating your mods. Please wait ...";
             PagePaneBefUp.Controls.Add(UpdateModsLabel);
 
             ProgressBar UpdateBar = new ProgressBar();
-            UpdateBar.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(300 * ratioY));
-            UpdateBar.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(20 * ratioY));
+            UpdateBar.Location = new System.Drawing.Point((int)(600 * ratioX), (int)(600 * ratioY));
+            UpdateBar.Size = new System.Drawing.Size((int)(600 * ratioX), (int)(40 * ratioY));
             UpdateBar.Name = "UpdateBar";
             UpdateBar.Maximum = 100;
             UpdateBar.Minimum = 0;
@@ -734,12 +795,12 @@ namespace ModManager4.Class
             c = new Component("BeforeApplyCode");
 
             Panel PagePanelApplyCode = new Panel();
-            PagePanelApplyCode.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelApplyCode.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelApplyCode.Name = "PagePanelApplyCode";
             PagePanelApplyCode.BackColor = Color.Black;
             PagePanelApplyCode.BorderStyle = BorderStyle.Fixed3D;
             PagePanelApplyCode.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelApplyCode.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelApplyCode.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelApplyCode.TabStop = false;
             PagePanelApplyCode.Visible = false;
             this.modManager.Controls.Add(PagePanelApplyCode);
@@ -750,9 +811,9 @@ namespace ModManager4.Class
             ApplyCodeTitle.BackColor = Color.Transparent;
             ApplyCodeTitle.ForeColor = SystemColors.Control;
             ApplyCodeTitle.TextAlign = ContentAlignment.MiddleCenter;
-            ApplyCodeTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            ApplyCodeTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             ApplyCodeTitle.Name = "ApplyCodeTitle";
-            ApplyCodeTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            ApplyCodeTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             ApplyCodeTitle.Text = "Updating mods";
             PagePanelApplyCode.Controls.Add(ApplyCodeTitle);
 
@@ -760,15 +821,15 @@ namespace ModManager4.Class
             ApplyCodeLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ApplyCodeLabel.ForeColor = System.Drawing.SystemColors.Control;
             ApplyCodeLabel.TextAlign = ContentAlignment.MiddleCenter;
-            ApplyCodeLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
+            ApplyCodeLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(300 * ratioY));
             ApplyCodeLabel.Name = "ApplyCodeLabel";
-            ApplyCodeLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(20 * ratioY));
+            ApplyCodeLabel.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(40 * ratioY));
             ApplyCodeLabel.Text = "Mod Manager is updating your mods. Please wait ...";
             PagePanelApplyCode.Controls.Add(ApplyCodeLabel);
 
             ProgressBar UpdateCodeBar = new ProgressBar();
-            UpdateCodeBar.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(300 * ratioY));
-            UpdateCodeBar.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(20 * ratioY));
+            UpdateCodeBar.Location = new System.Drawing.Point((int)(600 * ratioX), (int)(600 * ratioY));
+            UpdateCodeBar.Size = new System.Drawing.Size((int)(600 * ratioX), (int)(40 * ratioY));
             UpdateCodeBar.Name = "UpdateCodeBar";
             UpdateCodeBar.Maximum = 100;
             UpdateCodeBar.Minimum = 0;
@@ -780,12 +841,12 @@ namespace ModManager4.Class
             c = new Component("LocalAdd");
 
             Panel PagePanelLocal = new Panel();
-            PagePanelLocal.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelLocal.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelLocal.Name = "PagePanelLocal";
             PagePanelLocal.BackColor = Color.Black;
             PagePanelLocal.BorderStyle = BorderStyle.Fixed3D;
             PagePanelLocal.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelLocal.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelLocal.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelLocal.TabStop = false;
             PagePanelLocal.Visible = false;
             this.modManager.Controls.Add(PagePanelLocal);
@@ -796,9 +857,9 @@ namespace ModManager4.Class
             LocalTitle.BackColor = Color.Transparent;
             LocalTitle.ForeColor = SystemColors.Control;
             LocalTitle.TextAlign = ContentAlignment.MiddleCenter;
-            LocalTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            LocalTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             LocalTitle.Name = "LocalTitle";
-            LocalTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            LocalTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             LocalTitle.Text = "Add local mod";
             PagePanelLocal.Controls.Add(LocalTitle);
 
@@ -806,29 +867,29 @@ namespace ModManager4.Class
             ModNameLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameLabel.ForeColor = System.Drawing.SystemColors.Control;
             ModNameLabel.TextAlign = ContentAlignment.MiddleLeft;
-            ModNameLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(90 * ratioY));
+            ModNameLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(180 * ratioY));
             ModNameLabel.Name = "ModNameLabel";
-            ModNameLabel.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+            ModNameLabel.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             ModNameLabel.Text = "Mod name :";
             PagePanelLocal.Controls.Add(ModNameLabel);
 
             System.Windows.Forms.TextBox ModNameField = new System.Windows.Forms.TextBox();
             ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameField.ForeColor = System.Drawing.SystemColors.ControlText;
-            ModNameField.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(90 * ratioY));
+            ModNameField.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(180 * ratioY));
             ModNameField.Name = "ModNameField";
             ModNameField.Text = "";
             ModNameField.TabStop = false;
-            ModNameField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(25 * ratioY));
+            ModNameField.Size = new System.Drawing.Size((int)(600 * ratioX), (int)(50 * ratioY));
             PagePanelLocal.Controls.Add(ModNameField);
 
             System.Windows.Forms.Label ModDepsLabel = new System.Windows.Forms.Label();
             ModDepsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModDepsLabel.ForeColor = System.Drawing.SystemColors.Control;
             ModDepsLabel.TextAlign = ContentAlignment.MiddleLeft;
-            ModDepsLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(130 * ratioY));
+            ModDepsLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(260 * ratioY));
             ModDepsLabel.Name = "ModDepsLabel";
-            ModDepsLabel.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+            ModDepsLabel.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             ModDepsLabel.Text = "Mod dependencies :";
             PagePanelLocal.Controls.Add(ModDepsLabel);
 
@@ -838,10 +899,10 @@ namespace ModManager4.Class
                 MMCheckbox ModDepCheckbox = new MMCheckbox(this.modManager);
                 ModDepCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepCheckbox.ForeColor = System.Drawing.SystemColors.Control;
-                ModDepCheckbox.Location = new System.Drawing.Point((int)((20 + 200*(offset%4)) * ratioX), (int)((170 + 40*(offset/4)) * ratioY));
+                ModDepCheckbox.Location = new System.Drawing.Point((int)((40 + 400*(offset%4)) * ratioX), (int)((340 + 80*(offset/4)) * ratioY));
                 ModDepCheckbox.Name = d.name;
                 ModDepCheckbox.TabStop = false;
-                ModDepCheckbox.Size = new System.Drawing.Size((int)(25 * ratioX), (int)(25 * ratioY));
+                ModDepCheckbox.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
                 
                 if (offset == 0)
                 {
@@ -854,9 +915,9 @@ namespace ModManager4.Class
                 ModDepField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepField.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepField.TextAlign = ContentAlignment.MiddleLeft;
-                ModDepField.Location = new System.Drawing.Point((int)((50 + 200*(offset%4)) * ratioX), (int)((170 + 40*(offset/4)) * ratioY));
+                ModDepField.Location = new System.Drawing.Point((int)((100 + 400*(offset%4)) * ratioX), (int)((340 + 80*(offset/4)) * ratioY));
                 ModDepField.Name = "ModDepField" + d.name;
-                ModDepField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+                ModDepField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
                 ModDepField.Text = d.name;
                 PagePanelLocal.Controls.Add(ModDepField);
 
@@ -865,20 +926,20 @@ namespace ModManager4.Class
 
             System.Windows.Forms.Label ModAddField = new System.Windows.Forms.Label();
             ModAddField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModAddField.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(300 * ratioY));
+            ModAddField.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(600 * ratioY));
             ModAddField.ForeColor = System.Drawing.SystemColors.Control;
             ModAddField.Name = "ModAddField";
-            ModAddField.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(30 * ratioY));
+            ModAddField.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(60 * ratioY));
             ModAddField.Text = "Mod file :";
             ModAddField.TabStop = false;
             PagePanelLocal.Controls.Add(ModAddField);
 
             Button ModAddButton = new System.Windows.Forms.Button();
             ModAddButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModAddButton.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(300 * ratioY));
+            ModAddButton.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(600 * ratioY));
             ModAddButton.Name = "ModAddButton";
             ModAddButton.TextAlign = ContentAlignment.MiddleCenter;
-            ModAddButton.Size = new System.Drawing.Size((int)(180 * ratioX), (int)(30 * ratioY));
+            ModAddButton.Size = new System.Drawing.Size((int)(360 * ratioX), (int)(60 * ratioY));
             ModAddButton.Text = "Select file (zip or dll)";
             ModAddButton.TabStop = false;
             ModAddButton.Click += new EventHandler(this.events.addMod);
@@ -887,20 +948,20 @@ namespace ModManager4.Class
 
             System.Windows.Forms.Label ModAddFileName = new System.Windows.Forms.Label();
             ModAddFileName.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModAddFileName.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(300 * ratioY));
+            ModAddFileName.Location = new System.Drawing.Point((int)(800 * ratioX), (int)(600 * ratioY));
             ModAddFileName.TextAlign = ContentAlignment.MiddleLeft;
             ModAddFileName.ForeColor = System.Drawing.SystemColors.Control;
             ModAddFileName.Name = "ModAddFileName";
-            ModAddFileName.Size = new System.Drawing.Size((int)(490 * ratioX), (int)(30 * ratioY));
+            ModAddFileName.Size = new System.Drawing.Size((int)(980 * ratioX), (int)(60 * ratioY));
             ModAddFileName.Text = "No file selected";
             ModAddFileName.TabStop = false;
             PagePanelLocal.Controls.Add(ModAddFileName);
 
             Button ModAddValid = new System.Windows.Forms.Button();
             ModAddValid.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModAddValid.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(410 * ratioY));
+            ModAddValid.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(820 * ratioY));
             ModAddValid.Name = "ModAddValid";
-            ModAddValid.Size = new System.Drawing.Size((int)(870 * ratioX), (int)(40 * ratioY));
+            ModAddValid.Size = new System.Drawing.Size((int)(1740 * ratioX), (int)(80 * ratioY));
             ModAddValid.Text = "Add mod";
             ModAddValid.TabStop = false;
             ModAddValid.Click += new EventHandler(this.events.validAddMod);
@@ -912,12 +973,12 @@ namespace ModManager4.Class
             c = new Component("LocalEdit");
 
             Panel PagePanelLocalEdit = new Panel();
-            PagePanelLocalEdit.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelLocalEdit.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelLocalEdit.Name = "PagePanelLocalEdit";
             PagePanelLocalEdit.BackColor = Color.Black;
             PagePanelLocalEdit.BorderStyle = BorderStyle.Fixed3D;
             PagePanelLocalEdit.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelLocalEdit.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelLocalEdit.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelLocalEdit.TabStop = false;
             PagePanelLocalEdit.Visible = false;
             this.modManager.Controls.Add(PagePanelLocalEdit);
@@ -928,9 +989,9 @@ namespace ModManager4.Class
             LocalEditTitle.BackColor = Color.Transparent;
             LocalEditTitle.ForeColor = SystemColors.Control;
             LocalEditTitle.TextAlign = ContentAlignment.MiddleCenter;
-            LocalEditTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            LocalEditTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             LocalEditTitle.Name = "LocalEditTitle";
-            LocalEditTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            LocalEditTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             LocalEditTitle.Text = "Edit local mod";
             PagePanelLocalEdit.Controls.Add(LocalEditTitle);
 
@@ -941,7 +1002,7 @@ namespace ModManager4.Class
             LocalEditId.TextAlign = ContentAlignment.MiddleCenter;
             LocalEditId.Location = new System.Drawing.Point(0, 0);
             LocalEditId.Name = "LocalEditId";
-            LocalEditId.Size = new System.Drawing.Size(20,20);
+            LocalEditId.Size = new System.Drawing.Size(40,40);
             LocalEditId.Visible = false;
             LocalEditId.Text = "";
             PagePanelLocalEdit.Controls.Add(LocalEditId);
@@ -950,29 +1011,29 @@ namespace ModManager4.Class
             ModNameLabelEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameLabelEdit.ForeColor = System.Drawing.SystemColors.Control;
             ModNameLabelEdit.TextAlign = ContentAlignment.MiddleLeft;
-            ModNameLabelEdit.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(90 * ratioY));
+            ModNameLabelEdit.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(180 * ratioY));
             ModNameLabelEdit.Name = "ModNameLabelEdit";
-            ModNameLabelEdit.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+            ModNameLabelEdit.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             ModNameLabelEdit.Text = "Mod name :";
             PagePanelLocalEdit.Controls.Add(ModNameLabelEdit);
 
             System.Windows.Forms.TextBox ModNameFieldEdit = new System.Windows.Forms.TextBox();
             ModNameFieldEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameFieldEdit.ForeColor = System.Drawing.SystemColors.ControlText;
-            ModNameFieldEdit.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(90 * ratioY));
+            ModNameFieldEdit.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(180 * ratioY));
             ModNameFieldEdit.Name = "ModNameFieldEdit";
             ModNameFieldEdit.Text = "";
             ModNameFieldEdit.TabStop = false;
-            ModNameFieldEdit.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(25 * ratioY));
+            ModNameFieldEdit.Size = new System.Drawing.Size((int)(600 * ratioX), (int)(50 * ratioY));
             PagePanelLocalEdit.Controls.Add(ModNameFieldEdit);
 
             System.Windows.Forms.Label ModDepsLabelEdit = new System.Windows.Forms.Label();
             ModDepsLabelEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModDepsLabelEdit.ForeColor = System.Drawing.SystemColors.Control;
             ModDepsLabelEdit.TextAlign = ContentAlignment.MiddleLeft;
-            ModDepsLabelEdit.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(130 * ratioY));
+            ModDepsLabelEdit.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(260 * ratioY));
             ModDepsLabelEdit.Name = "ModDepsLabel";
-            ModDepsLabelEdit.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+            ModDepsLabelEdit.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             ModDepsLabelEdit.Text = "Mod dependencies :";
             PagePanelLocalEdit.Controls.Add(ModDepsLabelEdit);
 
@@ -982,10 +1043,10 @@ namespace ModManager4.Class
                 MMCheckbox ModDepCheckbox = new MMCheckbox(this.modManager);
                 ModDepCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepCheckbox.ForeColor = System.Drawing.SystemColors.Control;
-                ModDepCheckbox.Location = new System.Drawing.Point((int)((20 + 200 * (offset % 4)) * ratioX), (int)((170 + 40 * (offset / 4)) * ratioY));
+                ModDepCheckbox.Location = new System.Drawing.Point((int)((40 + 400 * (offset % 4)) * ratioX), (int)((340 + 80 * (offset / 4)) * ratioY));
                 ModDepCheckbox.Name = d.name;
                 ModDepCheckbox.TabStop = false;
-                ModDepCheckbox.Size = new System.Drawing.Size((int)(25 * ratioX), (int)(25 * ratioY));
+                ModDepCheckbox.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
 
                 PagePanelLocalEdit.Controls.Add(ModDepCheckbox);
 
@@ -993,9 +1054,9 @@ namespace ModManager4.Class
                 ModDepField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepField.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepField.TextAlign = ContentAlignment.MiddleLeft;
-                ModDepField.Location = new System.Drawing.Point((int)((50 + 200 * (offset % 4)) * ratioX), (int)((170 + 40 * (offset / 4)) * ratioY));
+                ModDepField.Location = new System.Drawing.Point((int)((100 + 400 * (offset % 4)) * ratioX), (int)((340 + 80 * (offset / 4)) * ratioY));
                 ModDepField.Name = "ModDepField" + d.name;
-                ModDepField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+                ModDepField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
                 ModDepField.Text = d.name;
                 PagePanelLocalEdit.Controls.Add(ModDepField);
 
@@ -1004,19 +1065,19 @@ namespace ModManager4.Class
 
             System.Windows.Forms.Label ModAddFieldEdit = new System.Windows.Forms.Label();
             ModAddFieldEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModAddFieldEdit.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(300 * ratioY));
+            ModAddFieldEdit.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(600 * ratioY));
             ModAddFieldEdit.ForeColor = System.Drawing.SystemColors.Control;
             ModAddFieldEdit.Name = "ModAddFieldEdit";
-            ModAddFieldEdit.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(30 * ratioY));
+            ModAddFieldEdit.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(60 * ratioY));
             ModAddFieldEdit.Text = "Mod file :";
             ModAddFieldEdit.TabStop = false;
             PagePanelLocalEdit.Controls.Add(ModAddFieldEdit);
 
             Button ModAddButtonEdit = new System.Windows.Forms.Button();
             ModAddButtonEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModAddButtonEdit.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(300 * ratioY));
+            ModAddButtonEdit.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(600 * ratioY));
             ModAddButtonEdit.Name = "ModAddButtonEdit";
-            ModAddButtonEdit.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(30 * ratioY));
+            ModAddButtonEdit.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
             ModAddButtonEdit.Text = "Select file";
             ModAddButtonEdit.TabStop = false;
             ModAddButtonEdit.Click += new EventHandler(this.events.editMod);
@@ -1025,20 +1086,20 @@ namespace ModManager4.Class
 
             System.Windows.Forms.Label ModAddFileNameEdit = new System.Windows.Forms.Label();
             ModAddFileNameEdit.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModAddFileNameEdit.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(300 * ratioY));
+            ModAddFileNameEdit.Location = new System.Drawing.Point((int)(740 * ratioX), (int)(600 * ratioY));
             ModAddFileNameEdit.TextAlign = ContentAlignment.MiddleLeft;
             ModAddFileNameEdit.ForeColor = System.Drawing.SystemColors.Control;
             ModAddFileNameEdit.Name = "ModAddFileNameEdit";
-            ModAddFileNameEdit.Size = new System.Drawing.Size((int)(520 * ratioX), (int)(30 * ratioY));
+            ModAddFileNameEdit.Size = new System.Drawing.Size((int)(1040 * ratioX), (int)(60 * ratioY));
             ModAddFileNameEdit.Text = "No file selected";
             ModAddFileNameEdit.TabStop = false;
             PagePanelLocalEdit.Controls.Add(ModAddFileNameEdit);
 
             Button ModEditValid = new System.Windows.Forms.Button();
             ModEditValid.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModEditValid.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(410 * ratioY));
+            ModEditValid.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(820 * ratioY));
             ModEditValid.Name = "ModEditValid";
-            ModEditValid.Size = new System.Drawing.Size((int)(870 * ratioX), (int)(40 * ratioY));
+            ModEditValid.Size = new System.Drawing.Size((int)(1740 * ratioX), (int)(80 * ratioY));
             ModEditValid.Text = "Edit mod";
             ModEditValid.TabStop = false;
             ModEditValid.Click += new EventHandler(this.events.validEditMod);
@@ -1050,12 +1111,12 @@ namespace ModManager4.Class
             c = new Component("Unreacheable");
 
             Panel PagePanelUnreacheable = new Panel();
-            PagePanelUnreacheable.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelUnreacheable.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelUnreacheable.Name = "PagePanelUnreacheable";
             PagePanelUnreacheable.BackColor = Color.Black;
             PagePanelUnreacheable.BorderStyle = BorderStyle.Fixed3D;
             PagePanelUnreacheable.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelUnreacheable.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelUnreacheable.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelUnreacheable.TabStop = false;
             PagePanelUnreacheable.Visible = false;
             this.modManager.Controls.Add(PagePanelUnreacheable);
@@ -1066,9 +1127,9 @@ namespace ModManager4.Class
             UnreacheableTitle.BackColor = Color.Transparent;
             UnreacheableTitle.ForeColor = SystemColors.Control;
             UnreacheableTitle.TextAlign = ContentAlignment.MiddleCenter;
-            UnreacheableTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            UnreacheableTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             UnreacheableTitle.Name = "UnreacheableTitle";
-            UnreacheableTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            UnreacheableTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             UnreacheableTitle.Text = "Server unreacheable";
             PagePanelUnreacheable.Controls.Add(UnreacheableTitle);
 
@@ -1076,9 +1137,9 @@ namespace ModManager4.Class
             UnreacheableLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UnreacheableLabel.ForeColor = System.Drawing.SystemColors.Control;
             UnreacheableLabel.TextAlign = ContentAlignment.TopLeft;
-            UnreacheableLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
+            UnreacheableLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(300 * ratioY));
             UnreacheableLabel.Name = "UnreacheableLabel";
-            UnreacheableLabel.Size = new System.Drawing.Size((int)(896 * ratioX), (int)(300 * ratioY));
+            UnreacheableLabel.Size = new System.Drawing.Size((int)(1800 * ratioX), (int)(600 * ratioY));
             UnreacheableLabel.Text = "Mod Manager's server is unreacheable.\n" +
                 "\n" +
                 "There are many possible reasons for this :\n" +
@@ -1094,12 +1155,12 @@ namespace ModManager4.Class
             c = new Component("UnsavedChanges");
 
             Panel PagePanelUnsavedChanges = new Panel();
-            PagePanelUnsavedChanges.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelUnsavedChanges.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelUnsavedChanges.Name = "PagePanelUnsavedChanges";
             PagePanelUnsavedChanges.BackColor = Color.Black;
             PagePanelUnsavedChanges.BorderStyle = BorderStyle.Fixed3D;
             PagePanelUnsavedChanges.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelUnsavedChanges.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelUnsavedChanges.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelUnsavedChanges.TabStop = false;
             PagePanelUnsavedChanges.Visible = false;
             this.modManager.Controls.Add(PagePanelUnsavedChanges);
@@ -1110,9 +1171,9 @@ namespace ModManager4.Class
             UnsavedChangesTitle.BackColor = Color.Transparent;
             UnsavedChangesTitle.ForeColor = SystemColors.Control;
             UnsavedChangesTitle.TextAlign = ContentAlignment.MiddleCenter;
-            UnsavedChangesTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            UnsavedChangesTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             UnsavedChangesTitle.Name = "UnsavedChangesTitle";
-            UnsavedChangesTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            UnsavedChangesTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             UnsavedChangesTitle.Text = "Unsaved Changes";
             PagePanelUnsavedChanges.Controls.Add(UnsavedChangesTitle);
 
@@ -1120,20 +1181,20 @@ namespace ModManager4.Class
             UnsavedChangesLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             UnsavedChangesLabel.ForeColor = System.Drawing.SystemColors.Control;
             UnsavedChangesLabel.TextAlign = ContentAlignment.TopCenter;
-            UnsavedChangesLabel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(150 * ratioY));
+            UnsavedChangesLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(300 * ratioY));
             UnsavedChangesLabel.Name = "UnsavedChangesLabel";
-            UnsavedChangesLabel.Size = new System.Drawing.Size((int)(896 * ratioX), (int)(50 * ratioY));
+            UnsavedChangesLabel.Size = new System.Drawing.Size((int)(1800 * ratioX), (int)(100 * ratioY));
             UnsavedChangesLabel.Text = "There are unsaved changes in your mod configuration.\n" +
                 "Do you want to save them before starting game ?";
             PagePanelUnsavedChanges.Controls.Add(UnsavedChangesLabel);
 
             PictureBox SaveChanges = new System.Windows.Forms.PictureBox();
             SaveChanges.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            SaveChanges.Location = new System.Drawing.Point((int)(80 * ratioX), (int)(300 * ratioY));
+            SaveChanges.Location = new System.Drawing.Point((int)(160 * ratioX), (int)(600 * ratioY));
             SaveChanges.BackgroundImage = global::ModManager4.Properties.Resources.save;
             SaveChanges.BackgroundImageLayout = ImageLayout.Stretch;
             SaveChanges.Name = "SaveChanges";
-            SaveChanges.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(80 * ratioY));
+            SaveChanges.Size = new System.Drawing.Size((int)(600 * ratioX), (int)(160 * ratioY));
             SaveChanges.Cursor = Cursors.Hand;
             SaveChanges.TabStop = false;
             SaveChanges.Click += new EventHandler(this.events.saveAndStart);
@@ -1141,11 +1202,11 @@ namespace ModManager4.Class
 
             PictureBox StartAnyway = new System.Windows.Forms.PictureBox();
             StartAnyway.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            StartAnyway.Location = new System.Drawing.Point((int)(450 * ratioX), (int)(300 * ratioY));
+            StartAnyway.Location = new System.Drawing.Point((int)(900 * ratioX), (int)(600 * ratioY));
             StartAnyway.BackgroundImage = global::ModManager4.Properties.Resources.dontsave;
             StartAnyway.BackgroundImageLayout = ImageLayout.Stretch;
             StartAnyway.Name = "StartAnyway";
-            StartAnyway.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(80 * ratioY));
+            StartAnyway.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(160 * ratioY));
             StartAnyway.Cursor = Cursors.Hand;
             StartAnyway.TabStop = false;
             StartAnyway.Click += new EventHandler(this.events.startAnyway);
@@ -1162,12 +1223,12 @@ namespace ModManager4.Class
             c = new Component("WIP");
 
             Panel PagePanelWIP = new Panel();
-            PagePanelWIP.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelWIP.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelWIP.Name = "PagePanelWIP";
             PagePanelWIP.BackColor = Color.Black;
             PagePanelWIP.BorderStyle = BorderStyle.Fixed3D;
             PagePanelWIP.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelWIP.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelWIP.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelWIP.TabStop = false;
             PagePanelWIP.Visible = false;
             this.modManager.Controls.Add(PagePanelWIP);
@@ -1178,9 +1239,9 @@ namespace ModManager4.Class
             WIPTitle.BackColor = Color.Transparent;
             WIPTitle.ForeColor = SystemColors.Control;
             WIPTitle.TextAlign = ContentAlignment.MiddleCenter;
-            WIPTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            WIPTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             WIPTitle.Name = "WIPTitle";
-            WIPTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            WIPTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             WIPTitle.Text = "Work In progress";
             PagePanelWIP.Controls.Add(WIPTitle);
 
@@ -1188,9 +1249,9 @@ namespace ModManager4.Class
             WIPLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             WIPLabel.ForeColor = System.Drawing.SystemColors.Control;
             WIPLabel.TextAlign = ContentAlignment.MiddleCenter;
-            WIPLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
+            WIPLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(300 * ratioY));
             WIPLabel.Name = "WIPLabel";
-            WIPLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            WIPLabel.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             WIPLabel.Text = "This page is being developped and is unavailable for now.";
             PagePanelWIP.Controls.Add(WIPLabel);
 
@@ -1199,12 +1260,12 @@ namespace ModManager4.Class
             c = new Component("Disabled");
 
             Panel PagePanelDisabled = new Panel();
-            PagePanelDisabled.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelDisabled.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelDisabled.Name = "PagePanelDisabled";
             PagePanelDisabled.BackColor = Color.Black;
             PagePanelDisabled.BorderStyle = BorderStyle.Fixed3D;
             PagePanelDisabled.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelDisabled.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelDisabled.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelDisabled.TabStop = false;
             PagePanelDisabled.Visible = false;
             this.modManager.Controls.Add(PagePanelDisabled);
@@ -1215,9 +1276,9 @@ namespace ModManager4.Class
             DisabledTitle.BackColor = Color.Transparent;
             DisabledTitle.ForeColor = SystemColors.Control;
             DisabledTitle.TextAlign = ContentAlignment.MiddleCenter;
-            DisabledTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            DisabledTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             DisabledTitle.Name = "DisabledTitle";
-            DisabledTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            DisabledTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             DisabledTitle.Text = "Mod Manager disabled";
             PagePanelDisabled.Controls.Add(DisabledTitle);
 
@@ -1225,9 +1286,9 @@ namespace ModManager4.Class
             DisabledLabel.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             DisabledLabel.ForeColor = System.Drawing.SystemColors.Control;
             DisabledLabel.TextAlign = ContentAlignment.MiddleCenter;
-            DisabledLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(150 * ratioY));
+            DisabledLabel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(300 * ratioY));
             DisabledLabel.Name = "UpdateModsLabel";
-            DisabledLabel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(150 * ratioY));
+            DisabledLabel.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(300 * ratioY));
             DisabledLabel.Text = "Mod Manager has been temporary disabled !\n" +
                 "Mod Manager will be back again soon !\n\n" +
                 "Please, consider joining the discord (link on github) to get notified when it goes live again.\n\n" +
@@ -1270,15 +1331,15 @@ namespace ModManager4.Class
         
             Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
 
-            double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
-            double ratioY = (double)this.modManager.config.resolutionY / 810.0;
+            double ratioX = (double)this.modManager.config.resolutionX / 2560.0;
+            double ratioY = (double)this.modManager.config.resolutionY / 1600.0;
 
             PictureBox UpdateModsPic = new System.Windows.Forms.PictureBox();
             UpdateModsPic.Image = global::ModManager4.Properties.Resources.update;
             UpdateModsPic.BackColor = System.Drawing.Color.Transparent;
-            UpdateModsPic.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(250 * ratioY));
+            UpdateModsPic.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(500 * ratioY));
             UpdateModsPic.Name = "UpdateModsPic";
-            UpdateModsPic.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(100 * ratioY));
+            UpdateModsPic.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(200 * ratioY));
             UpdateModsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             UpdateModsPic.TabStop = false;
             UpdateModsPic.Cursor = Cursors.Hand;
@@ -1292,9 +1353,9 @@ namespace ModManager4.Class
             PictureBox RemoveModsPic = new System.Windows.Forms.PictureBox();
             RemoveModsPic.Image = global::ModManager4.Properties.Resources.uninstallall;
             RemoveModsPic.BackColor = System.Drawing.Color.Transparent;
-            RemoveModsPic.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(450 * ratioY));
+            RemoveModsPic.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(900 * ratioY));
             RemoveModsPic.Name = "RemoveModsPic";
-            RemoveModsPic.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(100 * ratioY));
+            RemoveModsPic.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(200 * ratioY));
             RemoveModsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             RemoveModsPic.TabStop = false;
             RemoveModsPic.Cursor = Cursors.Hand;
@@ -1308,9 +1369,9 @@ namespace ModManager4.Class
             PictureBox AddLocalPic = new System.Windows.Forms.PictureBox();
             AddLocalPic.Image = global::ModManager4.Properties.Resources.localadd;
             AddLocalPic.BackColor = System.Drawing.Color.Transparent;
-            AddLocalPic.Location = new System.Drawing.Point((int)(1130 * ratioX), (int)(220 * ratioY));
+            AddLocalPic.Location = new System.Drawing.Point((int)(2260 * ratioX), (int)(440 * ratioY));
             AddLocalPic.Name = "AddLocalPic";
-            AddLocalPic.Size = new System.Drawing.Size((int)(110 * ratioX), (int)(80 * ratioY));
+            AddLocalPic.Size = new System.Drawing.Size((int)(220 * ratioX), (int)(160 * ratioY));
             AddLocalPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             AddLocalPic.TabStop = false;
             AddLocalPic.Cursor = Cursors.Hand;
@@ -1324,9 +1385,9 @@ namespace ModManager4.Class
             PictureBox BetterCrewlinkPic = new System.Windows.Forms.PictureBox();
             BetterCrewlinkPic.Image = global::ModManager4.Properties.Resources.bettercrewlink;
             BetterCrewlinkPic.BackColor = System.Drawing.Color.Transparent;
-            BetterCrewlinkPic.Location = new System.Drawing.Point((int)(1130 * ratioX), (int)(360 * ratioY));
+            BetterCrewlinkPic.Location = new System.Drawing.Point((int)(2260 * ratioX), (int)(720 * ratioY));
             BetterCrewlinkPic.Name = "BetterCrewlinkPic";
-            BetterCrewlinkPic.Size = new System.Drawing.Size((int)(110 * ratioX), (int)(110 * ratioY));
+            BetterCrewlinkPic.Size = new System.Drawing.Size((int)(220 * ratioX), (int)(220 * ratioY));
             BetterCrewlinkPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             BetterCrewlinkPic.TabStop = false;
             BetterCrewlinkPic.Cursor = Cursors.Hand;
@@ -1340,9 +1401,9 @@ namespace ModManager4.Class
             PictureBox ServersPic = new System.Windows.Forms.PictureBox();
             ServersPic.Image = global::ModManager4.Properties.Resources.server;
             ServersPic.BackColor = System.Drawing.Color.Transparent;
-            ServersPic.Location = new System.Drawing.Point((int)(1130 * ratioX), (int)(520 * ratioY));
+            ServersPic.Location = new System.Drawing.Point((int)(2260 * ratioX), (int)(1040 * ratioY));
             ServersPic.Name = "ServersPic";
-            ServersPic.Size = new System.Drawing.Size((int)(110 * ratioX), (int)(100 * ratioY));
+            ServersPic.Size = new System.Drawing.Size((int)(220 * ratioX), (int)(200 * ratioY));
             ServersPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             ServersPic.TabStop = false;
             ServersPic.Cursor = Cursors.Hand;
@@ -1354,12 +1415,12 @@ namespace ModManager4.Class
             c.addControl(ServersPic);
 
             Panel PagePanel = new Panel();
-            PagePanel.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanel.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanel.Name = "PagePanel";
             PagePanel.BackColor = Color.Black;
             PagePanel.BorderStyle = BorderStyle.Fixed3D;
             PagePanel.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanel.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanel.TabStop = false;
             PagePanel.Visible = false;
             this.modManager.Controls.Add(PagePanel);
@@ -1369,10 +1430,18 @@ namespace ModManager4.Class
             CheckedTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             CheckedTitle.BackColor = Color.Transparent;
             CheckedTitle.ForeColor = SystemColors.Control;
-            CheckedTitle.Location = new System.Drawing.Point((int)(30 * ratioX), (int)(20 * ratioY));
+            CheckedTitle.Location = new System.Drawing.Point((int)(50 * ratioX), (int)(40 * ratioY));
             CheckedTitle.Name = "Sort=Checked";
-            CheckedTitle.Size = new System.Drawing.Size((int)(30 * ratioX), (int)(20 * ratioY));
-            CheckedTitle.Text = "X";
+            CheckedTitle.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
+            CheckedTitle.BackgroundImageLayout = ImageLayout.Stretch;
+            if (this.modManager.config.sortOrder == "A")
+            {
+                CheckedTitle.BackgroundImage = global::ModManager4.Properties.Resources.down;
+            }
+            else
+            {
+                CheckedTitle.BackgroundImage = global::ModManager4.Properties.Resources.up;
+            }
             CheckedTitle.Click += new EventHandler(this.events.sortMods);
             CheckedTitle.Cursor = Cursors.Hand;
             PagePanel.Controls.Add(CheckedTitle);
@@ -1381,9 +1450,9 @@ namespace ModManager4.Class
             ModNameTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModNameTitle.BackColor = Color.Transparent;
             ModNameTitle.ForeColor = SystemColors.Control;
-            ModNameTitle.Location = new System.Drawing.Point((int)(60 * ratioX), (int)(20 * ratioY));
+            ModNameTitle.Location = new System.Drawing.Point((int)(120 * ratioX), (int)(40 * ratioY));
             ModNameTitle.Name = "Sort=Name";
-            ModNameTitle.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
+            ModNameTitle.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
             ModNameTitle.Text = "Name";
             ModNameTitle.Click += new EventHandler(this.events.sortMods);
             ModNameTitle.Cursor = Cursors.Hand;
@@ -1393,9 +1462,9 @@ namespace ModManager4.Class
             ModAuthorTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModAuthorTitle.BackColor = Color.Transparent;
             ModAuthorTitle.ForeColor = SystemColors.Control;
-            ModAuthorTitle.Location = new System.Drawing.Point((int)(210 * ratioX), (int)(20 * ratioY));
+            ModAuthorTitle.Location = new System.Drawing.Point((int)(420 * ratioX), (int)(40 * ratioY));
             ModAuthorTitle.Name = "Sort=Author";
-            ModAuthorTitle.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
+            ModAuthorTitle.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
             ModAuthorTitle.Text = "Author";
             ModAuthorTitle.Click += new EventHandler(this.events.sortMods);
             ModAuthorTitle.Cursor = Cursors.Hand;
@@ -1405,9 +1474,9 @@ namespace ModManager4.Class
             ModVersionTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModVersionTitle.BackColor = Color.Transparent;
             ModVersionTitle.ForeColor = SystemColors.Control;
-            ModVersionTitle.Location = new System.Drawing.Point((int)(360 * ratioX), (int)(20 * ratioY));
+            ModVersionTitle.Location = new System.Drawing.Point((int)(720 * ratioX), (int)(40 * ratioY));
             ModVersionTitle.Name = "Sort=Version";
-            ModVersionTitle.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
+            ModVersionTitle.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
             ModVersionTitle.Text = "Version";
             ModVersionTitle.Click += new EventHandler(this.events.sortMods);
             ModVersionTitle.Cursor = Cursors.Hand;
@@ -1416,16 +1485,16 @@ namespace ModManager4.Class
             System.Windows.Forms.Label ModGithubTitle = new System.Windows.Forms.Label();
             ModGithubTitle.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ModGithubTitle.ForeColor = SystemColors.Control;
-            ModGithubTitle.Location = new System.Drawing.Point((int)(510 * ratioX), (int)(20 * ratioY));
+            ModGithubTitle.Location = new System.Drawing.Point((int)(1020 * ratioX), (int)(40 * ratioY));
             ModGithubTitle.Name = "ModGithubTitle";
-            ModGithubTitle.Size = new System.Drawing.Size((int)(396 * ratioX), (int)(20 * ratioY));
+            ModGithubTitle.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(40 * ratioY));
             ModGithubTitle.Text = "More information";
             PagePanel.Controls.Add(ModGithubTitle);
 
             Panel ModsGroupbox = new Panel();
-            ModsGroupbox.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(45 * ratioY));
+            ModsGroupbox.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(90 * ratioY));
             ModsGroupbox.Name = "ModsGroupbox";
-            ModsGroupbox.Size = new System.Drawing.Size((int)(876 * ratioX), (int)(410 * ratioY));
+            ModsGroupbox.Size = new System.Drawing.Size((int)(1750 * ratioX), (int)(820 * ratioY));
             ModsGroupbox.AutoScroll = false;
             ModsGroupbox.HorizontalScroll.Enabled = false;
             ModsGroupbox.HorizontalScroll.Visible = false;
@@ -1435,16 +1504,17 @@ namespace ModManager4.Class
             PagePanel.Controls.Add(ModsGroupbox);
 
             int i = 0;
-            int offset = 10;
-            foreach (string cat in this.modManager.modlist.getAvailableCategories())
+            int offset = 20;
+            foreach (Category cat in this.modManager.modlist.getAvailableCategories(this.modManager))
             {
+
                 Panel CategoryTitlePanel = new Panel();
                 CategoryTitlePanel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(offset * ratioY));
                 CategoryTitlePanel.Name = "CategoryTitlePanel=" + cat;
                 CategoryTitlePanel.BackColor = Color.Black;
                 CategoryTitlePanel.BorderStyle = BorderStyle.FixedSingle;
                 CategoryTitlePanel.BackgroundImageLayout = ImageLayout.Stretch;
-                CategoryTitlePanel.Size = new System.Drawing.Size((int)(850 * ratioX), (int)(30 * ratioY));
+                CategoryTitlePanel.Size = new System.Drawing.Size((int)(1700 * ratioX), (int)(60 * ratioY));
                 CategoryTitlePanel.Padding = new Padding(10);
                 CategoryTitlePanel.Click += new EventHandler(this.events.rollCategory);
                 CategoryTitlePanel.TabStop = false;
@@ -1455,16 +1525,16 @@ namespace ModManager4.Class
                 System.Windows.Forms.Label CategoryField = new System.Windows.Forms.Label();
                 CategoryField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 CategoryField.ForeColor = System.Drawing.SystemColors.Control;
-                CategoryField.Location = new System.Drawing.Point((int)(5 * ratioX), (int)(5 * ratioY));
+                CategoryField.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(10 * ratioY));
                 CategoryField.Name = "CategoryField=" + cat;
-                CategoryField.Size = new System.Drawing.Size((int)(780 * ratioX), (int)(20 * ratioY));
-                CategoryField.Text = cat;
+                CategoryField.Size = new System.Drawing.Size((int)(1560 * ratioX), (int)(40 * ratioY));
+                CategoryField.Text = cat.name;
                 CategoryField.Click += new EventHandler(this.events.rollCategory);
                 CategoryTitlePanel.Controls.Add(CategoryField);
 
                 PictureBox CategoryArrowPic = new System.Windows.Forms.PictureBox();
 
-                if (this.modManager.config.hiddenCategories.Contains(cat))
+                if (this.modManager.config.hiddenCategories.Contains(cat.id))
                 {
                     CategoryArrowPic.Image = global::ModManager4.Properties.Resources.up;
                 } else
@@ -1473,18 +1543,18 @@ namespace ModManager4.Class
                 }
                     
                 CategoryArrowPic.BackColor = System.Drawing.Color.Transparent;
-                CategoryArrowPic.Location = new System.Drawing.Point((int)(820 * ratioX), (int)(5 * ratioY));
+                CategoryArrowPic.Location = new System.Drawing.Point((int)(1640 * ratioX), (int)(10 * ratioY));
                 CategoryArrowPic.Name = "CategoryArrowPic=" + cat;
-                CategoryArrowPic.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                CategoryArrowPic.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
                 CategoryArrowPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                 CategoryArrowPic.TabStop = false;
                 CategoryArrowPic.Click += new EventHandler(this.events.rollCategory);
                 CategoryTitlePanel.Controls.Add(CategoryArrowPic);
 
-                offset = offset + 50;
+                offset = offset + 100;
 
                 Panel CategoryPanel = new Panel();
-                CategoryPanel.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(offset * ratioY));
+                CategoryPanel.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(offset * ratioY));
                 CategoryPanel.Name = "CategoryPanel="+ cat;
                 CategoryPanel.BackColor = Color.Black;
                 CategoryPanel.BackgroundImageLayout = ImageLayout.Stretch;
@@ -1493,7 +1563,7 @@ namespace ModManager4.Class
 
                 int categoryOffset = 0;
 
-                if (this.modManager.config.hiddenCategories.Contains(cat) == false)
+                if (this.modManager.config.hiddenCategories.Contains(cat.id) == false)
                 {
                     foreach (Mod mod in this.modManager.modlist.getAvailableModsByCategory(cat))
                     {
@@ -1505,14 +1575,13 @@ namespace ModManager4.Class
                             ModCheckbox.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(categoryOffset * ratioY));
                             ModCheckbox.Name = mod.id;
                             ModCheckbox.TabStop = false;
-                            ModCheckbox.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                            ModCheckbox.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
                             ModCheckbox.Click += new EventHandler(this.events.checkBox);
 
                             if ((this.modManager.config.containsMod(mod.id) && this.modManager.modlist.toUninstall.Contains(mod.id) == false) || this.modManager.modlist.toInstall.Contains(mod.id))
                             {
                                 ModCheckbox.Checked = true;
                             }
-
                             CategoryPanel.Controls.Add(ModCheckbox);
 
                         }
@@ -1526,7 +1595,7 @@ namespace ModManager4.Class
                                 ModDownload.BackColor = System.Drawing.Color.Transparent;
                                 ModDownload.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(categoryOffset * ratioY));
                                 ModDownload.Name = "ModDownload=" + mod.id;
-                                ModDownload.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                                ModDownload.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
                                 ModDownload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                                 ModDownload.TabStop = false;
                                 ModDownload.Cursor = Cursors.Hand;
@@ -1541,7 +1610,7 @@ namespace ModManager4.Class
                                 ModDownload.BackColor = System.Drawing.Color.Transparent;
                                 ModDownload.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(categoryOffset * ratioY));
                                 ModDownload.Name = "ModDownload=" + mod.id;
-                                ModDownload.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                                ModDownload.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
                                 ModDownload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                                 ModDownload.TabStop = false;
                                 ModDownload.Cursor = Cursors.Hand;
@@ -1556,7 +1625,7 @@ namespace ModManager4.Class
                                 ModPlay.BackColor = System.Drawing.Color.Transparent;
                                 ModPlay.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(categoryOffset * ratioY));
                                 ModPlay.Name = "ModPlay=" + mod.id;
-                                ModPlay.Size = new System.Drawing.Size((int)(15 * ratioX), (int)(15 * ratioY));
+                                ModPlay.Size = new System.Drawing.Size((int)(30 * ratioX), (int)(30 * ratioY));
                                 ModPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                                 ModPlay.TabStop = false;
                                 ModPlay.Cursor = Cursors.Hand;
@@ -1568,9 +1637,9 @@ namespace ModManager4.Class
                         System.Windows.Forms.Label ModNameField = new System.Windows.Forms.Label();
                         ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         ModNameField.ForeColor = System.Drawing.SystemColors.Control;
-                        ModNameField.Location = new System.Drawing.Point((int)(30 * ratioX), (int)(categoryOffset * ratioY));
+                        ModNameField.Location = new System.Drawing.Point((int)(60 * ratioX), (int)(categoryOffset * ratioY));
                         ModNameField.Name = "ModNameField=" + mod.id;
-                        ModNameField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
+                        ModNameField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
                         ModNameField.Text = mod.name;
                         CategoryPanel.Controls.Add(ModNameField);
 
@@ -1581,10 +1650,10 @@ namespace ModManager4.Class
                             ModAuthorField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                             ModAuthorField.LinkColor = System.Drawing.SystemColors.Control;
                             ModAuthorField.ForeColor = System.Drawing.SystemColors.Control;
-                            ModAuthorField.Location = new System.Drawing.Point((int)(180 * ratioX), (int)(categoryOffset * ratioY));
+                            ModAuthorField.Location = new System.Drawing.Point((int)(360 * ratioX), (int)(categoryOffset * ratioY));
                             ModAuthorField.Name = "ModAuthorField=" + mod.id;
                             ModAuthorField.TabStop = false;
-                            ModAuthorField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
+                            ModAuthorField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
                             ModAuthorField.Text = mod.author;
 
                             if (mod.type == "mod" || mod.id == "Challenger")
@@ -1605,9 +1674,9 @@ namespace ModManager4.Class
                         System.Windows.Forms.Label ModVersionField = new System.Windows.Forms.Label();
                         ModVersionField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         ModVersionField.ForeColor = System.Drawing.SystemColors.Control;
-                        ModVersionField.Location = new System.Drawing.Point((int)(330 * ratioX), (int)(categoryOffset * ratioY));
+                        ModVersionField.Location = new System.Drawing.Point((int)(660 * ratioX), (int)(categoryOffset * ratioY));
                         ModVersionField.Name = "ModVersionField=" + mod.id;
-                        ModVersionField.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(20 * ratioY));
+                        ModVersionField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
                         if (mod.type == "mod")
                         {
                             ModVersionField.Text = mod.release.TagName;
@@ -1624,9 +1693,9 @@ namespace ModManager4.Class
                             ModGithubField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                             ModGithubField.LinkColor = System.Drawing.SystemColors.Control;
                             ModGithubField.ForeColor = System.Drawing.SystemColors.Control;
-                            ModGithubField.Location = new System.Drawing.Point((int)(480 * ratioX), (int)(categoryOffset * ratioY));
+                            ModGithubField.Location = new System.Drawing.Point((int)(960 * ratioX), (int)(categoryOffset * ratioY));
                             ModGithubField.Name = "ModGithubField=" + mod.id;
-                            ModGithubField.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(20 * ratioY));
+                            ModGithubField.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(40 * ratioY));
                             ModGithubField.TabStop = false;
 
                             if (mod.type == "mod")
@@ -1653,9 +1722,9 @@ namespace ModManager4.Class
                             PictureBox EditLocalField = new System.Windows.Forms.PictureBox();
                             EditLocalField.Image = global::ModManager4.Properties.Resources.edit;
                             EditLocalField.BackColor = System.Drawing.Color.Transparent;
-                            EditLocalField.Location = new System.Drawing.Point((int)(770 * ratioX), (int)(categoryOffset * ratioY));
+                            EditLocalField.Location = new System.Drawing.Point((int)(1540 * ratioX), (int)(categoryOffset * ratioY));
                             EditLocalField.Name = "EditLocalField=" + mod.id;
-                            EditLocalField.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                            EditLocalField.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
                             EditLocalField.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                             EditLocalField.TabStop = false;
                             EditLocalField.Cursor = Cursors.Hand;
@@ -1666,9 +1735,9 @@ namespace ModManager4.Class
                             PictureBox RemoveLocalField = new System.Windows.Forms.PictureBox();
                             RemoveLocalField.Image = global::ModManager4.Properties.Resources.remove;
                             RemoveLocalField.BackColor = System.Drawing.Color.Transparent;
-                            RemoveLocalField.Location = new System.Drawing.Point((int)(800 * ratioX), (int)(categoryOffset * ratioY));
+                            RemoveLocalField.Location = new System.Drawing.Point((int)(1620 * ratioX), (int)(categoryOffset * ratioY));
                             RemoveLocalField.Name = "RemoveLocalField=" + mod.id;
-                            RemoveLocalField.Size = new System.Drawing.Size((int)(20 * ratioX), (int)(20 * ratioY));
+                            RemoveLocalField.Size = new System.Drawing.Size((int)(40 * ratioX), (int)(40 * ratioY));
                             RemoveLocalField.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                             RemoveLocalField.TabStop = false;
                             RemoveLocalField.Cursor = Cursors.Hand;
@@ -1678,12 +1747,11 @@ namespace ModManager4.Class
 
                         }
 
-
-                        categoryOffset = categoryOffset + 30;
+                        categoryOffset = categoryOffset + 60;
                     }
                 }
 
-                CategoryPanel.Size = new System.Drawing.Size((int)(820 * ratioX), (int)(categoryOffset * ratioY));
+                CategoryPanel.Size = new System.Drawing.Size((int)(1700 * ratioX), (int)(categoryOffset * ratioY));
                 offset = offset + categoryOffset;
 
                 i++;
@@ -1697,16 +1765,16 @@ namespace ModManager4.Class
 
             Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
 
-            double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
-            double ratioY = (double)this.modManager.config.resolutionY / 810.0;
+            double ratioX = (double)this.modManager.config.resolutionX / 2560.0;
+            double ratioY = (double)this.modManager.config.resolutionY / 1600.0;
 
             Panel PagePanelServers = new Panel();
-            PagePanelServers.Location = new System.Drawing.Point((int)(184 * ratioX), (int)(190 * ratioY));
+            PagePanelServers.Location = new System.Drawing.Point((int)(370 * ratioX), (int)(380 * ratioY));
             PagePanelServers.Name = "PagePanelServers";
             PagePanelServers.BackColor = Color.Black;
             PagePanelServers.BorderStyle = BorderStyle.Fixed3D;
             PagePanelServers.BackgroundImageLayout = ImageLayout.Stretch;
-            PagePanelServers.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(477 * ratioY));
+            PagePanelServers.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(960 * ratioY));
             PagePanelServers.TabStop = false;
             PagePanelServers.Visible = false;
             this.modManager.Controls.Add(PagePanelServers);
@@ -1717,9 +1785,9 @@ namespace ModManager4.Class
             ServersTitle.BackColor = Color.Transparent;
             ServersTitle.ForeColor = SystemColors.Control;
             ServersTitle.TextAlign = ContentAlignment.MiddleCenter;
-            ServersTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(20 * ratioY));
+            ServersTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
             ServersTitle.Name = "ServersTitle";
-            ServersTitle.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(30 * ratioY));
+            ServersTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
             ServersTitle.Text = "Servers";
             PagePanelServers.Controls.Add(ServersTitle);
 
@@ -1727,9 +1795,9 @@ namespace ModManager4.Class
             ServerNameTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ServerNameTitle.BackColor = Color.Transparent;
             ServerNameTitle.ForeColor = SystemColors.Control;
-            ServerNameTitle.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(80 * ratioY));
+            ServerNameTitle.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(160 * ratioY));
             ServerNameTitle.Name = "ServerNameTitle";
-            ServerNameTitle.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            ServerNameTitle.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
             ServerNameTitle.Text = "Name";
             PagePanelServers.Controls.Add(ServerNameTitle);
 
@@ -1737,9 +1805,9 @@ namespace ModManager4.Class
             ServerIPTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ServerIPTitle.BackColor = Color.Transparent;
             ServerIPTitle.ForeColor = SystemColors.Control;
-            ServerIPTitle.Location = new System.Drawing.Point((int)(220 * ratioX), (int)(80 * ratioY));
+            ServerIPTitle.Location = new System.Drawing.Point((int)(440 * ratioX), (int)(160 * ratioY));
             ServerIPTitle.Name = "ServerIPTitle";
-            ServerIPTitle.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(20 * ratioY));
+            ServerIPTitle.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(40 * ratioY));
             ServerIPTitle.Text = "IP Address";
             PagePanelServers.Controls.Add(ServerIPTitle);
 
@@ -1747,17 +1815,17 @@ namespace ModManager4.Class
             ServerPortTitle.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ServerPortTitle.BackColor = Color.Transparent;
             ServerPortTitle.ForeColor = SystemColors.Control;
-            ServerPortTitle.Location = new System.Drawing.Point((int)(620 * ratioX), (int)(80 * ratioY));
+            ServerPortTitle.Location = new System.Drawing.Point((int)(1240 * ratioX), (int)(160 * ratioY));
             ServerPortTitle.Name = "ServerPortTitle";
-            ServerPortTitle.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(20 * ratioY));
+            ServerPortTitle.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(40 * ratioY));
             ServerPortTitle.Text = "Port";
             PagePanelServers.Controls.Add(ServerPortTitle);
 
             Panel ServersPanel = new Panel();
-            ServersPanel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(130 * ratioY));
+            ServersPanel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(260 * ratioY));
             ServersPanel.Name = "ServersPanel";
             ServersPanel.BackColor = Color.Transparent;
-            ServersPanel.Size = new System.Drawing.Size((int)(916 * ratioX), (int)(280 * ratioY));
+            ServersPanel.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(560 * ratioY));
             ServersPanel.AutoScroll = false;
             ServersPanel.HorizontalScroll.Enabled = false;
             ServersPanel.HorizontalScroll.Visible = false;
@@ -1776,9 +1844,9 @@ namespace ModManager4.Class
 
             Button ServersReset = new System.Windows.Forms.Button();
             ServersReset.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ServersReset.Location = new System.Drawing.Point((int)(20 * ratioX), (int)(430 * ratioY));
+            ServersReset.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(860 * ratioY));
             ServersReset.Name = "ServersReset";
-            ServersReset.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+            ServersReset.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             ServersReset.Text = "Reset to default";
             ServersReset.TabStop = false;
             ServersReset.Click += new EventHandler(this.events.resetServers);
@@ -1787,9 +1855,9 @@ namespace ModManager4.Class
 
             Button AddServer = new System.Windows.Forms.Button();
             AddServer.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            AddServer.Location = new System.Drawing.Point((int)(220 * ratioX), (int)(430 * ratioY));
+            AddServer.Location = new System.Drawing.Point((int)(440 * ratioX), (int)(860 * ratioY));
             AddServer.Name = "AddServer";
-            AddServer.Size = new System.Drawing.Size((int)(150 * ratioX), (int)(25 * ratioY));
+            AddServer.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             AddServer.Text = "Add Server";
             AddServer.TabStop = false;
             AddServer.Click += new EventHandler(this.events.addServer);
@@ -1804,17 +1872,17 @@ namespace ModManager4.Class
 
             Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
 
-            double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
-            double ratioY = (double)this.modManager.config.resolutionY / 810.0;
+            double ratioX = (double)this.modManager.config.resolutionX / 2560.0;
+            double ratioY = (double)this.modManager.config.resolutionY / 1600.0;
 
             System.Windows.Forms.TextBox ServerName = new System.Windows.Forms.TextBox();
             ServerName.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ServerName.BackColor = SystemColors.ControlText;
             ServerName.ForeColor = SystemColors.Control;
             ServerName.BorderStyle = BorderStyle.None;
-            ServerName.Location = new System.Drawing.Point((int)(20 * ratioX), (int)((40 * offset) * ratioY));
+            ServerName.Location = new System.Drawing.Point((int)(40 * ratioX), (int)((80 * offset) * ratioY));
             ServerName.Name = "ServerName=" + offset;
-            ServerName.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(20 * ratioY));
+            ServerName.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
             ServerName.Text = s.name;
             ServerName.TextChanged += new EventHandler(this.events.showSaveServer);
 
@@ -1830,9 +1898,9 @@ namespace ModManager4.Class
             ServerIP.BackColor = SystemColors.ControlText;
             ServerIP.ForeColor = SystemColors.Control;
             ServerIP.BorderStyle = BorderStyle.None;
-            ServerIP.Location = new System.Drawing.Point((int)(220 * ratioX), (int)((40 * offset) * ratioY));
+            ServerIP.Location = new System.Drawing.Point((int)(440 * ratioX), (int)((80 * offset) * ratioY));
             ServerIP.Name = "ServerIP=" + offset;
-            ServerIP.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(20 * ratioY));
+            ServerIP.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(40 * ratioY));
             ServerIP.Text = s.DefaultIp;
             ServerIP.TextChanged += new EventHandler(this.events.showSaveServer);
 
@@ -1848,9 +1916,9 @@ namespace ModManager4.Class
             ServerPort.BackColor = SystemColors.ControlText;
             ServerPort.ForeColor = SystemColors.Control;
             ServerPort.BorderStyle = BorderStyle.None;
-            ServerPort.Location = new System.Drawing.Point((int)(620 * ratioX), (int)((40 * offset) * ratioY));
+            ServerPort.Location = new System.Drawing.Point((int)(1240 * ratioX), (int)((80 * offset) * ratioY));
             ServerPort.Name = "ServerPort=" + offset;
-            ServerPort.Size = new System.Drawing.Size((int)(100 * ratioX), (int)(20 * ratioY));
+            ServerPort.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(40 * ratioY));
             ServerPort.Minimum = 0;
             ServerPort.Maximum = 65536;
             ServerPort.Value = s.port;
@@ -1869,10 +1937,10 @@ namespace ModManager4.Class
                 PictureBox ServerValidPic = new System.Windows.Forms.PictureBox();
                 ServerValidPic.Image = global::ModManager4.Properties.Resources.valid;
                 ServerValidPic.BackColor = System.Drawing.Color.Transparent;
-                ServerValidPic.Location = new System.Drawing.Point((int)(770 * ratioX), (int)(((40 * offset) - 5) * ratioY));
+                ServerValidPic.Location = new System.Drawing.Point((int)(1540 * ratioX), (int)(((80 * offset) - 10) * ratioY));
                 ServerValidPic.Name = "ServerValidPic=" + offset;
                 ServerValidPic.Cursor = Cursors.Hand;
-                ServerValidPic.Size = new System.Drawing.Size((int)(25 * ratioX), (int)(25 * ratioY));
+                ServerValidPic.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
                 ServerValidPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                 ServerValidPic.TabStop = false;
                 ServerValidPic.Hide();
@@ -1882,10 +1950,10 @@ namespace ModManager4.Class
                 PictureBox ServerRemovePic = new System.Windows.Forms.PictureBox();
                 ServerRemovePic.Image = global::ModManager4.Properties.Resources.remove;
                 ServerRemovePic.BackColor = System.Drawing.Color.Transparent;
-                ServerRemovePic.Location = new System.Drawing.Point((int)(815 * ratioX), (int)(((40 * offset) - 5) * ratioY));
+                ServerRemovePic.Location = new System.Drawing.Point((int)(1630 * ratioX), (int)(((80 * offset) - 10) * ratioY));
                 ServerRemovePic.Name = "ServerRemovePic=" + offset;
                 ServerRemovePic.Cursor = Cursors.Hand;
-                ServerRemovePic.Size = new System.Drawing.Size((int)(25 * ratioX), (int)(25 * ratioY));
+                ServerRemovePic.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
                 ServerRemovePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
                 ServerRemovePic.TabStop = false;
                 ServerRemovePic.Click += new EventHandler(this.events.removeServer);

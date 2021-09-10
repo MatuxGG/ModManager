@@ -22,11 +22,11 @@ namespace ModManager4.Class
         protected override void OnPaint(PaintEventArgs pevent)
         {
 
-            double ratioX = (double)this.modManager.config.resolutionX / 1300.0;
-            double ratioY = (double)this.modManager.config.resolutionY / 810.0;
+            double ratioX = (double)this.modManager.config.resolutionX / 2560.0;
+            double ratioY = (double)this.modManager.config.resolutionY / 1600.0;
 
-            int width = (int)(15 * ratioX);
-            int height = (int)(15 * ratioY);
+            int width = (int)(30 * ratioX);
+            int height = (int)(30 * ratioY);
 
             base.OnPaint(pevent);
 
@@ -40,7 +40,7 @@ namespace ModManager4.Class
             {
                 Bitmap bmp = new Bitmap(global::ModManager4.Properties.Resources._unchecked, new Size(width, height));
                 pevent.Graphics.Clear(Color.Black);
-                pevent.Graphics.FillRectangle(new TextureBrush(bmp), new Rectangle(0, 0, (int)(15 * ratioX), (int)(15 * ratioY)));
+                pevent.Graphics.FillRectangle(new TextureBrush(bmp), new Rectangle(0, 0, width, height));
             }
         }
     }

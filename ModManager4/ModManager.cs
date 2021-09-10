@@ -30,6 +30,7 @@ namespace ModManager4
 
         public ServerConfig serverConfig;
         public Modlist modlist;
+        public Categorylist categorylist;
         public Config config;
         public Componentlist componentlist;
         public Pagelist pagelist;
@@ -48,7 +49,7 @@ namespace ModManager4
         public async Task Start(string[] args)
         {
             // Constants declaration
-            this.serverURL = "https://mm.matux.fr/mm4/";
+            this.serverURL = "https://mm.matux.fr/";
             this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
             this.appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager";
             this.tempPath = Path.GetTempPath() + "ModManager";
@@ -116,14 +117,14 @@ namespace ModManager4
 
             if (args.Count() == 0)
             {
-                this.Size = new Size(this.config.resolutionX, this.config.resolutionY);
+                this.Size = new Size(this.config.resolutionX, 30 + this.config.resolutionY);
                 this.CenterToScreen();
                 this.Show();
 
-                double ratioX = (double)this.config.resolutionX / 1300.0;
-                double ratioY = (double)this.config.resolutionY / 810.0;
-                this.InitProgressBar.Location = new System.Drawing.Point((int)(484 * ratioX), (int)(569 * ratioY));
-                this.InitProgressBar.Size = new System.Drawing.Size((int)(313 * ratioX), (int)(23 * ratioY));
+                double ratioX = (double)this.config.resolutionX / 2560.0;
+                double ratioY = (double)this.config.resolutionY / 1600.0;
+                this.InitProgressBar.Location = new System.Drawing.Point((int)(970 * ratioX), (int)(1140 * ratioY));
+                this.InitProgressBar.Size = new System.Drawing.Size((int)(600 * ratioX), (int)(50 * ratioY));
             }
 
             if (args.Count() > 0)
@@ -132,6 +133,10 @@ namespace ModManager4
                 ProgressBar progress = (ProgressBar)this.Controls["InitProgressBar"];
                 progress.Visible = false;
             }
+
+            // Load categories from server
+            this.categorylist = new Categorylist(this);
+            this.categorylist.load();
 
             // Load mods from server
             this.modlist = new Modlist(this);
@@ -186,7 +191,7 @@ namespace ModManager4
 
             this.BackgroundImage = global::ModManager4.Properties.Resources.titlefond;
 
-            this.Size = new Size(this.config.resolutionX, this.config.resolutionY);
+            this.Size = new Size(this.config.resolutionX, 30 + this.config.resolutionY);
             this.CenterToScreen();
 
             this.logs.log("Mod Manager loaded successfully\n");

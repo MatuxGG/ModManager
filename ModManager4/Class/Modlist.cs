@@ -30,7 +30,7 @@ namespace ModManager4.Class
         public void load()
         {
             this.modManager.logs.log("Loading modlist");
-            string modlistURL = this.modManager.serverURL + "/modlist2.json";
+            string modlistURL = this.modManager.serverURL + "/modlist.json";
             string modlist = "";
             try
             {
@@ -86,17 +86,48 @@ namespace ModManager4.Class
             ProgressBar progress = (ProgressBar)this.modManager.Controls["InitProgressBar"];
             int max = this.mods.Count();
             int i = 0;
+            List<Mod> releasesToRemove = new List<Mod>() { };
             foreach (Mod m in this.mods)
             {
                 i++;
                 progress.Value = (100 * i) / max;
                 await this.loadRelease(m);
+                if (m.type != "allInOne" && m.name != "Challenger" && m.release == null)
+                {
+                    releasesToRemove.Add(m);
+                }
+            }
+            foreach (Mod toRemove in releasesToRemove)
+            {
+                this.mods.Remove(toRemove);
             }
             string localModsPath = this.modManager.appDataPath + "\\localMods.json";
             if (File.Exists(localModsPath))
             {
                 string json = File.ReadAllText(localModsPath);
                 List<Mod> localMods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(json);
+
+                // Code to remove old local mods
+                //
+                List<Mod> oldMods = new List<Mod>() { };
+                foreach (Mod lm in localMods)
+                {
+                    if (lm.category == "Local mods")
+                    {
+                        oldMods.Add(lm);
+                    }
+                }
+                if (oldMods.Count > 0)
+                {
+                    foreach (Mod toRemove in oldMods)
+                    {
+                        localMods.Remove(toRemove);
+                    }
+                    json = JsonConvert.SerializeObject(localMods);
+                    File.WriteAllText(this.modManager.appDataPath + "\\localMods.json", json);
+                }
+                //
+
                 this.mods.AddRange(localMods);
             }
 
@@ -121,6 +152,7 @@ namespace ModManager4.Class
             var tokenAuth = new Credentials(token);
             client.Credentials = tokenAuth;
             IReadOnlyList<Release> releases = await client.Repository.Release.GetAll(m.author, m.github);
+            // There is no management of Challenger down because we assume that it will be always up
             this.challengerClient = null;
             this.challengerMod = null;
             foreach (Release r in releases)
@@ -159,6 +191,7 @@ namespace ModManager4.Class
                 }
             }
             return localMods;
+
         }
 
         public void resetChanged()
@@ -329,38 +362,26 @@ namespace ModManager4.Class
             return null;
         }
 
-        public List<string> getCategories()
+        public List<Category> getAvailableCategories(ModManager modManager)
         {
-            List<string> categories = new List<string>();
+            List<Category> categories = new List<Category>();
             foreach (Mod m in this.mods)
             {
-                if (!categories.Contains(m.category))
+                Category cat = this.modManager.categorylist.getCategoryById(m.category);
+                if (!categories.Contains(cat) && m.gameVersion == this.modManager.serverConfig.gameVersion)
                 {
-                    categories.Add(m.category);
+                    categories.Add(cat);
                 }
             }
             return categories;
         }
 
-        public List<string> getAvailableCategories()
-        {
-            List<string> categories = new List<string>();
-            foreach (Mod m in this.mods)
-            {
-                if (!categories.Contains(m.category) && m.gameVersion == this.modManager.serverConfig.gameVersion)
-                {
-                    categories.Add(m.category);
-                }
-            }
-            return categories;
-        }
-
-        public List<Mod> getModsByCategory(string category)
+        public List<Mod> getModsByCategory(Category category)
         {
             List<Mod> retour = new List<Mod>();
             foreach (Mod m in this.mods)
             {
-                if (m.category == category)
+                if (m.category == category.id)
                 {
                     retour.Add(m);
                 }
@@ -368,12 +389,12 @@ namespace ModManager4.Class
             return retour;
         }
 
-        public List<Mod> getAvailableModsByCategory(string category)
+        public List<Mod> getAvailableModsByCategory(Category category)
         {
             List<Mod> retour = new List<Mod>();
             foreach (Mod m in this.mods)
             {
-                if (m.category == category && m.gameVersion == this.modManager.serverConfig.gameVersion)
+                if (m.category == category.id && m.gameVersion == this.modManager.serverConfig.gameVersion)
                 {
                     retour.Add(m);
                 }

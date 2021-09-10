@@ -294,24 +294,92 @@ namespace ModManager4.Class
         {
             MMCheckbox clickedBox = ((MMCheckbox)sender);
             Mod m = this.modManager.modlist.getModById(clickedBox.Name);
-            if (clickedBox.CheckState == CheckState.Checked)
+
+            Category modCat = this.modManager.categorylist.getCategoryById(m.category);
+            Boolean status = true;
+            if (clickedBox.CheckState == CheckState.Unchecked || modCat.type == "any")
+                //|| (modCat.type == "unique" && this.modManager.config.getInstalledModsWithoutAllInOne(this.modManager).Count + this.modManager.modlist.toInstall.Count - this.modManager.modlist.toUninstall.Count == 0)) Unique dropped for now
             {
-                if (this.modManager.modlist.toUninstall.Contains(m.id))
+                status = true;
+            }
+            else if (modCat.type == "one")
+            {
+                int inCat = 0;
+                foreach (InstalledMod im in this.modManager.config.getInstalledModsForCategory(this.modManager, modCat))
                 {
-                    this.modManager.modlist.toUninstall.Remove(m.id);
-                } else
-                {
-                    this.modManager.modlist.toInstall.Add(m.id);
+                    inCat++;
+                    foreach (string toUninstall in this.modManager.modlist.toUninstall)
+                    {
+                        if (toUninstall == im.id)
+                        {
+                            inCat--;
+                            break;
+                        }
+                    }
                 }
-            } else
-            {
-                if (this.modManager.modlist.toInstall.Contains(m.id))
+                if (inCat > 0)
                 {
-                    this.modManager.modlist.toInstall.Remove(m.id);
+                    status = false;
                 }
                 else
                 {
-                    this.modManager.modlist.toUninstall.Add(m.id);
+                    Boolean toInstallCat = false;
+                    foreach (string toInstall in this.modManager.modlist.toInstall)
+                    {
+                        if (this.modManager.modlist.getModById(toInstall).category == modCat.id)
+                        {
+                            toInstallCat = true;
+                            break;
+                        }
+                    }
+                    if (toInstallCat)
+                    {
+                        status = false;
+                    }
+                    else
+                    {
+                        status = true;
+                    }
+                }
+
+            }
+            else
+            {
+                status = false;
+            }
+
+            if (status)
+            {
+                if (clickedBox.CheckState == CheckState.Checked)
+                {
+                    if (this.modManager.modlist.toUninstall.Contains(m.id))
+                    {
+                        this.modManager.modlist.toUninstall.Remove(m.id);
+                    }
+                    else
+                    {
+                        this.modManager.modlist.toInstall.Add(m.id);
+                    }
+                }
+                else
+                {
+                    if (this.modManager.modlist.toInstall.Contains(m.id))
+                    {
+                        this.modManager.modlist.toInstall.Remove(m.id);
+                    }
+                    else
+                    {
+                        this.modManager.modlist.toUninstall.Add(m.id);
+                    }
+                }
+            } else
+            {
+                if (clickedBox.CheckState == CheckState.Checked)
+                {
+                    clickedBox.CheckState = CheckState.Unchecked;
+                } else
+                {
+                    clickedBox.CheckState = CheckState.Checked;
                 }
             }
         }
@@ -328,7 +396,7 @@ namespace ModManager4.Class
             this.modManager.componentlist = new Componentlist(this.modManager);
             this.modManager.componentlist.load();
             this.modManager.modlist.setCode();
-            this.modManager.Size = new Size(resX, resY);
+            this.modManager.Size = new Size(resX, resY + 30);
             this.modManager.centerToScreenPub();
             this.modManager.logs.log(this.modManager.componentlist.toString());
             this.modManager.pagelist.renderPage("Settings");
@@ -517,7 +585,7 @@ namespace ModManager4.Class
             string newPath = this.modManager.appDataPath + "\\localMods\\" + Path.GetFileName(fileName);
             this.modManager.utils.FileCopy(fileName, newPath);
             List<Mod> localMods = this.modManager.modlist.getLocalMods();
-            Mod newMod = new Mod("Localmod" + localMods.Count, name, "Local mods", "localMod", this.modManager.serverConfig.gameVersion, dependencies, "You", newPath, new List<string>(){ }, new List<string>() { }, new List<string>() { });
+            Mod newMod = new Mod("Localmod" + localMods.Count, name, "local", "localMod", this.modManager.serverConfig.gameVersion, dependencies, "You", newPath, new List<string>(){ }, new List<string>() { }, new List<string>() { });
             this.modManager.modlist.mods.Add(newMod);
             this.modManager.modlist.updateLocalMods();
             this.modManager.componentlist.refreshModSelection();

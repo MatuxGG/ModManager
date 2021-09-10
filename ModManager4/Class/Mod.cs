@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ModManager4.Class
 {
@@ -65,8 +66,13 @@ namespace ModManager4.Class
             var client = new GitHubClient(new ProductHeaderValue("ModManager"));
             var tokenAuth = new Credentials(token);
             client.Credentials = tokenAuth;
-            this.release = await client.Repository.Release.GetLatest(this.author, this.github);
-            
+            try
+            {
+                this.release = await client.Repository.Release.GetLatest(this.author, this.github);
+            } catch
+            {
+                this.release = null;
+            }
         }
     }
 }

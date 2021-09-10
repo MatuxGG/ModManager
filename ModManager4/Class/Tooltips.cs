@@ -53,7 +53,7 @@ namespace ModManager4.Class
 
             Point locationOnForm = c.FindForm().PointToClient(c.Parent.PointToScreen(c.Location));
 
-            this.toolTip.Show(s, this.modManager, locationOnForm);
+            this.toolTip.Show(s, this.modManager, locationOnForm, 5000);
         }
 
         public void hide(object sender, EventArgs e)
