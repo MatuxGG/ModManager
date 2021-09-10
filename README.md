@@ -8,7 +8,7 @@ Join the discord: https://mm.matux.fr/discord
 
 1. Download and install .net 5 [here](https://matux.fr/dotnet64). (Or alternatively from [here](https://matux.fr/dotnet32) if you are using a 32bit system.)
 
-2. Download the latest "ModManagerInstaller.exe" from this GitHub’s [release page](https://github.com/MatuxGG/ModManager/releases).
+2. Download the latest "ModManagerInstaller.exe" available [here](https://mm.matux.fr/latest).
 
 3. Launch the installer and choose a location for the software. (You should not select your Among Us directory!)
 
