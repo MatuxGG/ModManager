@@ -44,14 +44,7 @@ namespace ModManager4.Class
 
         public Control getControl(string name)
         {
-            foreach (Control c in this.controls)
-            {
-                if (c.Name == name)
-                {
-                    return c;
-                }
-            }
-            return null;
+            return this.controls.Find(c => c.Name == name);
         }
 
         public void hide()

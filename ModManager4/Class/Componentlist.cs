@@ -1369,7 +1369,7 @@ namespace ModManager4.Class
             PictureBox AddLocalPic = new System.Windows.Forms.PictureBox();
             AddLocalPic.Image = global::ModManager4.Properties.Resources.localadd;
             AddLocalPic.BackColor = System.Drawing.Color.Transparent;
-            AddLocalPic.Location = new System.Drawing.Point((int)(2260 * ratioX), (int)(440 * ratioY));
+            AddLocalPic.Location = new System.Drawing.Point((int)(2260 * ratioX), (int)(500 * ratioY));
             AddLocalPic.Name = "AddLocalPic";
             AddLocalPic.Size = new System.Drawing.Size((int)(220 * ratioX), (int)(160 * ratioY));
             AddLocalPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -1382,26 +1382,10 @@ namespace ModManager4.Class
             this.modManager.Controls.Add(AddLocalPic);
             c.addControl(AddLocalPic);
 
-            PictureBox BetterCrewlinkPic = new System.Windows.Forms.PictureBox();
-            BetterCrewlinkPic.Image = global::ModManager4.Properties.Resources.bettercrewlink;
-            BetterCrewlinkPic.BackColor = System.Drawing.Color.Transparent;
-            BetterCrewlinkPic.Location = new System.Drawing.Point((int)(2260 * ratioX), (int)(720 * ratioY));
-            BetterCrewlinkPic.Name = "BetterCrewlinkPic";
-            BetterCrewlinkPic.Size = new System.Drawing.Size((int)(220 * ratioX), (int)(220 * ratioY));
-            BetterCrewlinkPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            BetterCrewlinkPic.TabStop = false;
-            BetterCrewlinkPic.Cursor = Cursors.Hand;
-            BetterCrewlinkPic.MouseLeave += new EventHandler(this.tooltips.hide);
-            BetterCrewlinkPic.MouseHover += new EventHandler(this.tooltips.show);
-            BetterCrewlinkPic.Click += new EventHandler(this.events.openBcl);
-            BetterCrewlinkPic.Visible = false;
-            this.modManager.Controls.Add(BetterCrewlinkPic);
-            c.addControl(BetterCrewlinkPic);
-
             PictureBox ServersPic = new System.Windows.Forms.PictureBox();
             ServersPic.Image = global::ModManager4.Properties.Resources.server;
             ServersPic.BackColor = System.Drawing.Color.Transparent;
-            ServersPic.Location = new System.Drawing.Point((int)(2260 * ratioX), (int)(1040 * ratioY));
+            ServersPic.Location = new System.Drawing.Point((int)(2260 * ratioX), (int)(900 * ratioY));
             ServersPic.Name = "ServersPic";
             ServersPic.Size = new System.Drawing.Size((int)(220 * ratioX), (int)(200 * ratioY));
             ServersPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -1503,6 +1487,9 @@ namespace ModManager4.Class
             ModsGroupbox.TabStop = false;
             PagePanel.Controls.Add(ModsGroupbox);
 
+            object objBcl = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
+            RegistryKey polusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1653240", false);
+
             int i = 0;
             int offset = 20;
             foreach (Category cat in this.modManager.modlist.getAvailableCategories(this.modManager))
@@ -1587,7 +1574,7 @@ namespace ModManager4.Class
                         }
                         else
                         {
-                            if (this.modManager.config.containsMod(mod.id) == false)
+                            if (this.modManager.config.containsMod(mod.id) == false && !(mod.id == "BetterCrewlink" && objBcl != null && System.IO.File.Exists(objBcl.ToString() + "\\Better-CrewLink.exe")) && !(mod.id == "Polusgg" && polusKey != null))
                             {
                                 // Download
                                 PictureBox ModDownload = new System.Windows.Forms.PictureBox();
@@ -1656,7 +1643,7 @@ namespace ModManager4.Class
                             ModAuthorField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
                             ModAuthorField.Text = mod.author;
 
-                            if (mod.type == "mod" || mod.id == "Challenger")
+                            if (mod.type == "mod" || mod.id == "Challenger" || mod.id == "BetterCrewlink")
                             {
                                 ModAuthorField.Click += new EventHandler(this.events.openAuthorGithub);
                             }
@@ -1664,7 +1651,7 @@ namespace ModManager4.Class
                             {
                                 ModAuthorField.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
                             }
-                            if (mod.id == "Skeld")
+                            if (mod.id == "Skeld" || mod.id == "Polusgg")
                             {
                                 ModAuthorField.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
                             }
@@ -1702,11 +1689,11 @@ namespace ModManager4.Class
                             {
                                 ModGithubField.Text = "https://github.com/" + mod.author + "/" + mod.github;
                             }
-                            else if (mod.id == "Challenger")
+                            else if (mod.id == "Challenger" || mod.id == "BetterCrewlink")
                             {
                                 ModGithubField.Text = "https://github.com/" + mod.author + "/" + mod.github;
                             }
-                            else if (mod.id == "Skeld")
+                            else if (mod.id == "Skeld" || mod.id == "Polusgg")
                             {
                                 ModGithubField.Text = mod.github;
                             }
@@ -2064,14 +2051,7 @@ namespace ModManager4.Class
 
         public Component get(string name)
         {
-            foreach (Component c in this.components)
-            {
-                if (c.name == name)
-                {
-                    return c;
-                }
-            }
-            return null;
+            return this.components.Find(c => c.name == name);
         }
 
         public string toString()

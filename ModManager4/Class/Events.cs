@@ -129,34 +129,11 @@ namespace ModManager4.Class
             }
         }
 
-        public void openBcl(object sender, EventArgs e)
+        public void openPolus(object sender, EventArgs e)
         {
             PictureBox pic = ((PictureBox)sender);
-            object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
+            RegistryKey polusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1653240", false);
 
-            if (o!= null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
-            {
-                Process.Start("explorer", o.ToString() + "\\Better-CrewLink.exe");
-            } else
-            {
-                pic.Enabled = false;
-                string dlPath = this.modManager.tempPath + "\\Better-CrewLink-Setup.exe";
-                try
-                {
-                    using (var client = new WebClient())
-                    {
-                        client.DownloadFile(this.modManager.serverURL + "\\bcl", dlPath);
-                    }
-                }
-                catch
-                {
-                    this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
-                    this.modManager.componentlist.events.exitMM();
-                }
-                this.modManager.logs.debug(dlPath);
-                Process.Start("explorer.exe", dlPath);
-                pic.Enabled = true;
-            }
         }
 
         public void exitMM()
@@ -608,8 +585,6 @@ namespace ModManager4.Class
             System.Windows.Forms.Label LocalEditId = (System.Windows.Forms.Label)p.Controls["LocalEditId"];
             Mod m = this.modManager.modlist.getModById(LocalEditId.Text);
 
-
-
             List<string> dependencies = new List<string>();
             foreach (Control c in p.Controls)
             {
@@ -715,8 +690,56 @@ namespace ModManager4.Class
                 Directory.CreateDirectory(this.modManager.appDataPath + "\\allInOneMods\\" + m.id);
                 this.modManager.pagelist.renderPage("BeforeUpdateMods");
                 this.modManager.modWorker.installChallenger();
-            }
+            } else if (m.id == "BetterCrewlink")
+            {
+                object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
 
+                if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
+                {
+                    Process.Start("explorer", o.ToString() + "\\Better-CrewLink.exe");
+                }
+                else
+                {
+                    string dlPath = this.modManager.tempPath + "\\Better-CrewLink-Setup.exe";
+                    try
+                    {
+                        using (var client = new WebClient())
+                        {
+                            client.DownloadFile(this.modManager.serverURL + "\\bcl", dlPath);
+                        }
+                    }
+                    catch
+                    {
+                        this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
+                        this.modManager.componentlist.events.exitMM();
+                    }
+                    this.modManager.logs.debug(dlPath);
+                    Process.Start("explorer.exe", dlPath);
+
+                    Boolean installed = false;
+                    while (!installed)
+                    {
+                        o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
+                        if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
+                        {
+                            installed = true;
+                        }
+                    }
+                    this.clearWithBlink();
+                    this.modManager.pagelist.renderPage("ModSelection");
+                }
+            }
+            else if (m.id == "Polusgg")
+            {
+                RegistryKey polusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1653240", false);
+                if (polusKey != null)
+                {
+                    Process.Start("explorer", "steam://rungameid/1653240");
+                } else
+                {
+                    Process.Start("explorer", "https://store.steampowered.com/app/1653240/Polusgg/");
+                }
+            }
 
             this.modManager.logs.log("Event : Downloaded All In One Mod " + m.name + " successfully\n");
 
@@ -736,6 +759,54 @@ namespace ModManager4.Class
             else if (m.id == "Challenger")
             {
                 Process.Start("explorer", this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Among Us.exe");
+            }
+            else if (m.id == "BetterCrewlink")
+            {
+                object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
+
+                if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
+                {
+                    Process.Start("explorer", o.ToString() + "\\Better-CrewLink.exe");
+                }
+                else
+                {
+                    string dlPath = this.modManager.tempPath + "\\Better-CrewLink-Setup.exe";
+                    try
+                    {
+                        using (var client = new WebClient())
+                        {
+                            client.DownloadFile(this.modManager.serverURL + "\\bcl", dlPath);
+                        }
+                    }
+                    catch
+                    {
+                        this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
+                        this.modManager.componentlist.events.exitMM();
+                    }
+                    this.modManager.logs.debug(dlPath);
+                    Process.Start("explorer.exe", dlPath);
+
+                    Boolean installed = false;
+                    while (!installed)
+                    {
+                        o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
+                        if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
+                        {
+                            installed = true;
+                        }
+                    }
+                    this.clearWithBlink();
+                    this.modManager.pagelist.renderPage("ModSelection");
+                }
+            }
+            else if (m.id == "Polusgg")
+            {
+                RegistryKey polusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1653240", false);
+                if (polusKey != null)
+                {
+                    Process.Start("explorer", "steam://rungameid/1653240");
+
+                }
             }
 
             this.modManager.logs.log("Event : Started All In One Mod " + m.name + " successfully\n");

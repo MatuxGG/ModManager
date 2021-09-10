@@ -50,14 +50,7 @@ namespace ModManager4.Class
 
         public Category getCategoryById(string id)
         {
-            foreach (Category cat in this.categories)
-            {
-                if (cat.id == id)
-                {
-                    return cat;
-                }
-            }
-            return null;
+            return this.categories.Find(c => c.id == id);
         }
     }
 }

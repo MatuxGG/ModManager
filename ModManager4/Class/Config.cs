@@ -269,64 +269,27 @@ namespace ModManager4.Class
 
         public Boolean containsMod(string id)
         {
-            foreach (InstalledMod m in this.installedMods)
-            {
-                if (m.id == id)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return this.installedMods.Find(m => m.id == id) != null;
         }
 
         public Boolean isUpTodate(string id, string version)
         {
-            foreach (InstalledMod m in this.installedMods)
-            {
-                if (m.id == id && m.version == version)
-                {
-                    return true;
-                }
-            }
-            return false;
+            return this.installedMods.Find(m => m.id == id && m.version == version) != null;
         }
 
         public InstalledMod getInstalledModById(string id)
         {
-            foreach (InstalledMod m in this.installedMods)
-            {
-                if (m.id == id)
-                {
-                    return m;
-                }
-            }
-            return null;
+            return this.installedMods.Find(im => im.id == id);
         }
 
         public List<InstalledMod> getInstalledModsForCategory(ModManager modManager, Category cat)
         {
-            List<InstalledMod> ret = new List<InstalledMod>() { };
-            foreach (InstalledMod im in this.installedMods)
-            {
-                if (modManager.modlist.getAvailableModById(im.id).category == cat.id)
-                {
-                    ret.Add(im);
-                }
-            }
-            return ret;
+            return this.installedMods.FindAll(im => modManager.modlist.getAvailableModById(im.id).category == cat.id);
         }
 
         public List<InstalledMod> getInstalledModsWithoutAllInOne(ModManager modManager)
         {
-            List<InstalledMod> ret = new List<InstalledMod>() { };
-            foreach (InstalledMod im in this.installedMods)
-            {
-                if (modManager.modlist.getModById(im.id).type != "allInOne")
-                {
-                    ret.Add(im);
-                }
-            }
-            return ret;
+            return this.installedMods.FindAll(im => modManager.modlist.getModById(im.id).type != "allInOne");
         }
 
         public bool exists(ModManager modManager)

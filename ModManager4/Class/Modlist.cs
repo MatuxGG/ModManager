@@ -182,16 +182,7 @@ namespace ModManager4.Class
 
         public List<Mod> getLocalMods()
         {
-            List<Mod> localMods = new List<Mod>();
-            foreach (Mod m in this.mods)
-            {
-                if (m.type == "localMod")
-                {
-                    localMods.Add(m);
-                }
-            }
-            return localMods;
-
+            return this.mods.FindAll(m => m.type == "localMod");
         }
 
         public void resetChanged()
@@ -340,93 +331,37 @@ namespace ModManager4.Class
 
         public Mod getModById(string id)
         {
-            foreach (Mod m in this.mods)
-            {
-                if (m.id == id)
-                {
-                    return m;
-                }
-            }
-            return null;
+            return this.mods.Find(m => m.id == id);
         }
 
         public Mod getAvailableModById(string id)
         {
-            foreach (Mod m in this.mods)
-            {
-                if (m.id == id && m.gameVersion == this.modManager.serverConfig.gameVersion)
-                {
-                    return m;
-                }
-            }
-            return null;
+            return this.mods.Find(m => m.id == id && m.gameVersion == this.modManager.serverConfig.gameVersion);
         }
 
         public List<Category> getAvailableCategories(ModManager modManager)
         {
-            List<Category> categories = new List<Category>();
-            foreach (Mod m in this.mods)
-            {
-                Category cat = this.modManager.categorylist.getCategoryById(m.category);
-                if (!categories.Contains(cat) && m.gameVersion == this.modManager.serverConfig.gameVersion)
-                {
-                    categories.Add(cat);
-                }
-            }
-            return categories;
+            return this.modManager.categorylist.categories.FindAll(c => this.mods.Find(m => c.id == m.category) != null);
         }
 
         public List<Mod> getModsByCategory(Category category)
         {
-            List<Mod> retour = new List<Mod>();
-            foreach (Mod m in this.mods)
-            {
-                if (m.category == category.id)
-                {
-                    retour.Add(m);
-                }
-            }
-            return retour;
+            return this.mods.FindAll(m => m.category == category.id);
         }
 
         public List<Mod> getAvailableModsByCategory(Category category)
         {
-            List<Mod> retour = new List<Mod>();
-            foreach (Mod m in this.mods)
-            {
-                if (m.category == category.id && m.gameVersion == this.modManager.serverConfig.gameVersion)
-                {
-                    retour.Add(m);
-                }
-            }
-            retour = this.sort(retour);
-            return retour;
+            return sort(this.mods.FindAll(m => m.category == category.id && m.gameVersion == this.modManager.serverConfig.gameVersion));
         }
 
         public List<Mod> getAvailableMods()
         {
-            List<Mod> retour = new List<Mod>();
-            foreach (Mod m in this.mods)
-            {
-                if (m.gameVersion == this.modManager.serverConfig.gameVersion)
-                {
-                    retour.Add(m);
-                }
-            }
-            return retour;
+            return this.mods.FindAll(m => m.gameVersion == this.modManager.serverConfig.gameVersion);
         }
 
         public List<Mod> getAvailableRemoteMods()
         {
-            List<Mod> retour = new List<Mod>();
-            foreach (Mod m in this.mods)
-            {
-                if (m.gameVersion == this.modManager.serverConfig.gameVersion && m.type == "mod")
-                {
-                    retour.Add(m);
-                }
-            }
-            return retour;
+            return this.mods.FindAll(m => m.gameVersion == this.modManager.serverConfig.gameVersion && m.type == "mod");
         }
 
         public List<Mod> sort(List<Mod> mods)
