@@ -100,7 +100,7 @@ namespace ModManager4.Class
 
                 if (m.type != "allInOne")
                 {
-                    if (mod.gameVersion != modManager.serverConfig.gameVersion || (m.type == "mod" && mod.version != m.release.TagName))
+                    if (mod.gameVersion != modManager.serverConfig.get("gameVersion").value || (m.type == "mod" && mod.version != m.release.TagName))
                     {
                         modManager.logs.log("- Uninstall mod " + m.name + " (wrong version or game version)");
                         modManager.modWorker.uninstallMod(m);

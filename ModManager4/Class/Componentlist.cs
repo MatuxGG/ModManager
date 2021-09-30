@@ -92,13 +92,27 @@ namespace ModManager4.Class
             this.modManager.Controls.Add(VersionField);
             c.addControl(VersionField);
 
+            System.Windows.Forms.Label CreditsFields = new System.Windows.Forms.Label();
+            CreditsFields.BackColor = System.Drawing.Color.Transparent;
+            CreditsFields.ForeColor = System.Drawing.Color.Gray;
+            CreditsFields.Name = "CreditsFields";
+            CreditsFields.TextAlign = ContentAlignment.TopCenter;
+            CreditsFields.Font = new System.Drawing.Font("Arial", fonts.sizeXS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            CreditsFields.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(1520 * ratioY));
+            CreditsFields.Size = new System.Drawing.Size((int)(2500 * ratioX), (int)(60 * ratioY));
+            CreditsFields.Text = this.modManager.serverConfig.get("credits").value;
+            CreditsFields.UseMnemonic = false;
+            CreditsFields.Visible = false;
+            this.modManager.Controls.Add(CreditsFields);
+            c.addControl(CreditsFields);
+
             System.Windows.Forms.Label StatusField = new System.Windows.Forms.Label();
             StatusField.BackColor = System.Drawing.Color.Transparent;
             StatusField.ForeColor = System.Drawing.Color.Yellow;
             StatusField.Name = "StatusField";
             StatusField.TextAlign = ContentAlignment.MiddleLeft;
             StatusField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            StatusField.Location = new System.Drawing.Point((int)(2170 * ratioX), (int)(1420 * ratioY));
+            StatusField.Location = new System.Drawing.Point((int)(2170 * ratioX), (int)(1400 * ratioY));
             StatusField.Size = new System.Drawing.Size((int)(180 * ratioX), (int)(40 * ratioY));
             StatusField.Text = "Server status : ";
             StatusField.Visible = false;
@@ -110,10 +124,10 @@ namespace ModManager4.Class
             StatusLabel.Name = "StatusLabel";
             StatusLabel.TextAlign = ContentAlignment.MiddleLeft;
             StatusLabel.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            StatusLabel.Location = new System.Drawing.Point((int)(2350 * ratioX), (int)(1420 * ratioY));
+            StatusLabel.Location = new System.Drawing.Point((int)(2350 * ratioX), (int)(1400 * ratioY));
             StatusLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(40 * ratioY));
             
-            if (this.modManager.serverConfig.enabled)
+            if (this.modManager.serverConfig.get("enabled").value == "true")
             {
                 StatusLabel.ForeColor = System.Drawing.Color.LightGreen;
                 StatusLabel.Text = "Online";
@@ -133,7 +147,7 @@ namespace ModManager4.Class
             GameVersionField.Name = "GameVersionField";
             GameVersionField.TextAlign = ContentAlignment.MiddleLeft;
             GameVersionField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            GameVersionField.Location = new System.Drawing.Point((int)(2170 * ratioX), (int)(1460 * ratioY));
+            GameVersionField.Location = new System.Drawing.Point((int)(2170 * ratioX), (int)(1440 * ratioY));
             GameVersionField.Size = new System.Drawing.Size((int)(180 * ratioX), (int)(40 * ratioY));
             GameVersionField.Text = "Game version : ";
             GameVersionField.Visible = false;
@@ -146,9 +160,9 @@ namespace ModManager4.Class
             GameVersionLabel.Name = "GameVersionLabel";
             GameVersionLabel.TextAlign = ContentAlignment.MiddleLeft;
             GameVersionLabel.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            GameVersionLabel.Location = new System.Drawing.Point((int)(2350 * ratioX), (int)(1460 * ratioY));
+            GameVersionLabel.Location = new System.Drawing.Point((int)(2350 * ratioX), (int)(1440 * ratioY));
             GameVersionLabel.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(40 * ratioY));
-            GameVersionLabel.Text = this.modManager.serverConfig.gameVersion;
+            GameVersionLabel.Text = this.modManager.serverConfig.get("gameVersion").value;
             GameVersionLabel.Visible = false;
             this.modManager.Controls.Add(GameVersionLabel);
             c.addControl(GameVersionLabel);
@@ -223,7 +237,7 @@ namespace ModManager4.Class
             PlayGameLabel.Image = global::ModManager4.Properties.Resources.start_game;
             PlayGameLabel.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
             PlayGameLabel.Name = "PlayGameLabel";
-            PlayGameLabel.Location = new System.Drawing.Point((int)(1140 * ratioX), (int)(1380 * ratioY));
+            PlayGameLabel.Location = new System.Drawing.Point((int)(1140 * ratioX), (int)(1360 * ratioY));
             PlayGameLabel.Size = new System.Drawing.Size((int)(480 * ratioX), (int)(160 * ratioY));
             PlayGameLabel.Cursor = Cursors.Hand;
             PlayGameLabel.Visible = false;
@@ -238,7 +252,7 @@ namespace ModManager4.Class
             PictureBox SettingsPic = new System.Windows.Forms.PictureBox();
             SettingsPic.Image = global::ModManager4.Properties.Resources.settings;
             SettingsPic.BackColor = System.Drawing.Color.Transparent;
-            SettingsPic.Location = new System.Drawing.Point((int)(1700 * ratioX), (int)(1380 * ratioY));
+            SettingsPic.Location = new System.Drawing.Point((int)(1700 * ratioX), (int)(1360 * ratioY));
             SettingsPic.Name = "SettingsPic";
             SettingsPic.Size = new System.Drawing.Size((int)(420 * ratioX), (int)(140 * ratioY));
             SettingsPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -254,7 +268,7 @@ namespace ModManager4.Class
             PictureBox CodePic = new System.Windows.Forms.PictureBox();
             CodePic.Image = global::ModManager4.Properties.Resources.code;
             CodePic.BackColor = System.Drawing.Color.Transparent;
-            CodePic.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(1410 * ratioY));
+            CodePic.Location = new System.Drawing.Point((int)(400 * ratioX), (int)(1390 * ratioY));
             CodePic.Name = "CodePic";
             CodePic.Size = new System.Drawing.Size((int)(190 * ratioX), (int)(80 * ratioY));
             CodePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
@@ -267,7 +281,7 @@ namespace ModManager4.Class
             System.Windows.Forms.TextBox CodeTextbox = new System.Windows.Forms.TextBox();
             CodeTextbox.Font = new System.Drawing.Font("Arial", fonts.sizeXL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             CodeTextbox.ForeColor = SystemColors.ControlText;
-            CodeTextbox.Location = new System.Drawing.Point((int)(620 * ratioX), (int)(1420 * ratioY));
+            CodeTextbox.Location = new System.Drawing.Point((int)(620 * ratioX), (int)(1400 * ratioY));
             CodeTextbox.Name = "CodeTextbox";
             CodeTextbox.TabStop = false;
             CodeTextbox.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(40 * ratioY));
@@ -280,7 +294,7 @@ namespace ModManager4.Class
             PictureBox ValidCodePic = new System.Windows.Forms.PictureBox();
             ValidCodePic.Image = global::ModManager4.Properties.Resources.valid;
             ValidCodePic.BackColor = System.Drawing.Color.Transparent;
-            ValidCodePic.Location = new System.Drawing.Point((int)(840 * ratioX), (int)(1410 * ratioY));
+            ValidCodePic.Location = new System.Drawing.Point((int)(840 * ratioX), (int)(1390 * ratioY));
             ValidCodePic.Name = "ValidCodePic";
             ValidCodePic.Cursor = Cursors.Hand;
             ValidCodePic.Size = new System.Drawing.Size((int)(80 * ratioX), (int)(80 * ratioY));
@@ -296,7 +310,7 @@ namespace ModManager4.Class
             PictureBox ExportCodePic = new System.Windows.Forms.PictureBox();
             ExportCodePic.Image = global::ModManager4.Properties.Resources.export;
             ExportCodePic.BackColor = System.Drawing.Color.Transparent;
-            ExportCodePic.Location = new System.Drawing.Point((int)(960 * ratioX), (int)(1410 * ratioY));
+            ExportCodePic.Location = new System.Drawing.Point((int)(960 * ratioX), (int)(1390 * ratioY));
             ExportCodePic.Name = "ExportCodePic";
             ExportCodePic.Cursor = Cursors.Hand;
             ExportCodePic.Size = new System.Drawing.Size((int)(80 * ratioX), (int)(80 * ratioY));
@@ -401,16 +415,73 @@ namespace ModManager4.Class
             InfoTitle.BackColor = Color.Transparent;
             InfoTitle.ForeColor = SystemColors.Control;
             InfoTitle.TextAlign = ContentAlignment.MiddleCenter;
-            InfoTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
+            InfoTitle.BorderStyle = BorderStyle.FixedSingle;
+            InfoTitle.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(40 * ratioY));
             InfoTitle.Name = "InfoTitle";
-            InfoTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
-            InfoTitle.Text = "Information";
+            InfoTitle.Size = new System.Drawing.Size((int)(1230 * ratioX), (int)(60 * ratioY));
+            InfoTitle.Text = "Frequently Asked Questions";
             PagePanelInfo.Controls.Add(InfoTitle);
 
+            Faq currentFaq = this.modManager.faqlist.getCurrent();
+            int currentFaqId = this.modManager.faqlist.current;
+
+            PictureBox LastFaqPict = new System.Windows.Forms.PictureBox();
+            LastFaqPict.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            LastFaqPict.Location = new System.Drawing.Point((int)(200 * ratioX), (int)(125 * ratioY));
+            LastFaqPict.BackgroundImage = global::ModManager4.Properties.Resources.back;
+            LastFaqPict.Name = "LastFaqPict";
+            LastFaqPict.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            LastFaqPict.Cursor = Cursors.Hand;
+            LastFaqPict.TabStop = false;
+            LastFaqPict.Click += new EventHandler(this.events.lastFaq);
+            if (currentFaqId > 0)
+            {
+                LastFaqPict.Enabled = true;
+                LastFaqPict.BackgroundImageLayout = ImageLayout.Stretch;
+            }
+            else
+            {
+                LastFaqPict.Enabled = false;
+                LastFaqPict.BackgroundImageLayout = ImageLayout.None;
+            }
+            PagePanelInfo.Controls.Add(LastFaqPict);
+
+            PictureBox NextFaqPict = new System.Windows.Forms.PictureBox();
+            NextFaqPict.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            NextFaqPict.Location = new System.Drawing.Point((int)(1630 * ratioX), (int)(125 * ratioY));
+            NextFaqPict.BackgroundImage = global::ModManager4.Properties.Resources.next;
+            NextFaqPict.Name = "NextFaqPict";
+            NextFaqPict.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            NextFaqPict.Cursor = Cursors.Hand;
+            NextFaqPict.TabStop = false;
+            NextFaqPict.Click += new EventHandler(this.events.nextFaq);
+            if (currentFaqId < this.modManager.faqlist.getMax())
+            {
+                NextFaqPict.Enabled = true;
+                NextFaqPict.BackgroundImageLayout = ImageLayout.Stretch;
+            }
+            else
+            {
+                NextFaqPict.Enabled = false;
+                NextFaqPict.BackgroundImageLayout = ImageLayout.None;
+            }
+            PagePanelInfo.Controls.Add(NextFaqPict);
+
+            System.Windows.Forms.Label InfoQuestion = new System.Windows.Forms.Label();
+            InfoQuestion.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            InfoQuestion.BackColor = Color.Transparent;
+            InfoQuestion.ForeColor = SystemColors.Control;
+            InfoQuestion.TextAlign = ContentAlignment.MiddleCenter;
+            InfoQuestion.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(120 * ratioY));
+            InfoQuestion.Name = "InfoQuestion";
+            InfoQuestion.Size = new System.Drawing.Size((int)(1230 * ratioX), (int)(60 * ratioY));
+            InfoQuestion.Text = currentFaq.question;
+            PagePanelInfo.Controls.Add(InfoQuestion);
+
             Panel ContentPanelInfo = new Panel();
-            ContentPanelInfo.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(140 * ratioY));
+            ContentPanelInfo.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(240 * ratioY));
             ContentPanelInfo.Name = "ContentPanelInfo";
-            ContentPanelInfo.Size = new System.Drawing.Size((int)(1750 * ratioX), (int)(780 * ratioY));
+            ContentPanelInfo.Size = new System.Drawing.Size((int)(1750 * ratioX), (int)(680 * ratioY));
             ContentPanelInfo.AutoScroll = true;
             ContentPanelInfo.TabStop = false;
             PagePanelInfo.Controls.Add(ContentPanelInfo);
@@ -423,21 +494,8 @@ namespace ModManager4.Class
             InfoLabel.AutoSize = true;
             InfoLabel.MaximumSize = new Size((int)(1620 * ratioX), 0);
             InfoLabel.Name = "InfoLabel";
+            InfoLabel.Text = currentFaq.answer;
             ContentPanelInfo.Controls.Add(InfoLabel);
-
-            try
-            {
-                using (var client = new WebClient())
-                {
-                    string news = client.DownloadString(this.modManager.serverURL + "/info.txt");
-                    InfoLabel.Text = news;
-                }
-            }
-            catch
-            {
-                this.modManager.logs.log("Error : Disconnected when loading info\n");
-                this.events.exitMM();
-            }
 
             this.components.Add(c);
 
@@ -658,16 +716,72 @@ namespace ModManager4.Class
             NewsTitle.BackColor = Color.Transparent;
             NewsTitle.ForeColor = SystemColors.Control;
             NewsTitle.TextAlign = ContentAlignment.MiddleCenter;
-            NewsTitle.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(40 * ratioY));
+            NewsTitle.BorderStyle = BorderStyle.FixedSingle;
+            NewsTitle.Location = new System.Drawing.Point((int)(300 * ratioX), (int)(40 * ratioY));
             NewsTitle.Name = "NewsTitle";
-            NewsTitle.Size = new System.Drawing.Size((int)(1830 * ratioX), (int)(60 * ratioY));
+            NewsTitle.Size = new System.Drawing.Size((int)(1230 * ratioX), (int)(60 * ratioY));
             NewsTitle.Text = "News";
             PagePanelNews.Controls.Add(NewsTitle);
 
+            News currentNews = this.modManager.newslist.getCurrent();
+            int currentNewsId = this.modManager.newslist.current;
+
+            PictureBox LastPict = new System.Windows.Forms.PictureBox();
+            LastPict.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            LastPict.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(125 * ratioY));
+            LastPict.BackgroundImage = global::ModManager4.Properties.Resources.back;
+            LastPict.Name = "LastPict";
+            LastPict.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            LastPict.Cursor = Cursors.Hand;
+            LastPict.TabStop = false;
+            LastPict.Click += new EventHandler(this.events.lastNews);
+            if (currentNewsId > 0)
+            {
+                LastPict.Enabled = true;
+                LastPict.BackgroundImageLayout = ImageLayout.Stretch;
+            } else
+            {
+                LastPict.Enabled = false;
+                LastPict.BackgroundImageLayout = ImageLayout.None;
+            }
+            PagePanelNews.Controls.Add(LastPict);
+
+            PictureBox NextPict = new System.Windows.Forms.PictureBox();
+            NextPict.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            NextPict.Location = new System.Drawing.Point((int)(1330 * ratioX), (int)(125 * ratioY));
+            NextPict.BackgroundImage = global::ModManager4.Properties.Resources.next;
+            NextPict.Name = "NextPict";
+            NextPict.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
+            NextPict.Cursor = Cursors.Hand;
+            NextPict.TabStop = false;
+            NextPict.Click += new EventHandler(this.events.nextNews);
+            if (currentNewsId < this.modManager.newslist.getMax())
+            {
+                NextPict.Enabled = true;
+                NextPict.BackgroundImageLayout = ImageLayout.Stretch;
+            }
+            else
+            {
+                NextPict.Enabled = false;
+                NextPict.BackgroundImageLayout = ImageLayout.None;
+            }
+            PagePanelNews.Controls.Add(NextPict);
+
+            System.Windows.Forms.Label NewsTitle2 = new System.Windows.Forms.Label();
+            NewsTitle2.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            NewsTitle2.BackColor = Color.Transparent;
+            NewsTitle2.ForeColor = SystemColors.Control;
+            NewsTitle2.TextAlign = ContentAlignment.MiddleCenter;
+            NewsTitle2.Location = new System.Drawing.Point((int)(600 * ratioX), (int)(120 * ratioY));
+            NewsTitle2.Name = "NewsTitle2";
+            NewsTitle2.Size = new System.Drawing.Size((int)(630 * ratioX), (int)(60 * ratioY));
+            NewsTitle2.Text = currentNews.name;
+            PagePanelNews.Controls.Add(NewsTitle2);
+
             Panel ContentPanelNews = new Panel();
-            ContentPanelNews.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(140 * ratioY));
+            ContentPanelNews.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(200 * ratioY));
             ContentPanelNews.Name = "ContentPanelNews";
-            ContentPanelNews.Size = new System.Drawing.Size((int)(1750 * ratioX), (int)(780 * ratioY));
+            ContentPanelNews.Size = new System.Drawing.Size((int)(1750 * ratioX), (int)(660 * ratioY));
             ContentPanelNews.AutoScroll = true;
             ContentPanelNews.TabStop = false;
             PagePanelNews.Controls.Add(ContentPanelNews);
@@ -680,21 +794,19 @@ namespace ModManager4.Class
             NewsLabel.Name = "NewsLabel";
             NewsLabel.AutoSize = true;
             NewsLabel.MaximumSize = new Size((int)(1620 * ratioX), 0);
+            NewsLabel.Text = currentNews.content;
             ContentPanelNews.Controls.Add(NewsLabel);
 
-            try
-            {
-                using (var client = new WebClient())
-                {
-                    string news = client.DownloadString(this.modManager.serverURL + "/news.txt");
-                    NewsLabel.Text = news;
-                }
-            }
-            catch
-            {
-                this.modManager.logs.log("Error : Disconnected when loading news\n");
-                this.events.exitMM();
-            }
+            System.Windows.Forms.Label NewsDate = new System.Windows.Forms.Label();
+            NewsDate.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            NewsDate.BackColor = Color.Transparent;
+            NewsDate.ForeColor = SystemColors.Control;
+            NewsDate.TextAlign = ContentAlignment.MiddleRight;
+            NewsDate.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(880 * ratioY));
+            NewsDate.Name = "NewsDate";
+            NewsDate.Size = new System.Drawing.Size((int)(1750 * ratioX), (int)(60 * ratioY));
+            NewsDate.Text = currentNews.date;
+            PagePanelNews.Controls.Add(NewsDate);
 
             this.components.Add(c);
 
@@ -900,7 +1012,7 @@ namespace ModManager4.Class
                 ModDepCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepCheckbox.Location = new System.Drawing.Point((int)((40 + 400*(offset%4)) * ratioX), (int)((340 + 80*(offset/4)) * ratioY));
-                ModDepCheckbox.Name = d.name;
+                ModDepCheckbox.Name = d.id;
                 ModDepCheckbox.TabStop = false;
                 ModDepCheckbox.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
                 
@@ -916,9 +1028,9 @@ namespace ModManager4.Class
                 ModDepField.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepField.TextAlign = ContentAlignment.MiddleLeft;
                 ModDepField.Location = new System.Drawing.Point((int)((100 + 400*(offset%4)) * ratioX), (int)((340 + 80*(offset/4)) * ratioY));
-                ModDepField.Name = "ModDepField" + d.name;
+                ModDepField.Name = "ModDepField" + d.id;
                 ModDepField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
-                ModDepField.Text = d.name;
+                ModDepField.Text = d.id;
                 PagePanelLocal.Controls.Add(ModDepField);
 
                 offset++;
@@ -1044,7 +1156,7 @@ namespace ModManager4.Class
                 ModDepCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 ModDepCheckbox.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepCheckbox.Location = new System.Drawing.Point((int)((40 + 400 * (offset % 4)) * ratioX), (int)((340 + 80 * (offset / 4)) * ratioY));
-                ModDepCheckbox.Name = d.name;
+                ModDepCheckbox.Name = d.id;
                 ModDepCheckbox.TabStop = false;
                 ModDepCheckbox.Size = new System.Drawing.Size((int)(50 * ratioX), (int)(50 * ratioY));
 
@@ -1055,9 +1167,9 @@ namespace ModManager4.Class
                 ModDepField.ForeColor = System.Drawing.SystemColors.Control;
                 ModDepField.TextAlign = ContentAlignment.MiddleLeft;
                 ModDepField.Location = new System.Drawing.Point((int)((100 + 400 * (offset % 4)) * ratioX), (int)((340 + 80 * (offset / 4)) * ratioY));
-                ModDepField.Name = "ModDepField" + d.name;
+                ModDepField.Name = "ModDepField" + d.id;
                 ModDepField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
-                ModDepField.Text = d.name;
+                ModDepField.Text = d.id;
                 PagePanelLocalEdit.Controls.Add(ModDepField);
 
                 offset++;
@@ -1190,11 +1302,11 @@ namespace ModManager4.Class
 
             PictureBox SaveChanges = new System.Windows.Forms.PictureBox();
             SaveChanges.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            SaveChanges.Location = new System.Drawing.Point((int)(160 * ratioX), (int)(600 * ratioY));
+            SaveChanges.Location = new System.Drawing.Point((int)(550 * ratioX), (int)(505 * ratioY));
             SaveChanges.BackgroundImage = global::ModManager4.Properties.Resources.save;
             SaveChanges.BackgroundImageLayout = ImageLayout.Stretch;
             SaveChanges.Name = "SaveChanges";
-            SaveChanges.Size = new System.Drawing.Size((int)(600 * ratioX), (int)(160 * ratioY));
+            SaveChanges.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(70 * ratioY));
             SaveChanges.Cursor = Cursors.Hand;
             SaveChanges.TabStop = false;
             SaveChanges.Click += new EventHandler(this.events.saveAndStart);
@@ -1202,11 +1314,11 @@ namespace ModManager4.Class
 
             PictureBox StartAnyway = new System.Windows.Forms.PictureBox();
             StartAnyway.Font = new System.Drawing.Font("Arial", fonts.sizeL, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            StartAnyway.Location = new System.Drawing.Point((int)(900 * ratioX), (int)(600 * ratioY));
+            StartAnyway.Location = new System.Drawing.Point((int) (915 * ratioX), (int)(500 * ratioY));
             StartAnyway.BackgroundImage = global::ModManager4.Properties.Resources.dontsave;
             StartAnyway.BackgroundImageLayout = ImageLayout.Stretch;
             StartAnyway.Name = "StartAnyway";
-            StartAnyway.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(160 * ratioY));
+            StartAnyway.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(80 * ratioY));
             StartAnyway.Cursor = Cursors.Hand;
             StartAnyway.TabStop = false;
             StartAnyway.Click += new EventHandler(this.events.startAnyway);
@@ -1664,14 +1776,14 @@ namespace ModManager4.Class
                         ModVersionField.Location = new System.Drawing.Point((int)(660 * ratioX), (int)(categoryOffset * ratioY));
                         ModVersionField.Name = "ModVersionField=" + mod.id;
                         ModVersionField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
-                        if (mod.type == "mod")
+                        if (mod.type == "mod" || mod.id == "Challenger" || mod.id == "BetterCrewlink")
                         {
                             ModVersionField.Text = mod.release.TagName;
-                        }
-                        else
+                        } else
                         {
                             ModVersionField.Text = "";
                         }
+
                         CategoryPanel.Controls.Add(ModVersionField);
 
                         if (mod.type == "mod" || mod.type == "allInOne")

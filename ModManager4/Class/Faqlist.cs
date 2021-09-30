@@ -8,31 +8,33 @@ using System.Windows.Forms;
 
 namespace ModManager4.Class
 {
-    public class Categorylist
+    public class Faqlist
     {
+        public List<Faq> faqlist;
         public ModManager modManager;
+        public int current;
 
-        public List<Category> categories;
-        public Categorylist(ModManager modManager)
+        public Faqlist(ModManager modManager)
         {
             this.modManager = modManager;
-            this.categories = new List<Category>();
+            this.current = 0;
         }
+
         public void load()
         {
-            this.modManager.logs.log("Loading categories");
-            string catlistURL = this.modManager.apiURL + "/categories";
-            string cat = "";
+            this.modManager.logs.log("Loading faqlist");
+            string faqlistURL = this.modManager.apiURL + "/faq";
+            string faqlist = "";
             try
             {
                 using (var client = new WebClient())
                 {
-                    cat = client.DownloadString(catlistURL);
+                    faqlist = client.DownloadString(faqlistURL);
                 }
             }
             catch
             {
-                this.modManager.logs.log("Error : Disconnected when loading categories\n");
+                this.modManager.logs.log("Error : Disconnected when loading faqlist\n");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -43,14 +45,18 @@ namespace ModManager4.Class
                                     "If this problem persists, please send a ticket on Mod Manager's discord.", "Server unreacheable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
-            this.categories = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Category>>(cat);
+            this.faqlist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Faq>>(faqlist);
 
-            this.modManager.logs.log("- Categories loaded successfully");
         }
 
-        public Category getCategoryById(string id)
+        public Faq getCurrent()
         {
-            return this.categories.Find(c => c.id == id);
+            return this.faqlist[this.current];
+        }
+
+        public int getMax()
+        {
+            return this.faqlist.Count() - 1;
         }
     }
 }

@@ -3,8 +3,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace ModManager4.Class
 {
@@ -13,6 +15,8 @@ namespace ModManager4.Class
         public int CurrentRegionIdx;
 
         public List<Server> Regions;
+
+        public List<Server> remoteServers;
         
         public Serverlist()
         {
@@ -28,6 +32,7 @@ namespace ModManager4.Class
 
         public void load(ModManager modManager)
         {
+            modManager.logs.log("Loading serverlist");
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\..\\LocalLow\\Innersloth\\Among Us\\regionInfo.json";
             if (File.Exists(path))
             {
@@ -36,6 +41,30 @@ namespace ModManager4.Class
                 this.Regions = s.Regions;
                 this.CurrentRegionIdx = s.CurrentRegionIdx;
             }
+
+            string serverlistURL = modManager.apiURL + "/servers";
+            string serverlist = "";
+            try
+            {
+                using (var client = new WebClient())
+                {
+                    serverlist = client.DownloadString(serverlistURL);
+                }
+            }
+            catch
+            {
+                modManager.logs.log("Error : Disconnected when loading serverlist\n");
+                MessageBox.Show("Mod Manager's server is unreacheable.\n" +
+                                    "\n" +
+                                    "There are many possible reasons for this :\n" +
+                                    "- You are disconnected from internet\n" +
+                                    "- Your antivirus blocks Mod Manager\n" +
+                                    "- Mod Manager server is down. Check its status on matux.fr\n" +
+                                    "\n" +
+                                    "If this problem persists, please send a ticket on Mod Manager's discord.", "Server unreacheable", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                Environment.Exit(0);
+            }
+            this.remoteServers = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Server>>(serverlist);
         }
 
         public void update(ModManager modManager)
@@ -56,12 +85,7 @@ namespace ModManager4.Class
             temp.Add(this.Regions[0]);
             temp.Add(this.Regions[1]);
             temp.Add(this.Regions[2]);
-            Server matux = new Server("DnsRegionInfo, Assembly-CSharp", "152.228.160.91", "152.228.160.91", 22023, "matux.fr", 1003);
-            Server challenger = new Server("DnsRegionInfo, Assembly-CSharp", "51.210.123.16", "51.210.123.16", 22023, "challenger", 1003);
-            Server skeld = new Server("DnsRegionInfo, Assembly-CSharp", "192.241.154.115", "192.241.154.115", 22023, "skeld.net", 1003);
-            temp.Add(matux);
-            temp.Add(challenger);
-            temp.Add(skeld);
+            temp.AddRange(this.remoteServers);
             this.Regions = temp;
             this.update(modManager);
         }

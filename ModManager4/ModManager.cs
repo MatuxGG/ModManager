@@ -17,6 +17,7 @@ namespace ModManager4
     public partial class ModManager : Form
     {
         public string serverURL;
+        public string apiURL;
         public string appPath;
         public string appDataPath;
         public string tempPath;
@@ -30,6 +31,8 @@ namespace ModManager4
 
         public ServerConfig serverConfig;
         public Modlist modlist;
+        public Newslist newslist;
+        public Faqlist faqlist;
         public Categorylist categorylist;
         public Config config;
         public Componentlist componentlist;
@@ -50,6 +53,7 @@ namespace ModManager4
         {
             // Constants declaration
             this.serverURL = "https://mm.matux.fr/";
+            this.apiURL = "https://api.matux.fr/";
             this.appPath = System.AppDomain.CurrentDomain.BaseDirectory;
             this.appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\ModManager";
             this.tempPath = Path.GetTempPath() + "ModManager";
@@ -83,31 +87,11 @@ namespace ModManager4
             this.updater = new Updater(this);
             await this.updater.checkUpdate();
 
-            //Get Server Config
-            this.logs.log("ServerConfig");
-            string config = "";
-
-            try
-            {
-                using (var client = new WebClient())
-                {
-                    config = client.DownloadString(this.serverURL + "/serverConfig.json");
-                }
-            }
-            catch
-            {
-                this.logs.log("Error : Disconnected when loading Server config\n");
-                MessageBox.Show("Mod Manager's server is unreacheable.\n" +
-                "\n" +
-                "There are many possible reasons for this :\n" +
-                "- You are disconnected from internet\n" +
-                "- Your antivirus blocks Mod Manager\n" +
-                "- Mod Manager server is down. Check its status on matux.fr\n" +
-                "\n" +
-                "If this problem persists, please send a ticket on Mod Manager's discord.", "Server unreacheable", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Environment.Exit(0);
-            }
-            this.serverConfig = Newtonsoft.Json.JsonConvert.DeserializeObject<ServerConfig>(config);
+            // Load remote config
+            this.serverConfig = new ServerConfig(this);
+            this.logs.log("Loading server config");
+            this.serverConfig.load();
+            this.logs.log("- Server config loaded successfully");
 
             // Load local config or create one (find AU folder if possible)
             this.config = new Config();
@@ -133,6 +117,14 @@ namespace ModManager4
                 ProgressBar progress = (ProgressBar)this.Controls["InitProgressBar"];
                 progress.Visible = false;
             }
+
+            // Load News from server
+            this.newslist = new Newslist(this);
+            this.newslist.load();
+
+            // Load Faq from server
+            this.faqlist = new Faqlist(this);
+            this.faqlist.load();
 
             // Load categories from server
             this.categorylist = new Categorylist(this);
@@ -196,7 +188,7 @@ namespace ModManager4
 
             this.logs.log("Mod Manager loaded successfully\n");
 
-            if (serverConfig.enabled == false)
+            if (serverConfig.get("enabled").value == "false")
             {
                 this.pagelist.renderPage("Disabled");
                 return;

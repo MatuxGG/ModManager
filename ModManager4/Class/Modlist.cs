@@ -21,6 +21,8 @@ namespace ModManager4.Class
         public List<string> toUninstall;
         public Release challengerClient;
         public Release challengerMod;
+        
+
         public Modlist(ModManager modManager)
         {
             this.modManager = modManager;
@@ -30,7 +32,7 @@ namespace ModManager4.Class
         public void load()
         {
             this.modManager.logs.log("Loading modlist");
-            string modlistURL = this.modManager.serverURL + "/modlist.json";
+            string modlistURL = this.modManager.apiURL + "/mods";
             string modlist = "";
             try
             {
@@ -54,7 +56,7 @@ namespace ModManager4.Class
             }
             this.mods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(modlist);
 
-            string dependenciesURL = this.modManager.serverURL + "/dependencies.json";
+            string dependenciesURL = this.modManager.apiURL + "/dependencies";
             string dependencies = "";
             try
             {
@@ -136,7 +138,7 @@ namespace ModManager4.Class
 
         public async Task loadRelease(Mod m)
         {
-            if (m.type != "allInOne")
+            if (m.type != "allInOne" || m.id == "BetterCrewlink")
             {
                 await m.getGithubRelease(this.modManager.token);
             }
@@ -152,6 +154,7 @@ namespace ModManager4.Class
             var tokenAuth = new Credentials(token);
             client.Credentials = tokenAuth;
             IReadOnlyList<Release> releases = await client.Repository.Release.GetAll(m.author, m.github);
+            m.release = releases.First();
             // There is no management of Challenger down because we assume that it will be always up
             this.challengerClient = null;
             this.challengerMod = null;
@@ -170,7 +173,6 @@ namespace ModManager4.Class
                     break;
                 }
             }
-
         }
 
         public void updateLocalMods()
@@ -336,7 +338,7 @@ namespace ModManager4.Class
 
         public Mod getAvailableModById(string id)
         {
-            return this.mods.Find(m => m.id == id && m.gameVersion == this.modManager.serverConfig.gameVersion);
+            return this.mods.Find(m => m.id == id && m.gameVersion == this.modManager.serverConfig.get("gameVersion").value);
         }
 
         public List<Category> getAvailableCategories(ModManager modManager)
@@ -351,17 +353,17 @@ namespace ModManager4.Class
 
         public List<Mod> getAvailableModsByCategory(Category category)
         {
-            return sort(this.mods.FindAll(m => m.category == category.id && m.gameVersion == this.modManager.serverConfig.gameVersion));
+            return sort(this.mods.FindAll(m => m.category == category.id && m.gameVersion == this.modManager.serverConfig.get("gameVersion").value));
         }
 
         public List<Mod> getAvailableMods()
         {
-            return this.mods.FindAll(m => m.gameVersion == this.modManager.serverConfig.gameVersion);
+            return this.mods.FindAll(m => m.gameVersion == this.modManager.serverConfig.get("gameVersion").value);
         }
 
         public List<Mod> getAvailableRemoteMods()
         {
-            return this.mods.FindAll(m => m.gameVersion == this.modManager.serverConfig.gameVersion && m.type == "mod");
+            return this.mods.FindAll(m => m.gameVersion == this.modManager.serverConfig.get("gameVersion").value && m.type == "mod");
         }
 
         public List<Mod> sort(List<Mod> mods)

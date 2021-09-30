@@ -300,7 +300,7 @@ namespace ModManager4.Class
                 this.modManager.config.getInstalledModById("Challenger").version = this.modManager.modlist.challengerMod.TagName;
             } else
             {
-                InstalledMod newMod = new InstalledMod("Challenger", this.modManager.modlist.challengerMod.TagName, this.modManager.serverConfig.gameVersion, new List<string>() { });
+                InstalledMod newMod = new InstalledMod("Challenger", this.modManager.modlist.challengerMod.TagName, this.modManager.serverConfig.get("gameVersion").value, new List<string>() { });
                 this.modManager.config.installedMods.Add(newMod);
             }
 
@@ -391,7 +391,7 @@ namespace ModManager4.Class
                     {
                         using (var client = new WebClient())
                         {
-                            client.DownloadFile(this.modManager.serverURL + "/dependencies/" + dependencie + ".zip", tempPath + "\\" + dependencie + ".zip");
+                            client.DownloadFile(this.modManager.apiURL + "/files/dependencies/" + dependencie + ".zip", tempPath + "\\" + dependencie + ".zip");
                         }
                     }
                     catch

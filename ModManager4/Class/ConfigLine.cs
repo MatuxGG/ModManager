@@ -6,15 +6,15 @@ using System.Threading.Tasks;
 
 namespace ModManager4.Class
 {
-    public class Dependency
+    public class ConfigLine
     {
-        public string id { get; set; }
-        public string name { get; set; }
-    
-        public Dependency(string id, string name)
+        public string id;
+        public string value;
+
+        public ConfigLine(string id, string value)
         {
             this.id = id;
-            this.name = name;
+            this.value = value;
         }
     }
 }

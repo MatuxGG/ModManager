@@ -562,7 +562,7 @@ namespace ModManager4.Class
             string newPath = this.modManager.appDataPath + "\\localMods\\" + Path.GetFileName(fileName);
             this.modManager.utils.FileCopy(fileName, newPath);
             List<Mod> localMods = this.modManager.modlist.getLocalMods();
-            Mod newMod = new Mod("Localmod" + localMods.Count, name, "local", "localMod", this.modManager.serverConfig.gameVersion, dependencies, "You", newPath, new List<string>(){ }, new List<string>() { }, new List<string>() { });
+            Mod newMod = new Mod("Localmod" + localMods.Count, name, "local", "localMod", this.modManager.serverConfig.get("gameVersion").value, dependencies, "You", newPath, new List<string>(){ }, new List<string>() { }, new List<string>() { });
             this.modManager.modlist.mods.Add(newMod);
             this.modManager.modlist.updateLocalMods();
             this.modManager.componentlist.refreshModSelection();
@@ -657,6 +657,108 @@ namespace ModManager4.Class
             this.modManager.logs.log("Event : Removed local mods successfully\n");
         }
 
+        public void lastNews(object sender, EventArgs e)
+        {
+            this.modManager.newslist.current--;
+            this.refreshNews();
+        }
+
+        public void nextNews(object sender, EventArgs e)
+        {
+            this.modManager.newslist.current++;
+            this.refreshNews();
+        }
+
+        public void refreshNews()
+        {
+            int currentNewsId = this.modManager.newslist.current;
+            News currentNews = this.modManager.newslist.getCurrent();
+
+            Panel newsPanel = (Panel) this.modManager.Controls["PagePanelNews"];
+
+            Label NewsTitle = (Label)newsPanel.Controls["NewsTitle2"];
+            Label NewsContent = (Label)newsPanel.Controls["ContentPanelNews"].Controls["NewsLabel"];
+            Label NewsDate = (Label)newsPanel.Controls["NewsDate"];
+
+            PictureBox LastPict = (PictureBox)newsPanel.Controls["LastPict"];
+            PictureBox NextPict = (PictureBox)newsPanel.Controls["NextPict"];
+
+            NewsTitle.Text = currentNews.name;
+            NewsContent.Text = currentNews.content;
+            NewsDate.Text = currentNews.date;
+
+            if (currentNewsId > 0)
+            {
+                LastPict.Enabled = true;
+                LastPict.BackgroundImageLayout = ImageLayout.Stretch;
+            }
+            else
+            {
+                LastPict.Enabled = false;
+                LastPict.BackgroundImageLayout = ImageLayout.None;
+            }
+            if (currentNewsId < this.modManager.newslist.getMax())
+            {
+                NextPict.Enabled = true;
+                NextPict.BackgroundImageLayout = ImageLayout.Stretch;
+            }
+            else
+            {
+                NextPict.Enabled = false;
+                NextPict.BackgroundImageLayout = ImageLayout.None;
+            }
+        }
+
+        public void lastFaq(object sender, EventArgs e)
+        {
+            this.modManager.faqlist.current--;
+            this.refreshFaq();
+        }
+
+        public void nextFaq(object sender, EventArgs e)
+        {
+            this.modManager.faqlist.current++;
+            this.refreshFaq();
+        }
+
+        public void refreshFaq()
+        {
+            int currentFaqId = this.modManager.faqlist.current;
+            Faq currentFaq = this.modManager.faqlist.getCurrent();
+
+            Panel faqPanel = (Panel)this.modManager.Controls["PagePanelInfo"];
+
+            Label FaqTitle = (Label)faqPanel.Controls["InfoQuestion"];
+            Label FaqAnswer = (Label)faqPanel.Controls["ContentPanelInfo"].Controls["InfoLabel"];
+
+            PictureBox LastFaqPict = (PictureBox)faqPanel.Controls["LastFaqPict"];
+            PictureBox NextFaqPict = (PictureBox)faqPanel.Controls["NextFaqPict"];
+
+            FaqTitle.Text = currentFaq.question;
+            FaqAnswer.Text = currentFaq.answer;
+
+            if (currentFaqId > 0)
+            {
+                LastFaqPict.Enabled = true;
+                LastFaqPict.BackgroundImageLayout = ImageLayout.Stretch;
+            }
+            else
+            {
+                LastFaqPict.Enabled = false;
+                LastFaqPict.BackgroundImageLayout = ImageLayout.None;
+            }
+            if (currentFaqId < this.modManager.faqlist.getMax())
+            {
+                NextFaqPict.Enabled = true;
+                NextFaqPict.BackgroundImageLayout = ImageLayout.Stretch;
+            }
+            else
+            {
+                NextFaqPict.Enabled = false;
+                NextFaqPict.BackgroundImageLayout = ImageLayout.None;
+            }
+        }
+
         public void downloadAllInOne(object sender, EventArgs e)
         {
             string cross = ((PictureBox)sender).Name;
@@ -713,7 +815,6 @@ namespace ModManager4.Class
                         this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
                         this.modManager.componentlist.events.exitMM();
                     }
-                    this.modManager.logs.debug(dlPath);
                     Process.Start("explorer.exe", dlPath);
 
                     Boolean installed = false;
@@ -737,12 +838,52 @@ namespace ModManager4.Class
                     Process.Start("explorer", "steam://rungameid/1653240");
                 } else
                 {
-                    Process.Start("explorer", "https://store.steampowered.com/app/1653240/Polusgg/");
+                    Process.Start("explorer", "steam://run/1653240");
+                    this.checkPolusInstalled();
                 }
             }
 
             this.modManager.logs.log("Event : Downloaded All In One Mod " + m.name + " successfully\n");
 
+        }
+
+        public void checkPolusInstalled()
+        {
+            BackgroundWorker backgroundWorkerPolus = new BackgroundWorker();
+            backgroundWorkerPolus.WorkerReportsProgress = true;
+
+            backgroundWorkerPolus.DoWork += new DoWorkEventHandler(this.backgroundWorkerPolus_DoWork);
+            backgroundWorkerPolus.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorkerPolus_RunWorkerCompleted);
+            backgroundWorkerPolus.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorkerPolus_ProgressChanged);
+            backgroundWorkerPolus.RunWorkerAsync();
+
+        }
+
+        public void backgroundWorkerPolus_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var backgroundWorker = sender as BackgroundWorker;
+
+            Boolean installed = false;
+            while (!installed)
+            {
+                RegistryKey polusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1653240", false);
+                if (polusKey != null)
+                {
+                    installed = true;
+                }
+            }
+            backgroundWorker.ReportProgress(100);
+        }
+
+        private void backgroundWorkerPolus_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+
+        }
+
+        private void backgroundWorkerPolus_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            this.clearWithBlink();
+            this.modManager.pagelist.renderPage("ModSelection");
         }
 
         public void startAllInOne(object sender, EventArgs e)
