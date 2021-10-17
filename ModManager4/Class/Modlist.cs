@@ -21,7 +21,6 @@ namespace ModManager4.Class
         public List<string> toUninstall;
         public Release challengerClient;
         public Release challengerMod;
-        
 
         public Modlist(ModManager modManager)
         {
@@ -89,20 +88,33 @@ namespace ModManager4.Class
             int max = this.mods.Count();
             int i = 0;
             List<Mod> releasesToRemove = new List<Mod>() { };
+
+            List<Task> tasks = new List<Task>() { };
             foreach (Mod m in this.mods)
             {
+                Task t = this.loadRelease(m);
                 i++;
-                progress.Value = (100 * i) / max;
-                await this.loadRelease(m);
+                tasks.Add(t);
+            }
+            progress.Value = 50;
+            await Task.WhenAll(tasks);
+            progress.Value = 100;
+
+            
+            foreach(Mod m in this.mods)
+            {
                 if (m.type != "allInOne" && m.name != "Challenger" && m.release == null)
                 {
                     releasesToRemove.Add(m);
                 }
             }
+
             foreach (Mod toRemove in releasesToRemove)
             {
                 this.mods.Remove(toRemove);
+            
             }
+            
             string localModsPath = this.modManager.appDataPath + "\\localMods.json";
             if (File.Exists(localModsPath))
             {

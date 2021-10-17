@@ -35,7 +35,7 @@ namespace ModManager4.Class
 
             this.modManager.Controls.Clear();
 
-            Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
+            Fontlist fonts = new Fontlist(this.modManager, this.modManager.config.resolutionY);
 
             double ratioX = (double)this.modManager.config.resolutionX / 2560.0;
             double ratioY = (double)this.modManager.config.resolutionY / 1600.0;
@@ -1428,20 +1428,46 @@ namespace ModManager4.Class
         public void refreshModSelection()
         {
             Component c = this.get("ModSelection");
-            c.removeControls();
+            foreach (Control co in c.controls)
+            {
+                this.modManager.Controls.Remove(co);
+            }
+            this.components.Remove(c);
+            c = new Component("ModSelection");
             c = this.loadModPage(c);
+            this.components.Add(c);
+            //c.removeControls();
+            //c = this.loadModPage(c);
+            //this.renderComponent(c);
+        }
+
+        public void renderComponent(Component c)
+        {
+            foreach (Control control in c.controls)
+            {
+                control.Show();
+            }
         }
 
         public void refreshServers()
         {
             Component c = this.get("Servers");
-            c.removeControls();
+            foreach (Control co in c.controls)
+            {
+                this.modManager.Controls.Remove(co);
+            }
+            this.components.Remove(c);
+            c = new Component("Servers");
             c = this.loadServers(c);
+            this.components.Add(c);
+            //Component c = this.get("Servers");
+            //c.removeControls();
+            //c = this.loadServers(c);
         }
 
         public Component loadModPage(Component c) { 
         
-            Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
+            Fontlist fonts = new Fontlist(this.modManager, this.modManager.config.resolutionY);
 
             double ratioX = (double)this.modManager.config.resolutionX / 2560.0;
             double ratioY = (double)this.modManager.config.resolutionY / 1600.0;
@@ -1609,7 +1635,7 @@ namespace ModManager4.Class
 
                 Panel CategoryTitlePanel = new Panel();
                 CategoryTitlePanel.Location = new System.Drawing.Point((int)(0 * ratioX), (int)(offset * ratioY));
-                CategoryTitlePanel.Name = "CategoryTitlePanel=" + cat;
+                CategoryTitlePanel.Name = "CategoryTitlePanel=" + cat.id;
                 CategoryTitlePanel.BackColor = Color.Black;
                 CategoryTitlePanel.BorderStyle = BorderStyle.FixedSingle;
                 CategoryTitlePanel.BackgroundImageLayout = ImageLayout.Stretch;
@@ -1625,7 +1651,7 @@ namespace ModManager4.Class
                 CategoryField.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                 CategoryField.ForeColor = System.Drawing.SystemColors.Control;
                 CategoryField.Location = new System.Drawing.Point((int)(10 * ratioX), (int)(10 * ratioY));
-                CategoryField.Name = "CategoryField=" + cat;
+                CategoryField.Name = "CategoryField=" + cat.id;
                 CategoryField.Size = new System.Drawing.Size((int)(1560 * ratioX), (int)(40 * ratioY));
                 CategoryField.Text = cat.name;
                 CategoryField.Click += new EventHandler(this.events.rollCategory);
@@ -1755,15 +1781,10 @@ namespace ModManager4.Class
                             ModAuthorField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
                             ModAuthorField.Text = mod.author;
 
-                            if (mod.type == "mod" || mod.id == "Challenger" || mod.id == "BetterCrewlink")
+                            if (mod.githubLink == "1")
                             {
                                 ModAuthorField.Click += new EventHandler(this.events.openAuthorGithub);
-                            }
-                            if (mod.type == "localMod")
-                            {
-                                ModAuthorField.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
-                            }
-                            if (mod.id == "Skeld" || mod.id == "Polusgg")
+                            } else
                             {
                                 ModAuthorField.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
                             }
@@ -1776,7 +1797,7 @@ namespace ModManager4.Class
                         ModVersionField.Location = new System.Drawing.Point((int)(660 * ratioX), (int)(categoryOffset * ratioY));
                         ModVersionField.Name = "ModVersionField=" + mod.id;
                         ModVersionField.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(40 * ratioY));
-                        if (mod.type == "mod" || mod.id == "Challenger" || mod.id == "BetterCrewlink")
+                        if (mod.githubLink == "1")
                         {
                             ModVersionField.Text = mod.release.TagName;
                         } else
@@ -1792,25 +1813,20 @@ namespace ModManager4.Class
                             ModGithubField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                             ModGithubField.LinkColor = System.Drawing.SystemColors.Control;
                             ModGithubField.ForeColor = System.Drawing.SystemColors.Control;
+                            ModGithubField.Size = new System.Drawing.Size((int)(700 * ratioX), (int)(40 * ratioY));
                             ModGithubField.Location = new System.Drawing.Point((int)(960 * ratioX), (int)(categoryOffset * ratioY));
                             ModGithubField.Name = "ModGithubField=" + mod.id;
-                            ModGithubField.Size = new System.Drawing.Size((int)(800 * ratioX), (int)(40 * ratioY));
                             ModGithubField.TabStop = false;
+                            ModGithubField.Click += new EventHandler(this.events.openGithub);
 
-                            if (mod.type == "mod")
+                            if (mod.githubLink == "1")
                             {
                                 ModGithubField.Text = "https://github.com/" + mod.author + "/" + mod.github;
                             }
-                            else if (mod.id == "Challenger" || mod.id == "BetterCrewlink")
-                            {
-                                ModGithubField.Text = "https://github.com/" + mod.author + "/" + mod.github;
-                            }
-                            else if (mod.id == "Skeld" || mod.id == "Polusgg")
+                            else
                             {
                                 ModGithubField.Text = mod.github;
                             }
-
-                            ModGithubField.Click += new EventHandler(this.events.openGithub);
 
                             CategoryPanel.Controls.Add(ModGithubField);
                         }
@@ -1862,7 +1878,7 @@ namespace ModManager4.Class
         public Component loadServers(Component c)
         {
 
-            Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
+            Fontlist fonts = new Fontlist(this.modManager, this.modManager.config.resolutionY);
 
             double ratioX = (double)this.modManager.config.resolutionX / 2560.0;
             double ratioY = (double)this.modManager.config.resolutionY / 1600.0;
@@ -1969,7 +1985,7 @@ namespace ModManager4.Class
         public void addServer(Server s, int offset, Panel p)
         {
 
-            Fontlist fonts = new Fontlist(this.modManager.config.resolutionY);
+            Fontlist fonts = new Fontlist(this.modManager, this.modManager.config.resolutionY);
 
             double ratioX = (double)this.modManager.config.resolutionX / 2560.0;
             double ratioY = (double)this.modManager.config.resolutionY / 1600.0;

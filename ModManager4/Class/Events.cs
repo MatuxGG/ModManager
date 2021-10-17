@@ -208,7 +208,9 @@ namespace ModManager4.Class
             this.modManager.serverlist.removeRegion(serverId);
             this.modManager.serverlist.update(this.modManager);
 
-            this.clearWithBlink();
+            this.modManager.componentlist.refreshServers();
+
+            //this.clearWithBlink();
 
             this.modManager.pagelist.renderPage("Servers");
         }
@@ -217,7 +219,9 @@ namespace ModManager4.Class
         {
             this.modManager.serverlist.reset(this.modManager);
 
-            this.clearWithBlink();
+            this.modManager.componentlist.refreshServers();
+
+            // this.clearWithBlink();
 
             this.modManager.pagelist.renderPage("Servers");
         }
@@ -467,7 +471,7 @@ namespace ModManager4.Class
                 arguments = arguments.Substring(0, arguments.Length - 1);
             } else
             {
-                title = title + " Among Us";
+                title = title.Substring(0, title.Length - 2);
                 arguments = "";
             }
             string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + "\\" + title + ".lnk";
@@ -562,7 +566,7 @@ namespace ModManager4.Class
             string newPath = this.modManager.appDataPath + "\\localMods\\" + Path.GetFileName(fileName);
             this.modManager.utils.FileCopy(fileName, newPath);
             List<Mod> localMods = this.modManager.modlist.getLocalMods();
-            Mod newMod = new Mod("Localmod" + localMods.Count, name, "local", "localMod", this.modManager.serverConfig.get("gameVersion").value, dependencies, "You", newPath, new List<string>(){ }, new List<string>() { }, new List<string>() { });
+            Mod newMod = new Mod("Localmod" + localMods.Count, name, "local", "localMod", this.modManager.serverConfig.get("gameVersion").value, dependencies, "You", newPath, "0", new List<string>(){ }, new List<string>() { }, new List<string>() { });
             this.modManager.modlist.mods.Add(newMod);
             this.modManager.modlist.updateLocalMods();
             this.modManager.componentlist.refreshModSelection();
@@ -630,7 +634,9 @@ namespace ModManager4.Class
             Mod m = this.modManager.modlist.getModById(modId);
             this.modManager.modWorker.removeLocalMod(m);
 
-            this.clearWithBlink();
+            this.modManager.componentlist.refreshModSelection();
+
+            //this.clearWithBlink();
 
             this.modManager.logs.log(this.modManager.componentlist.toString());
             this.modManager.pagelist.renderPage("ModSelection");
@@ -785,7 +791,8 @@ namespace ModManager4.Class
                 this.modManager.config.installedMods.Add(newMod);
                 this.modManager.config.update(this.modManager);
 
-                this.clearWithBlink();
+                this.modManager.componentlist.refreshModSelection();
+                //this.clearWithBlink();
                 this.modManager.pagelist.renderPage("ModSelection");
             } else if (m.id == "Challenger")
             {
@@ -826,7 +833,8 @@ namespace ModManager4.Class
                             installed = true;
                         }
                     }
-                    this.clearWithBlink();
+                    this.modManager.componentlist.refreshModSelection();
+                    //this.clearWithBlink();
                     this.modManager.pagelist.renderPage("ModSelection");
                 }
             }
@@ -882,7 +890,8 @@ namespace ModManager4.Class
 
         private void backgroundWorkerPolus_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            this.clearWithBlink();
+            this.modManager.componentlist.refreshModSelection();
+            //this.clearWithBlink();
             this.modManager.pagelist.renderPage("ModSelection");
         }
 
@@ -936,12 +945,14 @@ namespace ModManager4.Class
                             installed = true;
                         }
                     }
-                    this.clearWithBlink();
+                    this.modManager.componentlist.refreshModSelection();
+                    //this.clearWithBlink();
                     this.modManager.pagelist.renderPage("ModSelection");
                 }
             }
             else if (m.id == "Polusgg")
             {
+                //this.modManager.modWorker.uninstallMods();
                 RegistryKey polusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1653240", false);
                 if (polusKey != null)
                 {
@@ -966,7 +977,9 @@ namespace ModManager4.Class
             }
             this.modManager.config.update(this.modManager);
 
-            this.clearWithBlink();
+            this.modManager.componentlist.refreshModSelection();
+
+            //this.clearWithBlink();
 
             this.modManager.pagelist.renderPage("ModSelection");
 
@@ -990,7 +1003,9 @@ namespace ModManager4.Class
                 this.modManager.config.sortOrder = "A";
             }
 
-            this.clearWithBlink();
+            this.modManager.componentlist.refreshModSelection();
+
+            //this.clearWithBlink();
 
             this.modManager.pagelist.renderPage("ModSelection");
         }
