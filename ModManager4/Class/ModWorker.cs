@@ -500,7 +500,11 @@ namespace ModManager4.Class
 
             ZipFile.ExtractToDirectory(m.github, tempPathZip);
 
-            tempPathZip = this.getBepInExInsideRec(tempPathZip);
+            string newPath = this.getBepInExInsideRec(tempPathZip);
+            if (newPath != null)
+            {
+                tempPathZip = newPath;
+            }
 
             string dirPlugins = this.modManager.config.amongUsPath + "\\BepInEx\\plugins";
 
@@ -641,7 +645,7 @@ namespace ModManager4.Class
             //this.modManager.utils.DirectoryDelete(tempPath);
             Directory.CreateDirectory(tempPath);
             string zipPath = tempPath + "\\" + fileName;
-            
+
             if (this.modManager.config.enableCache == true)
             {
                 this.modManager.logs.log("- Cache enabled");
@@ -690,7 +694,11 @@ namespace ModManager4.Class
             Directory.CreateDirectory(tempPathZip);
             ZipFile.ExtractToDirectory(zipPath, tempPathZip);
 
-            tempPathZip = this.getBepInExInsideRec(tempPathZip);
+            string newPath = this.getBepInExInsideRec(tempPathZip);
+            if (newPath != null)
+            {
+                tempPathZip = newPath;
+            }
 
             List<string> installedFiles = new List<string>();
             foreach (string folder in m.folders)
