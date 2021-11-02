@@ -566,7 +566,7 @@ namespace ModManager4.Class
             string newPath = this.modManager.appDataPath + "\\localMods\\" + Path.GetFileName(fileName);
             this.modManager.utils.FileCopy(fileName, newPath);
             List<Mod> localMods = this.modManager.modlist.getLocalMods();
-            Mod newMod = new Mod("Localmod" + localMods.Count, name, "local", "localMod", this.modManager.serverConfig.get("gameVersion").value, dependencies, "You", newPath, "0", new List<string>(){ }, new List<string>() { }, new List<string>() { });
+            Mod newMod = new Mod("Localmod" + localMods.Count, name, "local", "localMod", this.modManager.serverConfig.get("gameVersion").value, dependencies, "You", newPath, "0", new List<string>(){ }, new List<string>() { }, new List<string>() { }, "1", "1");
             this.modManager.modlist.mods.Add(newMod);
             this.modManager.modlist.updateLocalMods();
             this.modManager.componentlist.refreshModSelection();
@@ -933,7 +933,6 @@ namespace ModManager4.Class
                         this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
                         this.modManager.componentlist.events.exitMM();
                     }
-                    this.modManager.logs.debug(dlPath);
                     Process.Start("explorer.exe", dlPath);
 
                     Boolean installed = false;
@@ -1072,7 +1071,7 @@ namespace ModManager4.Class
                 worked = true;
             } else if (this.modManager.config.startMethod == "Epic Games Store")
             {
-                Process.Start("explorer", "com.epicgames.launcher://apps/33956bcb55d4452d8c47e16b94e294bd%3A729a86a5146640a2ace9e8c595414c56%3A963137e4c29d4c79a81323b8fab03a40?action=launch&silent=true");
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {"com.epicgames.launcher://apps/33956bcb55d4452d8c47e16b94e294bd%3A729a86a5146640a2ace9e8c595414c56%3A963137e4c29d4c79a81323b8fab03a40?action=launch&silent=true"}") { CreateNoWindow = true });
                 worked = true;
             }
             if (worked == false)

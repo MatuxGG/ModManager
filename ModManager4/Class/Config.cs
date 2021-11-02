@@ -210,7 +210,7 @@ namespace ModManager4.Class
                 {
                     modManager.logs.log("- Among Us detected on Epic Games Store");
                     this.amongUsPath = egsPath;
-                    //this.startMethod = "Epic Games Store";
+                    this.startMethod = "Epic Games Store";
 
                     modManager.logs.log("- Saving Among Us path : " + this.amongUsPath);
                     this.update(modManager);

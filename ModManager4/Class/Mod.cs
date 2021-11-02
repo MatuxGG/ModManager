@@ -23,10 +23,12 @@ namespace ModManager4.Class
         public List<string> data { get; set; }
 
         public List<string> excludeFiles { get; set; }
+        public string worksOnSteam { get; set; }
+        public string worksOnEGS { get; set; }
 
         public Release release { get; set; }
 
-        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, List<string> folders, List<string> data, List<string> excludeFiles)
+        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, List<string> folders, List<string> data, List<string> excludeFiles, string worksOnSteam, string worksOnEGS)
         {
             this.id = id;
             this.name = name;
@@ -41,6 +43,8 @@ namespace ModManager4.Class
             this.folders = folders;
             this.data = data;
             this.excludeFiles = excludeFiles;
+            this.worksOnSteam = worksOnSteam;
+            this.worksOnEGS = worksOnEGS;
 
             if (this.dependencies == null)
             {

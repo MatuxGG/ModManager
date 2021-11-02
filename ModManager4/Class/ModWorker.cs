@@ -706,10 +706,7 @@ namespace ModManager4.Class
                 DirectoryInfo dirInfo = new DirectoryInfo(tempPathZip + "\\" + folder);
                 if (dirInfo.Exists)
                 {
-                    if (Directory.Exists(this.modManager.config.amongUsPath + "\\" + folder) == false)
-                    {
-                        Directory.CreateDirectory(this.modManager.config.amongUsPath + "\\" + folder);
-                    }
+                    Directory.CreateDirectory(this.modManager.config.amongUsPath + "\\" + folder);
 
                     FileInfo[] files = dirInfo.GetFiles("*");
                     foreach (FileInfo f in files)

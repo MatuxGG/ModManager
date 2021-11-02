@@ -42,6 +42,8 @@ namespace ModManager4.Class
             { "MMDiscordLabel", "Click here to join Mod Manager's discord server" },
             { "MatuxGithubLabel", "Click here to open Mod Manager's github repository" },
             { "MethodComboBox", "Click here to change the method used to start Among Us" },
+            { "ModSteam", "This mod is compatible with Steam" },
+            { "ModEGS", "This mod is compatible with Epic Games Store" },
 
         }; 
 
@@ -49,7 +51,12 @@ namespace ModManager4.Class
         {
             Control c = (Control)sender;
 
-            string s = tips[c.Name];
+            string name = c.Name;
+            if (name.Contains("="))
+            {
+                name = name.Substring(0, name.IndexOf("="));
+            }
+            string s = tips[name];
 
             Point locationOnForm = c.FindForm().PointToClient(c.Parent.PointToScreen(c.Location));
 

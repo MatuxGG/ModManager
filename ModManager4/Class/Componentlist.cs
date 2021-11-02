@@ -578,8 +578,8 @@ namespace ModManager4.Class
             MethodComboBox.MouseLeave += new EventHandler(this.tooltips.hide);
             MethodComboBox.MouseHover += new EventHandler(this.tooltips.show);
 
-            MethodComboBox.Items.AddRange(new string[] { "Direct Link", "Steam" });
-            //MethodComboBox.Items.AddRange(new string[] { "Direct Link", "Steam", "Epic Games Store" });
+            //MethodComboBox.Items.AddRange(new string[] { "Direct Link", "Steam" });
+            MethodComboBox.Items.AddRange(new string[] { "Direct Link", "Steam", "Epic Games Store" });
 
             string currentMethod = this.modManager.config.startMethod;
 
@@ -1813,7 +1813,7 @@ namespace ModManager4.Class
                             ModGithubField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                             ModGithubField.LinkColor = System.Drawing.SystemColors.Control;
                             ModGithubField.ForeColor = System.Drawing.SystemColors.Control;
-                            ModGithubField.Size = new System.Drawing.Size((int)(700 * ratioX), (int)(40 * ratioY));
+                            ModGithubField.Size = new System.Drawing.Size((int)(600 * ratioX), (int)(40 * ratioY));
                             ModGithubField.Location = new System.Drawing.Point((int)(960 * ratioX), (int)(categoryOffset * ratioY));
                             ModGithubField.Name = "ModGithubField=" + mod.id;
                             ModGithubField.TabStop = false;
@@ -1829,6 +1829,39 @@ namespace ModManager4.Class
                             }
 
                             CategoryPanel.Controls.Add(ModGithubField);
+
+                            if (mod.worksOnSteam == "1")
+                            {
+                                PictureBox ModSteam = new System.Windows.Forms.PictureBox();
+                                ModSteam.Image = global::ModManager4.Properties.Resources.steam;
+                                ModSteam.BackColor = System.Drawing.Color.Transparent;
+                                ModSteam.Location = new System.Drawing.Point((int)(1580 * ratioX), (int)(categoryOffset * ratioY));
+                                ModSteam.Name = "ModSteam=" + mod.id;
+                                ModSteam.Size = new System.Drawing.Size((int)(30 * ratioX), (int)(30 * ratioY));
+                                ModSteam.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                                ModSteam.TabStop = false;
+                                ModSteam.Cursor = Cursors.Hand;
+                                ModSteam.MouseLeave += new EventHandler(this.tooltips.hide);
+                                ModSteam.MouseHover += new EventHandler(this.tooltips.show);
+                                CategoryPanel.Controls.Add(ModSteam);
+                            }
+
+                            if (mod.worksOnEGS == "1")
+                            {
+                                PictureBox ModEGS = new System.Windows.Forms.PictureBox();
+                                ModEGS.Image = global::ModManager4.Properties.Resources.epicGames;
+                                ModEGS.BackColor = System.Drawing.Color.Transparent;
+                                ModEGS.Location = new System.Drawing.Point((int)(1630 * ratioX), (int)(categoryOffset * ratioY));
+                                ModEGS.Name = "ModEGS=" + mod.id;
+                                ModEGS.Size = new System.Drawing.Size((int)(30 * ratioX), (int)(30 * ratioY));
+                                ModEGS.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+                                ModEGS.TabStop = false;
+                                ModEGS.Cursor = Cursors.Hand;
+                                ModEGS.MouseLeave += new EventHandler(this.tooltips.hide);
+                                ModEGS.MouseHover += new EventHandler(this.tooltips.show);
+                                CategoryPanel.Controls.Add(ModEGS);
+                            }
+
                         }
 
                         else
