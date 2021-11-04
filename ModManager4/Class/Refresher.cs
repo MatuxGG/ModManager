@@ -35,7 +35,7 @@ namespace ModManager4.Class
 
             while (true)
             {
-                System.Threading.Thread.Sleep(10 * 1000); // Each 5 minute
+                System.Threading.Thread.Sleep(5 * 60 * 1000); // Each 5 minute
 
                 while (this.modManager.actionLock == true)
                 {
