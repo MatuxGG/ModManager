@@ -112,7 +112,7 @@ namespace ModManager4.Class
                             Environment.Exit(0);
                         }
                         this.modManager.logs.log("- Launching installer");
-                        Process.Start(installerPath);
+                        Process.Start("explorer", installerPath);
                         Environment.Exit(0);
                     }
                 }

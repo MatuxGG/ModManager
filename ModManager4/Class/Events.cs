@@ -31,7 +31,7 @@ namespace ModManager4.Class
             LinkLabel clickedLink = ((LinkLabel)sender);
             string link = clickedLink.Text;
             this.modManager.logs.log("Event : Open github at link " + link + "\n");
-            Process.Start(link);
+            Process.Start("explorer", link);
         }
 
         public void openAuthorGithub(object sender, EventArgs e)
@@ -41,7 +41,7 @@ namespace ModManager4.Class
             Mod m = this.modManager.modlist.getModById(modId);
             string link = "https://github.com/" + m.author;
             this.modManager.logs.log("Event : Open Author github at link " + link + "\n");
-            Process.Start(link);
+            Process.Start("explorer", link);
         }
 
         public void openAnnounce(object sender, EventArgs e)
@@ -64,19 +64,19 @@ namespace ModManager4.Class
         public void openMMDiscord(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager discord\n");
-            Process.Start(this.modManager.serverURL + "/discord");
+            Process.Start("explorer", this.modManager.serverURL + "/discord");
         }
 
         public void openMatuxGithub(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager github\n");
-            Process.Start(this.modManager.serverURL + "\\github");
+            Process.Start("explorer", this.modManager.serverURL + "\\github");
         }
 
         public void openMatuxRoadmap(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager Roadmap\n");
-            Process.Start(this.modManager.serverURL + "\\roadmap");
+            Process.Start("explorer", this.modManager.serverURL + "\\roadmap");
         }
 
         public void openPathSelection(object sender, EventArgs e)
@@ -88,7 +88,7 @@ namespace ModManager4.Class
         public void openAmongUsDirectory(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Among Us folder\n");
-            Process.Start("explorer.exe", this.modManager.config.amongUsPath);
+            Process.Start("explorer", this.modManager.config.amongUsPath);
         }
 
         public void openInfo(object sender, EventArgs e)
@@ -126,7 +126,7 @@ namespace ModManager4.Class
                 "Do you still want to open it ?", "Open logs folder", MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 string path = this.modManager.appDataPath;
-                Process.Start("explorer.exe", path);
+                Process.Start("explorer", path);
             }
         }
 
@@ -830,7 +830,7 @@ namespace ModManager4.Class
 
                 if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
                 {
-                    Process.Start(o.ToString() + "\\Better-CrewLink.exe");
+                    Process.Start("explorer", o.ToString() + "\\Better-CrewLink.exe");
                 }
                 else
                 {
@@ -847,7 +847,7 @@ namespace ModManager4.Class
                         this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
                         this.modManager.componentlist.events.exitMM();
                     }
-                    Process.Start(dlPath);
+                    Process.Start("explorer", dlPath);
 
                     Boolean installed = false;
                     while (!installed)
@@ -889,11 +889,11 @@ namespace ModManager4.Class
 
             if (m.id == "Skeld")
             {
-                Process.Start(this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Skeld.exe");
+                Process.Start("explorer", this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Skeld.exe");
             }
             else if (m.id == "Challenger")
             {
-                Process.Start(this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Among Us.exe");
+                Process.Start("explorer", this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Among Us.exe");
             }
             else if (m.id == "BetterCrewlink")
             {
@@ -901,7 +901,7 @@ namespace ModManager4.Class
 
                 if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
                 {
-                    Process.Start(o.ToString() + "\\Better-CrewLink.exe");
+                    Process.Start("explorer", o.ToString() + "\\Better-CrewLink.exe");
                 }
                 else
                 {
@@ -918,7 +918,7 @@ namespace ModManager4.Class
                         this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
                         this.modManager.componentlist.events.exitMM();
                     }
-                    Process.Start(dlPath);
+                    Process.Start("explorer", dlPath);
 
                     Boolean installed = false;
                     while (!installed)
@@ -1036,7 +1036,7 @@ namespace ModManager4.Class
                 string path = this.modManager.config.amongUsPath + "\\Among Us.exe";
                 if (System.IO.File.Exists(path))
                 {
-                    Process.Start(path);
+                    Process.Start("explorer", path);
                     worked = true;
                 } else
                 {
@@ -1044,7 +1044,7 @@ namespace ModManager4.Class
                 }
             } else if (this.modManager.config.startMethod == "Steam")
             {
-                Process.Start("steam://rungameid/945360");
+                Process.Start("explorer", "steam://rungameid/945360");
                 worked = true;
             } else if (this.modManager.config.startMethod == "Epic Games Store")
             {
