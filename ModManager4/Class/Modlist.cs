@@ -82,7 +82,7 @@ namespace ModManager4.Class
             this.modManager.logs.log("- Modlist loaded successfully");
         }
 
-        public async Task loadReleases()
+        public async Task loadReleases(bool silent = false)
         {
             ProgressBar progress = (ProgressBar)this.modManager.Controls["InitProgressBar"];
             int max = this.mods.Count();
@@ -96,11 +96,17 @@ namespace ModManager4.Class
                 i++;
                 tasks.Add(t);
             }
-            progress.Value = 50;
-            await Task.WhenAll(tasks);
-            progress.Value = 100;
-
             
+            if (silent == false)
+            {
+                progress.Value = 50;
+            }
+            await Task.WhenAll(tasks);
+            if (silent == false)
+            {
+                progress.Value = 100;
+            }
+
             foreach(Mod m in this.mods)
             {
                 if (m.type != "allInOne" && m.name != "Challenger" && m.release == null)
@@ -144,8 +150,11 @@ namespace ModManager4.Class
 
                 this.mods.AddRange(localMods);
             }
-
-            progress.Visible = false;
+            
+            /*if (silent == false)
+            {
+                progress.Visible = false;
+            }*/
         }
 
         public async Task loadRelease(Mod m)

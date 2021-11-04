@@ -28,6 +28,8 @@ namespace ModManager4
         public Logger logs;
         public Updater updater;
         public ModWorker modWorker;
+        public MMIcon mmIcon;
+        public Refresher refresher;
 
         public ServerConfig serverConfig;
         public Modlist modlist;
@@ -38,6 +40,7 @@ namespace ModManager4
         public Componentlist componentlist;
         public Pagelist pagelist;
         public Serverlist serverlist;
+        public bool actionLock;
 
         public ModManager(string[] args)
         {
@@ -68,6 +71,9 @@ namespace ModManager4
             //Create Temp folder if necessary
             Directory.CreateDirectory(this.tempPath);
 
+            // No lock on start
+            this.actionLock = false;
+
             // Tools
             this.logs = new Logger();
             this.utils = new Utils();
@@ -76,22 +82,22 @@ namespace ModManager4
             this.logs.log("Mod Manager loading\n");
             this.logs.log("- Version " + this.version.ToString().Remove(this.version.ToString().Length - 2));
 
+            /*
             if (System.Diagnostics.Process.GetProcessesByName("ModManager4").Length > 1)
             {
                 this.logs.log("Error : Mod Manager already running\n");
                 MessageBox.Show("Mod Manager is already running.", "Mod Manager already opened", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
+            */
 
             //Check update
             this.updater = new Updater(this);
-            await this.updater.checkUpdate();
+            await this.updater.CheckRunUpdateOnStart();
+            this.updater.StartUpdateChecker();
 
             // Load remote config
-            this.serverConfig = new ServerConfig(this);
-            this.logs.log("Loading server config");
-            this.serverConfig.load();
-            this.logs.log("- Server config loaded successfully");
+            this.refreshConfig();
 
             // Load local config or create one (find AU folder if possible)
             this.config = new Config();
@@ -99,6 +105,7 @@ namespace ModManager4
             this.config.load(this);
             this.logs.log("- Config loaded successfully\n");
 
+            
             if (args.Count() == 0)
             {
                 this.Size = new Size(this.config.resolutionX, 30 + this.config.resolutionY);
@@ -111,6 +118,7 @@ namespace ModManager4
                 this.InitProgressBar.Size = new System.Drawing.Size((int)(600 * ratioX), (int)(50 * ratioY));
             }
 
+
             if (args.Count() > 0)
             {
                 this.modWorker.changeUI = false;
@@ -118,23 +126,12 @@ namespace ModManager4
                 progress.Visible = false;
             }
 
-            // Load News from server
-            this.newslist = new Newslist(this);
-            this.newslist.load();
-
-            // Load Faq from server
-            this.faqlist = new Faqlist(this);
-            this.faqlist.load();
 
             // Load categories from server
-            this.categorylist = new Categorylist(this);
-            this.categorylist.load();
+            this.refreshCategories();
 
             // Load mods from server
-            this.modlist = new Modlist(this);
-            this.modlist.load();
-            await this.modlist.loadReleases();
-            this.logs.log(this.modlist.toString());
+            await this.refreshMods();
 
             // Load local config or create one (find AU folder if possible)
             this.logs.log("Loading config (2/2)");
@@ -145,6 +142,7 @@ namespace ModManager4
 
             if (args.Count() > 0)
             {
+
                 List<string> modsToInstall = new List<string>() { };
                 foreach (string arg in args)
                 {
@@ -159,6 +157,7 @@ namespace ModManager4
                 {
                     this.modWorker.startAfterUpdate = true;
                     this.modWorker.installFromCode(code);
+                    this.logs.debug("test2");
                 } else
                 {
                     this.componentlist.events.startGame();
@@ -167,24 +166,28 @@ namespace ModManager4
                 return;
             }
 
-            this.serverlist = new Serverlist();
-            this.serverlist.load(this);
-            this.logs.log(this.serverlist.toString());
+            // Load News from server
+            this.refreshNews();
 
-            // Load pages
-            this.componentlist.load();
-            this.logs.log(this.componentlist.toString());
+            // Load Faq from server
+            this.refreshFaq();
 
-            this.pagelist = new Pagelist(this);
-            this.pagelist.load();
-            this.logs.log(this.pagelist.toString());
+            // Load Servers from server
+            this.refreshServers();
 
-            this.modlist.setCode();
+            // Load pages & components
+            this.refreshPages();
 
             this.BackgroundImage = global::ModManager4.Properties.Resources.titlefond;
 
             this.Size = new Size(this.config.resolutionX, 30 + this.config.resolutionY);
             this.CenterToScreen();
+
+            // Load notify icon
+            this.mmIcon = new MMIcon(this);
+
+            // Load refresher
+            this.refresher = new Refresher(this);
 
             this.logs.log("Mod Manager loaded successfully\n");
 
@@ -201,6 +204,58 @@ namespace ModManager4
             {
                 this.pagelist.renderPage("FirstPathSelection");
             }
+        }
+
+        public void refreshConfig()
+        {
+            this.serverConfig = new ServerConfig(this);
+            this.logs.log("Loading server config");
+            this.serverConfig.load();
+            this.logs.log("- Server config loaded successfully");
+        }
+
+        public void refreshCategories()
+        {
+            this.categorylist = new Categorylist(this);
+            this.categorylist.load();
+        }
+
+        public async Task refreshMods(bool silent = false)
+        {
+            this.modlist = new Modlist(this);
+            this.modlist.load();
+            await this.modlist.loadReleases(silent);
+            this.logs.log(this.modlist.toString());
+        }
+        public void refreshNews()
+        {
+            this.newslist = new Newslist(this);
+            this.newslist.load();
+        }
+
+        public void refreshFaq()
+        {
+            this.faqlist = new Faqlist(this);
+            this.faqlist.load();
+        }
+
+        public void refreshServers()
+        {
+            this.serverlist = new Serverlist();
+            this.serverlist.load(this);
+            this.logs.log(this.serverlist.toString());
+        }
+
+        public void refreshPages()
+        {
+            this.componentlist.load();
+            this.logs.log(this.componentlist.toString());
+
+            this.pagelist = new Pagelist(this);
+            this.pagelist.load();
+            this.logs.log(this.pagelist.toString());
+
+            this.modlist.setCode();
         }
 
         public void centerToScreenPub()

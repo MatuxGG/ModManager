@@ -1,6 +1,7 @@
 ﻿using Octokit;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Net;
@@ -15,6 +16,8 @@ namespace ModManager4.Class
         public ModManager modManager { get; set; }
         public Version latestVersion { get; set; }
         public Release latestRelease { get; set; }
+
+        public BackgroundWorker backgroundWorker;
         public Updater(ModManager modManager)
         {
             this.modManager = modManager;
@@ -22,57 +25,97 @@ namespace ModManager4.Class
             this.latestRelease = null;
         }
 
-        public async Task checkUpdate()
+        public async Task CheckRunUpdateOnStart()
         {
-            this.modManager.logs.log("Updater : Check Update");
+            this.modManager.logs.log("Updater : Started");
             await this.GetGithubVersion();
 
             if (this.latestVersion > this.modManager.version)
             {
-                string installerPath = this.modManager.tempPath + "\\ModManagerInstaller.exe";
-                this.modManager.logs.log("- Update available");
-                DialogResult userAction = MessageBox.Show("There is a new version of Mod Manager available. Mod Manager will auto update.\n\n" +
-                    "Press OK to continue.", "Mod Manager Update", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
-                this.modManager.logs.log("- New version available");
-                if (userAction == DialogResult.OK)
+                await this.updateMM();
+            }
+            this.modManager.logs.log("Updater : No update found");
+        }
+
+        public void StartUpdateChecker()
+        {
+            this.backgroundWorker = new BackgroundWorker();
+            this.InitializeBackgroundWorker();
+            this.backgroundWorker.RunWorkerAsync();
+        }
+
+        private void InitializeBackgroundWorker()
+        {
+            this.backgroundWorker.DoWork += new DoWorkEventHandler(this.backgroundWorker_DoWork);
+            this.backgroundWorker.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorker_RunWorkerCompleted);
+            this.backgroundWorker.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorker_ProgressChanged);
+        }
+
+        public async void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
+        {
+
+            var backgroundWorker = sender as BackgroundWorker;
+
+            while (this.latestVersion <= this.modManager.version)
+            {
+                System.Threading.Thread.Sleep(60 * 1000); // Each minute
+                await this.GetGithubVersion();
+            }
+
+            System.Windows.Forms.Application.Restart();
+
+        }
+
+        private void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            // Nothing
+        }
+
+        private void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            // Nothing
+        }
+
+        public async Task updateMM()
+        {
+            string installerPath = this.modManager.tempPath + "\\ModManagerInstaller.exe";
+            this.modManager.logs.log("Updater : Update available");
+            DialogResult userAction = MessageBox.Show("There is a new version of Mod Manager available. Mod Manager will auto update.\n\n" +
+                "Press OK to continue.", "Mod Manager Update", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
+            if (userAction == DialogResult.OK)
+            {
+                this.modManager.utils.FileDelete(installerPath);
+                foreach (ReleaseAsset ra in this.latestRelease.Assets)
                 {
-                    this.modManager.utils.FileDelete(installerPath);
-                    foreach (ReleaseAsset ra in this.latestRelease.Assets)
+                    if (ra.Name == "ModManagerInstaller.exe")
                     {
-                        if (ra.Name == "ModManagerInstaller.exe")
+                        try
                         {
-                            try
+                            using (WebClient client = new WebClient())
                             {
-                                using (WebClient client = new WebClient())
-                                {
-                                    client.DownloadFile(ra.BrowserDownloadUrl, installerPath);
-                                }
+                                client.DownloadFile(ra.BrowserDownloadUrl, installerPath);
                             }
-                            catch
-                            {
-                                this.modManager.logs.log("Error : Disconnected when checking update\n");
-                                MessageBox.Show("Mod Manager's server is unreacheable.\n" +
-                                    "\n" +
-                                    "There are many possible reasons for this :\n" +
-                                    "- You are disconnected from internet\n" +
-                                    "- Your antivirus blocks Mod Manager\n" +
-                                    "- Mod Manager server is down. Check its status on matux.fr\n" +
-                                    "\n" +
-                                    "If this problem persists, please send a ticket on Mod Manager's discord.", "Server unreacheable", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                                Environment.Exit(0);
-                            }
-                            this.modManager.logs.log("- Launching installer");
-                            Process.Start(installerPath);
+                        }
+                        catch
+                        {
+                            this.modManager.logs.log("Error : Disconnected when checking update\n");
+                            MessageBox.Show("Mod Manager's server is unreacheable.\n" +
+                                "\n" +
+                                "There are many possible reasons for this :\n" +
+                                "- You are disconnected from internet\n" +
+                                "- Your antivirus blocks Mod Manager\n" +
+                                "- Mod Manager server is down. Check its status on matux.fr\n" +
+                                "\n" +
+                                "If this problem persists, please send a ticket on Mod Manager's discord.", "Server unreacheable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             Environment.Exit(0);
                         }
+                        this.modManager.logs.log("- Launching installer");
+                        Process.Start(installerPath);
+                        Environment.Exit(0);
                     }
                 }
-                Environment.Exit(0);
-
-            } else
-            {
-                this.modManager.logs.log("- No update available");
             }
+            Environment.Exit(0);
         }
 
         public void ExecuteAsAdmin(string fileName)
@@ -89,7 +132,6 @@ namespace ModManager4.Class
             var client = new GitHubClient(new ProductHeaderValue("ModManager"));
             var tokenAuth = new Credentials(this.modManager.token);
             client.Credentials = tokenAuth;
-            this.latestVersion = null;
             Release r = new Release() { };
             try
             {

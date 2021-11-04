@@ -11,15 +11,19 @@ namespace ModManager4.Class
         public ModManager modManager;
 
         public List<Page> pages;
+
+        public string currentPage;
+
         public Pagelist(ModManager modManager)
         {
             this.modManager = modManager;
+            this.currentPage = "ModSelection";
             this.pages = new List<Page>();
         }
         public void load()
         {
             this.pages.Add(new Page("ModSelection", new string[] { "Header", "HeaderPub", "ModSelection", "Footer" }));
-            this.pages.Add(new Page("PathSelection", new string[] { "Header", "HeaderPub", "BackToMods", "PathSelection", "Footer" }));
+            this.pages.Add(new Page("PathSelection", new string[] { "Header", "HeaderPub", "BackToSettings", "PathSelection", "Footer" }));
             this.pages.Add(new Page("FirstPathSelection", new string[] { "HeaderPub", "PathSelection" }));
             this.pages.Add(new Page("Settings", new string[] { "Header", "HeaderPub", "BackToMods", "Settings", "Footer" }));
             this.pages.Add(new Page("News", new string[] { "Header", "HeaderPub", "BackToMods", "News", "Footer" }));
@@ -47,6 +51,7 @@ namespace ModManager4.Class
                 if (p.name == name)
                 {
                     this.modManager.componentlist.renderComponents(p.components);
+                    this.currentPage = name;
                 } else
                 {
                     

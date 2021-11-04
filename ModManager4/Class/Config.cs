@@ -225,7 +225,7 @@ namespace ModManager4.Class
 
             while (this.amongUsPath == null || File.Exists(this.amongUsPath + "\\Among Us.exe") == false)
             {
-                if (MessageBox.Show("Among Us not found ! Please, select the Among Us executable", "Among Us not found", MessageBoxButtons.OK, MessageBoxIcon.Information) == DialogResult.Cancel) {
+                if (MessageBox.Show("Among Us not found ! Please, select the Among Us executable", "Among Us not found", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel) {
                     Environment.Exit(0);
                 }
                 this.selectFolderWorker(modManager);

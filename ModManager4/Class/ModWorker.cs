@@ -62,6 +62,13 @@ namespace ModManager4.Class
         {
             var backgroundWorkerCode = sender as BackgroundWorker;
 
+            while (this.modManager.actionLock == true)
+            {
+
+            }
+
+            this.modManager.actionLock = true;
+
             string binary = this.modManager.modlist.HexStringToBinary(this.codeToInstall);
 
             int supCount = this.modManager.modlist.getAvailableRemoteMods().Count;
@@ -125,6 +132,10 @@ namespace ModManager4.Class
             {
                 this.modManager.modlist.setCode();
                 this.modManager.componentlist.refreshModSelection();
+                this.modManager.mmIcon.load();
+
+                this.modManager.actionLock = false;
+
                 this.modManager.logs.log("Install from code successful");
                 this.modManager.pagelist.renderPage("ModSelection");
             }
@@ -137,6 +148,13 @@ namespace ModManager4.Class
 
         public void uninstallMods()
         {
+            while (this.modManager.actionLock == true)
+            {
+
+            }
+
+            this.modManager.actionLock = true;
+
             this.modManager.logs.log("Uninstall all mods process");
             if (this.modManager.config != null)
             {
@@ -169,7 +187,11 @@ namespace ModManager4.Class
                     this.modManager.config.installedMods = allInOneTemp;
                 }
                 this.modManager.config.update(this.modManager);
-                
+
+                this.modManager.mmIcon.load();
+
+                this.modManager.actionLock = false;
+
                 this.modManager.logs.log("Uninstall successful");
             }
         }
@@ -306,6 +328,8 @@ namespace ModManager4.Class
 
             this.modManager.config.update(this.modManager);
 
+            this.modManager.mmIcon.load();
+
             this.modManager.componentlist.events.clearWithBlink();
             this.modManager.pagelist.renderPage("ModSelection");
         }
@@ -330,6 +354,14 @@ namespace ModManager4.Class
         public void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var backgroundWorker = sender as BackgroundWorker;
+
+            while (this.modManager.actionLock == true)
+            {
+
+            }
+
+            this.modManager.actionLock = true;
+
             int i = 0;
             int max = this.modManager.modlist.toInstall.Count + this.modManager.modlist.toUninstall.Count;
             this.modManager.logs.log("Mods to install = " + this.modManager.modlist.toInstall.Count);
@@ -367,11 +399,14 @@ namespace ModManager4.Class
             }
             this.modManager.modlist.resetChanged();
             this.modManager.modlist.setCode();
+            this.modManager.mmIcon.load();
+            this.modManager.actionLock = false;
             this.modManager.logs.log("Update mods successful");
             if (this.startAfterUpdate == true)
             {
                 this.modManager.componentlist.events.startGame();
             }
+
             this.modManager.componentlist.events.clearWithBlink();
             this.modManager.pagelist.renderPage("ModSelection");
         }
@@ -789,6 +824,8 @@ namespace ModManager4.Class
 
             this.modManager.config.installedMods.Remove(installedMod);
             this.modManager.config.update(this.modManager);
+
+            this.modManager.mmIcon.load();
 
             this.modManager.logs.log("- Uninstall mod " + m.name + " completed");
         }

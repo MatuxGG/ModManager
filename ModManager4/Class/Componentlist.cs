@@ -391,6 +391,24 @@ namespace ModManager4.Class
 
             this.components.Add(c);
 
+            c = new Component("BackToSettings");
+
+            PictureBox BackToSettings = new System.Windows.Forms.PictureBox();
+            BackToSettings.Image = global::ModManager4.Properties.Resources.back;
+            BackToSettings.BackColor = System.Drawing.Color.Transparent;
+            BackToSettings.Location = new System.Drawing.Point((int)(100 * ratioX), (int)(700 * ratioY));
+            BackToSettings.Name = "BackToSettings";
+            BackToSettings.Size = new System.Drawing.Size((int)(200 * ratioX), (int)(200 * ratioY));
+            BackToSettings.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            BackToSettings.TabStop = false;
+            BackToSettings.Cursor = Cursors.Hand;
+            BackToSettings.Click += new EventHandler(this.events.openSettings);
+            BackToSettings.Visible = false;
+            this.modManager.Controls.Add(BackToSettings);
+            c.addControl(BackToSettings);
+
+            this.components.Add(c);
+
             c = new Component("ModSelection");
 
             c = this.loadModPage(c);

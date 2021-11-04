@@ -60,6 +60,7 @@ namespace ModManager4.Class
             this.modManager.logs.log("Event : Render page ModSelection\n");
             this.modManager.pagelist.renderPage("ModSelection");
         }
+
         public void openMMDiscord(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager discord\n");
@@ -770,6 +771,12 @@ namespace ModManager4.Class
             string cross = ((PictureBox)sender).Name;
             string modId = cross.Substring(cross.IndexOf("=") + 1);
             Mod m = this.modManager.modlist.getModById(modId);
+
+            this.downloadAllInOneMod(m);
+        }
+
+        public void downloadAllInOneMod(Mod m)
+        {
             this.modManager.logs.log("Event : Downloading All In One Mod " + m.name + "\n");
 
             if (m.id == "Skeld")
@@ -794,12 +801,14 @@ namespace ModManager4.Class
                 this.modManager.componentlist.refreshModSelection();
                 //this.clearWithBlink();
                 this.modManager.pagelist.renderPage("ModSelection");
-            } else if (m.id == "Challenger")
+            }
+            else if (m.id == "Challenger")
             {
                 Directory.CreateDirectory(this.modManager.appDataPath + "\\allInOneMods\\" + m.id);
                 this.modManager.pagelist.renderPage("BeforeUpdateMods");
                 this.modManager.modWorker.installChallenger();
-            } else if (m.id == "BetterCrewlink")
+            }
+            else if (m.id == "BetterCrewlink")
             {
                 object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
 
@@ -844,7 +853,8 @@ namespace ModManager4.Class
                 if (polusKey != null)
                 {
                     Process.Start("explorer", "steam://rungameid/1653240");
-                } else
+                }
+                else
                 {
                     Process.Start("explorer", "steam://run/1653240");
                     this.checkPolusInstalled();
@@ -852,7 +862,6 @@ namespace ModManager4.Class
             }
 
             this.modManager.logs.log("Event : Downloaded All In One Mod " + m.name + " successfully\n");
-
         }
 
         public void checkPolusInstalled()
@@ -900,8 +909,13 @@ namespace ModManager4.Class
             string cross = ((PictureBox)sender).Name;
             string modId = cross.Substring(cross.IndexOf("=") + 1);
             Mod m = this.modManager.modlist.getModById(modId);
-            this.modManager.logs.log("Event : Starting All In One Mod " + m.name + "\n");
 
+            this.startAllInOneMod(m);
+        }
+
+        public void startAllInOneMod(Mod m)
+        {
+            this.modManager.logs.log("Event : Starting All In One Mod " + m.name + "\n");
             if (m.id == "Skeld")
             {
                 Process.Start("explorer", this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Skeld.exe");

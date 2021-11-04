@@ -1,7 +1,8 @@
 {
   "profiles": {
     "ModManager4": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "CustomKeybinds"
     }
   }
 }
