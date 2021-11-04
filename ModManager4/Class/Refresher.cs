@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
@@ -34,7 +35,7 @@ namespace ModManager4.Class
 
             while (true)
             {
-                System.Threading.Thread.Sleep(20 * 1000); // Each minute
+                System.Threading.Thread.Sleep(10 * 1000); // Each 5 minute
 
                 while (this.modManager.actionLock == true)
                 {
@@ -43,36 +44,58 @@ namespace ModManager4.Class
 
                 this.modManager.actionLock = true;
 
-                // Save current page
-                string currentPage = this.modManager.pagelist.currentPage;
+                this.modManager.Invoke(new Action(async () => {
 
-                // Refresh config
-                this.modManager.refreshConfig();
+                    // Save current page
+                    string currentPage = this.modManager.pagelist.currentPage;
 
-                // Refresh categories
-                this.modManager.refreshCategories();
+                    // Save current toInstall & toUninstall
+                    List<string> toInstall = this.modManager.modlist.toInstall;
+                    List<string> toUninstall = this.modManager.modlist.toUninstall;
 
-                // Refresh modlist
-                await this.modManager.refreshMods(true);
+                    // Save current remote version
+                    string version = this.modManager.serverConfig.get("gameVersion").value;
 
-                // Refresh news
-                this.modManager.refreshNews();
+                    // Refresh config
+                    this.modManager.refreshConfig();
 
-                // Refresh faq
-                this.modManager.refreshFaq();
+                    // Check if server got disabled
+                    if (this.modManager.serverConfig.get("enabled").value == "false")
+                    {
+                        string path = this.modManager.appPath + "ModManager4.exe";
+                        Process.Start(path, "force");
+                        Environment.Exit(0);
+                    }
 
-                // Refresh serverlist
-                this.modManager.refreshServers();
+                    // Check if version is different
+                    if (version != this.modManager.serverConfig.get("gameVersion").value)
+                    {
+                        string path = this.modManager.appPath + "ModManager4.exe";
+                        Process.Start(path, "force");
+                        Environment.Exit(0);
+                    }
 
-                this.modManager.Invoke(new Action(() => {
+                    // Refresh categories
+                    this.modManager.refreshCategories();
+
+                    // Refresh modlist
+                    await this.modManager.refreshMods(true);
+
+                    //Restore toInstall & toUninstall
+                    this.modManager.modlist.toInstall = toInstall;
+                    this.modManager.modlist.toUninstall = toUninstall;
+
+                    // Refresh news
+                    this.modManager.refreshNews();
+
+                    // Refresh faq
+                    this.modManager.refreshFaq();
+
+                    // Refresh serverlist
+                    this.modManager.refreshServers();
 
                     this.modManager.componentlist = new Componentlist(this.modManager);
                     this.modManager.refreshPages();
-
-                    if (this.modManager.serverConfig.get("enabled").value == "false")
-                    {
-                        this.modManager.pagelist.renderPage("Disabled");
-                    }
 
                     if (this.modManager.config.amongUsPath != null)
                     {

@@ -16,6 +16,8 @@ namespace ModManager4.Class
         public string gameVersion { get; set; }
         public List<string> dependencies { get; set; }
         public string type { get; set; }
+
+        public string compType { get; set; }
         public string author { get; set; }
         public string github { get; set; }
         public string githubLink { get; set; }
@@ -28,7 +30,7 @@ namespace ModManager4.Class
 
         public Release release { get; set; }
 
-        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, List<string> folders, List<string> data, List<string> excludeFiles, string worksOnSteam, string worksOnEGS)
+        public Mod(string id, string name, string category, string type, string compType, string gameVersion, List<string> dependencies, string author, string github, string githubLink, List<string> folders, List<string> data, List<string> excludeFiles, string worksOnSteam, string worksOnEGS)
         {
             this.id = id;
             this.name = name;
@@ -39,6 +41,7 @@ namespace ModManager4.Class
             this.github = github;
             this.githubLink = githubLink;
             this.type = type;
+            this.compType = compType;
             this.release = null;
             this.folders = folders;
             this.data = data;

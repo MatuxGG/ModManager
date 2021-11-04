@@ -24,73 +24,81 @@ namespace ModManager4.Class
             this.notifyIcon.Visible = true;
             this.notifyIcon.MouseClick += this.mouseEvent;
             this.modManager.Resize += new EventHandler(this.onResize);
-            this.modManager.FormClosing += new FormClosingEventHandler(this.onClose);
             this.load();
         }
 
         public void load()
         {
             this.notifyIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
-            this.notifyIcon.ContextMenuStrip.Items.Add("Open Mod Manager", null, this.open);
-
-            this.notifyIcon.ContextMenuStrip.Items.Add("-");
-
-            List<InstalledMod> im = this.modManager.config.getInstalledModsWithoutAllInOne(this.modManager);
-
-            if (im.Count() > 0)
+            if (this.modManager.serverConfig.get("enabled").value == "true")
             {
-                this.notifyIcon.ContextMenuStrip.Items.Add("Start Vanilla Among Us", null, this.startVanilla);
-                
-                string text = "Start Modded Among Us (";
-                foreach (InstalledMod i in im)
+                this.notifyIcon.ContextMenuStrip.Items.Add("Open Mod Manager", null, this.open);
+
+                this.notifyIcon.ContextMenuStrip.Items.Add("-");
+
+                List<InstalledMod> im = this.modManager.config.getInstalledModsWithoutAllInOne(this.modManager);
+
+                if (im.Count() > 0)
                 {
-                    Mod m = this.modManager.modlist.getModById(i.id);
-                    text = text + m.name + ", ";
+                    this.notifyIcon.ContextMenuStrip.Items.Add("Start Vanilla Among Us", null, this.startVanilla);
+
+                    string text = "Start Modded Among Us (";
+                    foreach (InstalledMod i in im)
+                    {
+                        Mod m = this.modManager.modlist.getModById(i.id);
+                        text = text + m.name + ", ";
+                    }
+                    text = text.Substring(0, text.Length - 2);
+                    text = text + ")";
+                    this.notifyIcon.ContextMenuStrip.Items.Add(text, null, this.start);
                 }
-                text = text.Substring(0, text.Length - 2);
-                text = text + ")";
-                this.notifyIcon.ContextMenuStrip.Items.Add(text, null, this.start);
-            } else
-            {
-                this.notifyIcon.ContextMenuStrip.Items.Add("Start Vanilla Among Us", null, this.start);
-            }
-
-            this.notifyIcon.ContextMenuStrip.Items.Add("-");
-
-            object objBcl = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
-            if (this.modManager.config.containsMod("BetterCrewlink") || (objBcl != null && System.IO.File.Exists(objBcl.ToString() + "\\Better-CrewLink.exe")))
-            {
-                this.notifyIcon.ContextMenuStrip.Items.Add("Start Better Crewlink", null, this.startBetterCrewlink);
-            } else
-            {
-                this.notifyIcon.ContextMenuStrip.Items.Add("Install Better Crewlink", null, this.installBetterCrewlink);
-            }
-
-            if (this.modManager.config.containsMod("Challenger"))
-            {
-                if (this.modManager.config.getInstalledModById("Challenger").version != this.modManager.modlist.challengerMod.TagName)
+                else
                 {
-                    this.notifyIcon.ContextMenuStrip.Items.Add("Update Challenger", null, this.updateChallenger);
-                } else
-                {
-                    this.notifyIcon.ContextMenuStrip.Items.Add("Start Challenger", null, this.startChallenger);
+                    this.notifyIcon.ContextMenuStrip.Items.Add("Start Vanilla Among Us", null, this.start);
                 }
-            } else
-            {
-                this.notifyIcon.ContextMenuStrip.Items.Add("Install Challenger", null, this.updateChallenger);
+
+                this.notifyIcon.ContextMenuStrip.Items.Add("-");
+
+                object objBcl = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
+                if (this.modManager.config.containsMod("BetterCrewlink") || (objBcl != null && System.IO.File.Exists(objBcl.ToString() + "\\Better-CrewLink.exe")))
+                {
+                    this.notifyIcon.ContextMenuStrip.Items.Add("Start Better Crewlink", null, this.startBetterCrewlink);
+                }
+                else
+                {
+                    this.notifyIcon.ContextMenuStrip.Items.Add("Install Better Crewlink", null, this.installBetterCrewlink);
+                }
+
+                if (this.modManager.config.containsMod("Challenger"))
+                {
+                    if (this.modManager.config.getInstalledModById("Challenger").version != this.modManager.modlist.challengerMod.TagName)
+                    {
+                        this.notifyIcon.ContextMenuStrip.Items.Add("Update Challenger", null, this.updateChallenger);
+                    }
+                    else
+                    {
+                        this.notifyIcon.ContextMenuStrip.Items.Add("Start Challenger", null, this.startChallenger);
+                    }
+                }
+                else
+                {
+                    this.notifyIcon.ContextMenuStrip.Items.Add("Install Challenger", null, this.updateChallenger);
+                }
+
+                if (this.modManager.config.containsMod("Skeld"))
+                {
+                    this.notifyIcon.ContextMenuStrip.Items.Add("Start Skeld.net", null, this.startSkeld);
+                }
+                else
+                {
+                    this.notifyIcon.ContextMenuStrip.Items.Add("Install Skeld.net", null, this.installSkeld);
+                }
+
+                this.notifyIcon.ContextMenuStrip.Items.Add("-");
+
+                this.notifyIcon.ContextMenuStrip.Items.Add("Settings", null, this.settings);
             }
-
-            if (this.modManager.config.containsMod("Skeld"))
-            {
-                this.notifyIcon.ContextMenuStrip.Items.Add("Start Skeld.net", null, this.startSkeld);
-            } else
-            {
-                this.notifyIcon.ContextMenuStrip.Items.Add("Install Skeld.net", null, this.installSkeld);
-            }
-
-            this.notifyIcon.ContextMenuStrip.Items.Add("-");
-
-            this.notifyIcon.ContextMenuStrip.Items.Add("Settings", null, this.settings);
+            
             this.notifyIcon.ContextMenuStrip.Items.Add("Exit", null, this.exit);
         }
 
@@ -103,10 +111,6 @@ namespace ModManager4.Class
             {
                 this.modManager.ShowInTaskbar = true;
             }
-        }
-        public void onClose(object sender, FormClosingEventArgs e)
-        {
-            e.Cancel = MessageBox.Show("Exit Mod Manager ?", "Exit Mod Manager", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No;
         }
 
         private void mouseEvent(object Sender, MouseEventArgs e)

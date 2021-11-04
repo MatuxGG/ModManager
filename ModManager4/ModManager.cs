@@ -82,14 +82,17 @@ namespace ModManager4
             this.logs.log("Mod Manager loading\n");
             this.logs.log("- Version " + this.version.ToString().Remove(this.version.ToString().Length - 2));
 
-            /*
+            
             if (System.Diagnostics.Process.GetProcessesByName("ModManager4").Length > 1)
             {
-                this.logs.log("Error : Mod Manager already running\n");
-                MessageBox.Show("Mod Manager is already running.", "Mod Manager already opened", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                Environment.Exit(0);
+                if (args.Count() == 0 || args[0] != "force")
+                {
+                    this.logs.log("Error : Mod Manager already running\n");
+                    MessageBox.Show("Mod Manager is already running.", "Mod Manager already opened", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Environment.Exit(0);
+                }
             }
-            */
+            
 
             //Check update
             this.updater = new Updater(this);
@@ -119,7 +122,7 @@ namespace ModManager4
             }
 
 
-            if (args.Count() > 0)
+            if (args.Count() > 0 && args[0] != "force")
             {
                 this.modWorker.changeUI = false;
                 ProgressBar progress = (ProgressBar)this.Controls["InitProgressBar"];
@@ -140,9 +143,8 @@ namespace ModManager4
 
             this.componentlist = new Componentlist(this);
 
-            if (args.Count() > 0)
+            if (args.Count() > 0 && args[0] != "force")
             {
-
                 List<string> modsToInstall = new List<string>() { };
                 foreach (string arg in args)
                 {
@@ -157,7 +159,6 @@ namespace ModManager4
                 {
                     this.modWorker.startAfterUpdate = true;
                     this.modWorker.installFromCode(code);
-                    this.logs.debug("test2");
                 } else
                 {
                     this.componentlist.events.startGame();

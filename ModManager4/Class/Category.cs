@@ -11,13 +11,10 @@ namespace ModManager4.Class
         public string id { get; set; }
         public string name { get; set; }
 
-        public string type { get; set; }
-
-        public Category(string id, string name, string type)
+        public Category(string id, string name)
         {
             this.id = id;
             this.name = name;
-            this.type = type;
         }
     }
 }

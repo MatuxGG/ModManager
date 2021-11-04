@@ -364,7 +364,7 @@ namespace ModManager4.Class
 
         public List<Category> getAvailableCategories(ModManager modManager)
         {
-            return this.modManager.categorylist.categories.FindAll(c => this.mods.Find(m => c.id == m.category) != null);
+            return this.modManager.categorylist.categories.FindAll(c => this.mods.Find(m => c.id == m.category && m.gameVersion == this.modManager.serverConfig.get("gameVersion").value) != null);
         }
 
         public List<Mod> getModsByCategory(Category category)

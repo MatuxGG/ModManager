@@ -31,7 +31,7 @@ namespace ModManager4.Class
             LinkLabel clickedLink = ((LinkLabel)sender);
             string link = clickedLink.Text;
             this.modManager.logs.log("Event : Open github at link " + link + "\n");
-            Process.Start("explorer", link);
+            Process.Start(link);
         }
 
         public void openAuthorGithub(object sender, EventArgs e)
@@ -41,7 +41,7 @@ namespace ModManager4.Class
             Mod m = this.modManager.modlist.getModById(modId);
             string link = "https://github.com/" + m.author;
             this.modManager.logs.log("Event : Open Author github at link " + link + "\n");
-            Process.Start("explorer", link);
+            Process.Start(link);
         }
 
         public void openAnnounce(object sender, EventArgs e)
@@ -64,19 +64,19 @@ namespace ModManager4.Class
         public void openMMDiscord(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager discord\n");
-            Process.Start("explorer", this.modManager.serverURL + "/discord");
+            Process.Start(this.modManager.serverURL + "/discord");
         }
 
         public void openMatuxGithub(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager github\n");
-            Process.Start("explorer", this.modManager.serverURL + "\\github");
+            Process.Start(this.modManager.serverURL + "\\github");
         }
 
         public void openMatuxRoadmap(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager Roadmap\n");
-            Process.Start("explorer", this.modManager.serverURL + "\\roadmap");
+            Process.Start(this.modManager.serverURL + "\\roadmap");
         }
 
         public void openPathSelection(object sender, EventArgs e)
@@ -277,53 +277,61 @@ namespace ModManager4.Class
             MMCheckbox clickedBox = ((MMCheckbox)sender);
             Mod m = this.modManager.modlist.getModById(clickedBox.Name);
 
-            Category modCat = this.modManager.categorylist.getCategoryById(m.category);
             Boolean status = true;
-            if (clickedBox.CheckState == CheckState.Unchecked || modCat.type == "any")
+            if (clickedBox.CheckState == CheckState.Unchecked || m.compType == "any")
                 //|| (modCat.type == "unique" && this.modManager.config.getInstalledModsWithoutAllInOne(this.modManager).Count + this.modManager.modlist.toInstall.Count - this.modManager.modlist.toUninstall.Count == 0)) Unique dropped for now
             {
                 status = true;
             }
-            else if (modCat.type == "one")
+            else if (m.compType == "one")
             {
-                int inCat = 0;
-                foreach (InstalledMod im in this.modManager.config.getInstalledModsForCategory(this.modManager, modCat))
+                status = true;
+
+                List<Mod> currentMods = new List<Mod>() { };
+
+                foreach (InstalledMod im in this.modManager.config.getInstalledModsWithoutAllInOne(this.modManager))
                 {
-                    inCat++;
-                    foreach (string toUninstall in this.modManager.modlist.toUninstall)
-                    {
-                        if (toUninstall == im.id)
-                        {
-                            inCat--;
-                            break;
-                        }
-                    }
-                }
-                if (inCat > 0)
-                {
-                    status = false;
-                }
-                else
-                {
-                    Boolean toInstallCat = false;
-                    foreach (string toInstall in this.modManager.modlist.toInstall)
-                    {
-                        if (this.modManager.modlist.getModById(toInstall).category == modCat.id)
-                        {
-                            toInstallCat = true;
-                            break;
-                        }
-                    }
-                    if (toInstallCat)
+                    Mod mim = this.modManager.modlist.getAvailableModById(im.id);
+                    if (this.modManager.modlist.toUninstall.Contains(mim.id) == false && mim.compType != "any")
                     {
                         status = false;
-                    }
-                    else
-                    {
-                        status = true;
+                        break;
                     }
                 }
 
+                foreach (string toInstall in this.modManager.modlist.toInstall)
+                {
+                    Mod mim = this.modManager.modlist.getAvailableModById(toInstall);
+                    if (mim.compType != "any")
+                    {
+                        status = false;
+                        break;
+                    }
+                }
+            }
+            else if (m.compType == "cat")
+            {
+                status = true;
+
+                foreach (InstalledMod im in this.modManager.config.getInstalledModsWithoutAllInOne(this.modManager))
+                {
+                    Mod mim = this.modManager.modlist.getAvailableModById(im.id);
+                    if (this.modManager.modlist.toUninstall.Contains(mim.id) == false && (mim.compType == "one" || (mim.compType == "cat" && mim.category != m.category ) ))
+                    {
+                        status = false;
+                        break;
+                    }
+                }
+
+                foreach (string toInstall in this.modManager.modlist.toInstall)
+                {
+                    Mod mim = this.modManager.modlist.getAvailableModById(toInstall);
+                    if (mim.compType == "one" || ( mim.compType == "cat" && mim.category != m.category ) )
+                    {
+                        status = false;
+                        break;
+                    }
+                }
             }
             else
             {
@@ -567,7 +575,7 @@ namespace ModManager4.Class
             string newPath = this.modManager.appDataPath + "\\localMods\\" + Path.GetFileName(fileName);
             this.modManager.utils.FileCopy(fileName, newPath);
             List<Mod> localMods = this.modManager.modlist.getLocalMods();
-            Mod newMod = new Mod("Localmod" + localMods.Count, name, "local", "localMod", this.modManager.serverConfig.get("gameVersion").value, dependencies, "You", newPath, "0", new List<string>(){ }, new List<string>() { }, new List<string>() { }, "1", "1");
+            Mod newMod = new Mod("Localmod" + localMods.Count, name, "local", "localMod", "any", this.modManager.serverConfig.get("gameVersion").value, dependencies, "You", newPath, "0", new List<string>(){ }, new List<string>() { }, new List<string>() { }, "1", "1");
             this.modManager.modlist.mods.Add(newMod);
             this.modManager.modlist.updateLocalMods();
             this.modManager.componentlist.refreshModSelection();
@@ -779,6 +787,13 @@ namespace ModManager4.Class
         {
             this.modManager.logs.log("Event : Downloading All In One Mod " + m.name + "\n");
 
+            while (this.modManager.actionLock == true)
+            {
+
+            }
+
+            this.modManager.actionLock = true;
+
             if (m.id == "Skeld")
             {
                 try
@@ -806,6 +821,7 @@ namespace ModManager4.Class
             {
                 Directory.CreateDirectory(this.modManager.appDataPath + "\\allInOneMods\\" + m.id);
                 this.modManager.pagelist.renderPage("BeforeUpdateMods");
+                this.modManager.actionLock = false;
                 this.modManager.modWorker.installChallenger();
             }
             else if (m.id == "BetterCrewlink")
@@ -814,7 +830,7 @@ namespace ModManager4.Class
 
                 if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
                 {
-                    Process.Start("explorer", o.ToString() + "\\Better-CrewLink.exe");
+                    Process.Start(o.ToString() + "\\Better-CrewLink.exe");
                 }
                 else
                 {
@@ -831,7 +847,7 @@ namespace ModManager4.Class
                         this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
                         this.modManager.componentlist.events.exitMM();
                     }
-                    Process.Start("explorer.exe", dlPath);
+                    Process.Start(dlPath);
 
                     Boolean installed = false;
                     while (!installed)
@@ -847,61 +863,9 @@ namespace ModManager4.Class
                     this.modManager.pagelist.renderPage("ModSelection");
                 }
             }
-            else if (m.id == "Polusgg")
-            {
-                RegistryKey polusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1653240", false);
-                if (polusKey != null)
-                {
-                    Process.Start("explorer", "steam://rungameid/1653240");
-                }
-                else
-                {
-                    Process.Start("explorer", "steam://run/1653240");
-                    this.checkPolusInstalled();
-                }
-            }
 
+            this.modManager.actionLock = false;
             this.modManager.logs.log("Event : Downloaded All In One Mod " + m.name + " successfully\n");
-        }
-
-        public void checkPolusInstalled()
-        {
-            BackgroundWorker backgroundWorkerPolus = new BackgroundWorker();
-            backgroundWorkerPolus.WorkerReportsProgress = true;
-
-            backgroundWorkerPolus.DoWork += new DoWorkEventHandler(this.backgroundWorkerPolus_DoWork);
-            backgroundWorkerPolus.RunWorkerCompleted += new RunWorkerCompletedEventHandler(this.backgroundWorkerPolus_RunWorkerCompleted);
-            backgroundWorkerPolus.ProgressChanged += new ProgressChangedEventHandler(this.backgroundWorkerPolus_ProgressChanged);
-            backgroundWorkerPolus.RunWorkerAsync();
-
-        }
-
-        public void backgroundWorkerPolus_DoWork(object sender, DoWorkEventArgs e)
-        {
-            var backgroundWorker = sender as BackgroundWorker;
-
-            Boolean installed = false;
-            while (!installed)
-            {
-                RegistryKey polusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1653240", false);
-                if (polusKey != null)
-                {
-                    installed = true;
-                }
-            }
-            backgroundWorker.ReportProgress(100);
-        }
-
-        private void backgroundWorkerPolus_ProgressChanged(object sender, ProgressChangedEventArgs e)
-        {
-
-        }
-
-        private void backgroundWorkerPolus_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
-        {
-            this.modManager.componentlist.refreshModSelection();
-            //this.clearWithBlink();
-            this.modManager.pagelist.renderPage("ModSelection");
         }
 
         public void startAllInOne(object sender, EventArgs e)
@@ -916,13 +880,20 @@ namespace ModManager4.Class
         public void startAllInOneMod(Mod m)
         {
             this.modManager.logs.log("Event : Starting All In One Mod " + m.name + "\n");
+            while (this.modManager.actionLock == true)
+            {
+
+            }
+
+            this.modManager.actionLock = true;
+
             if (m.id == "Skeld")
             {
-                Process.Start("explorer", this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Skeld.exe");
+                Process.Start(this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Skeld.exe");
             }
             else if (m.id == "Challenger")
             {
-                Process.Start("explorer", this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Among Us.exe");
+                Process.Start(this.modManager.appDataPath + "\\allInOneMods\\" + m.id + "\\" + "Among Us.exe");
             }
             else if (m.id == "BetterCrewlink")
             {
@@ -930,7 +901,7 @@ namespace ModManager4.Class
 
                 if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
                 {
-                    Process.Start("explorer", o.ToString() + "\\Better-CrewLink.exe");
+                    Process.Start(o.ToString() + "\\Better-CrewLink.exe");
                 }
                 else
                 {
@@ -947,7 +918,7 @@ namespace ModManager4.Class
                         this.modManager.logs.log("Error : Disconnected during Better Crewlink install");
                         this.modManager.componentlist.events.exitMM();
                     }
-                    Process.Start("explorer.exe", dlPath);
+                    Process.Start(dlPath);
 
                     Boolean installed = false;
                     while (!installed)
@@ -963,16 +934,8 @@ namespace ModManager4.Class
                     this.modManager.pagelist.renderPage("ModSelection");
                 }
             }
-            else if (m.id == "Polusgg")
-            {
-                //this.modManager.modWorker.uninstallMods();
-                RegistryKey polusKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 1653240", false);
-                if (polusKey != null)
-                {
-                    Process.Start("explorer", "steam://rungameid/1653240");
 
-                }
-            }
+            this.modManager.actionLock = false;
 
             this.modManager.logs.log("Event : Started All In One Mod " + m.name + " successfully\n");
         }
@@ -1073,7 +1036,7 @@ namespace ModManager4.Class
                 string path = this.modManager.config.amongUsPath + "\\Among Us.exe";
                 if (System.IO.File.Exists(path))
                 {
-                    Process.Start("explorer", path);
+                    Process.Start(path);
                     worked = true;
                 } else
                 {
@@ -1081,7 +1044,7 @@ namespace ModManager4.Class
                 }
             } else if (this.modManager.config.startMethod == "Steam")
             {
-                Process.Start("explorer", "steam://rungameid/945360");
+                Process.Start("steam://rungameid/945360");
                 worked = true;
             } else if (this.modManager.config.startMethod == "Epic Games Store")
             {

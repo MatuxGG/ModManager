@@ -62,7 +62,9 @@ namespace ModManager4.Class
                 await this.GetGithubVersion();
             }
 
-            System.Windows.Forms.Application.Restart();
+            string path = this.modManager.appPath + "ModManager4.exe";
+            Process.Start(path, "force");
+            Environment.Exit(0);
 
         }
 
