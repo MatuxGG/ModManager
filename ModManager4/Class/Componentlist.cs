@@ -547,7 +547,7 @@ namespace ModManager4.Class
             AmongUsDirSwitchLabel.ForeColor = System.Drawing.SystemColors.Control;
             AmongUsDirSwitchLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(200 * ratioY));
             AmongUsDirSwitchLabel.Name = "AmongUsDirSwitchLabel";
-            AmongUsDirSwitchLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
+            AmongUsDirSwitchLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
             AmongUsDirSwitchLabel.Text = "Among Us directory :";
             PagePanelSettings.Controls.Add(AmongUsDirSwitchLabel);
 
@@ -555,7 +555,7 @@ namespace ModManager4.Class
             AmongUsDirSwitchButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             AmongUsDirSwitchButton.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(200 * ratioY));
             AmongUsDirSwitchButton.Name = "AmongUsDirSwitchButton";
-            AmongUsDirSwitchButton.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
+            AmongUsDirSwitchButton.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             AmongUsDirSwitchButton.Text = "Change";
             AmongUsDirSwitchButton.UseVisualStyleBackColor = true;
             AmongUsDirSwitchButton.TabStop = false;
@@ -568,7 +568,7 @@ namespace ModManager4.Class
             OpenAmongUs.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             OpenAmongUs.Location = new System.Drawing.Point((int)(900 * ratioX), (int)(200 * ratioY));
             OpenAmongUs.Name = "OpenAmongUs";
-            OpenAmongUs.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
+            OpenAmongUs.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             OpenAmongUs.Text = "Open";
             OpenAmongUs.TabStop = false;
             OpenAmongUs.UseVisualStyleBackColor = true;
@@ -580,17 +580,17 @@ namespace ModManager4.Class
             System.Windows.Forms.Label MethodLabel = new System.Windows.Forms.Label();
             MethodLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             MethodLabel.ForeColor = System.Drawing.SystemColors.Control;
-            MethodLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(300 * ratioY));
+            MethodLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(280 * ratioY));
             MethodLabel.Name = "MethodLabel";
-            MethodLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
+            MethodLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
             MethodLabel.Text = "Change start method :";
             PagePanelSettings.Controls.Add(MethodLabel);
 
             ComboBox MethodComboBox = new ComboBox();
             MethodComboBox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            MethodComboBox.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(300 * ratioY));
+            MethodComboBox.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(280 * ratioY));
             MethodComboBox.Name = "MethodComboBox";
-            MethodComboBox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
+            MethodComboBox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             MethodComboBox.TabStop = false;
             MethodComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             MethodComboBox.MouseLeave += new EventHandler(this.tooltips.hide);
@@ -610,17 +610,17 @@ namespace ModManager4.Class
             System.Windows.Forms.Label RemoveLocalLabel = new System.Windows.Forms.Label();
             RemoveLocalLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             RemoveLocalLabel.ForeColor = System.Drawing.SystemColors.Control;
-            RemoveLocalLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(400 * ratioY));
+            RemoveLocalLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(360 * ratioY));
             RemoveLocalLabel.Name = "RemoveLocalLabel";
-            RemoveLocalLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
+            RemoveLocalLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
             RemoveLocalLabel.Text = "Remove local mods :";
             PagePanelSettings.Controls.Add(RemoveLocalLabel);
 
             Button RemoveLocalButton = new System.Windows.Forms.Button();
             RemoveLocalButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            RemoveLocalButton.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(400 * ratioY));
+            RemoveLocalButton.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(360 * ratioY));
             RemoveLocalButton.Name = "RemoveLocalButton";
-            RemoveLocalButton.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
+            RemoveLocalButton.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             RemoveLocalButton.Text = "Remove";
             RemoveLocalButton.UseVisualStyleBackColor = true;
             RemoveLocalButton.MouseLeave += new EventHandler(this.tooltips.hide);
@@ -632,17 +632,17 @@ namespace ModManager4.Class
             System.Windows.Forms.Label ResolutionLabel = new System.Windows.Forms.Label();
             ResolutionLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             ResolutionLabel.ForeColor = System.Drawing.SystemColors.Control;
-            ResolutionLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(500 * ratioY));
+            ResolutionLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(440 * ratioY));
             ResolutionLabel.Name = "ResolutionLabel";
-            ResolutionLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
+            ResolutionLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
             ResolutionLabel.Text = "Change resolution :";
             PagePanelSettings.Controls.Add(ResolutionLabel);
 
             ComboBox ResolutionComboBox = new ComboBox();
             ResolutionComboBox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ResolutionComboBox.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(500 * ratioY));
+            ResolutionComboBox.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(440 * ratioY));
             ResolutionComboBox.Name = "ResolutionComboBox";
-            ResolutionComboBox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
+            ResolutionComboBox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             ResolutionComboBox.TabStop = false;
             ResolutionComboBox.DropDownStyle = ComboBoxStyle.DropDownList;
             ResolutionComboBox.MouseLeave += new EventHandler(this.tooltips.hide);
@@ -665,17 +665,17 @@ namespace ModManager4.Class
             System.Windows.Forms.Label EnableCacheLabel = new System.Windows.Forms.Label();
             EnableCacheLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             EnableCacheLabel.ForeColor = System.Drawing.SystemColors.Control;
-            EnableCacheLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(600 * ratioY));
+            EnableCacheLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(520 * ratioY));
             EnableCacheLabel.Name = "EnableCacheLabel";
-            EnableCacheLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
+            EnableCacheLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
             EnableCacheLabel.Text = "Enable cache :";
             PagePanelSettings.Controls.Add(EnableCacheLabel);
 
             MMCheckbox EnableCacheCheckbox = new MMCheckbox(this.modManager);
             EnableCacheCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            EnableCacheCheckbox.Location = new System.Drawing.Point((int)(600 * ratioX), (int)(600 * ratioY));
+            EnableCacheCheckbox.Location = new System.Drawing.Point((int)(600 * ratioX), (int)(520 * ratioY));
             EnableCacheCheckbox.Name = "EnableCacheCheckbox";
-            EnableCacheCheckbox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
+            EnableCacheCheckbox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             EnableCacheCheckbox.UseVisualStyleBackColor = true;
             EnableCacheCheckbox.MouseLeave += new EventHandler(this.tooltips.hide);
             EnableCacheCheckbox.MouseHover += new EventHandler(this.tooltips.show);
@@ -692,20 +692,51 @@ namespace ModManager4.Class
 
             PagePanelSettings.Controls.Add(EnableCacheCheckbox);
 
+            System.Windows.Forms.Label EnableLegacyLabel = new System.Windows.Forms.Label();
+            EnableLegacyLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            EnableLegacyLabel.ForeColor = System.Drawing.SystemColors.Control;
+            EnableLegacyLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(600 * ratioY));
+            EnableLegacyLabel.Name = "EnableLegacyLabel";
+            EnableLegacyLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
+            EnableLegacyLabel.Text = "Enable legacy mode :";
+            PagePanelSettings.Controls.Add(EnableLegacyLabel);
+
+            MMCheckbox EnableLegacyCheckbox = new MMCheckbox(this.modManager);
+            EnableLegacyCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            EnableLegacyCheckbox.Location = new System.Drawing.Point((int)(600 * ratioX), (int)(600 * ratioY));
+            EnableLegacyCheckbox.Name = "EnableLegacyCheckbox";
+            EnableLegacyCheckbox.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
+            EnableLegacyCheckbox.UseVisualStyleBackColor = true;
+            EnableLegacyCheckbox.MouseLeave += new EventHandler(this.tooltips.hide);
+            EnableLegacyCheckbox.MouseHover += new EventHandler(this.tooltips.show);
+            EnableLegacyCheckbox.Click += new EventHandler(this.events.enableLegacy);
+            EnableLegacyCheckbox.TabStop = false;
+
+            if (this.modManager.config.enableLegacy == false)
+            {
+                EnableLegacyCheckbox.CheckState = CheckState.Unchecked;
+            }
+            else
+            {
+                EnableLegacyCheckbox.CheckState = CheckState.Checked;
+            }
+
+            PagePanelSettings.Controls.Add(EnableLegacyCheckbox);
+
             System.Windows.Forms.Label OpenLogsLabel = new System.Windows.Forms.Label();
             OpenLogsLabel.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             OpenLogsLabel.ForeColor = System.Drawing.SystemColors.Control;
-            OpenLogsLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(700 * ratioY));
+            OpenLogsLabel.Location = new System.Drawing.Point((int)(40 * ratioX), (int)(680 * ratioY));
             OpenLogsLabel.Name = "OpenLogsLabel";
-            OpenLogsLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(40 * ratioY));
+            OpenLogsLabel.Size = new System.Drawing.Size((int)(400 * ratioX), (int)(50 * ratioY));
             OpenLogsLabel.Text = "Open logs folder :";
             PagePanelSettings.Controls.Add(OpenLogsLabel);
 
             Button OpenLogsButton = new System.Windows.Forms.Button();
             OpenLogsButton.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            OpenLogsButton.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(700 * ratioY));
+            OpenLogsButton.Location = new System.Drawing.Point((int)(500 * ratioX), (int)(680 * ratioY));
             OpenLogsButton.Name = "OpenLogsButton";
-            OpenLogsButton.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(60 * ratioY));
+            OpenLogsButton.Size = new System.Drawing.Size((int)(300 * ratioX), (int)(50 * ratioY));
             OpenLogsButton.Text = "Open";
             OpenLogsButton.UseVisualStyleBackColor = true;
             OpenLogsButton.MouseLeave += new EventHandler(this.tooltips.hide);
@@ -1024,7 +1055,7 @@ namespace ModManager4.Class
             PagePanelLocal.Controls.Add(ModDepsLabel);
 
             int offset = 0;
-            foreach (Dependency d in this.modManager.modlist.availableDependencies)
+            foreach (Dependency d in this.modManager.modlist.getDependencies())
             {
                 MMCheckbox ModDepCheckbox = new MMCheckbox(this.modManager);
                 ModDepCheckbox.Font = new System.Drawing.Font("Arial", fonts.sizeM, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1648,7 +1679,7 @@ namespace ModManager4.Class
 
             int i = 0;
             int offset = 20;
-            foreach (Category cat in this.modManager.modlist.getAvailableCategories(this.modManager))
+            foreach (Category cat in this.modManager.config.enableLegacy == false ? this.modManager.modlist.getAvailableCategories(this.modManager) : this.modManager.modlist.getCategories(this.modManager))
             {
 
                 Panel CategoryTitlePanel = new Panel();
@@ -1708,7 +1739,7 @@ namespace ModManager4.Class
 
                 if (this.modManager.config.hiddenCategories.Contains(cat.id) == false)
                 {
-                    foreach (Mod mod in this.modManager.modlist.getAvailableModsByCategory(cat))
+                    foreach (Mod mod in this.modManager.config.enableLegacy == false ? this.modManager.modlist.getAvailableModsByCategory(cat) : this.modManager.modlist.getModsByCategory(cat))
                     {
                         if (mod.type == "mod" || mod.type == "localMod")
                         {
@@ -1778,7 +1809,7 @@ namespace ModManager4.Class
                         }
 
                         System.Windows.Forms.Label ModNameField = new System.Windows.Forms.Label();
-                        ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeS, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                        ModNameField.Font = new System.Drawing.Font("Arial", fonts.sizeS, (this.modManager.config.enableLegacy == false || mod.gameVersion == this.modManager.serverConfig.get("gameVersion").value) ? System.Drawing.FontStyle.Regular : System.Drawing.FontStyle.Strikeout, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
                         ModNameField.ForeColor = System.Drawing.SystemColors.Control;
                         ModNameField.Location = new System.Drawing.Point((int)(60 * ratioX), (int)(categoryOffset * ratioY));
                         ModNameField.Name = "ModNameField=" + mod.id;

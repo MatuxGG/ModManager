@@ -367,6 +367,11 @@ namespace ModManager4.Class
             return this.modManager.categorylist.categories.FindAll(c => this.mods.Find(m => c.id == m.category && m.gameVersion == this.modManager.serverConfig.get("gameVersion").value) != null);
         }
 
+        public List<Category> getCategories(ModManager modManager)
+        {
+            return this.modManager.categorylist.categories.FindAll(c => this.mods.Find(m => c.id == m.category) != null);
+        }
+
         public List<Mod> getModsByCategory(Category category)
         {
             return this.mods.FindAll(m => m.category == category.id);
@@ -471,6 +476,11 @@ namespace ModManager4.Class
             {
                 return i > 0;
             }
+        }
+
+        public List<Dependency> getDependencies()
+        {
+            return this.availableDependencies.FindAll(d => d.isAvailable == "1");
         }
 
         public string toString()

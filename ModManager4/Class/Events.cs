@@ -118,6 +118,24 @@ namespace ModManager4.Class
             this.modManager.config.update(this.modManager);
         }
 
+        public void enableLegacy(object sender, EventArgs e)
+        {
+            MMCheckbox checkbox = ((MMCheckbox)sender);
+            if (checkbox.Checked)
+            {
+                this.modManager.logs.log("Event : Enable legacy \n");
+                this.modManager.config.enableLegacy = true;
+            }
+            else
+            {
+                this.modManager.logs.log("Event : Disable legacy \n");
+                this.modManager.config.enableLegacy = false;
+            }
+            this.modManager.config.update(this.modManager);
+            this.modManager.componentlist.refreshModSelection();
+
+        }
+
         public void openLogs(object sender, EventArgs e)
         {
             this.modManager.logs.log("Event : Open Mod Manager logs folder\n");

@@ -129,6 +129,7 @@ namespace ModManager4.Class
             if (this.modManager.WindowState == FormWindowState.Minimized)
                 this.modManager.WindowState = FormWindowState.Normal;
 
+            this.modManager.Activate();
         }
 
         private void start(object sender, EventArgs e)

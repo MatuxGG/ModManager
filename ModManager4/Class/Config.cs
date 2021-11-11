@@ -28,7 +28,9 @@ namespace ModManager4.Class
         public string sortType { get; set; }
         public string sortOrder { get; set; }
 
-        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, Boolean enableCache, int resolutionX, int resolutionY, string startMethod, List<string> hiddenCategories, string sortType, string sortOrder)
+        public Boolean enableLegacy { get; set; }
+
+        public Config(string amongUsPath, List<InstalledMod> installedMods, List<string> installedDependencies, Boolean enableCache, int resolutionX, int resolutionY, string startMethod, List<string> hiddenCategories, string sortType, string sortOrder, Boolean enableLegacy)
         {
             this.amongUsPath = amongUsPath;
             this.installedMods = installedMods;
@@ -40,6 +42,7 @@ namespace ModManager4.Class
             this.hiddenCategories = hiddenCategories;
             this.sortType = sortType;
             this.sortOrder = sortOrder;
+            this.enableLegacy = enableLegacy;
         }
 
         public Config()
@@ -54,6 +57,7 @@ namespace ModManager4.Class
             this.hiddenCategories = new List<string>() { };
             this.sortType = "Checked";
             this.sortOrder = "A";
+            this.enableLegacy = false;
         }
 
         public List<int[]> getResolutions()
@@ -100,22 +104,21 @@ namespace ModManager4.Class
 
                 if (m.type != "allInOne")
                 {
-                    if (mod.gameVersion != modManager.serverConfig.get("gameVersion").value || (m.type == "mod" && mod.version != m.release.TagName))
+                    if ((this.enableLegacy == false && mod.gameVersion != modManager.serverConfig.get("gameVersion").value) || (m.type == "mod" && mod.version != m.release.TagName))
                     {
                         modManager.logs.log("- Uninstall mod " + m.name + " (wrong version or game version)");
                         modManager.modWorker.uninstallMod(m);
                         return true;
                     }
-                }
 
-
-                foreach (string file in mod.files)
-                {
-                    if (File.Exists(this.amongUsPath + "\\" + file) == false && Directory.Exists(this.amongUsPath + "\\" + file) == false)
+                    foreach (string file in mod.files)
                     {
-                        modManager.logs.log("- Uninstall mod " + m.name + " (missing file " + file + ")");
-                        modManager.modWorker.uninstallMod(m);
-                        return true;
+                        if (File.Exists(this.amongUsPath + "\\" + file) == false && Directory.Exists(this.amongUsPath + "\\" + file) == false)
+                        {
+                            modManager.logs.log("- Uninstall mod " + m.name + " (missing file " + file + ")");
+                            modManager.modWorker.uninstallMod(m);
+                            return true;
+                        }
                     }
                 }
             }
@@ -156,6 +159,7 @@ namespace ModManager4.Class
                     this.hiddenCategories = temp.hiddenCategories;
                     this.sortType = temp.sortType;
                     this.sortOrder = temp.sortOrder;
+                    this.enableLegacy = temp.enableLegacy;
                     this.update(modManager);
                     return;
                 } else
@@ -177,6 +181,7 @@ namespace ModManager4.Class
             this.hiddenCategories = new List<string>() { };
             this.sortType = "Checked";
             this.sortOrder = "A";
+            this.enableLegacy = false;
 
             // Detection from Steam
             modManager.logs.log("- Getting Among Us path from Steam");

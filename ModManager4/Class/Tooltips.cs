@@ -37,6 +37,7 @@ namespace ModManager4.Class
             { "RemoveLocalButton", "Click here to remove all local mods stored in Mod Manager at once" },
             { "OpenLogsButton", "Click here to open Mod Manager's logs folder\nIt contains useful information that can be used to solve an issue" },
             { "EnableCacheCheckbox", "Click here to enable/disable Mod Manager's cache" },
+            { "EnableLegacyCheckbox", "Click here to enable/disable Mod Manager's legacy mode. If enabled, mods available for older versions of the game will be visible" },
             { "ResolutionComboBox", "Click here to change the resolution of Mod Manager's window" },
             { "MatuxRoadmapLabel", "Click here to open Mod Manager's roadmap\nYou can track incomming features or known bugs here" },
             { "MMDiscordLabel", "Click here to join Mod Manager's discord server" },

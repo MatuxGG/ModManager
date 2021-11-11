@@ -11,10 +11,12 @@ namespace ModManager4.Class
         public string id { get; set; }
         public string name { get; set; }
     
-        public Dependency(string id, string name)
+        public string isAvailable { get; set; }
+        public Dependency(string id, string name, string isAvailable)
         {
             this.id = id;
             this.name = name;
+            this.isAvailable = isAvailable;
         }
     }
 }
