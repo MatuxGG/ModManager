@@ -1,14 +1,12 @@
 # Mod Manager
-Among Us Mod Manager is an open-source software for the popular game Among Us. It allows you to switch between many established mods with only a few clicks!
+Among Us Mod Manager is an open-source launcher for the popular game Among Us. It allows you to switch between many established mods with only a few clicks!
 
 Join the discord: https://mm.matux.fr/discord
 
 ![ModManagerv4.0.10](https://amodsus.com/attachments/modmanager4-0-10-png.505/)
 ## How to install?
 
-1. Download and install .net 5 [here](https://matux.fr/dotnet64). (Or alternatively from [here](https://matux.fr/dotnet32) if you are using a 32bit system.)
-
-2. Download the latest "ModManagerInstaller.exe" available [here](https://mm.matux.fr/latest).
+1. Download the latest "ModManagerInstaller.exe" available [here](https://mm.matux.fr/latest).
 
 3. Launch the installer and choose a location for the software. (You should not select your Among Us directory!)
 
@@ -20,15 +18,11 @@ Join the discord: https://mm.matux.fr/discord
 
 - A window will open.
 
-- You can select any number of mods just by checking them; then, press update to install them.
+- Choose a mod category and download any wanted mod by using the download button on the right side.
 
-- If at any point, you want to remove all mods installed, you have a button to do so.
+- Start a mod by clicking the launch button, which replaced the download button on the right side.
 
 - You are ready to play! :)
-
-## How to synchronize your installed mods with your friends?
-
-Below the mod manager menu, there is a code that you can share with your friends. After your friends entered the code into their Mod Manager, they will have the same configurations as you.
 
 ## Making a mod compatible with Mod Manager
 
@@ -39,6 +33,8 @@ Publish a release in a public GitHub repository for your mod. In this release, y
 - A .zip with of the Among Us modded directory
 
 Then, join the [discord](https://mm.matux.fr/discord) and send your repository link. It will be a pleasure adding your mod. :)
+
+Note: This section will be rewritten soon to help you use te new account system ! :)
 
 ## Credits & Resources
 
