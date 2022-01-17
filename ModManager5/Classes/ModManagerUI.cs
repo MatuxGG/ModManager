@@ -503,6 +503,7 @@ namespace ModManager5.Classes
             });
             ServersMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
+                showMenuPanel();
                 openForm(ServersForm);
             });
             NewsMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
@@ -1333,7 +1334,7 @@ namespace ModManager5.Classes
                     {
                         loadAccount();
                         LoginErrorLabel.Visible = false;
-                        openForm(MyStatsForm);
+                        openForm(EmptyForm);
                     }
                     else
                     {
@@ -1358,7 +1359,7 @@ namespace ModManager5.Classes
                     {
                         loadAccount();
                         LoginErrorLabel.Visible = false;
-                        openForm(MyModsForm);
+                        openForm(EmptyForm);
                     }
                     else
                     {

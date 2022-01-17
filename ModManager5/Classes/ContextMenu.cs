@@ -41,9 +41,13 @@ namespace ModManager5.Classes
                 foreach (InstalledMod i in im)
                 {
                     Mod m = ModList.getModById(i.id);
-                    notifyIcon.ContextMenuStrip.Items.Add(m.name, null, new EventHandler((object sender, EventArgs e) => {
-                        Process.Start("explorer", ModManager.appDataPath + @"\mods\" + m.id + @"\Among Us.exe");
-                    }));
+                    if (m != null)
+                    {
+                        notifyIcon.ContextMenuStrip.Items.Add(m.name, null, new EventHandler((object sender, EventArgs e) => {
+                            Process.Start("explorer", ModManager.appDataPath + @"\mods\" + m.id + @"\Among Us.exe");
+                        }));
+                    }
+                    
                 }
                 
                 notifyIcon.ContextMenuStrip.Items.Add("-");
