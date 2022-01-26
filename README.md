@@ -3,7 +3,8 @@ Among Us Mod Manager is an open-source launcher for the popular game Among Us. I
 
 Join the discord: https://mm.matux.fr/discord
 
-![ModManagerv4.0.10](https://amodsus.com/attachments/modmanager4-0-10-png.505/)
+![ModManagerv5.0.1](https://amodsus.com/attachments/1642431805864-png.530/)
+
 ## How to install?
 
 1. Download the latest "ModManagerInstaller.exe" available [here](https://mm.matux.fr/latest).
