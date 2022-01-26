@@ -77,10 +77,11 @@ namespace ModManager5.Classes
 
             if (myKey != null)
             {
-                
                 amongUsPath = (String)myKey.GetValue("InstallLocation");
-                generateFolder(amongUsPath);
-                return;
+                if (generateFolder(amongUsPath))
+                {
+                    return;
+                }
             }
             else
             {
@@ -92,8 +93,10 @@ namespace ModManager5.Classes
             foreach (DriveInfo d in DriveInfo.GetDrives())
             {
                 amongUsPath = d.Name + @"Program Files\Epic Games\AmongUs";
-                generateFolder(amongUsPath);
-                return;
+                if (generateFolder(amongUsPath))
+                {
+                    return;
+                }
             }
 
             
@@ -101,8 +104,10 @@ namespace ModManager5.Classes
             {
                 Utils.log("[ConfigManager] Among Us path detected in Config");
                 amongUsPath = config.amongUsPath;
-                generateFolder(amongUsPath);
-                return;
+                if (generateFolder(amongUsPath))
+                {
+                    return;
+                }
             }
             // No Among Us found
 
@@ -116,11 +121,13 @@ namespace ModManager5.Classes
                 }
                 amongUsPath = selectFolderWorker();
             }
-            generateFolder(amongUsPath);
-            return;
+            if (generateFolder(amongUsPath))
+            {
+                return;
+            }
         }
 
-        public static void generateFolder(string path)
+        public static Boolean generateFolder(string path)
         {
             if (File.Exists(path + @"\Among Us.exe"))
             {
@@ -134,8 +141,9 @@ namespace ModManager5.Classes
                 config.currentGameVersion = latest;
                 config.amongUsPath = path;
                 update();
+                return true;
             }
-            return;
+            return false;
         }
         
         public static string selectFolderWorker()

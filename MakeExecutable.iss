@@ -30,6 +30,7 @@ SetupIconFile=D:\visualstudio\ModManager5\ModManager5\modmanager.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
+ArchitecturesInstallIn64BitMode=x64
 
 [Code]
 function InitializeSetup: Boolean;
@@ -37,6 +38,9 @@ begin
   ExtractTemporaryFile('netcorecheck.exe');     
   ExtractTemporaryFile('netcorecheck_x64.exe');
   Dependency_AddDotNet50;
+  Dependency_AddDotNet50Desktop;
+  
+
 
   Result := True;
 end;
