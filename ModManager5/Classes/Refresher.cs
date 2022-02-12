@@ -34,7 +34,8 @@ namespace ModManager5.Classes
 
                 Utils.log("[Refresher] Starting data refresh");
 
-                thisModManager.Invoke(new Action(async () => {
+                Action a = new Action(async () =>
+                {
                     ModManagerUI.StatusLabel.Text = "Updating data, please wait...";
                     Utils.log("[Refresher] Loading global config");
                     ConfigManager.loadGlobalConfig();
@@ -66,7 +67,6 @@ namespace ModManager5.Classes
                     {
                         NewsList.current = 0;
                     }
-
                     // Faq
                     Utils.log("[Refresher] Loading faq");
                     current = FaqList.current;
@@ -82,13 +82,16 @@ namespace ModManager5.Classes
                     ServerManager.load();
                     //ModWorker.load();
                     Utils.log("[Refresher] Loading context menu");
+
                     ContextMenu.load();
                     Utils.log("[Refresher] Loading Mod Manager UI");
                     ModManagerUI.InitUI();
                     ModManagerUI.openForm(ModManagerUI.activeForm);
                     ModManager.silent = false;
                     ModManagerUI.StatusLabel.Text = "";
-                }));
+                });
+
+                thisModManager.Invoke(a);
 
                 ModWorker.endTransaction();
 
@@ -103,6 +106,7 @@ namespace ModManager5.Classes
         private static void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // Nothing
+            Utils.debug("test");
         }
     }
 }

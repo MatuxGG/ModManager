@@ -129,6 +129,9 @@ namespace ModManager5
                 Utils.log("Loading servers");
                 ServerManager.load();
             }
+
+            Utils.log("Loading downloader");
+            DownloadWorker.load(this);
             Utils.log("Loading installer");
             ModWorker.load();
 
@@ -209,6 +212,5 @@ namespace ModManager5
             ModManagerUI.LoadingLabel.Visible = false;
             ModManagerUI.StatusLabel.Text = "";
         }
-
     }
 }

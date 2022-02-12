@@ -56,6 +56,7 @@ namespace ModManager5.Classes
 
         public static TextBox LoginPseudoText;
         public static TextBox LoginPasswordText;
+        public static List<Control> allocatedControls;
 
         public static void load(ModManager modManager)
         {
@@ -92,6 +93,7 @@ namespace ModManager5.Classes
             StartPanel = new Panel();
 
             CategoryForms = new List<Form>() { };
+            allocatedControls = new List<Control>() { };
 
             modManager.BackColor = ThemeList.theme.AppBackgroundColor;
 
@@ -427,7 +429,7 @@ namespace ModManager5.Classes
             StatusLabel.Dock = DockStyle.Left;
             StatusLabel.Size = new Size(500, 30);
             StatusLabel.TextAlign = ContentAlignment.MiddleLeft;
-            StatusLabel.Padding = new Padding(10, 30, 10, 30);
+            StatusLabel.Padding = new Padding(10, 10, 10, 10);
             StatusLabel.Name = "StatusLabel";
             StatusLabel.Text = Translator.get("Loading...");
             StatusLabel.TabStop = false;
@@ -440,6 +442,11 @@ namespace ModManager5.Classes
 
         public static void InitUI()
         {
+            foreach(Control c in allocatedControls)
+            {
+                c.Dispose();
+            }
+            allocatedControls.Clear();
             //loadLocalMods();
             loadEmpty();
             loadMods();
@@ -457,6 +464,9 @@ namespace ModManager5.Classes
             {
                 showMenuPanel(ModsCategoriesPanel);
                 openForm(CategoryForms.Last());
+            } else
+            {
+                openForm(EmptyForm);
             }
         }
 
@@ -614,10 +624,11 @@ namespace ModManager5.Classes
                 }
                 
             }
+            
             ModsCategoriesPanel.Size = new Size(300, 40 * size);
 
             // Forms
-
+            
             foreach (Form f in CategoryForms)
             {
                 refreshModForm(f);
@@ -637,7 +648,7 @@ namespace ModManager5.Classes
             Category cat = CategoryManager.getCategoryById(f.Name);
 
             List<Mod> mods = new List<Mod>() { };
-
+            
             if (cat.id == "local")
             {
                 mods.AddRange(ModList.localMods);
@@ -713,7 +724,7 @@ namespace ModManager5.Classes
                 InstalledMod im = ConfigManager.getInstalledModById(m.id);
                 
                 if (m.type != "local") {
-
+                    
                     if (m.id == "BetterCrewlink" && im == null)
                     {
                         object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
@@ -729,6 +740,7 @@ namespace ModManager5.Classes
 
                     }
 
+                    
                     if (im == null)
                     {
                         PictureBox ModDownload = new PictureBox();
@@ -746,10 +758,14 @@ namespace ModManager5.Classes
                         {
                             ModWorker.installAnyMod(m);
                         });
+
+                        allocatedControls.Add(ModDownload);
+                        
                         ModPanel.Controls.Add(ModDownload, 4, line);
                     }
-                    else if (((m.type != "allInOne" || m.id == "Challenger") && im.version != m.release.TagName) || (m.type != "allInOne" && im.gameVersion != m.gameVersion))
+                    else if (((m.type != "allInOne" || m.id == "Challenger" || m.id == "ChallengerBeta") && im.version != m.release.TagName) || (m.type != "allInOne" && im.gameVersion != m.gameVersion))
                     {
+                        
                         PictureBox ModUpdate = new PictureBox();
                         ModUpdate.Cursor = System.Windows.Forms.Cursors.Hand;
                         ModUpdate.Dock = DockStyle.Fill;
@@ -765,11 +781,14 @@ namespace ModManager5.Classes
                         {
                             ModWorker.installAnyMod(m);
                         });
+                        allocatedControls.Add(ModUpdate);
 
                         ModPanel.Controls.Add(ModUpdate, 4, line);
+                        
                     }
                     else
                     {
+                        
                         PictureBox ModPlay = new PictureBox();
                         ModPlay.Cursor = System.Windows.Forms.Cursors.Hand;
                         ModPlay.Dock = DockStyle.Fill;
@@ -785,9 +804,12 @@ namespace ModManager5.Classes
                         {
                             ModWorker.startMod(m);
                         });
+                        allocatedControls.Add(ModPlay);
                         ModPanel.Controls.Add(ModPlay, 4, line);
+                        
                     }
-
+                    
+                    
                     PictureBox ModUninstall = new PictureBox();
                     ModUninstall.Dock = DockStyle.Fill;
                     ModUninstall.Margin = new System.Windows.Forms.Padding(0);
@@ -797,6 +819,8 @@ namespace ModManager5.Classes
                     ModUninstall.Margin = new Padding(10, 10, 10, 10);
                     ModUninstall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
                     ModUninstall.TabStop = false;
+
+                    allocatedControls.Add(ModUninstall);
 
                     ModPanel.Controls.Add(ModUninstall, 5, line);
 
@@ -826,6 +850,7 @@ namespace ModManager5.Classes
                     ModSave.Click += new EventHandler((object sender, EventArgs e) => {
                         ModList.createShortcut(m);
                     });
+                    allocatedControls.Add(ModSave);
                     ModPanel.Controls.Add(ModSave, 6, line);
 
                     System.Windows.Forms.LinkLabel ModGithub = new System.Windows.Forms.LinkLabel();
@@ -838,6 +863,7 @@ namespace ModManager5.Classes
                     ModGithub.Dock = DockStyle.Left;
                     ModGithub.Padding = new Padding(12, 0, 0, 0);
                     ModGithub.Size = new System.Drawing.Size(700, 50);
+                    allocatedControls.Add(ModGithub);
                     if (m.githubLink == "1")
                     {
                         ModGithub.Text = "https://github.com/" + m.author + "/" + m.github;
@@ -863,6 +889,7 @@ namespace ModManager5.Classes
                     ModVersion.Padding = new Padding(12, 0, 0, 0);
                     ModVersion.Size = new System.Drawing.Size(150, 50);
                     ModVersion.TabStop = false;
+                    allocatedControls.Add(ModVersion);
                     if (m.githubLink == "1")
                     {
                         ModVersion.Text = m.release.TagName;
@@ -884,6 +911,7 @@ namespace ModManager5.Classes
                     ModAuthor.Size = new System.Drawing.Size(250, 50);
                     ModAuthor.Text = m.author;
                     ModAuthor.TabStop = false;
+                    allocatedControls.Add(ModAuthor);
 
                     if (m.githubLink == "1")
                     {
@@ -913,6 +941,7 @@ namespace ModManager5.Classes
                     ModTitle.Text = (m.type == "allInOne" || m.gameVersion == ServerConfig.get("gameVersion").value) ? m.name : m.name + "*";
                     ModTitle.TabStop = false;
                     ModPanel.Controls.Add(ModTitle, 0, line);
+                    allocatedControls.Add(ModTitle);
 
                 } else
                 {
@@ -1103,7 +1132,7 @@ namespace ModManager5.Classes
                             ModWorker.endTransaction();
                         });
                     }
-                    
+                    allocatedControls.Add(ModRemovedPic);
                     ModPanel.Controls.Add(ModRemovedPic, 6, line);
 
                     if (!last)
@@ -1184,6 +1213,9 @@ namespace ModManager5.Classes
                             StatusLabel.Text = Translator.get("Local mod edited");
                             ModWorker.endTransaction();
                         });
+
+                        allocatedControls.Add(ModStartPic);
+                        allocatedControls.Add(ModValidPic);
 
                         ModPanel.Controls.Add(ModValidPic, 5, line);
                     }
@@ -1742,7 +1774,7 @@ namespace ModManager5.Classes
 
                     Utils.DirectoryDelete(ModManager.appDataPath);
                     string path = ModManager.appPath + "ModManager5.exe";
-                    Process.Start(path, "force");
+                    Process.Start(path, "force " + activeForm.Name);
                     Environment.Exit(0);
                 }
             });

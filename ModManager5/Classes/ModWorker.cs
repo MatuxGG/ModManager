@@ -9,6 +9,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Net;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -38,9 +39,77 @@ namespace ModManager5.Classes
             ModWorker.finished = true;
         }
 
+        public static void startSteam()
+        {
+            if (!finished)
+            {
+                return;
+            }
+            finished = false;
+            BackgroundWorker backgroundWorkerSteam = new BackgroundWorker();
+            backgroundWorkerSteam.WorkerReportsProgress = true;
+            backgroundWorkerSteam.DoWork += new DoWorkEventHandler(backgroundWorkerSteam_DoWork);
+            backgroundWorkerSteam.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerSteam_RunWorkerCompleted);
+            backgroundWorkerSteam.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerSteam_ProgressChanged);
+            backgroundWorkerSteam.RunWorkerAsync();
+
+        }
+
+        private static void backgroundWorkerSteam_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var backgroundWorker = sender as BackgroundWorker;
+
+            if (System.Diagnostics.Process.GetProcessesByName("Steam").Length < 1)
+            {
+                Process.Start("explorer", "steam://");
+                backgroundWorker.ReportProgress(10);
+            }
+
+            while (System.Diagnostics.Process.GetProcessesByName("Steam").Length < 1)
+            {
+
+            }
+
+            finished = true;
+            backgroundWorker.ReportProgress(100);
+        }
+
+        private static void backgroundWorkerSteam_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+            if (!ModManager.silent)
+            {
+                switch (e.ProgressPercentage)
+                {
+                    case 10:
+                        ModManagerUI.StatusLabel.Text = Translator.get("Starting Steam...");
+                        break;
+                }
+            }
+
+            
+        }
+
+        private static void backgroundWorkerSteam_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (!ModManager.silent)
+            {
+                if (finished)
+                {
+                    ModManagerUI.StatusLabel.Text =  Translator.get("Steam started.");
+                }
+            }
+            else
+            {
+                finished = true;
+            }
+        }
+
         public static void startMod(Mod m)
         {
             Utils.log("[ModWorker] Starting mod " + m.name);
+
+            //startSteam();
+
             if (m.id == "Skeld")
             {
                 Process.Start("explorer", ModManager.appDataPath + @"\mods\" + m.id + @"\Skeld.exe");
@@ -83,6 +152,8 @@ namespace ModManager5.Classes
                 
             }
         }
+
+        
 
         private static void cleanGame(string amongUsPath)
         {
@@ -227,10 +298,8 @@ namespace ModManager5.Classes
 
             finished = false;
             
-            if (!ModManager.silent)
-                ModManagerUI.StatusLabel.Text = "Downloading Better Crewlink...";
-
             string dlPath = ModManager.tempPath + @"\Better-CrewLink-Setup.exe";
+
             using (var client = new WebClient())
             {
                 client.DownloadFile(ModManager.serverURL + @"\bcl", dlPath);
@@ -249,7 +318,7 @@ namespace ModManager5.Classes
 
             if (!ModManager.silent)
             {
-                ModManagerUI.StatusLabel.Text = "Better Crewlink installed successfully !";
+                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", "Better Crewlink");
 
                 Form currentForm = ModManagerUI.getFormByCategoryId(m.category);
                 ModManagerUI.refreshModForm(currentForm);
@@ -267,17 +336,20 @@ namespace ModManager5.Classes
             }
 
             finished = false;
-            if (!ModManager.silent)
-                ModManagerUI.StatusLabel.Text = "Downloading Skeld.net...";
+            //if (!ModManager.silent)
+            //    ModManagerUI.StatusLabel.Text = "Downloading Skeld.net...";
 
             string path = ModManager.appDataPath + @"\mods\Skeld";
 
             Directory.CreateDirectory(path);
 
+            /*
             using (var client = new WebClient())
             {
                 client.DownloadFile(ModManager.serverURL + "/skeld",  path + @"\Skeld.exe");
             }
+            */
+            DownloadWorker.download(ModManager.serverURL + "/skeld", path + @"\Skeld.exe", "Downloading Skeld.net... (PERCENT%)");
 
             InstalledMod newMod = new InstalledMod("Skeld", "", "");
             ConfigManager.config.installedMods.Add(newMod);
@@ -287,7 +359,7 @@ namespace ModManager5.Classes
 
             if (!ModManager.silent)
             {
-                ModManagerUI.StatusLabel.Text = "Skeld.net successfully installed !";
+                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", "Skeld.net");
 
                 Form currentForm = ModManagerUI.getFormByCategoryId(m.category);
                 ModManagerUI.refreshModForm(currentForm);
@@ -339,6 +411,7 @@ namespace ModManager5.Classes
             string path = ModManager.tempPath + @"\" + asset.Name;
             Utils.FileDelete(path);
 
+            /*
             try
             {
                 using (WebClient wc = new WebClient())
@@ -351,6 +424,10 @@ namespace ModManager5.Classes
                 backgroundWorker.ReportProgress(100);
                 return;
             }
+            */
+
+            DownloadWorker.download(asset.BrowserDownloadUrl, path, "Installing " + ModToInstall.name + ", please wait...\nInstalling client... (PERCENT%)");
+
             backgroundWorker.ReportProgress(20);
 
             string appPath = ModManager.appDataPath + @"\mods\" + ModToInstall.id;
@@ -373,6 +450,7 @@ namespace ModManager5.Classes
 
             path = ModManager.tempPath + @"\" + asset.Name;
 
+            /*
             try
             {
                 using (WebClient wc = new WebClient())
@@ -385,6 +463,8 @@ namespace ModManager5.Classes
                 backgroundWorker.ReportProgress(100);
                 return;
             }
+            */
+            DownloadWorker.download(asset.BrowserDownloadUrl, path, "Installing " + ModToInstall.name + ", please wait...\nInstalling mod... (PERCENT%)");
 
             backgroundWorker.ReportProgress(40);
 
@@ -407,24 +487,7 @@ namespace ModManager5.Classes
 
         private static void backgroundWorkerChallenger_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (!ModManager.silent)
-            {
-                switch (e.ProgressPercentage)
-                {
-                    case 10:
-                        ModManagerUI.StatusLabel.Text = "Installing " + ModToInstall.name + ", please wait... Downloading client...";
-                        break;
-                    case 20:
-                        ModManagerUI.StatusLabel.Text = "Installing " + ModToInstall.name + ", please wait... Installating client...";
-                        break;
-                    case 30:
-                        ModManagerUI.StatusLabel.Text = "Installing " + ModToInstall.name + ", please wait... Downloading mod...";
-                        break;
-                    case 40:
-                        ModManagerUI.StatusLabel.Text = "Installing " + ModToInstall.name + ", please wait... Installing mod...";
-                        break;
-                }
-            }
+
         }
 
         private static void backgroundWorkerChallenger_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -433,13 +496,13 @@ namespace ModManager5.Classes
             {
                 if (finished)
                 {
-                    ModManagerUI.StatusLabel.Text = ModToInstall.name + " successfully installed !";
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", ModToInstall.name);
                     Form currentForm = ModManagerUI.getFormByCategoryId(ModToInstall.category);
                     ModManagerUI.refreshModForm(currentForm);
                 }
                 else
                 {
-                    ModManagerUI.StatusLabel.Text = "Error : installation cancelled.";
+                    ModManagerUI.StatusLabel.Text = Translator.get("Error : installation canceled.");
                     finished = true;
                 }
             } else
@@ -457,7 +520,7 @@ namespace ModManager5.Classes
             }
             finished = false;
 
-            ModManagerUI.StatusLabel.Text = "Uninstalling Mod, please wait...";
+            ModManagerUI.StatusLabel.Text = Translator.get("Uninstalling Mod, please wait...");
             
 
             InstalledMod im = ConfigManager.getInstalledModById(m.id);
@@ -469,7 +532,7 @@ namespace ModManager5.Classes
 
             finished = true;
 
-            ModManagerUI.StatusLabel.Text = "Mod successfully uninstalled !";
+            ModManagerUI.StatusLabel.Text = Translator.get("Mod uninstalled successfully.");
             Form currentForm = ModManagerUI.getFormByCategoryId(m.category);
             ModManagerUI.refreshModForm(currentForm);
 
@@ -559,21 +622,7 @@ namespace ModManager5.Classes
 
         private static void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
         {
-            if (!ModManager.silent)
-            {
-                switch (e.ProgressPercentage)
-                {
-                    case 10:
-                        ModManagerUI.StatusLabel.Text = "Installing Mod, please wait... Initializing...";
-                        break;
-                    case 20:
-                        ModManagerUI.StatusLabel.Text = "Installing Mod, please wait... Installing dependencies...";
-                        break;
-                    case 30:
-                        ModManagerUI.StatusLabel.Text = "Installing Mod, please wait... Installing mod...";
-                        break;
-                }
-            }
+            
         }
 
         private static void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -582,13 +631,13 @@ namespace ModManager5.Classes
             {
                 if (finished)
                 {
-                    ModManagerUI.StatusLabel.Text = "Mod successfully installed !";
+                    ModManagerUI.StatusLabel.Text = Translator.get("Mod installed successfully.");
                     Form currentForm = ModManagerUI.getFormByCategoryId(ModToInstall.category);
                     ModManagerUI.refreshModForm(currentForm);
                 }
                 else
                 {
-                    ModManagerUI.StatusLabel.Text = "Error : installation cancelled.";
+                    ModManagerUI.StatusLabel.Text = Translator.get("Error : installation canceled.");
                     finished = true;
                 }
             } else
@@ -607,7 +656,7 @@ namespace ModManager5.Classes
                 string tempPath = ModManager.tempPath;
                 string tempDestPath = tempPath + @"\" + dependencie + ".zip";
                 Utils.FileDelete(tempDestPath);
-                try
+                /*try
                 {
                     using (var client = new WebClient())
                     {
@@ -618,6 +667,8 @@ namespace ModManager5.Classes
                 {
                     return false;
                 }
+                */
+                DownloadWorker.download(ModManager.apiURL + "/files/dependencies/" + dependencie + ".zip", tempDestPath, "Installing mod, please wait...\nInstalling dependencies... (PERCENT%)");
 
                 try
                 {
@@ -669,7 +720,7 @@ namespace ModManager5.Classes
             Directory.CreateDirectory(pluginsPath);
             Utils.log("[ModWorker] Installing dll file " + fileName);
 
-            try
+            /*try
             {
                 using (var client = new WebClient())
                 {
@@ -680,6 +731,8 @@ namespace ModManager5.Classes
             {
                 return false;
             }
+            */
+            DownloadWorker.download(fileUrl, pluginsPath + @"\" + fileName, "Installing mod, please wait...\nInstalling mod... (PERCENT%)");
             return true;
         }
 
@@ -694,6 +747,7 @@ namespace ModManager5.Classes
 
             Utils.FileDelete(zipPath);
 
+            /*
             try
             {
                 using (var client = new WebClient())
@@ -705,6 +759,9 @@ namespace ModManager5.Classes
             {
                 return false;
             }
+            */
+
+            DownloadWorker.download(fileUrl, zipPath, "Installing mod, please wait...\nInstalling mod... (PERCENT%)");
 
             string newPath = ModManager.tempPath + @"\ModZip";
 
@@ -714,35 +771,6 @@ namespace ModManager5.Classes
             newPath = getBepInExInsideRec(newPath);
             Utils.DirectoryCopy(newPath, modPath, true);
 
-
-            /*List<string> installedFiles = new List<string>();
-
-            foreach (string folder in m.folders)
-            {
-                DirectoryInfo dirInfo = new DirectoryInfo(newPath + @"\" + folder);
-                if (dirInfo.Exists)
-                {
-                    Directory.CreateDirectory(modPath + @"\" + folder);
-
-                    FileInfo[] files = dirInfo.GetFiles("*");
-                    foreach (FileInfo f in files)
-                    {
-                        if (m.excludeFiles.Contains(folder + @"\" + f.Name) == false)
-                        {
-                            string target = modPath + @"\" + folder + "\\" + f.Name;
-                            string newName = f.Name;
-                            // Should never be triggered but it's still here just in case
-                            if (File.Exists(target))
-                            {
-                                newName = m.id + "-" + f.Name.Remove(f.Name.Length - 4);
-                                target = modPath + @"\" + folder + @"\" + newName;
-                            }
-                            Utils.FileCopy(f.FullName, target);
-                        }
-                    }
-                }
-            }
-            */
             return true;
         }
 

@@ -183,6 +183,7 @@ namespace ModManager5.Classes
             shortcut.TargetPath = ModManager.appPath + @"\ModManager5.exe";
             shortcut.Arguments = arguments;
 
+            /* Removed functionality
             string localPath = ModManager.appDataPath + @"\icons\" + m.id + ".ico";
             try
             {
@@ -195,6 +196,7 @@ namespace ModManager5.Classes
             {
 
             }
+            */
 
             shortcut.Save();
             ModManagerUI.StatusLabel.Text = "A shortcut has been created on your desktop !";
