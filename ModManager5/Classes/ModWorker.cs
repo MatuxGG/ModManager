@@ -411,26 +411,21 @@ namespace ModManager5.Classes
             string path = ModManager.tempPath + @"\" + asset.Name;
             Utils.FileDelete(path);
 
-            /*
-            try
-            {
-                using (WebClient wc = new WebClient())
-                {
-                    wc.DownloadFile(new Uri(asset.BrowserDownloadUrl), path);
-                }
-            }
-            catch
-            {
-                backgroundWorker.ReportProgress(100);
-                return;
-            }
-            */
-
             DownloadWorker.download(asset.BrowserDownloadUrl, path, "Installing " + ModToInstall.name + ", please wait...\nInstalling client... (PERCENT%)");
 
             backgroundWorker.ReportProgress(20);
 
             string appPath = ModManager.appDataPath + @"\mods\" + ModToInstall.id;
+            string configPath = appPath + @"\BepInEx\config";
+            string configTempPath = ModManager.tempPath + @"\ChallengerConfig";
+            Boolean configSaved = false;
+
+            if (Directory.Exists(configPath))
+            {
+                Utils.DirectoryDelete(configTempPath);
+                Utils.DirectoryCopy(configPath, configTempPath, true);
+                configSaved = true;
+            }
 
             Utils.DirectoryDelete(appPath);
             Directory.CreateDirectory(appPath);
@@ -450,25 +445,16 @@ namespace ModManager5.Classes
 
             path = ModManager.tempPath + @"\" + asset.Name;
 
-            /*
-            try
-            {
-                using (WebClient wc = new WebClient())
-                {
-                    wc.DownloadFile(new Uri(asset.BrowserDownloadUrl), path);
-                }
-            }
-            catch
-            {
-                backgroundWorker.ReportProgress(100);
-                return;
-            }
-            */
             DownloadWorker.download(asset.BrowserDownloadUrl, path, "Installing " + ModToInstall.name + ", please wait...\nInstalling mod... (PERCENT%)");
 
             backgroundWorker.ReportProgress(40);
 
             ZipFile.ExtractToDirectory(path, appPath);
+
+            if (configSaved)
+            {
+                Utils.DirectoryCopy(configTempPath, configPath, true);
+            }
 
             InstalledMod existingMod = ConfigManager.getInstalledModById(ModToInstall.id);
             if (existingMod != null)
@@ -690,7 +676,7 @@ namespace ModManager5.Classes
                 foreach (ReleaseAsset tab in m.release.Assets)
                 {
                     string fileName = tab.Name;
-                    if (fileName.Contains(".zip"))
+                    if (fileName.Contains(".zip") && !fileName.Contains("Old")) // Temporary fix for TownOfUsR, API update inc
                     {
                         return installZip(m, tab);
                     }

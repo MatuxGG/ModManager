@@ -5,7 +5,7 @@
 #include "D:\visualstudio\ModManager5\Installer\CodeDependencies.iss"
 
 #define MyAppName "ModManager"
-#define MyAppVersion "5.0.1"
+#define MyAppVersion "5.0.5"
 #define MyAppPublisher "Matux"
 #define MyAppURL "https://matux.fr"
 #define MyAppExeName "ModManager5.exe"
@@ -76,14 +76,14 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Release\net5.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Release\net5.0-windows\ModManager5.deps.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Release\net5.0-windows\ModManager5.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Release\net5.0-windows\ModManager5.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Release\net5.0-windows\ModManager5.runtimeconfig.dev.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Release\net5.0-windows\ModManager5.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Release\net5.0-windows\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Release\net5.0-windows\Octokit.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.deps.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.runtimeconfig.dev.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\Octokit.dll"; DestDir: "{app}"; Flags: ignoreversion
 Source: "D:\visualstudio\ModManager5\ModManager5\token.txt"; DestDir: "{app}"; Flags: ignoreversion
 
 Source: "D:\visualstudio\ModManager5\Installer\src\netcorecheck.exe"; Flags: dontcopy noencryption
