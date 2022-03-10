@@ -653,7 +653,7 @@ namespace ModManager5.Classes
             {
                 mods.AddRange(ModList.localMods);
                 int nextId = ModList.localMods.Count();
-                mods.Add(new Mod("LocalMod" + nextId, "NewMod" + nextId, "local", "local", "any", ServerConfig.get("gameVersion").value, new List<string>() { DependencyList.dependencies.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", new List<string>() { }, new List<string>() { }, new List<string>() { }, "1", "1"));
+                mods.Add(new Mod("LocalMod" + nextId, "NewMod" + nextId, "local", "local", ServerConfig.get("gameVersion").value, new List<string>() { DependencyList.dependencies.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", "", new List<string>() { }));
 
             } else
             {
@@ -676,14 +676,13 @@ namespace ModManager5.Classes
 
             if (cat.id == "local")
             {
-                ModPanel.ColumnCount = 7;
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+                ModPanel.ColumnCount = 6;
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
             } else
             {
                 ModPanel.ColumnCount = 7;
@@ -1000,31 +999,7 @@ namespace ModManager5.Classes
                     }
 
 
-                    ModPanel.Controls.Add(FileButton, 3, line);
-
-                    MMListBox ModDependencies = new MMListBox();
-                    ModDependencies.Dock = DockStyle.Fill;
-                    int i = 0;
-                    foreach (Dependency d in DependencyList.dependencies)
-                    {
-                        ModDependencies.Items.Add(d.id);
-                        if (m.dependencies.Contains(d.id))
-                        {
-                            ModDependencies.SetSelected(i, true);
-                        }
-                        i++;
-                    }
-
-                    if (!last)
-                    {
-                        ModDependencies.SelectedValueChanged += new EventHandler((object sender, EventArgs e) => {
-                            ModValidPic.Show();
-                        });
-                    }
-
-
-                    ModPanel.Controls.Add(ModDependencies, 2, line);
-
+                    ModPanel.Controls.Add(FileButton, 2, line);
 
                     MMComboBox ModVersion = new MMComboBox();
                     ModVersion.Margin = new Padding(12, 25, 0, 25);
@@ -1097,7 +1072,7 @@ namespace ModManager5.Classes
                                 tempPath = ModWorker.getBepInExInsideRec(tempPath);
                                 Utils.DirectoryCopy(tempPath, newPath, true);
 
-                                Mod newLocalMod = new Mod(ModTitle.Name, ModTitle.Text, "local", "local", "any", ModVersion.Text, ModDependencies.SelectedItems.Cast<string>().ToList(), "", @"localMods\"+ModTitle.Text, "0", new List<string>() { }, new List<string>() { }, new List<string>() { }, "1", "1") ;
+                                Mod newLocalMod = new Mod(ModTitle.Name, ModTitle.Text, "local", "local", ModVersion.Text, new List<string>() { }, "", @"localMods\"+ModTitle.Text, "0", "", new List<string>() { }) ;
                                 
                                 ModList.localMods.Add(newLocalMod);
 
@@ -1133,7 +1108,7 @@ namespace ModManager5.Classes
                         });
                     }
                     allocatedControls.Add(ModRemovedPic);
-                    ModPanel.Controls.Add(ModRemovedPic, 6, line);
+                    ModPanel.Controls.Add(ModRemovedPic, 5, line);
 
                     if (!last)
                     {
@@ -1153,7 +1128,7 @@ namespace ModManager5.Classes
                             ModWorker.startMod(m);
                         });
 
-                        ModPanel.Controls.Add(ModStartPic, 4, line);
+                        ModPanel.Controls.Add(ModStartPic, 3, line);
 
                         ModValidPic.Image = global::ModManager5.Properties.Resources.valid;
                         ModValidPic.Name = "ModValidPic=" + m.id;
@@ -1188,12 +1163,6 @@ namespace ModManager5.Classes
                                 m.gameVersion = ModVersion.Text;
                             }
 
-                            List<string> deps = ModDependencies.SelectedItems.Cast<string>().ToList();
-                            if (m.dependencies != deps)
-                            {
-                                m.dependencies = deps;
-                            }
-
                             if (FileButton.Text != "" && FileButton.Text != Translator.get("Change file"))
                             {
                                 string newPath = ModManager.appDataPath + @"\localMods\" + m.name;
@@ -1217,7 +1186,7 @@ namespace ModManager5.Classes
                         allocatedControls.Add(ModStartPic);
                         allocatedControls.Add(ModValidPic);
 
-                        ModPanel.Controls.Add(ModValidPic, 5, line);
+                        ModPanel.Controls.Add(ModValidPic, 4, line);
                     }
                 }
 

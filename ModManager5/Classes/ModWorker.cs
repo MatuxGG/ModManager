@@ -52,7 +52,6 @@ namespace ModManager5.Classes
             backgroundWorkerSteam.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerSteam_RunWorkerCompleted);
             backgroundWorkerSteam.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerSteam_ProgressChanged);
             backgroundWorkerSteam.RunWorkerAsync();
-
         }
 
         private static void backgroundWorkerSteam_DoWork(object sender, DoWorkEventArgs e)
@@ -112,15 +111,21 @@ namespace ModManager5.Classes
 
             if (m.id == "Skeld")
             {
+                if (!ModManager.silent)
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
                 Process.Start("explorer", ModManager.appDataPath + @"\mods\" + m.id + @"\Skeld.exe");
             }
             else if (m.id == "BetterCrewlink")
             {
                 object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
+                if (!ModManager.silent)
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
                 Process.Start("explorer", o.ToString() + @"\Better-CrewLink.exe");
             }
             else if (m.id == "Challenger" || m.id == "ChallengerBeta")
             {
+                if (!ModManager.silent)
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
                 Process.Start("explorer", ModManager.appDataPath + @"\mods\" + m.id + @"\Among Us.exe");
             } else
             {
@@ -132,6 +137,9 @@ namespace ModManager5.Classes
 
                 string dirPath = (m.type != "local" ? ModManager.appDataPath + @"\mods\" + m.id : ModManager.appDataPath + @"\localMods\" + m.name);
 
+                if (!ModManager.silent)
+                    ModManagerUI.StatusLabel.Text = Translator.get("Starting MODNAME ... Please wait...").Replace("MODNAME", m.name);
+
                 if (m.gameVersion == ServerConfig.get("gameVersion").value)
                 {
                     string amongUsPath = ConfigManager.config.amongUsPath;
@@ -139,6 +147,8 @@ namespace ModManager5.Classes
                     Utils.DirectoryCopy(dirPath, amongUsPath, true);
                     ConfigManager.config.lastMod = m.id;
                     ConfigManager.update();
+                    if (!ModManager.silent)
+                        ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
                     startGame(false);
                 } else
                 {
@@ -147,13 +157,13 @@ namespace ModManager5.Classes
                     Utils.DirectoryCopy(dirPath, amongUsPath, true);
                     ConfigManager.config.lastMod = m.id;
                     ConfigManager.update();
+                    if (!ModManager.silent)
+                        ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
                     Process.Start("explorer", amongUsPath + @"\Among Us.exe");
                 }
                 
             }
         }
-
-        
 
         private static void cleanGame(string amongUsPath)
         {
@@ -173,14 +183,15 @@ namespace ModManager5.Classes
                 Mod mod = ModList.getModById(ConfigManager.config.lastMod);
                 if (mod != null)
                 {
-                    foreach (string data in mod.data)
+                    List<string> tdata = mod.data;
+                    tdata.Add("BepInEx/config");
+                    foreach (string data in tdata)
                     {
                         string path = amongUsPath + @"\" + data;
                         string destPath = ModManager.appDataPath + @"\mods\" + mod.id + @"\" + data;
                         if (Directory.Exists(path))
                         {
                             Utils.DirectoryCopy(path, destPath, true);
-                            
                         }
                         if (File.Exists(path))
                         {
@@ -205,7 +216,12 @@ namespace ModManager5.Classes
         public static void startGame(Boolean vanilla)
         {
             if (vanilla)
+            {
                 Utils.log("[ModWorker] Starting game");
+                if (!ModManager.silent)
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", "Vanilla Among Us");
+            }
+
             Boolean vanillaOpen = (vanilla && isGameOpen());
             if (vanillaOpen)
             {
@@ -676,7 +692,7 @@ namespace ModManager5.Classes
                 foreach (ReleaseAsset tab in m.release.Assets)
                 {
                     string fileName = tab.Name;
-                    if (fileName.Contains(".zip") && !fileName.Contains("Old")) // Temporary fix for TownOfUsR, API update inc
+                    if (fileName.Contains(".zip") && (m.ignoredPattern == "" || !fileName.Contains(m.ignoredPattern)))
                     {
                         return installZip(m, tab);
                     }

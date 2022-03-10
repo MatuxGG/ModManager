@@ -9,14 +9,16 @@ namespace ModManager5.Classes
 {
     public class Config
     {
+        public string ModManagerVersion;
         public List<InstalledMod> installedMods;
         public List<InstalledVanilla> installedVanilla;
         public string currentGameVersion;
         public string amongUsPath;
         public string lastMod;
 
-        public Config(List<InstalledMod> installedMods, List<InstalledVanilla> installedVanilla, string currentGameVersion, string amongUsPath, string lastMod)
+        public Config(string modManagerVersion, List<InstalledMod> installedMods, List<InstalledVanilla> installedVanilla, string currentGameVersion, string amongUsPath, string lastMod)
         {
+            this.ModManagerVersion = modManagerVersion;
             this.installedMods = installedMods;
             this.installedVanilla = installedVanilla;
             this.currentGameVersion = currentGameVersion;
@@ -26,6 +28,7 @@ namespace ModManager5.Classes
 
         public Config()
         {
+            this.ModManagerVersion = ModManager.visibleVersion;
             string version = ServerConfig.get("gameVersion").value;
             this.installedMods = new List<InstalledMod>() { };
             this.installedVanilla = new List<InstalledVanilla>() { };

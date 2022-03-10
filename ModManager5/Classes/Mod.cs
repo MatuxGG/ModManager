@@ -12,24 +12,17 @@ namespace ModManager5.Classes
         public string id { get; set; }
         public string name { get; set; }
         public string category { get; set; }
+        public string type { get; set; }
         public string gameVersion { get; set; }
         public List<string> dependencies { get; set; }
-        public string type { get; set; }
-
-        public string compType { get; set; }
         public string author { get; set; }
         public string github { get; set; }
         public string githubLink { get; set; }
-        public List<string> folders { get; set; }
+        public string ignoredPattern { get; set; }
         public List<string> data { get; set; }
-
-        public List<string> excludeFiles { get; set; }
-        public string worksOnSteam { get; set; }
-        public string worksOnEGS { get; set; }
-
         public Release release { get; set; }
 
-        public Mod(string id, string name, string category, string type, string compType, string gameVersion, List<string> dependencies, string author, string github, string githubLink, List<string> folders, List<string> data, List<string> excludeFiles, string worksOnSteam, string worksOnEGS)
+        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, string ignoredPattern, List<string> data)
         {
             this.id = id;
             this.name = name;
@@ -39,23 +32,14 @@ namespace ModManager5.Classes
             this.author = author;
             this.github = github;
             this.githubLink = githubLink;
+            this.ignoredPattern = ignoredPattern;
             this.type = type;
-            this.compType = compType;
             this.release = null;
-            this.folders = folders;
             this.data = data;
-            this.excludeFiles = excludeFiles;
-            this.worksOnSteam = worksOnSteam;
-            this.worksOnEGS = worksOnEGS;
 
             if (this.dependencies == null)
             {
                 this.dependencies = new List<string>() { };
-            }
-
-            if (this.folders == null)
-            {
-                this.folders = new List<string>() { };
             }
 
             if (this.data == null)
@@ -63,10 +47,6 @@ namespace ModManager5.Classes
                 this.data = new List<string>() { };
             }
 
-            if (this.excludeFiles == null)
-            {
-                this.excludeFiles = new List<string>() { };
-            }
         }
 
         public async Task getGithubRelease()

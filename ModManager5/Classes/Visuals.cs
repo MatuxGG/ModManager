@@ -414,14 +414,13 @@ namespace ModManager5.Classes
             panel.Dock = DockStyle.Top;
             panel.BackColor = ThemeList.theme.AppOverlayColor;
 
-            panel.ColumnCount = 7;
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            panel.ColumnCount = 6;
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
 
             panel.RowCount = 1;
             panel.Size = new System.Drawing.Size(100, 50);
@@ -438,19 +437,7 @@ namespace ModManager5.Classes
             ModTitlePath.Padding = new Padding(12, 0, 0, 0);
             ModTitlePath.Size = new System.Drawing.Size(700, 50);
             ModTitlePath.Text = Translator.get("Path");
-            panel.Controls.Add(ModTitlePath, 3, 0);
-
-            System.Windows.Forms.Label ModTitleDependencies = new System.Windows.Forms.Label();
-            ModTitleDependencies.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModTitleDependencies.BackColor = Color.Transparent;
-            ModTitleDependencies.ForeColor = SystemColors.Control;
-            ModTitleDependencies.TextAlign = ContentAlignment.MiddleLeft;
-            ModTitleDependencies.Dock = DockStyle.Left;
-            ModTitleDependencies.Name = "ModTitleDependencies";
-            ModTitleDependencies.Padding = new Padding(12, 0, 0, 0);
-            ModTitleDependencies.Size = new System.Drawing.Size(150, 50);
-            ModTitleDependencies.Text = Translator.get("Dependencies");
-            panel.Controls.Add(ModTitleDependencies, 2, 0);
+            panel.Controls.Add(ModTitlePath, 2, 0);
 
             System.Windows.Forms.Label ModTitleGameVersion = new System.Windows.Forms.Label();
             ModTitleGameVersion.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
