@@ -19,6 +19,7 @@ namespace ModManager5
     {
         public static string serverURL = "https://mm.matux.fr/";
         public static string apiURL = "https://api.matux.fr/";
+        public static string panelURL = "https://panel.matux.fr/";
         public static string appPath = System.AppDomain.CurrentDomain.BaseDirectory;
         public static string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\ModManager";
         public static string tempPath = Path.GetTempPath() + "ModManager";

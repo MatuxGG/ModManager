@@ -25,10 +25,10 @@ namespace ModManager5.Classes
         public static async void backgroundWorker_DoWork(object sender, DoWorkEventArgs e)
         {
             var backgroundWorker = sender as BackgroundWorker;
-
+            /*
             while (true)
             {
-                System.Threading.Thread.Sleep(10 * 60 * 1000); // Each 10 minutes
+                System.Threading.Thread.Sleep(60 * 60 * 1000);
 
                 ModWorker.startTransaction();
 
@@ -96,6 +96,7 @@ namespace ModManager5.Classes
                 ModWorker.endTransaction();
 
             }
+            */
         }
 
         private static void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
@@ -106,7 +107,6 @@ namespace ModManager5.Classes
         private static void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
             // Nothing
-            Utils.debug("test");
         }
     }
 }

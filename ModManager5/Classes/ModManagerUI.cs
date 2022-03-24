@@ -47,6 +47,7 @@ namespace ModManager5.Classes
         public static Form MyModsForm;
         public static Form MyStatsForm;
         public static Form MyTranslationsForm;
+        public static Form MyAccountForm;
         public static Form ServersForm;
         public static Form NewsForm;
         public static Form FaqForm;
@@ -1212,7 +1213,9 @@ namespace ModManager5.Classes
 
             if (MatuxAPI.logged)
             {
-                int panelSize = 40;
+
+
+                int panelSize = 80;
 
                 Button b2 = CreateSubMenuButton("Logout");
 
@@ -1253,22 +1256,18 @@ namespace ModManager5.Classes
                     loadMyModsForm(MyModsForm);
                 }
 
-                if (MatuxAPI.myStats.Count() > 0)
-                {
-                    MyStatsForm = new GenericPanel();
-
-                    Button b3 = CreateSubMenuButton("My Stats");
-
-                    b3.Click += new EventHandler((object sender, EventArgs e) => {
-                        openForm(MyStatsForm);
-                    });
-                    AccountPanel.Controls.Add(b3);
-                    panelSize = panelSize + 40;
-
-                    loadMyStatsForm(MyStatsForm);
-                }
-
                 AccountPanel.Size = new Size(300, panelSize);
+
+                MyAccountForm = new GenericPanel();
+
+                Button b1 = CreateSubMenuButton("My Account");
+
+                loadAccountForm(MyAccountForm);
+
+                b1.Click += new EventHandler((object sender, EventArgs e) => {
+                    openForm(MyAccountForm);
+                });
+                AccountPanel.Controls.Add(b1);
 
             } else
             {
@@ -1289,12 +1288,62 @@ namespace ModManager5.Classes
             }
         }
 
+        private static void loadAccountForm(Form f)
+        {
+            Panel AccountContainerPanel = Visuals.createPanel();
+            f.Controls.Add(AccountContainerPanel);
+
+            TableLayoutPanel AccountPanel = Visuals.createLayoutPanelV(0, 600, DockStyle.Top, new int[] { 20, 10, 10, 10, 10, 10, 10, 20 });
+
+            AccountContainerPanel.Controls.Add(AccountPanel);
+
+
+            f.Controls.Add(Visuals.LabelTitle(Translator.get("Welcome to Matux.fr")));
+
+            PictureBox MatuxLogoPict = new PictureBox();
+            MatuxLogoPict.Image = global::ModManager5.Properties.Resources.matux;
+            MatuxLogoPict.Dock = DockStyle.Top;
+            MatuxLogoPict.Margin = new System.Windows.Forms.Padding(0);
+            MatuxLogoPict.Name = "MatuxLogoPict";
+            MatuxLogoPict.Size = new Size(100, 100);
+            MatuxLogoPict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            MatuxLogoPict.TabStop = false;
+            AccountPanel.Controls.Add(MatuxLogoPict, 0, 0);
+
+            MMLabel DescriptionLabel = new MMLabel();
+            DescriptionLabel.Dock = DockStyle.Top;
+            DescriptionLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            DescriptionLabel.Size = new Size(0, 100);
+            DescriptionLabel.ForeColor = ThemeList.theme.TextColor;
+            DescriptionLabel.BackColor = ThemeList.theme.AppBackgroundColor;
+            DescriptionLabel.TextAlign = ContentAlignment.MiddleCenter;
+            DescriptionLabel.TabStop = false;
+            DescriptionLabel.Text = Translator.get("You are logged as LOGIN").Replace("LOGIN", MatuxAPI.token.Substring(0, MatuxAPI.token.IndexOf("&")));
+            AccountPanel.Controls.Add(DescriptionLabel, 0, 1);
+
+            MMLabel OnlineLabel = new MMLabel();
+            OnlineLabel.Dock = DockStyle.Top;
+            OnlineLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            OnlineLabel.Size = new Size(0, 100);
+            OnlineLabel.ForeColor = ThemeList.theme.TextColor;
+            OnlineLabel.BackColor = ThemeList.theme.AppBackgroundColor;
+            OnlineLabel.TextAlign = ContentAlignment.MiddleCenter;
+            OnlineLabel.TabStop = false;
+            OnlineLabel.Text = Translator.get("Click here to access your online panel");
+            OnlineLabel.Click += new EventHandler((object sender, EventArgs e) => {
+                int index = MatuxAPI.token.IndexOf("&");
+                if (index != -1)
+                    Process.Start(new ProcessStartInfo("explorer.exe", "\"" + ModManager.panelURL + @"?t1=" + MatuxAPI.token.Substring(0, index) + "&t2=" + MatuxAPI.token.Substring(index+1) + "\""));
+            });
+            AccountPanel.Controls.Add(OnlineLabel, 0, 2);
+        }
+
         private static void loadLoginForm(Form f)
         {
             Panel LoginContainerPanel = Visuals.createPanel();
             f.Controls.Add(LoginContainerPanel);
 
-            TableLayoutPanel LoginPanel = Visuals.createLayoutPanelV(0, 600, DockStyle.Top, new int[] { 20, 10, 10, 10, 10, 20, 20 });
+            TableLayoutPanel LoginPanel = Visuals.createLayoutPanelV(0, 600, DockStyle.Top, new int[] { 20, 10, 10, 10, 10, 10, 10, 20 });
 
             LoginContainerPanel.Controls.Add(LoginPanel);
 
@@ -1316,6 +1365,7 @@ namespace ModManager5.Classes
             LoginPanel.Controls.Add(Visuals.centeredTextbox(Translator.get("Pseudo"), LoginPseudoText), 0, 1);
 
             LoginPasswordText = new MMTextbox();
+            LoginPasswordText.PasswordChar = '*';
             LoginPanel.Controls.Add(Visuals.centeredTextbox(Translator.get("Password"), LoginPasswordText), 0, 2);
 
             MMButton LoginLoginButton = new MMButton("rounded");
@@ -1335,7 +1385,7 @@ namespace ModManager5.Classes
                     {
                         loadAccount();
                         LoginErrorLabel.Visible = false;
-                        openForm(EmptyForm);
+                        openForm(MyAccountForm);
                     }
                     else
                     {
@@ -1370,6 +1420,20 @@ namespace ModManager5.Classes
                 }
             });
 
+            MMLabel RecoverLabel = new MMLabel();
+            RecoverLabel.Dock = DockStyle.Top;
+            RecoverLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            RecoverLabel.Size = new Size(0, 100);
+            RecoverLabel.ForeColor = ThemeList.theme.TextColor;
+            RecoverLabel.BackColor = ThemeList.theme.AppBackgroundColor;
+            RecoverLabel.TextAlign = ContentAlignment.MiddleCenter;
+            RecoverLabel.TabStop = false;
+            RecoverLabel.Text = "\n" + Translator.get("Password forgotten? Click here!");
+            RecoverLabel.Click += new EventHandler((object sender, EventArgs e) => {
+                Process.Start("explorer", ModManager.panelURL + @"forgot");
+            });
+            LoginPanel.Controls.Add(RecoverLabel, 0, 5);
+
             MMLabel DisclamerLabel = new MMLabel();
             DisclamerLabel.Dock = DockStyle.Top;
             DisclamerLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1379,7 +1443,7 @@ namespace ModManager5.Classes
             DisclamerLabel.TextAlign = ContentAlignment.MiddleCenter;
             DisclamerLabel.TabStop = false;
             DisclamerLabel.Text = "\n"+Translator.get("Login and password are encrypted and will be only used to log you to matux.fr") + "\n\n" + Translator.get("Not registered yet ? Just register by clicking the button below !");
-            LoginPanel.Controls.Add(DisclamerLabel, 0, 5);
+            LoginPanel.Controls.Add(DisclamerLabel, 0, 6);
 
             LoginErrorLabel.Dock = DockStyle.Top;
             LoginErrorLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -1389,7 +1453,7 @@ namespace ModManager5.Classes
             LoginErrorLabel.TextAlign = ContentAlignment.MiddleCenter;
             LoginErrorLabel.TabStop = false;
             LoginErrorLabel.Visible = false;
-            LoginPanel.Controls.Add(LoginErrorLabel, 0, 6);
+            LoginPanel.Controls.Add(LoginErrorLabel, 0, 7);
         }
 
         public static void loadNews()

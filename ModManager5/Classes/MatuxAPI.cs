@@ -15,7 +15,6 @@ namespace ModManager5.Classes
         public static Boolean logged;
         private static string path = ModManager.appDataPath + @"\token.txt";
         public static List<Mod> myMods;
-        public static List<AccountStat> myStats;
         public static Account myAccount;
         public static string currentLg;
 
@@ -74,7 +73,6 @@ namespace ModManager5.Classes
             token = "";
             logged = false;
             myMods = new List<Mod>() { };
-            myStats = new List<AccountStat>() { };
             Update();
             return;
         }
@@ -174,37 +172,6 @@ namespace ModManager5.Classes
             }
         }
 
-        public static void getMyStats()
-        {
-            if (token == "")
-            {
-                return;
-            }
-
-            using (var client = new WebClient())
-            {
-                var values = new NameValueCollection();
-                values["pseudo"] = getLogin();
-
-                try
-                {
-                    var response = client.UploadValues("https://api.matux.fr/account/roles", values);
-                    var responseString = Encoding.Default.GetString(response);
-                    myStats = Newtonsoft.Json.JsonConvert.DeserializeObject<List<AccountStat>>(responseString);
-                    return;
-                }
-                catch (WebException e)
-                {
-                    return;
-                }
-            }
-        }
-
-        public static string getStat(string role, string action)
-        {
-            return myStats.Find(s => s.role == role && s.action == action).value;
-        }
-
         private static string getLogin()
         {
             if (token == "")
@@ -254,7 +221,6 @@ namespace ModManager5.Classes
         {
             logged = true;
             getMyMods();
-            getMyStats();
             getMyAccount();
         }
 
