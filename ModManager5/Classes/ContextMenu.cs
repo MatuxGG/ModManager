@@ -15,6 +15,7 @@ namespace ModManager5.Classes
 
         public static void init(ModManager modmanager)
         {
+            Utils.log("Init START", "ContextMenu");
             modManager = modmanager;
             notifyIcon = new NotifyIcon();
             notifyIcon.Icon = global::ModManager5.Properties.Resources.modmanager;
@@ -23,10 +24,12 @@ namespace ModManager5.Classes
             notifyIcon.MouseClick += mouseEvent;
             modManager.Resize += new EventHandler(onResize);
             Application.ApplicationExit += new EventHandler(exit);
+            Utils.log("Init END", "ContextMenu");
         }
 
         public static void load()
         {
+            Utils.log("Load START", "ContextMenu");
             notifyIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
             if (ServerConfig.get("enabled").value == "true")
             {
@@ -38,6 +41,7 @@ namespace ModManager5.Classes
                 
                 notifyIcon.ContextMenuStrip.Items.Add("Vanilla Among Us", null, startGame);
 
+                Utils.log("Loading " + im.Count() + " mods", "ContextMenu");
                 foreach (InstalledMod i in im)
                 {
                     Mod m = ModList.getModById(i.id);
@@ -56,16 +60,21 @@ namespace ModManager5.Classes
             }
 
             notifyIcon.ContextMenuStrip.Items.Add("Exit", null, exit);
+            Utils.log("Load END", "ContextMenu");
         }
         private static void mouseEvent(object Sender, MouseEventArgs e)
         {
+            Utils.log("Click START", "ContextMenu");
             if (e.Button != MouseButtons.Right)
             {
+                Utils.log("Click YES", "ContextMenu");
                 if (modManager.WindowState == FormWindowState.Minimized)
                 {
+                    Utils.log("Maximize window", "ContextMenu");
                     modManager.WindowState = FormWindowState.Normal;
                 }
             }
+            Utils.log("Load END", "ContextMenu");
         }
 
         public static void onResize(object sender, EventArgs e)
@@ -82,27 +91,34 @@ namespace ModManager5.Classes
 
         private static void open(object sender, EventArgs e)
         {
+            Utils.log("Open START", "ContextMenu");
             if (modManager.WindowState == FormWindowState.Minimized)
                 modManager.WindowState = FormWindowState.Normal;
 
             modManager.Activate();
+            Utils.log("Open END", "ContextMenu");
         }
 
         private static void startGame(object sender, EventArgs e)
         {
+            Utils.log("Start Game START", "ContextMenu");
             ModWorker.startGame(true);
+            Utils.log("Start Game END", "ContextMenu");
         }
 
         private static void settings(object sender, EventArgs e)
         {
+            Utils.log("Settings START", "ContextMenu");
             ModManagerUI.openForm(ModManagerUI.SettingsForm);
             if (modManager.WindowState == FormWindowState.Minimized)
                 modManager.WindowState = FormWindowState.Normal;
             modManager.Activate();
+            Utils.log("Start Game END", "ContextMenu");
         }
 
         private static void exit(object sender, EventArgs e)
         {
+            Utils.log("Exit", "ContextMenu");
             notifyIcon.Dispose();
             Application.Exit();
         }

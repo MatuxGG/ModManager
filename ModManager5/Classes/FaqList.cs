@@ -15,6 +15,7 @@ namespace ModManager5.Classes
 
         public static void load()
         {
+            Utils.log("Load START", "FaqList");
             ModManagerUI.StatusLabel.Text = "Loading FAQ...";
             current = 0;
             string faqlistURL = ModManager.apiURL + "/faq/list";
@@ -28,6 +29,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Load connection FAIL", "FaqList");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -40,6 +42,7 @@ namespace ModManager5.Classes
             }
             faqlist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Faq>>(faqlistS);
 
+            Utils.log("Load END", "FaqList");
         }
 
         public static Faq getCurrent()

@@ -15,6 +15,7 @@ namespace ModManager5.Classes
 
         public static void load()
         {
+            Utils.log("Load START", "NewsList");
             ModManagerUI.StatusLabel.Text = "Loading News...";
             current = 0;
             string newslistURL = ModManager.apiURL + "/news/list";
@@ -28,6 +29,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Load connection FAIL", "NewsList");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -40,6 +42,7 @@ namespace ModManager5.Classes
             }
             newslist = Newtonsoft.Json.JsonConvert.DeserializeObject<List<News>>(newslistS);
 
+            Utils.log("Load END", "NewsList");
         }
 
         public static News getCurrent()

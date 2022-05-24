@@ -14,6 +14,7 @@ namespace ModManager5.Classes
 
         public static void load()
         {
+            Utils.log("Load START", "ServerConfig");
             if (!ModManager.silent)
                ModManagerUI.StatusLabel.Text = "Loading Server Config...";
             string configURL = ModManager.apiURL + "/config";
@@ -27,6 +28,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Load connection FAIL", "ServerConfig");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -38,6 +40,7 @@ namespace ModManager5.Classes
                 Environment.Exit(0);
             }
             configlines = Newtonsoft.Json.JsonConvert.DeserializeObject<List<ServerConfigLine>>(config);
+            Utils.log("Load END", "ServerConfig");
         }
 
         public static ServerConfigLine get(string id)

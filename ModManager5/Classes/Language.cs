@@ -16,6 +16,7 @@ namespace ModManager5.Classes
 
         public Language(string code, string name)
         {
+            Utils.log("New", "Language");
             this.code = code;
             this.name = name;
             this.translations = new List<Translation>() { };
@@ -23,6 +24,7 @@ namespace ModManager5.Classes
 
         public Language()
         {
+            Utils.log("New empty", "Language");
             this.code = "";
             this.name = "";
             this.translations = new List<Translation>() { };
@@ -30,6 +32,7 @@ namespace ModManager5.Classes
 
         public void load()
         {
+            Utils.log("Load START", "Language");
             string translationsURL = ModManager.apiURL + "/translation/get/" + this.code;
             string tr = "";
             try
@@ -41,6 +44,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Load connection FAIL", "Language");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -52,6 +56,7 @@ namespace ModManager5.Classes
                 Environment.Exit(0);
             }
             translations = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Translation>>(tr);
+            Utils.log("Load END", "Language");
         }
     }
 }

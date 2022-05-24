@@ -18,11 +18,13 @@ namespace ModManager5.Classes
 
         public static void load(ModManager modManager)
         {
+            Utils.log("Load", "DownloadWorker");
             thisModManager = modManager;
         }
 
         public static void download(string path, string destPath, string sentence)
         {
+            Utils.log("Download START", "DownloadWorker");
             finished = false;
             thisSentence = sentence;
             thisModManager.Invoke((MethodInvoker)delegate
@@ -40,6 +42,7 @@ namespace ModManager5.Classes
             {
 
             }
+            Utils.log("Download END", "DownloadWorker");
         }
 
         private static void client_DownloadProgressChanged(object sender, DownloadProgressChangedEventArgs e)

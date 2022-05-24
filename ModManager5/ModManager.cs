@@ -48,14 +48,15 @@ namespace ModManager5
 
             Utils.CleanLogs();
 
-            Utils.log("\nMod Manager Started");
+            Utils.logNewLine();
+            Utils.log("ModManager Started", "ModManager");
 
             // Disable multiple MM run
             if (System.Diagnostics.Process.GetProcessesByName("ModManager5").Length > 1 && (args.Count() == 0 || args[0] != "force"))
             {
                 if (args.Count() == 0)
                 {
-                    Utils.logE("Mod Manager already running");
+                    Utils.logE("Mod Manager already running", "ModManager");
                     MessageBox.Show("Mod Manager is already running.", "Mod Manager already opened", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Environment.Exit(0);
                 }
@@ -66,18 +67,18 @@ namespace ModManager5
             {
                 if (args[0] == "force")
                 {
-                    Utils.log("Restart detected");
+                    Utils.log("Restart detected", "ModManager");
                     args = new string[] { };
                 } else
                 {
-                    Utils.log("Silent mode detected");
+                    Utils.log("Silent mode detected", "ModManager");
                     silent = true;
                     this.WindowState = FormWindowState.Minimized;
                     this.ShowInTaskbar = false;
                 }
             }
 
-            Utils.log("Loading global config");
+            Utils.log("Loading global config", "ModManager");
             ConfigManager.loadGlobalConfig();
             ConfigManager.logConfig();
 
@@ -85,11 +86,11 @@ namespace ModManager5
             if (args.Count() <= 0) 
             {
                 silent = false;
-                Utils.log("Loading themes");
+                Utils.log("Loading themes", "ModManager");
                 ThemeList.load();
-                Utils.log("Loading translations");
+                Utils.log("Loading translations", "ModManager");
                 Translator.load();
-                Utils.log("Loading Mod Manager UI (1/2)");
+                Utils.log("Loading ModManager UI (1/2)", "ModManager");
                 ModManagerUI.load(this);
                 int width = (int)((80 * Screen.PrimaryScreen.Bounds.Width) / 100);
                 if (width < this.MinimumSize.Width)
@@ -102,43 +103,43 @@ namespace ModManager5
             }
 
             // Check update
-            Utils.log("Looking for updates updates");
+            Utils.log("Looking for updates updates", "ModManager");
             await Updater.CheckRunUpdateOnStart();
 
             // Init classes
-            Utils.log("Loading server config");
+            Utils.log("Loading server config", "ModManager");
             ServerConfig.load();
-            Utils.log("Loading config");
+            Utils.log("Loading config", "ModManager");
             ConfigManager.load();
 
-            Utils.log("Loading mods");
+            Utils.log("Loading mods", "ModManager");
             ModList.load();
-            Utils.log("Loading local mods");
+            Utils.log("Loading local mods", "ModManager");
             ModList.loadLocalMods();
-            Utils.log("Loading releases");
+            Utils.log("Loading releases", "ModManager");
             await ModList.loadReleases();
-            Utils.log("Loading dependencies");
+            Utils.log("Loading dependencies", "ModManager");
             DependencyList.load();
-            Utils.log("Loading categories");
+            Utils.log("Loading categories", "ModManager");
             CategoryManager.load();
             if (args.Count() <= 0)
             {
-                Utils.log("Loading news");
+                Utils.log("Loading news", "ModManager");
                 NewsList.load();
-                Utils.log("Loading FAQ");
+                Utils.log("Loading FAQ", "ModManager");
                 FaqList.load();
-                Utils.log("Loading servers");
+                Utils.log("Loading servers", "ModManager");
                 ServerManager.load();
             }
 
-            Utils.log("Loading downloader");
+            Utils.log("Loading downloader", "ModManager");
             DownloadWorker.load(this);
-            Utils.log("Loading installer");
+            Utils.log("Loading installer", "ModManager");
             ModWorker.load();
 
             if (args.Count() <= 0)
             {
-                Utils.log("Loading context menu");
+                Utils.log("Loading context menu", "ModManager");
                 ContextMenu.init(this);
                 ContextMenu.load();
 
@@ -154,10 +155,10 @@ namespace ModManager5
 
             if (args.Count() > 0)
             {
-                Utils.log("Starting mod from a shortcut");
+                Utils.log("Starting mod from a shortcut", "ModManager");
                 InstalledMod im = ConfigManager.getInstalledModById(args[0]);
                 Mod m = ModList.getModById(args[0]);
-                Utils.log("Mod detected : " + m.name);
+                Utils.log("Mod detected : " + m.name, "ModManager");
 
                 if (m.id == "BetterCrewlink" && im == null)
                 {
@@ -175,8 +176,8 @@ namespace ModManager5
                 // If needs update or install
                 if (im == null || (((m.type != "allInOne" || m.id == "Challenger") && im.version != m.release.TagName) || (m.type != "allInOne" && im.gameVersion != m.gameVersion)))
                 {
-                    Utils.log("Update needed");
-                    Utils.log("Updating mod");
+                    Utils.log("Update needed", "ModManager");
+                    Utils.log("Updating mod", "ModManager");
                     ModWorker.installAnyMod(m);
 
                     while (ModWorker.finished == false)
@@ -184,30 +185,30 @@ namespace ModManager5
                         
                     }
                 }
-                Utils.log("Starting mod");
+                Utils.log("Starting mod", "ModManager");
                 ModWorker.startMod(m);
 
                 Environment.Exit(0);
             }
 
-            Utils.log("Connecting to matux.fr");
+            Utils.log("Connecting to matux.fr", "ModManager");
             ModManagerUI.StatusLabel.Text = "Connecting...";
             MatuxAPI.CheckLogin();
             MatuxAPI.currentLg = ConfigManager.globalConfig.lg; // Configuration one day
 
-            Utils.log("Loading Mod Manager UI (2/2)");
+            Utils.log("Loading Mod Manager UI (2/2)", "ModManager");
             ModManagerUI.StatusLabel.Text = "Loading UI...";
 
             ModManagerUI.InitUI();
 
-            Utils.log("Loading listeners");
+            Utils.log("Loading listeners", "ModManager");
             ModManagerUI.InitListeners();
 
             ModManagerUI.hideMenuPanels();
 
             ModManagerUI.InitForm();
 
-            Utils.log("Loading data refresher");
+            Utils.log("Loading data refresher", "ModManager");
             Refresher.load(this);
 
             ModManagerUI.LoadingLabel.Visible = false;

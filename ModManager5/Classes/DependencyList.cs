@@ -13,6 +13,7 @@ namespace ModManager5.Classes
         public static List<Dependency> dependencies;
         public static void load()
         {
+            Utils.log("Load START", "DependencyList");
             if (!ModManager.silent)
                 ModManagerUI.StatusLabel.Text = "Loading Dependencies...";
             string dependenciesURL = ModManager.apiURL + "/dependency/list";
@@ -26,6 +27,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Load connection FAIL", "DependencyList");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -37,6 +39,7 @@ namespace ModManager5.Classes
                 Environment.Exit(0);
             }
             dependencies = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Dependency>>(dependencylist);
+            Utils.log("Load END", "DependencyList");
         }
 
         public static Dependency getDependencyById(string id)

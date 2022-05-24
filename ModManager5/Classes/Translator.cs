@@ -15,7 +15,7 @@ namespace ModManager5.Classes
 
         public static void load()
         {
-
+            Utils.log("Load START", "Translator");
             string languagesURL = ModManager.apiURL + "/translation/languages";
             string lg = "";
             try
@@ -27,6 +27,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Load connection FAIL", "Translator");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -39,6 +40,7 @@ namespace ModManager5.Classes
             }
             languages = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Language>>(lg);
 
+            Utils.log("Loading " + languages.Count() + " languages", "Translator");
             foreach (Language l in languages)
             {
                 l.load();
@@ -46,13 +48,16 @@ namespace ModManager5.Classes
 
             if (ConfigManager.globalConfig.lg == "")
             {
+                Utils.log("Choosing automatic language", "Translator");
                 CultureInfo ci = CultureInfo.InstalledUICulture;
                 string curLg = ci.TwoLetterISOLanguageName.ToUpper();
                 curLg = languages.Find(l => l.code == curLg) != null ? curLg : "EN";
+                Utils.log("New language: " + curLg, "Translator");
                 ConfigManager.globalConfig.lg = curLg;
                 ConfigManager.updateGlobalConfig();
             }
-            
+
+            Utils.log("Load END", "Translator");
         }
 
         public static string get(string toTranslate)

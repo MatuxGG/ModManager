@@ -25,14 +25,14 @@ namespace ModManager5.Classes
             }
         }
 
-        public static void log(string line)
+        public static void logNewLine()
         {
             Boolean written = false;
             while (written == false)
             {
                 try
                 {
-                    File.AppendAllText(logFile, line + Environment.NewLine);
+                    File.AppendAllText(logFile, Environment.NewLine);
                     written = true;
                 }
                 catch
@@ -42,9 +42,58 @@ namespace ModManager5.Classes
             }
         }
 
-        public static void logE(string line)
+        public static void log(string line, string className)
         {
-            Utils.log("[Error]" + line);
+            Boolean written = false;
+            while (written == false)
+            {
+                try
+                {
+                    File.AppendAllText(logFile, "[" + DateTime.UtcNow + "][" + className + "]" + Utils.getTabs(className) + line + Environment.NewLine);
+                    written = true;
+                }
+                catch
+                {
+                    written = false;
+                }
+            }
+        }
+
+        public static void logE(string line, string className)
+        {
+            Boolean written = false;
+            while (written == false)
+            {
+                try
+                {
+                    File.AppendAllText(logFile, "[" + DateTime.UtcNow + "][" + className + "] ERROR:" + Utils.getTabs(className) + line + Environment.NewLine);
+                    written = true;
+                }
+                catch
+                {
+                    written = false;
+                }
+            }
+        }
+
+        // Spec : str <= 15
+        public static string getTabs(string str)
+        {
+            int l = str.Length;
+            if (l < 5)
+            {
+                return "\t\t\t\t";
+            } else if (l < 9)
+            {
+                return "\t\t\t";
+            } else if (l < 13)
+            {
+                return "\t\t";
+            } else
+            {
+                return "\t";
+            }
+
         }
 
         public static void debug(string s)

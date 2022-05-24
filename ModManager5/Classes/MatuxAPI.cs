@@ -20,7 +20,7 @@ namespace ModManager5.Classes
 
         public static Boolean Login(string login, string password)
         {
-
+            Utils.log("Login START", "MatuxAPI");
             using (var client = new WebClient())
             {
                 var values = new NameValueCollection();
@@ -29,6 +29,7 @@ namespace ModManager5.Classes
 
                 try
                 {
+                    Utils.log("Login YES", "MatuxAPI");
                     var response = client.UploadValues("https://api.matux.fr/account/login", values);
                     var responseString = Encoding.Default.GetString(response);
                     token = responseString;
@@ -38,14 +39,16 @@ namespace ModManager5.Classes
                 }
                 catch (WebException e)
                 {
+                    Utils.log("Login NO", "MatuxAPI");
                     return false;
                 }
             }
+            Utils.log("Login END", "MatuxAPI");
         }
 
         public static Boolean Register(string login, string password)
         {
-
+            Utils.log("Register START", "MatuxAPI");
             using (var client = new WebClient())
             {
                 var values = new NameValueCollection();
@@ -59,21 +62,26 @@ namespace ModManager5.Classes
                     token = responseString;
                     validLogin();
                     Update();
+                    Utils.log("Register YES", "MatuxAPI");
                     return true;
                 }
                 catch (WebException e)
                 {
+                    Utils.log("Register NO", "MatuxAPI");
                     return false;
                 }
             }
+            Utils.log("Register END", "MatuxAPI");
         }
 
         public static void logout()
         {
+            Utils.log("Logout START", "MatuxAPI");
             token = "";
             logged = false;
             myMods = new List<Mod>() { };
             Update();
+            Utils.log("Logout END", "MatuxAPI");
             return;
         }
 
@@ -98,6 +106,7 @@ namespace ModManager5.Classes
             {
                 return;
             }
+            Utils.log("Update translation START", "MatuxAPI");
 
             using (var client = new WebClient())
             {
@@ -109,15 +118,18 @@ namespace ModManager5.Classes
 
                 try
                 {
+                    Utils.log("Update translation YES", "MatuxAPI");
                     var response = client.UploadValues("https://api.matux.fr/translation/update", values);
                     var responseString = Encoding.Default.GetString(response);
                     return;
                 }
                 catch (WebException e)
                 {
+                    Utils.log("Update translation NO", "MatuxAPI");
                     return;
                 }
             }
+            Utils.log("Update translation END", "MatuxAPI");
         }
 
         public static void getMyAccount()

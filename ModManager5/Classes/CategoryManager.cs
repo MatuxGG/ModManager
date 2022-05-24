@@ -14,6 +14,7 @@ namespace ModManager5.Classes
 
         public static void load()
         {
+            Utils.log("Load START", "CategoryManager");
             if (!ModManager.silent)
                 ModManagerUI.StatusLabel.Text = "Loading Mod Categories...";
             string catlistURL = ModManager.apiURL + "/category/list";
@@ -27,6 +28,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Load connection FAIL", "CategoryManager");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -38,6 +40,7 @@ namespace ModManager5.Classes
                 Environment.Exit(0);
             }
             categories = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Category>>(cat);
+            Utils.log("Load END", "CategoryManager");
         }
 
         public static Category getCategoryById(string id)

@@ -61,6 +61,7 @@ namespace ModManager5.Classes
 
         public static void load(ModManager modManager)
         {
+            Utils.log("Load START", "ModManagerUI");
             Graphics graphics = modManager.CreateGraphics();
             float ratio = 4 / (4 + ((graphics.DpiX - 96) / 24));
 
@@ -439,11 +440,13 @@ namespace ModManager5.Classes
             modManager.Controls.Add(AppPanel);
             modManager.Controls.Add(BottomRightPanel);
             modManager.Controls.Add(MenuPanel);
+            Utils.log("Load END", "ModManagerUI");
         }
 
         public static void InitUI()
         {
-            foreach(Control c in allocatedControls)
+            Utils.log("InitUI START", "ModManagerUI");
+            foreach (Control c in allocatedControls)
             {
                 c.Dispose();
             }
@@ -457,6 +460,7 @@ namespace ModManager5.Classes
             loadFaq();
             loadSettings();
             loadCredits();
+            Utils.log("InitUI END", "ModManagerUI");
         }
 
         public static void InitForm()
@@ -601,6 +605,7 @@ namespace ModManager5.Classes
 
         public static void loadMods()
         {
+            Utils.log("Load mods START", "ModManagerUI");
             // SubMenus
 
             List<Category> cats = CategoryManager.categories;
@@ -634,7 +639,8 @@ namespace ModManager5.Classes
             {
                 refreshModForm(f);
             }
-            
+
+            Utils.log("Load mods END", "ModManagerUI");
         }
 
         public static Form getFormByCategoryId(string id)
@@ -1207,13 +1213,14 @@ namespace ModManager5.Classes
 
         public static void loadAccount()
         {
+            Utils.log("Load account START", "ModManagerUI");
             AccountPanel.Controls.Clear();
             
             // SubMenu
 
             if (MatuxAPI.logged)
             {
-
+                Utils.log("Logged", "ModManagerUI");
 
                 int panelSize = 80;
 
@@ -1228,6 +1235,7 @@ namespace ModManager5.Classes
 
                 if (MatuxAPI.isTranslator() && MatuxAPI.currentLg != "EN")
                 {
+                    Utils.log("Translator", "ModManagerUI");
                     MyTranslationsForm = new GenericPanel();
 
                     Button b4 = CreateSubMenuButton("Translations");
@@ -1243,6 +1251,7 @@ namespace ModManager5.Classes
 
                 if (MatuxAPI.isModder())
                 {
+                    Utils.log("Modder", "ModManagerUI");
                     MyModsForm = new GenericPanel();
 
                     Button b = CreateSubMenuButton("My Mods");
@@ -1271,6 +1280,7 @@ namespace ModManager5.Classes
 
             } else
             {
+                Utils.log("Not logged", "ModManagerUI");
                 AccountPanel.Size = new Size(300, 40);
 
                 LoginForm = new GenericPanel();
@@ -1286,6 +1296,7 @@ namespace ModManager5.Classes
 
                 loadLoginForm(LoginForm);
             }
+            Utils.log("Load account END", "ModManagerUI");
         }
 
         private static void loadAccountForm(Form f)
@@ -1509,6 +1520,7 @@ namespace ModManager5.Classes
 
         public static void loadFaq()
         {
+            Utils.log("Load FAQ START", "ModManagerUI");
             FaqForm = new GenericPanel();
             FaqForm.Name = "Faq";
 
@@ -1553,10 +1565,13 @@ namespace ModManager5.Classes
             }
 
             FaqForm.Controls.Add(Visuals.LabelTitle(Translator.get("Frequently Asked Questions")));
+
+            Utils.log("Load FAQ END", "ModManagerUI");
         }
 
         public static void loadServers()
         {
+            Utils.log("Load servers START", "ModManagerUI");
             ServersForm = new GenericPanel();
             ServersForm.Name = "Servers";
 
@@ -1707,6 +1722,8 @@ namespace ModManager5.Classes
             ServersForm.Controls.Add(Visuals.ServersOverlay());
 
             ServersForm.Controls.Add(Visuals.LabelTitle(Translator.get("Servers")));
+
+            Utils.log("Load mods END", "ModManagerUI");
         }
 
         private static void loadMyStatsForm(Form f)
@@ -1794,6 +1811,7 @@ namespace ModManager5.Classes
         }
         public static void loadSettings()
         {
+            Utils.log("Load settings START", "ModManagerUI");
             SettingsForm = new GenericPanel();
             SettingsForm.Name = "Settings";
 
@@ -1883,10 +1901,13 @@ namespace ModManager5.Classes
 
 
             SettingsForm.Controls.Add(Visuals.LabelTitle(Translator.get("Settings")));
+
+            Utils.log("Load settings END", "ModManagerUI");
         }
 
         public static void loadCredits()
         {
+            Utils.log("Load credits START", "ModManagerUI");
             CreditsForm = new GenericPanel();
             CreditsForm.Name = "Credits";
 
@@ -1904,6 +1925,8 @@ namespace ModManager5.Classes
             CreditsForm.Controls.Add(CreditsContentLabel);
 
             CreditsForm.Controls.Add(Visuals.LabelTitle(Translator.get("Credits")));
+
+            Utils.log("Load credits END", "ModManagerUI");
         }
 
         public static void loadEmpty()

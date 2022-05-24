@@ -17,6 +17,7 @@ namespace ModManager5.Classes
 
         public static void load()
         {
+            Utils.log("Load START", "ServerManager");
             ModManagerUI.StatusLabel.Text = "Loading Servers...";
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\..\LocalLow\Innersloth\Among Us\regionInfo.json";
             if (File.Exists(path))
@@ -36,6 +37,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Load connection FAIL", "ServerManager");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -47,22 +49,27 @@ namespace ModManager5.Classes
                 Environment.Exit(0);
             }
             remoteServers = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Server>>(serverlist);
+            Utils.log("Load END", "ServerManager");
         }
 
         public static void update()
         {
+            Utils.log("Update START", "ServerManager");
             string json = JsonConvert.SerializeObject(serverList);
             File.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\..\LocalLow\Innersloth\Among Us\regionInfo.json", json);
+            Utils.log("Update END", "ServerManager");
         }
 
         public static void removeRegion(int regionId)
         {
+            Utils.log("Remove region " + regionId.ToString(), "ServerManager");
             serverList.Regions.RemoveAt(regionId);
             serverList.CurrentRegionIdx--;
         }
 
         public static void reset()
         {
+            Utils.log("Reset", "ServerManager");
             ServerList temp = serverList;
             serverList = new ServerList();
             serverList.Regions.Add(temp.Regions[0]);
@@ -74,6 +81,7 @@ namespace ModManager5.Classes
         }
         public static void add()
         {
+            Utils.log("Add", "ServerManager");
             Server newServ = new Server("DnsRegionInfo, Assembly-CSharp", "127.0.0.1", "127.0.0.1", 22023, "New Server", 1003);
             serverList.Regions.Add(newServ);
             update();

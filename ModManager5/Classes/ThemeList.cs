@@ -16,6 +16,7 @@ namespace ModManager5.Classes
 
         public static void load()
         {
+            Utils.log("Load START", "ThemeList");
             availableThemes = new List<Theme>() { };
 
             string path = ModManager.appDataPath + @"\themes";
@@ -41,6 +42,7 @@ namespace ModManager5.Classes
 
             foreach(FileInfo f in files)
             {
+                Utils.log("Load theme " + f.Name, "ThemeList");
                 string json = System.IO.File.ReadAllText(f.FullName);
                 Theme t = Newtonsoft.Json.JsonConvert.DeserializeObject<Theme>(json);
                 availableThemes.Add(t);
@@ -49,15 +51,16 @@ namespace ModManager5.Classes
             theme = availableThemes.Find(t => t.name == ConfigManager.globalConfig.theme);
             if (theme == null)
             {
+                Utils.log("No theme exist", "ThemeList");
                 theme = availableThemes.Find(t => t.name == "Dark");
                 ConfigManager.globalConfig.theme = "Dark";
                 ConfigManager.updateGlobalConfig();
             }
+            Utils.log("Load END", "ThemeList");
         }
 
         private static void addDefaultTheme(Theme t)
         {
-
             string path = ModManager.appDataPath + @"\themes\" + t.name + ".txt";
 
             if (File.Exists(path))
@@ -71,6 +74,7 @@ namespace ModManager5.Classes
 
         public static void useTheme(string name)
         {
+            Utils.log("Use theme " + name, "ThemeList");
             theme = availableThemes.Find(t => t.name == name);
         }
     }

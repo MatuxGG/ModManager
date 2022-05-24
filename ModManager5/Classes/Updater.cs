@@ -68,11 +68,13 @@ namespace ModManager5.Classes
 
         public static async Task updateMM()
         {
+            Utils.log("Update START", "Updater");
             string installerPath = ModManager.tempPath + @"\ModManagerInstaller.exe";
             DialogResult userAction = MessageBox.Show("There is a new version of Mod Manager available. Mod Manager will auto update.\n\n" +
                 "Press OK to continue.", "Mod Manager Update", MessageBoxButtons.OKCancel, MessageBoxIcon.Information);
             if (userAction == DialogResult.OK)
             {
+                Utils.log("Update accepted", "Updater");
                 Utils.FileDelete(installerPath);
                 foreach (ReleaseAsset ra in latestRelease.Assets)
                 {
@@ -87,6 +89,7 @@ namespace ModManager5.Classes
                         }
                         catch
                         {
+                            Utils.logE("Update connection FAIL", "Updater");
                             MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                 "\n" +
                                 "There are many possible reasons for this :\n" +
@@ -98,6 +101,7 @@ namespace ModManager5.Classes
                             Environment.Exit(0);
                         }
                         Process.Start("explorer", installerPath);
+                        Utils.log("Update DONE", "Updater");
                         Environment.Exit(0);
                     }
                 }
@@ -117,6 +121,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Github connection FAIL", "Updater");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                     "\n" +
                     "There are many possible reasons for this :\n" +

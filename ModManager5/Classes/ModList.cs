@@ -22,6 +22,7 @@ namespace ModManager5.Classes
 
         public static void load()
         {
+            Utils.log("Load START", "ModList");
             if (!ModManager.silent)
                 ModManagerUI.StatusLabel.Text = "Loading Mods...";
             string modlistURL = ModManager.apiURL + "/mod/list";
@@ -35,6 +36,7 @@ namespace ModManager5.Classes
             }
             catch
             {
+                Utils.logE("Load connection FAIL", "ModList");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -47,29 +49,36 @@ namespace ModManager5.Classes
             }
             mods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(modlist);
 
-            
+
+            Utils.log("Load END", "ModList");
         }
 
         public static void loadLocalMods()
         {
+            Utils.log("Load local mods START", "ModList");
             if (!ModManager.silent)
                 ModManagerUI.StatusLabel.Text = "Loading local mods...";
 
             string path = ModManager.appDataPath + @"\localMods.conf";
             if (System.IO.File.Exists(path))
             {
+                Utils.log("Local mods exists", "ModList");
                 string json = System.IO.File.ReadAllText(path);
                 localMods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(json);
             } else
             {
+                Utils.log("Local mods does not exist", "ModList");
                 localMods = new List<Mod>() { };
             }
+            Utils.log("Load local mods END", "ModList");
         }
 
         public static void updateLocalMods()
         {
+            Utils.log("Update local mods START", "ModList");
             string json = JsonConvert.SerializeObject(localMods);
             System.IO.File.WriteAllText(ModManager.appDataPath + @"\localMods.conf", json);
+            Utils.log("Update local mods END", "ModList");
         }
 
         public static Mod getLocalModById(string id)
@@ -79,6 +88,7 @@ namespace ModManager5.Classes
 
         public static async Task loadReleases()
         {
+            Utils.log("Load Releases START", "ModList");
             if (!ModManager.silent)
                 ModManagerUI.StatusLabel.Text = "Loading Releases...";
             int max = mods.Count();
@@ -86,6 +96,8 @@ namespace ModManager5.Classes
             List<Mod> releasesToRemove = new List<Mod>() { };
 
             List<Task> tasks = new List<Task>() { };
+
+            Utils.log("Loading " + mods.Count() + " mods", "ModList");
             foreach (Mod m in mods)
             {
                 Task t = loadRelease(m);
@@ -106,19 +118,24 @@ namespace ModManager5.Classes
             {
                 mods.Remove(toRemove);
             }
+            Utils.log("Loaded " + mods.Count() + " mods", "ModList");
 
             string localModsPath = ModManager.appDataPath + @"\localMods.json";
             if (System.IO.File.Exists(localModsPath))
             {
+                Utils.log("Loading local mods START", "ModList");
                 string json = System.IO.File.ReadAllText(localModsPath);
                 List<Mod> localMods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(json);
                 mods.AddRange(localMods);
+                Utils.log("Loading local mods END", "ModList");
             }
 
+            Utils.log("Load Releases END", "ModList");
         }
 
         public static async Task loadRelease(Mod m)
         {
+            Utils.log("Load release for mod " + m.id + " START", "ModList");
             if (m.type != "allInOne" || m.id == "BetterCrewlink")
             {
                 await m.getGithubRelease();
@@ -130,6 +147,7 @@ namespace ModManager5.Classes
             {
                 await getChallengerReleases(m, false);
             }
+            Utils.log("Load release for mod " + m.id + " END", "ModList");
         }
 
         public static async Task getChallengerReleases(Mod m, Boolean live)
@@ -170,6 +188,7 @@ namespace ModManager5.Classes
 
         public static void createShortcut(Mod m)
         {
+            Utils.log("Create shortcut START", "ModList");
             ModManagerUI.StatusLabel.Text = "A shortcut is under creation, please wait...";
             object shDesktop = (object)"Desktop";
             WshShell shell = new WshShell();
@@ -200,6 +219,8 @@ namespace ModManager5.Classes
 
             shortcut.Save();
             ModManagerUI.StatusLabel.Text = "A shortcut has been created on your desktop !";
+
+            Utils.log("Create shortcut END", "ModList");
         }
 
         public static Mod getModById(string id)
