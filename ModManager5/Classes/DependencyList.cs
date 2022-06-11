@@ -15,8 +15,8 @@ namespace ModManager5.Classes
         {
             Utils.log("Load START", "DependencyList");
             if (!ModManager.silent)
-                ModManagerUI.StatusLabel.Text = "Loading Dependencies...";
-            string dependenciesURL = ModManager.apiURL + "/dependency/list";
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading Dependencies...");
+            string dependenciesURL = ModManager.apiURL + "/dep";
             string dependencylist = "";
             try
             {
@@ -25,9 +25,10 @@ namespace ModManager5.Classes
                     dependencylist = client.DownloadString(dependenciesURL);
                 }
             }
-            catch
+            catch (Exception e)
             {
                 Utils.logE("Load connection FAIL", "DependencyList");
+                Utils.logEx(e, "DependencyList");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +

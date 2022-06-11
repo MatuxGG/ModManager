@@ -1,4 +1,5 @@
-﻿    using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ namespace ModManager5.Classes
 {
     public class Category
     {
+        [JsonProperty(PropertyName = "sId")]
         public string id;
         public string name;
         public string type;

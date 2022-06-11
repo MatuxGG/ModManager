@@ -18,14 +18,14 @@ namespace ModManager5.Classes
         public static void load()
         {
             Utils.log("Load START", "ServerManager");
-            ModManagerUI.StatusLabel.Text = "Loading Servers...";
+            ModManagerUI.StatusLabel.Text = Translator.get("Loading Among Us Servers...");
             string path = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\..\LocalLow\Innersloth\Among Us\regionInfo.json";
             if (File.Exists(path))
             {
                 string json = System.IO.File.ReadAllText(path);
                 serverList = Newtonsoft.Json.JsonConvert.DeserializeObject<ServerList>(json);
             }
-
+            /*
             string serverlistURL = ModManager.apiURL + "/server/list";
             string serverlist = "";
             try
@@ -49,6 +49,8 @@ namespace ModManager5.Classes
                 Environment.Exit(0);
             }
             remoteServers = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Server>>(serverlist);
+            */
+            remoteServers = new List<Server>() { };
             Utils.log("Load END", "ServerManager");
         }
 

@@ -47,7 +47,7 @@ namespace ModManager5.Classes
         {
             Utils.log("Load config START", "ConfigManager");
             if (!ModManager.silent)
-                ModManagerUI.StatusLabel.Text = "Loading Local Config...";
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading Local Config...");
             config = new Config();
             if (File.Exists(path))
             {
@@ -215,23 +215,31 @@ namespace ModManager5.Classes
         public static void logConfig()
         {
             Utils.log("Computer information", "ConfigManager");
-            ComputerInfo c = new ComputerInfo();
-            decimal ram = c.TotalPhysicalMemory;
-            ram = Math.Round(ram / (1024 * 1024 * 1024), 1);
-            Utils.log("- OS Version: " + c.OSFullName, "ConfigManager");
-            Utils.log("- OS Language: " + c.InstalledUICulture.Name, "ConfigManager");
-            Utils.log("- Processor: " + System.Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER"), "ConfigManager");
-            Utils.log("- RAM: " + ram.ToString() + "Go", "ConfigManager");
-            Utils.log("- Drives:", "ConfigManager");
-            foreach (DriveInfo d in DriveInfo.GetDrives())
+            try
             {
-                decimal free = d.AvailableFreeSpace;
-                decimal total = d.TotalSize;
-                free = Math.Round(free / (1024 * 1024 * 1024), 1);
-                total = Math.Round(total / (1024 * 1024 * 1024), 1);
+                ComputerInfo c = new ComputerInfo();
+                decimal ram = c.TotalPhysicalMemory;
+                ram = Math.Round(ram / (1024 * 1024 * 1024), 1);
+                Utils.log("- OS Version: " + c.OSFullName, "ConfigManager");
+                Utils.log("- OS Language: " + c.InstalledUICulture.Name, "ConfigManager");
+                Utils.log("- Processor: " + System.Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER"), "ConfigManager");
+                Utils.log("- RAM: " + ram.ToString() + "Go", "ConfigManager");
+                Utils.log("- Drives:", "ConfigManager");
+                foreach (DriveInfo d in DriveInfo.GetDrives())
+                {
+                    decimal free = d.AvailableFreeSpace;
+                    decimal total = d.TotalSize;
+                    free = Math.Round(free / (1024 * 1024 * 1024), 1);
+                    total = Math.Round(total / (1024 * 1024 * 1024), 1);
 
-                Utils.log(" - Drive " + d.Name + ":" + free + "/" + total, "ConfigManager");
+                    Utils.log(" - Drive " + d.Name + ":" + free + "/" + total, "ConfigManager");
+                }
+            } catch (Exception e)
+            {
+                Utils.logE("Loading computer info FAIL", "ConfigManager");
+                Utils.logEx(e, "ConfigManager");
             }
+            
         }
     }
 

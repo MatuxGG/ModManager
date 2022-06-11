@@ -87,9 +87,10 @@ namespace ModManager5.Classes
                                 client.DownloadFile(ra.BrowserDownloadUrl, installerPath);
                             }
                         }
-                        catch
+                        catch (Exception e)
                         {
                             Utils.logE("Update connection FAIL", "Updater");
+                            Utils.logEx(e, "Updater");
                             MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                 "\n" +
                                 "There are many possible reasons for this :\n" +
@@ -119,9 +120,10 @@ namespace ModManager5.Classes
             {
                 r = await client.Repository.Release.GetLatest("MatuxGG", "ModManager");
             }
-            catch
+            catch (Exception e)
             {
                 Utils.logE("Github connection FAIL", "Updater");
+                Utils.logEx(e, "Updater");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                     "\n" +
                     "There are many possible reasons for this :\n" +

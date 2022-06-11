@@ -16,7 +16,7 @@ namespace ModManager5.Classes
         public static void load()
         {
             Utils.log("Load START", "Translator");
-            string languagesURL = ModManager.apiURL + "/translation/languages";
+            string languagesURL = ModManager.apiURL + "/trans";
             string lg = "";
             try
             {
@@ -25,9 +25,10 @@ namespace ModManager5.Classes
                     lg = client.DownloadString(languagesURL);
                 }
             }
-            catch
+            catch (Exception e)
             {
                 Utils.logE("Load connection FAIL", "Translator");
+                Utils.logEx(e, "Translator");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -38,6 +39,7 @@ namespace ModManager5.Classes
                                     "If this problem persists, please send a ticket on Mod Manager's discord.", "Server unreacheable", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 Environment.Exit(0);
             }
+            Utils.log(lg, "Translator");
             languages = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Language>>(lg);
 
             Utils.log("Loading " + languages.Count() + " languages", "Translator");

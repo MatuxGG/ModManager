@@ -37,20 +37,11 @@ namespace ModManager5.Classes
         public static Button ServersMenuButton;
         public static Label StatusLabel;
         public static Panel ModsCategoriesPanel;
-        public static Panel AccountPanel;
         public static MMButton StartButton;
         public static Panel StartPanel;
 
         public static List<Form> CategoryForms;
-        public static Form LoginForm;
-        public static Form RegisterForm;
-        public static Form MyModsForm;
-        public static Form MyStatsForm;
-        public static Form MyTranslationsForm;
-        public static Form MyAccountForm;
         public static Form ServersForm;
-        public static Form NewsForm;
-        public static Form FaqForm;
         public static Form SettingsForm;
         public static Form CreditsForm;
         public static Form EmptyForm;
@@ -75,7 +66,6 @@ namespace ModManager5.Classes
             SettingsMenuButton = new Button();
             FaqMenuButton = new Button();
             NewsMenuButton = new Button();
-            AccountPanel = new Panel();
             AccountMenuButton = new Button();
             ServersMenuButton = new Button();
             ModsCategoriesPanel = new Panel();
@@ -108,9 +98,8 @@ namespace ModManager5.Classes
             MenuPanel.Controls.Add(SettingsMenuButton);
             MenuPanel.Controls.Add(FaqMenuButton);
             MenuPanel.Controls.Add(NewsMenuButton);
-            MenuPanel.Controls.Add(ServersMenuButton);
-            MenuPanel.Controls.Add(AccountPanel);
             MenuPanel.Controls.Add(AccountMenuButton);
+            MenuPanel.Controls.Add(ServersMenuButton);
             MenuPanel.Controls.Add(ModsCategoriesPanel);
             MenuPanel.Controls.Add(BottomLeftPanel);
             MenuPanel.Controls.Add(ModsMenuButton);
@@ -219,13 +208,6 @@ namespace ModManager5.Classes
             ServersMenuButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             ServersMenuButton.UseVisualStyleBackColor = false;
             ServersMenuButton.TabStop = false;
-
-            // 
-            // AccountPanel
-            // 
-            AccountPanel.Dock = System.Windows.Forms.DockStyle.Top;
-            AccountPanel.Name = "AccountPanel";
-            AccountPanel.Size = new System.Drawing.Size(300, 0);
 
             // 
             // AccountMenuButton
@@ -454,10 +436,7 @@ namespace ModManager5.Classes
             //loadLocalMods();
             loadEmpty();
             loadMods();
-            loadAccount();
             loadServers();
-            loadNews();
-            loadFaq();
             loadSettings();
             loadCredits();
             Utils.log("InitUI END", "ModManagerUI");
@@ -490,15 +469,15 @@ namespace ModManager5.Classes
             });
             FaqMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
-                showMenuPanel();
+                Process.Start("explorer", ModManager.serverURL + @"\faq");
             });
             NewsMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
-                showMenuPanel();
+                Process.Start("explorer", ModManager.serverURL + @"\news");
             });
             AccountMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
-                showMenuPanel(AccountPanel);
+                Process.Start("explorer", ModManager.serverURL + @"\login");
             });
             RoadmapPict.Click += new EventHandler((object sender, EventArgs e) => {
 
@@ -521,14 +500,6 @@ namespace ModManager5.Classes
                 showMenuPanel();
                 openForm(ServersForm);
             });
-            NewsMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
-            {
-                openForm(NewsForm);
-            });
-            FaqMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
-            {
-                openForm(FaqForm);
-            });
             SettingsMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 openForm(SettingsForm);
@@ -543,8 +514,6 @@ namespace ModManager5.Classes
         {
             if (ModsCategoriesPanel.Visible == true)
                 ModsCategoriesPanel.Visible = false;
-            if (AccountPanel.Visible == true)
-                AccountPanel.Visible = false;
         }
 
         public static void showMenuPanel(Panel subMenu = null)
@@ -660,7 +629,7 @@ namespace ModManager5.Classes
             {
                 mods.AddRange(ModList.localMods);
                 int nextId = ModList.localMods.Count();
-                mods.Add(new Mod("LocalMod" + nextId, "NewMod" + nextId, "local", "local", ServerConfig.get("gameVersion").value, new List<string>() { DependencyList.dependencies.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", "", new List<string>() { }));
+                mods.Add(new Mod("LocalMod" + nextId, Translator.get("NewMod") + nextId, "local", "local", ServerConfig.get("gameVersion").value, new List<string>() { DependencyList.dependencies.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", "", "", ""));
 
             } else
             {
@@ -1079,7 +1048,7 @@ namespace ModManager5.Classes
                                 tempPath = ModWorker.getBepInExInsideRec(tempPath);
                                 Utils.DirectoryCopy(tempPath, newPath, true);
 
-                                Mod newLocalMod = new Mod(ModTitle.Name, ModTitle.Text, "local", "local", ModVersion.Text, new List<string>() { }, "", @"localMods\"+ModTitle.Text, "0", "", new List<string>() { }) ;
+                                Mod newLocalMod = new Mod(ModTitle.Name, ModTitle.Text, "local", "local", ModVersion.Text, new List<string>() { }, "", @"localMods\"+ModTitle.Text, "0", "", "", "") ;
                                 
                                 ModList.localMods.Add(newLocalMod);
 
@@ -1209,364 +1178,6 @@ namespace ModManager5.Classes
             }
 
             f.Controls.Add(Visuals.LabelTitle(Translator.get(cat.name)));
-        }
-
-        public static void loadAccount()
-        {
-            Utils.log("Load account START", "ModManagerUI");
-            AccountPanel.Controls.Clear();
-            
-            // SubMenu
-
-            if (MatuxAPI.logged)
-            {
-                Utils.log("Logged", "ModManagerUI");
-
-                int panelSize = 80;
-
-                Button b2 = CreateSubMenuButton("Logout");
-
-                b2.Click += new EventHandler((object sender, EventArgs e) => {
-                    MatuxAPI.logout();
-                    loadAccount();
-                    openForm(LoginForm);
-                });
-                AccountPanel.Controls.Add(b2);
-
-                if (MatuxAPI.isTranslator() && MatuxAPI.currentLg != "EN")
-                {
-                    Utils.log("Translator", "ModManagerUI");
-                    MyTranslationsForm = new GenericPanel();
-
-                    Button b4 = CreateSubMenuButton("Translations");
-
-                    b4.Click += new EventHandler((object sender, EventArgs e) => {
-                        openForm(MyTranslationsForm);
-                    });
-                    AccountPanel.Controls.Add(b4);
-                    panelSize = panelSize + 40;
-
-                    loadMyTranslationsForm(MyTranslationsForm);
-                }
-
-                if (MatuxAPI.isModder())
-                {
-                    Utils.log("Modder", "ModManagerUI");
-                    MyModsForm = new GenericPanel();
-
-                    Button b = CreateSubMenuButton("My Mods");
-
-                    b.Click += new EventHandler((object sender, EventArgs e) => {
-                        openForm(MyModsForm);
-                    });
-                    AccountPanel.Controls.Add(b);
-                    panelSize = panelSize + 40;
-
-                    loadMyModsForm(MyModsForm);
-                }
-
-                AccountPanel.Size = new Size(300, panelSize);
-
-                MyAccountForm = new GenericPanel();
-
-                Button b1 = CreateSubMenuButton("My Account");
-
-                loadAccountForm(MyAccountForm);
-
-                b1.Click += new EventHandler((object sender, EventArgs e) => {
-                    openForm(MyAccountForm);
-                });
-                AccountPanel.Controls.Add(b1);
-
-            } else
-            {
-                Utils.log("Not logged", "ModManagerUI");
-                AccountPanel.Size = new Size(300, 40);
-
-                LoginForm = new GenericPanel();
-
-                // Login
-
-                Button b = CreateSubMenuButton("Login");
-
-                b.Click += new EventHandler((object sender, EventArgs e) => {
-                    openForm(LoginForm);
-                });
-                AccountPanel.Controls.Add(b);
-
-                loadLoginForm(LoginForm);
-            }
-            Utils.log("Load account END", "ModManagerUI");
-        }
-
-        private static void loadAccountForm(Form f)
-        {
-            Panel AccountContainerPanel = Visuals.createPanel();
-            f.Controls.Add(AccountContainerPanel);
-
-            TableLayoutPanel AccountPanel = Visuals.createLayoutPanelV(0, 600, DockStyle.Top, new int[] { 20, 10, 10, 10, 10, 10, 10, 20 });
-
-            AccountContainerPanel.Controls.Add(AccountPanel);
-
-
-            f.Controls.Add(Visuals.LabelTitle(Translator.get("Welcome to Matux.fr")));
-
-            PictureBox MatuxLogoPict = new PictureBox();
-            MatuxLogoPict.Image = global::ModManager5.Properties.Resources.matux;
-            MatuxLogoPict.Dock = DockStyle.Top;
-            MatuxLogoPict.Margin = new System.Windows.Forms.Padding(0);
-            MatuxLogoPict.Name = "MatuxLogoPict";
-            MatuxLogoPict.Size = new Size(100, 100);
-            MatuxLogoPict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            MatuxLogoPict.TabStop = false;
-            AccountPanel.Controls.Add(MatuxLogoPict, 0, 0);
-
-            MMLabel DescriptionLabel = new MMLabel();
-            DescriptionLabel.Dock = DockStyle.Top;
-            DescriptionLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            DescriptionLabel.Size = new Size(0, 100);
-            DescriptionLabel.ForeColor = ThemeList.theme.TextColor;
-            DescriptionLabel.BackColor = ThemeList.theme.AppBackgroundColor;
-            DescriptionLabel.TextAlign = ContentAlignment.MiddleCenter;
-            DescriptionLabel.TabStop = false;
-            DescriptionLabel.Text = Translator.get("You are logged as LOGIN").Replace("LOGIN", MatuxAPI.token.Substring(0, MatuxAPI.token.IndexOf("&")));
-            AccountPanel.Controls.Add(DescriptionLabel, 0, 1);
-
-            MMLabel OnlineLabel = new MMLabel();
-            OnlineLabel.Dock = DockStyle.Top;
-            OnlineLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            OnlineLabel.Size = new Size(0, 100);
-            OnlineLabel.ForeColor = ThemeList.theme.TextColor;
-            OnlineLabel.BackColor = ThemeList.theme.AppBackgroundColor;
-            OnlineLabel.TextAlign = ContentAlignment.MiddleCenter;
-            OnlineLabel.TabStop = false;
-            OnlineLabel.Text = Translator.get("Click here to access your online panel");
-            OnlineLabel.Click += new EventHandler((object sender, EventArgs e) => {
-                int index = MatuxAPI.token.IndexOf("&");
-                if (index != -1)
-                    Process.Start(new ProcessStartInfo("explorer.exe", "\"" + ModManager.panelURL + @"?t1=" + MatuxAPI.token.Substring(0, index) + "&t2=" + MatuxAPI.token.Substring(index+1) + "\""));
-            });
-            AccountPanel.Controls.Add(OnlineLabel, 0, 2);
-        }
-
-        private static void loadLoginForm(Form f)
-        {
-            Panel LoginContainerPanel = Visuals.createPanel();
-            f.Controls.Add(LoginContainerPanel);
-
-            TableLayoutPanel LoginPanel = Visuals.createLayoutPanelV(0, 600, DockStyle.Top, new int[] { 20, 10, 10, 10, 10, 10, 10, 20 });
-
-            LoginContainerPanel.Controls.Add(LoginPanel);
-
-            MMLabel LoginErrorLabel = new MMLabel();
-
-            f.Controls.Add(Visuals.LabelTitle(Translator.get("Login to Matux.fr")));
-
-            PictureBox MatuxLogoPict = new PictureBox();
-            MatuxLogoPict.Image = global::ModManager5.Properties.Resources.matux;
-            MatuxLogoPict.Dock = DockStyle.Top;
-            MatuxLogoPict.Margin = new System.Windows.Forms.Padding(0);
-            MatuxLogoPict.Name = "MatuxLogoPict";
-            MatuxLogoPict.Size = new Size(100, 100);
-            MatuxLogoPict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            MatuxLogoPict.TabStop = false;
-            LoginPanel.Controls.Add(MatuxLogoPict, 0, 0);
-
-            LoginPseudoText = new MMTextbox();
-            LoginPanel.Controls.Add(Visuals.centeredTextbox(Translator.get("Pseudo"), LoginPseudoText), 0, 1);
-
-            LoginPasswordText = new MMTextbox();
-            LoginPasswordText.PasswordChar = '*';
-            LoginPanel.Controls.Add(Visuals.centeredTextbox(Translator.get("Password"), LoginPasswordText), 0, 2);
-
-            MMButton LoginLoginButton = new MMButton("rounded");
-            LoginPanel.Controls.Add(Visuals.centeredButton(Translator.get("Login"), LoginLoginButton), 0, 3);
-
-
-            LoginLoginButton.Click += new EventHandler((object sender, EventArgs e) => {
-                if (LoginPseudoText.Text == "" || LoginPasswordText.Text == "")
-                {
-                    LoginErrorLabel.Visible = true;
-                    LoginErrorLabel.Text = Translator.get("Wrong login and/or password, please try again");
-                }
-                else
-                {
-                    Boolean worked = MatuxAPI.Login(LoginPseudoText.Text, LoginPasswordText.Text);
-                    if (worked)
-                    {
-                        loadAccount();
-                        LoginErrorLabel.Visible = false;
-                        openForm(MyAccountForm);
-                    }
-                    else
-                    {
-                        LoginErrorLabel.Visible = true;
-                        LoginErrorLabel.Text = Translator.get("Wrong login and/or password, please try again");
-                    }
-                }
-            });
-
-            MMButton RegisterLoginButton = new MMButton("rounded");
-            LoginPanel.Controls.Add(Visuals.centeredButton(Translator.get("Register"), RegisterLoginButton), 0, 4) ;
-
-            RegisterLoginButton.Click += new EventHandler((object sender, EventArgs e) => {
-                if (LoginPseudoText.Text == "" || LoginPasswordText.Text == "")
-                {
-                    LoginErrorLabel.Visible = true;
-                    LoginErrorLabel.Text = Translator.get("Wrong login and/or password, please try again");
-                } else
-                {
-                    Boolean worked = MatuxAPI.Register(LoginPseudoText.Text, LoginPasswordText.Text);
-                    if (worked)
-                    {
-                        loadAccount();
-                        LoginErrorLabel.Visible = false;
-                        openForm(EmptyForm);
-                    }
-                    else
-                    {
-                        LoginErrorLabel.Visible = true;
-                        LoginErrorLabel.Text = Translator.get("Account already exists, please choose another one or login");
-                    }
-                }
-            });
-
-            MMLabel RecoverLabel = new MMLabel();
-            RecoverLabel.Dock = DockStyle.Top;
-            RecoverLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            RecoverLabel.Size = new Size(0, 100);
-            RecoverLabel.ForeColor = ThemeList.theme.TextColor;
-            RecoverLabel.BackColor = ThemeList.theme.AppBackgroundColor;
-            RecoverLabel.TextAlign = ContentAlignment.MiddleCenter;
-            RecoverLabel.TabStop = false;
-            RecoverLabel.Text = "\n" + Translator.get("Password forgotten? Click here!");
-            RecoverLabel.Click += new EventHandler((object sender, EventArgs e) => {
-                Process.Start("explorer", ModManager.panelURL + @"forgot");
-            });
-            LoginPanel.Controls.Add(RecoverLabel, 0, 5);
-
-            MMLabel DisclamerLabel = new MMLabel();
-            DisclamerLabel.Dock = DockStyle.Top;
-            DisclamerLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            DisclamerLabel.Size = new Size(0, 100);
-            DisclamerLabel.ForeColor = ThemeList.theme.TextColor;
-            DisclamerLabel.BackColor = ThemeList.theme.AppBackgroundColor;
-            DisclamerLabel.TextAlign = ContentAlignment.MiddleCenter;
-            DisclamerLabel.TabStop = false;
-            DisclamerLabel.Text = "\n"+Translator.get("Login and password are encrypted and will be only used to log you to matux.fr") + "\n\n" + Translator.get("Not registered yet ? Just register by clicking the button below !");
-            LoginPanel.Controls.Add(DisclamerLabel, 0, 6);
-
-            LoginErrorLabel.Dock = DockStyle.Top;
-            LoginErrorLabel.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            LoginErrorLabel.Size = new Size(0, 100);
-            LoginErrorLabel.ForeColor = Color.Red;
-            LoginErrorLabel.BackColor = ThemeList.theme.AppBackgroundColor;
-            LoginErrorLabel.TextAlign = ContentAlignment.MiddleCenter;
-            LoginErrorLabel.TabStop = false;
-            LoginErrorLabel.Visible = false;
-            LoginPanel.Controls.Add(LoginErrorLabel, 0, 7);
-        }
-
-        public static void loadNews()
-        {
-            NewsForm = new GenericPanel();
-            NewsForm.Name = "News";
-            
-            News n = NewsList.getCurrent();
-
-            Panel NewsContainerPanel = Visuals.createPanel();
-            NewsForm.Controls.Add(NewsContainerPanel);
-
-            TableLayoutPanel NewsPanel = Visuals.createLayoutPanel(600);
-            NewsContainerPanel.Controls.Add(NewsPanel);
-
-            Label NewsContent = Visuals.LabelContent(n.content, ContentAlignment.TopLeft, DockStyle.Top);
-            NewsContent.Margin = new System.Windows.Forms.Padding(20, 20, 20, 20);
-            NewsPanel.Controls.Add(NewsContent, 0, 0);
-
-            PictureBox LastNewsPict = new PictureBox();
-            PictureBox NextNewsPict = new PictureBox();
-
-            NewsForm.Controls.Add(Visuals.ScrollHeader(n.name, NextNewsPict, LastNewsPict));
-
-            if (NewsList.current < NewsList.getMax())
-            {
-                NextNewsPict.Visible = true;
-                NextNewsPict.Cursor = Cursors.Hand;
-                NextNewsPict.Click += new EventHandler((object sender, EventArgs e) => {
-                    NewsList.current = NewsList.current + 1;
-                    loadNews();
-                    openForm(NewsForm);
-                });
-            }
-
-            if (NewsList.current > 0)
-            {
-                LastNewsPict.Visible = true;
-                LastNewsPict.Cursor = Cursors.Hand;
-                LastNewsPict.Click += new EventHandler((object sender, EventArgs e) => {
-                    NewsList.current = NewsList.current - 1;
-                    loadNews();
-                    openForm(NewsForm);
-                });
-            }
-
-            Label NewsDateLabel = Visuals.LabelContent(n.date, ContentAlignment.MiddleRight, DockStyle.Top);
-            NewsDateLabel.Dock = DockStyle.Bottom;
-            NewsForm.Controls.Add(NewsDateLabel);
-
-            NewsForm.Controls.Add(Visuals.LabelTitle(Translator.get("News")));
-        }
-
-        public static void loadFaq()
-        {
-            Utils.log("Load FAQ START", "ModManagerUI");
-            FaqForm = new GenericPanel();
-            FaqForm.Name = "Faq";
-
-            Faq n = FaqList.getCurrent();
-
-            Panel FaqContainerPanel = Visuals.createPanel();
-            FaqForm.Controls.Add(FaqContainerPanel);
-
-            TableLayoutPanel FaqPanel = Visuals.createLayoutPanel(600);
-            FaqContainerPanel.Controls.Add(FaqPanel);
-
-            Label FaqContentLabel = Visuals.LabelContent(n.answer, ContentAlignment.TopLeft, DockStyle.Top);
-            FaqContentLabel.Margin = new System.Windows.Forms.Padding(20, 20, 20, 20);
-            FaqPanel.Controls.Add(FaqContentLabel, 0, 0);
-
-
-            PictureBox LastFaqPict = new PictureBox();
-            PictureBox NextFaqPict = new PictureBox();
-
-            FaqForm.Controls.Add(Visuals.ScrollHeader(n.question, NextFaqPict, LastFaqPict));
-
-            if (FaqList.current < FaqList.getMax())
-            {
-                NextFaqPict.Visible = true;
-                NextFaqPict.Cursor = Cursors.Hand;
-                NextFaqPict.Click += new EventHandler((object sender, EventArgs e) => {
-                    FaqList.current = FaqList.current + 1;
-                    loadFaq();
-                    openForm(FaqForm);
-                });
-            }
-
-            if (FaqList.current > 0)
-            {
-                LastFaqPict.Visible = true;
-                LastFaqPict.Cursor = Cursors.Hand;
-                LastFaqPict.Click += new EventHandler((object sender, EventArgs e) => {
-                    FaqList.current = FaqList.current - 1;
-                    loadFaq();
-                    openForm(FaqForm);
-                });
-            }
-
-            FaqForm.Controls.Add(Visuals.LabelTitle(Translator.get("Frequently Asked Questions")));
-
-            Utils.log("Load FAQ END", "ModManagerUI");
         }
 
         public static void loadServers()
@@ -1726,89 +1337,6 @@ namespace ModManager5.Classes
             Utils.log("Load mods END", "ModManagerUI");
         }
 
-        private static void loadMyStatsForm(Form f)
-        {
-            MyStatsForm = new GenericPanel();
-            MyStatsForm.Name = "MyStats";
-
-            bindWIP(MyStatsForm);
-
-            MyStatsForm.Controls.Add(Visuals.LabelTitle("My Stats"));
-        }
-
-        private static void loadMyModsForm(Form f)
-        {
-            MyModsForm = new GenericPanel();
-            MyModsForm.Name = "MyMods";
-
-            bindWIP(MyModsForm);
-
-            MyModsForm.Controls.Add(Visuals.LabelTitle("My Mods"));
-        }
-
-        private static void loadMyTranslationsForm(Form f)
-        {
-            MyTranslationsForm = new GenericPanel();
-            MyTranslationsForm.Name = "MyTranslations";
-
-            List<Translation> translations = new List<Translation>();
-            translations.AddRange(MatuxAPI.getTranslationsForLg(MatuxAPI.currentLg));
-            //servers.Reverse();
-
-            int max = translations.Count();
-            int i = 0;
-
-            //bindWIP(ServersForm);
-
-            Panel TranslationsContainerPanel = Visuals.createPanel();
-            MyTranslationsForm.Controls.Add(TranslationsContainerPanel);
-
-            TableLayoutPanel TranslationsPanel = new TableLayoutPanel();
-            TranslationsPanel.Size = new Size(0, 100 * max);
-            TranslationsPanel.Dock = DockStyle.Top;
-
-            TranslationsPanel.ColumnCount = 3;
-            TranslationsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
-            TranslationsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 40F));
-            TranslationsPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-
-            TranslationsPanel.RowCount = max;
-            int row = 0;
-            while (row < max)
-            {
-                TranslationsPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100 / max));
-                row++;
-            }
-
-            TranslationsContainerPanel.Controls.Add(TranslationsPanel);
-
-
-            foreach (Translation tr in translations)
-            {
-                MMLabel TranslationLabel = new MMLabel();
-                TextBox TranslationTextbox = new TextBox();
-                PictureBox TranslationValidPic = new PictureBox();
-                Visuals.TranslationLine(TranslationsPanel, i, tr, TranslationLabel, TranslationTextbox, TranslationValidPic);
-
-                TranslationTextbox.TextChanged += new EventHandler((object sender, EventArgs e) =>
-                {
-                    TranslationValidPic.Visible = true;
-                });
-
-                TranslationValidPic.Click += new EventHandler((object sender, EventArgs e) =>
-                {
-                    MatuxAPI.updateTranslation(MatuxAPI.currentLg, tr.original, TranslationTextbox.Text);
-                    TranslationValidPic.Visible = false;
-                });
-
-                i++;
-
-            }
-
-            MyTranslationsForm.Controls.Add(Visuals.TranslationsOverlay());
-
-            MyTranslationsForm.Controls.Add(Visuals.LabelTitle(Translator.get("Translations")));
-        }
         public static void loadSettings()
         {
             Utils.log("Load settings START", "ModManagerUI");
@@ -1915,13 +1443,14 @@ namespace ModManager5.Classes
             CreditsContentLabel.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             CreditsContentLabel.BackColor = Color.Transparent;
             CreditsContentLabel.ForeColor = SystemColors.Control;
-            CreditsContentLabel.TextAlign = ContentAlignment.TopLeft;
+            CreditsContentLabel.TextAlign = ContentAlignment.MiddleCenter;
             CreditsContentLabel.Dock = DockStyle.Top;
             CreditsContentLabel.Name = "CreditsContentLabel";
             CreditsContentLabel.Margin = new System.Windows.Forms.Padding(20, 20, 20, 20);
             CreditsContentLabel.UseMnemonic = false;
             CreditsContentLabel.Size = new System.Drawing.Size(250, 150);
-            CreditsContentLabel.Text = Translator.get(ServerConfig.get("credits").value);
+            string creditsText = Translator.get("creditsContent").Replace("\\n", "\n");
+            CreditsContentLabel.Text = creditsText;
             CreditsForm.Controls.Add(CreditsContentLabel);
 
             CreditsForm.Controls.Add(Visuals.LabelTitle(Translator.get("Credits")));

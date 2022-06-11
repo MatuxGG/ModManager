@@ -24,8 +24,8 @@ namespace ModManager5.Classes
         {
             Utils.log("Load START", "ModList");
             if (!ModManager.silent)
-                ModManagerUI.StatusLabel.Text = "Loading Mods...";
-            string modlistURL = ModManager.apiURL + "/mod/list";
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading Mods...");
+            string modlistURL = ModManager.apiURL + "/mod";
             string modlist = "";
             try
             {
@@ -34,9 +34,10 @@ namespace ModManager5.Classes
                     modlist = client.DownloadString(modlistURL);
                 }
             }
-            catch
+            catch (Exception e)
             {
                 Utils.logE("Load connection FAIL", "ModList");
+                Utils.logEx(e, "ModList");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +
@@ -49,7 +50,6 @@ namespace ModManager5.Classes
             }
             mods = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Mod>>(modlist);
 
-
             Utils.log("Load END", "ModList");
         }
 
@@ -57,7 +57,7 @@ namespace ModManager5.Classes
         {
             Utils.log("Load local mods START", "ModList");
             if (!ModManager.silent)
-                ModManagerUI.StatusLabel.Text = "Loading local mods...";
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading local mods...");
 
             string path = ModManager.appDataPath + @"\localMods.conf";
             if (System.IO.File.Exists(path))
@@ -90,7 +90,7 @@ namespace ModManager5.Classes
         {
             Utils.log("Load Releases START", "ModList");
             if (!ModManager.silent)
-                ModManagerUI.StatusLabel.Text = "Loading Releases...";
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading Releases...");
             int max = mods.Count();
             int i = 0;
             List<Mod> releasesToRemove = new List<Mod>() { };
@@ -189,7 +189,6 @@ namespace ModManager5.Classes
         public static void createShortcut(Mod m)
         {
             Utils.log("Create shortcut START", "ModList");
-            ModManagerUI.StatusLabel.Text = "A shortcut is under creation, please wait...";
             object shDesktop = (object)"Desktop";
             WshShell shell = new WshShell();
             string title = m.name + " (Mod Manager)";
@@ -218,7 +217,7 @@ namespace ModManager5.Classes
             */
 
             shortcut.Save();
-            ModManagerUI.StatusLabel.Text = "A shortcut has been created on your desktop !";
+            ModManagerUI.StatusLabel.Text = Translator.get("A shortcut has been created on your desktop !");
 
             Utils.log("Create shortcut END", "ModList");
         }

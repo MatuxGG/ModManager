@@ -137,6 +137,8 @@ namespace ModManager5.Classes
                     return;
                 }
 
+                
+
                 string dirPath = (m.type != "local" ? ModManager.appDataPath + @"\mods\" + m.id : ModManager.appDataPath + @"\localMods\" + m.name);
 
                 if (!ModManager.silent)
@@ -190,7 +192,8 @@ namespace ModManager5.Classes
                 Mod mod = ModList.getModById(ConfigManager.config.lastMod);
                 if (mod != null)
                 {
-                    List<string> tdata = mod.data;
+                    List<string> tdata = new List<string>() { };
+                    tdata.Add(mod.data);
                     tdata.Add("BepInEx/config");
                     foreach (string data in tdata)
                     {
@@ -389,7 +392,7 @@ namespace ModManager5.Classes
                 client.DownloadFile(ModManager.serverURL + "/skeld",  path + @"\Skeld.exe");
             }
             */
-            DownloadWorker.download(ModManager.serverURL + "/skeld", path + @"\Skeld.exe", "Downloading Skeld.net... (PERCENT%)");
+            DownloadWorker.download(ModManager.serverURL + "/skeld", path + @"\Skeld.exe", Translator.get("Downloading Skeld.net...") + "\n(PERCENT)", 0, 100);
 
             InstalledMod newMod = new InstalledMod("Skeld", "", "");
             ConfigManager.config.installedMods.Add(newMod);
@@ -451,7 +454,7 @@ namespace ModManager5.Classes
             string path = ModManager.tempPath + @"\" + asset.Name;
             Utils.FileDelete(path);
 
-            DownloadWorker.download(asset.BrowserDownloadUrl, path, "Installing " + ModToInstall.name + ", please wait...\nInstalling client... (PERCENT%)");
+            DownloadWorker.download(asset.BrowserDownloadUrl, path, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", ModToInstall.name) + "\n(PERCENT)", 0, 50);
 
             backgroundWorker.ReportProgress(20);
 
@@ -485,7 +488,7 @@ namespace ModManager5.Classes
 
             path = ModManager.tempPath + @"\" + asset.Name;
 
-            DownloadWorker.download(asset.BrowserDownloadUrl, path, "Installing " + ModToInstall.name + ", please wait...\nInstalling mod... (PERCENT%)");
+            DownloadWorker.download(asset.BrowserDownloadUrl, path, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", ModToInstall.name) + "\n(PERCENT)", 50, 50);
 
             backgroundWorker.ReportProgress(40);
 
@@ -528,7 +531,7 @@ namespace ModManager5.Classes
                 }
                 else
                 {
-                    ModManagerUI.StatusLabel.Text = Translator.get("Error : installation canceled.");
+                    ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("installation canceled.");
                     finished = true;
                 }
             } else
@@ -546,7 +549,7 @@ namespace ModManager5.Classes
             }
             finished = false;
 
-            ModManagerUI.StatusLabel.Text = Translator.get("Uninstalling Mod, please wait...");
+            ModManagerUI.StatusLabel.Text = Translator.get("Uninstalling MODNAME, please wait...").Replace("MODNAME", m.name);
             
 
             InstalledMod im = ConfigManager.getInstalledModById(m.id);
@@ -558,7 +561,7 @@ namespace ModManager5.Classes
 
             finished = true;
 
-            ModManagerUI.StatusLabel.Text = Translator.get("Mod uninstalled successfully.");
+            ModManagerUI.StatusLabel.Text = Translator.get("MODNAME uninstalled successfully.").Replace("MODNAME", m.name);
             Form currentForm = ModManagerUI.getFormByCategoryId(m.category);
             ModManagerUI.refreshModForm(currentForm);
             Utils.log("Uninstall mod " + m.name + " END", "ModWorker");
@@ -611,10 +614,9 @@ namespace ModManager5.Classes
 
             backgroundWorker.ReportProgress(20);
 
-            
-            Boolean result = installDependencies(m);
+            int result = installDependencies(m);
 
-            if (!result)
+            if (result == -1)
             {
                 Utils.DirectoryDelete(destPath);
                 backgroundWorker.ReportProgress(100);
@@ -623,9 +625,9 @@ namespace ModManager5.Classes
 
             backgroundWorker.ReportProgress(30);
 
-            result = installFiles(m);
+            bool result2 = installFiles(m, result > 0);
 
-            if (!result)
+            if (!result2)
             {
                 Utils.DirectoryDelete(destPath);
                 backgroundWorker.ReportProgress(100);
@@ -658,13 +660,13 @@ namespace ModManager5.Classes
             {
                 if (finished)
                 {
-                    ModManagerUI.StatusLabel.Text = Translator.get("Mod installed successfully.");
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", ModToInstall.name);
                     Form currentForm = ModManagerUI.getFormByCategoryId(ModToInstall.category);
                     ModManagerUI.refreshModForm(currentForm);
                 }
                 else
                 {
-                    ModManagerUI.StatusLabel.Text = Translator.get("Error : installation canceled.");
+                    ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("installation canceled.");
                     finished = true;
                 }
             } else
@@ -673,16 +675,18 @@ namespace ModManager5.Classes
             }
         }
 
-        public static Boolean installDependencies(Mod m)
+        public static int installDependencies(Mod m)
         {
             Utils.log("Install dependencies for mod " + m.name + " START", "ModWorker");
             string destPath = ModManager.appDataPath + @"\mods\" + m.id;
+            int countDep = 0;
             foreach (string dependencie in m.dependencies)
             {
                 Utils.log("Install dependency " + dependencie, "ModWorker");
                 string tempPath = ModManager.tempPath;
                 string tempDestPath = tempPath + @"\" + dependencie + ".zip";
                 Utils.FileDelete(tempDestPath);
+                countDep++;
                 /*try
                 {
                     using (var client = new WebClient())
@@ -695,23 +699,26 @@ namespace ModManager5.Classes
                     return false;
                 }
                 */
-                DownloadWorker.download(ModManager.apiURL + "/files/dependencies/" + dependencie + ".zip", tempDestPath, "Installing mod, please wait...\nInstalling dependencies... (PERCENT%)");
+                Dependency d = DependencyList.getDependencyById(dependencie);
+                Utils.log(ModManager.fileURL + "/dep/" + d.file + ".zip", "TEST");
+                DownloadWorker.download(ModManager.fileURL + "/dep/" + d.file, tempDestPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", 0, 50);
 
                 try
                 {
                     ZipFile.ExtractToDirectory(tempDestPath, destPath);
                 }
-                catch
+                catch (Exception e)
                 {
                     Utils.logE("Zip extraction FAIL", "ModWorker");
-                    return false;
+                    Utils.logEx(e, "ModWorker");
+                    return -1;
                 }
             }
             Utils.log("Install dependencies for mod " + m.name + " END", "ModWorker");
-            return true;
+            return countDep;
         }
 
-        public static Boolean installFiles(Mod m)
+        public static Boolean installFiles(Mod m, bool hasDependencies)
         {
             Utils.log("Install files for mod " + m.name + " START", "ModWorker");
             if (m.type == "mod")
@@ -719,18 +726,18 @@ namespace ModManager5.Classes
                 foreach (ReleaseAsset tab in m.release.Assets)
                 {
                     string fileName = tab.Name;
-                    if (fileName.Contains(".zip") && (m.ignoredPattern == "" || !fileName.Contains(m.ignoredPattern)))
+                    if (fileName.Contains(".zip") && (m.needPattern == null || m.needPattern == "" || fileName.Contains(m.needPattern)) && (m.ignoredPattern == null || m.ignoredPattern == "" || !fileName.Contains(m.ignoredPattern)))
                     {
-                        return installZip(m, tab);
+                        return installZip(m, tab, hasDependencies);
                     }
                 }
 
                 foreach (ReleaseAsset tab in m.release.Assets)
                 {
                     string fileName = tab.Name;
-                    if (fileName.Contains(".dll"))
+                    if (fileName.Contains(".dll") && (m.needPattern == "" || fileName.Contains(m.needPattern)) && (m.ignoredPattern == "" || !fileName.Contains(m.ignoredPattern)))
                     {
-                        return installDll(m, tab);
+                        return installDll(m, tab, hasDependencies);
                     }
                 }
             }
@@ -741,7 +748,7 @@ namespace ModManager5.Classes
 
         
 
-        public static Boolean installDll(Mod m, ReleaseAsset file)
+        public static Boolean installDll(Mod m, ReleaseAsset file, bool hasDependencies)
         {
             string fileName = file.Name;
             string fileUrl = file.BrowserDownloadUrl;
@@ -762,12 +769,12 @@ namespace ModManager5.Classes
                 return false;
             }
             */
-            DownloadWorker.download(fileUrl, pluginsPath + @"\" + fileName, "Installing mod, please wait...\nInstalling mod... (PERCENT%)");
+            DownloadWorker.download(fileUrl, pluginsPath + @"\" + fileName, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", (hasDependencies ? 50 : 0), (hasDependencies ? 50 : 100));
             Utils.log("Install dll file " + fileName + " END", "ModWorker");
             return true;
         }
 
-        public static Boolean installZip(Mod m, ReleaseAsset file)
+        public static Boolean installZip(Mod m, ReleaseAsset file, bool hasDependencies)
         {
             string fileName = file.Name;
             string fileUrl = file.BrowserDownloadUrl;
@@ -792,7 +799,7 @@ namespace ModManager5.Classes
             }
             */
 
-            DownloadWorker.download(fileUrl, zipPath, "Installing mod, please wait...\nInstalling mod... (PERCENT%)");
+            DownloadWorker.download(fileUrl, zipPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", (hasDependencies ? 50 : 0), (hasDependencies ? 50 : 100));
 
             string newPath = ModManager.tempPath + @"\ModZip";
 
@@ -801,6 +808,7 @@ namespace ModManager5.Classes
             ZipFile.ExtractToDirectory(zipPath, newPath);
             newPath = getBepInExInsideRec(newPath);
             Utils.DirectoryCopy(newPath, modPath, true);
+            
             Utils.log("Install zip file " + fileName + " END", "ModWorker");
 
             return true;

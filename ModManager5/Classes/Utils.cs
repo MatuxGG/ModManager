@@ -76,6 +76,12 @@ namespace ModManager5.Classes
             }
         }
 
+        public static void logEx(Exception e, string className)
+        {
+            Utils.logE("Error: " + e.Message, className);
+            Utils.logE("Source: " + e.Source, className);
+        }
+
         // Spec : str <= 15
         public static string getTabs(string str)
         {

@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿using Newtonsoft.Json;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace ModManager5.Classes
 {
     public class Mod
     {
+        [JsonProperty(PropertyName = "sId")]
         public string id { get; set; }
         public string name { get; set; }
         public string category { get; set; }
@@ -18,11 +20,14 @@ namespace ModManager5.Classes
         public string author { get; set; }
         public string github { get; set; }
         public string githubLink { get; set; }
+
+        [JsonProperty(PropertyName = "ignorePattern")]
         public string ignoredPattern { get; set; }
-        public List<string> data { get; set; }
+        public string needPattern { get; set; }
+        public string data { get; set; }
         public Release release { get; set; }
 
-        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, string ignoredPattern, List<string> data)
+        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, string ignoredPattern, string needPattern, string data)
         {
             this.id = id;
             this.name = name;
@@ -33,6 +38,7 @@ namespace ModManager5.Classes
             this.github = github;
             this.githubLink = githubLink;
             this.ignoredPattern = ignoredPattern;
+            this.needPattern = needPattern;
             this.type = type;
             this.release = null;
             this.data = data;
@@ -44,7 +50,7 @@ namespace ModManager5.Classes
 
             if (this.data == null)
             {
-                this.data = new List<string>() { };
+                this.data = "";
             }
 
         }

@@ -33,7 +33,7 @@ namespace ModManager5.Classes
         public void load()
         {
             Utils.log("Load START", "Language");
-            string translationsURL = ModManager.apiURL + "/translation/get/" + this.code;
+            string translationsURL = ModManager.apiURL + "/trans/" + this.code;
             string tr = "";
             try
             {
@@ -42,9 +42,10 @@ namespace ModManager5.Classes
                     tr = client.DownloadString(translationsURL);
                 }
             }
-            catch
+            catch (Exception e)
             {
                 Utils.logE("Load connection FAIL", "Language");
+                Utils.logEx(e, "Language");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +

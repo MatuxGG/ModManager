@@ -17,9 +17,9 @@ namespace ModManager5
 {
     public partial class ModManager : Form
     {
-        public static string serverURL = "https://mm.matux.fr/";
-        public static string apiURL = "https://api.matux.fr/";
-        public static string panelURL = "https://panel.matux.fr/";
+        public static string serverURL = "https://goodloss.fr";
+        public static string apiURL = "https://goodloss.fr/api";
+        public static string fileURL = "https://goodloss.fr/file";
         public static string appPath = System.AppDomain.CurrentDomain.BaseDirectory;
         public static string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\ModManager";
         public static string tempPath = Path.GetTempPath() + "ModManager";
@@ -124,10 +124,6 @@ namespace ModManager5
             CategoryManager.load();
             if (args.Count() <= 0)
             {
-                Utils.log("Loading news", "ModManager");
-                NewsList.load();
-                Utils.log("Loading FAQ", "ModManager");
-                FaqList.load();
                 Utils.log("Loading servers", "ModManager");
                 ServerManager.load();
             }
@@ -191,13 +187,8 @@ namespace ModManager5
                 Environment.Exit(0);
             }
 
-            Utils.log("Connecting to matux.fr", "ModManager");
-            ModManagerUI.StatusLabel.Text = "Connecting...";
-            MatuxAPI.CheckLogin();
-            MatuxAPI.currentLg = ConfigManager.globalConfig.lg; // Configuration one day
-
             Utils.log("Loading Mod Manager UI (2/2)", "ModManager");
-            ModManagerUI.StatusLabel.Text = "Loading UI...";
+            ModManagerUI.StatusLabel.Text = Translator.get("Loading UI...");
 
             ModManagerUI.InitUI();
 
@@ -211,6 +202,7 @@ namespace ModManager5
             Utils.log("Loading data refresher", "ModManager");
             Refresher.load(this);
 
+            Utils.log("Mod Manager ready", "ModManager");
             ModManagerUI.LoadingLabel.Visible = false;
             ModManagerUI.StatusLabel.Text = "";
         }

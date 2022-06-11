@@ -16,8 +16,8 @@ namespace ModManager5.Classes
         {
             Utils.log("Load START", "CategoryManager");
             if (!ModManager.silent)
-                ModManagerUI.StatusLabel.Text = "Loading Mod Categories...";
-            string catlistURL = ModManager.apiURL + "/category/list";
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading categories...");
+            string catlistURL = ModManager.apiURL + "/cat";
             string cat = "";
             try
             {
@@ -26,9 +26,10 @@ namespace ModManager5.Classes
                     cat = client.DownloadString(catlistURL);
                 }
             }
-            catch
+            catch (Exception e)
             {
                 Utils.logE("Load connection FAIL", "CategoryManager");
+                Utils.logEx(e, "CategoryManager");
                 MessageBox.Show("Mod Manager's server is unreacheable.\n" +
                                     "\n" +
                                     "There are many possible reasons for this :\n" +

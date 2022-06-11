@@ -16,7 +16,7 @@ namespace ModManager5.Classes
         {
             Utils.log("Load START", "ServerConfig");
             if (!ModManager.silent)
-               ModManagerUI.StatusLabel.Text = "Loading Server Config...";
+               ModManagerUI.StatusLabel.Text = Translator.get("Loading Server Config...");
             string configURL = ModManager.apiURL + "/config";
             string config = "";
             try
