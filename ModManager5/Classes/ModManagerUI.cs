@@ -663,9 +663,7 @@ namespace ModManager5.Classes
 
             } else if (cat.id == "Favorites")
             {
-                List<Mod> favs = ConfigManager.getFavoriteMods();
-                favs.Reverse();
-                mods.AddRange(favs);
+                mods = ConfigManager.getFavoriteMods();
             } else
             {
                 mods = ModList.getModsByCategory(f.Name);

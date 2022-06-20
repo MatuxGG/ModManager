@@ -242,6 +242,7 @@ namespace ModManager5.Classes
         public static void addFavoriteMod(string modId)
         {
             config.favoriteMods.Add(modId);
+            config.favoriteMods.Sort();
         }
 
         public static void logConfig()
