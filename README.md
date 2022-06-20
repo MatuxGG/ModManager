@@ -1,13 +1,13 @@
 # Mod Manager
 Among Us Mod Manager is an open-source launcher for the popular game Among Us. It allows you to switch between many established mods with only a few clicks!
 
-Join the discord: https://mm.matux.fr/discord
+Join the discord: https://goodloss.fr/discord
 
 ![ModManagerv5.0.1](https://amodsus.com/attachments/1642431805864-png.530/)
 
 ## How to install?
 
-1. Download the latest "ModManagerInstaller.exe" available [here](https://mm.matux.fr/latest).
+1. Download the latest "ModManagerInstaller.exe" available [here](https://goodloss.fr/latest).
 
 3. Launch the installer and choose a location for the software. (You should not select your Among Us directory!)
 
@@ -33,7 +33,7 @@ Publish a release in a public GitHub repository for your mod. In this release, y
 
 - A .zip with of the Among Us modded directory
 
-Then, join the [discord](https://mm.matux.fr/discord) and send your repository link. It will be a pleasure adding your mod. :)
+Then, join the [discord](https://goodloss.fr/discord) and send your repository link. It will be a pleasure adding your mod. :)
 
 Note: This section will be rewritten soon to help you use te new account system ! :)
 
