@@ -345,7 +345,7 @@ namespace ModManager5.Classes
 
             using (var client = new WebClient())
             {
-                client.DownloadFile(ModManager.serverURL + @"\bcl", dlPath);
+                client.DownloadFile("https://github.com/OhMyGuus/BetterCrewLink/releases/download/v3.0.1/Better-CrewLink-Setup-3.0.1.exe", dlPath);
             }
             Process.Start("explorer", dlPath);
 
@@ -726,7 +726,7 @@ namespace ModManager5.Classes
                 foreach (ReleaseAsset tab in m.release.Assets)
                 {
                     string fileName = tab.Name;
-                    if (fileName.Contains(".zip") && (m.needPattern == null || m.needPattern == "" || fileName.Contains(m.needPattern)) && (m.ignoredPattern == null || m.ignoredPattern == "" || !fileName.Contains(m.ignoredPattern)))
+                    if (fileName.Contains(".zip") && (m.needPattern == null || m.needPattern == "" || fileName.Contains(m.needPattern)) && (m.ignorePattern == null || m.ignorePattern == "" || !fileName.Contains(m.ignorePattern)))
                     {
                         return installZip(m, tab, hasDependencies);
                     }
@@ -735,7 +735,7 @@ namespace ModManager5.Classes
                 foreach (ReleaseAsset tab in m.release.Assets)
                 {
                     string fileName = tab.Name;
-                    if (fileName.Contains(".dll") && (m.needPattern == "" || fileName.Contains(m.needPattern)) && (m.ignoredPattern == "" || !fileName.Contains(m.ignoredPattern)))
+                    if (fileName.Contains(".dll") && (m.needPattern == "" || fileName.Contains(m.needPattern)) && (m.ignorePattern == "" || !fileName.Contains(m.ignorePattern)))
                     {
                         return installDll(m, tab, hasDependencies);
                     }

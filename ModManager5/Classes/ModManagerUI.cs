@@ -442,6 +442,21 @@ namespace ModManager5.Classes
             Utils.log("InitUI END", "ModManagerUI");
         }
 
+        public static void reloadMods()
+        {
+            string fName = activeForm.Name;
+            CategoryForms.Clear();
+            ModsCategoriesPanel.Controls.Clear();
+            loadMods();
+            if (ConfigManager.getFavoriteMods() != null)
+            {
+                openForm(CategoryForms.Find(f => f.Name == fName));
+            } else
+            {
+                openForm(CategoryForms.Last());
+            }
+        }
+
         public static void InitForm()
         {
             if (CategoryForms.Count() > 0)
@@ -577,7 +592,9 @@ namespace ModManager5.Classes
             Utils.log("Load mods START", "ModManagerUI");
             // SubMenus
 
-            List<Category> cats = CategoryManager.categories;
+            List<Category> oriCats = CategoryManager.categories;
+            List<Category> cats = new List<Category>() { };
+            cats.AddRange(oriCats);
             cats.Reverse();
             int size = 0;
             foreach (Category c in cats)
@@ -599,7 +616,20 @@ namespace ModManager5.Classes
                 }
                 
             }
-            
+
+            if (ConfigManager.getFavoriteMods() != null)
+            {
+                size++;
+                Button b = CreateSubMenuButton(Translator.get("Favorites"));
+                Form f = new GenericPanel();
+                f.Name = "Favorites";
+                CategoryForms.Add(f);
+                b.Click += new EventHandler((object sender, EventArgs e) => {
+                    openForm(f);
+                });
+                ModsCategoriesPanel.Controls.Add(b);
+            }
+
             ModsCategoriesPanel.Size = new Size(300, 40 * size);
 
             // Forms
@@ -631,6 +661,11 @@ namespace ModManager5.Classes
                 int nextId = ModList.localMods.Count();
                 mods.Add(new Mod("LocalMod" + nextId, Translator.get("NewMod") + nextId, "local", "local", ServerConfig.get("gameVersion").value, new List<string>() { DependencyList.dependencies.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", "", "", ""));
 
+            } else if (cat.id == "Favorites")
+            {
+                List<Mod> favs = ConfigManager.getFavoriteMods();
+                favs.Reverse();
+                mods.AddRange(favs);
             } else
             {
                 mods = ModList.getModsByCategory(f.Name);
@@ -661,14 +696,15 @@ namespace ModManager5.Classes
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
             } else
             {
-                ModPanel.ColumnCount = 7;
+                ModPanel.ColumnCount = 8;
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 29F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
             }
             
             int size = mods.Count();
@@ -700,7 +736,7 @@ namespace ModManager5.Classes
                 
                 if (m.type != "local") {
                     
-                    if (m.id == "BetterCrewlink" && im == null)
+                    if (m.id == "BetterCrewlink")
                     {
                         object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
 
@@ -708,6 +744,11 @@ namespace ModManager5.Classes
                         {
                             InstalledMod bcl = new InstalledMod(m.id, "", "");
                             ConfigManager.config.installedMods.Add(bcl);
+                            ConfigManager.update();
+                            im = ConfigManager.getInstalledModById(m.id);
+                        } else if (ConfigManager.getInstalledModById(m.id) != null)
+                        {
+                            ConfigManager.config.installedMods.RemoveAll(im => im.id == m.id);
                             ConfigManager.update();
                             im = ConfigManager.getInstalledModById(m.id);
                         }
@@ -784,7 +825,6 @@ namespace ModManager5.Classes
                         
                     }
                     
-                    
                     PictureBox ModUninstall = new PictureBox();
                     ModUninstall.Dock = DockStyle.Fill;
                     ModUninstall.Margin = new System.Windows.Forms.Padding(0);
@@ -814,7 +854,7 @@ namespace ModManager5.Classes
                     PictureBox ModSave = new PictureBox();
                     ModSave.Cursor = System.Windows.Forms.Cursors.Hand;
                     ModSave.Dock = DockStyle.Fill;
-                    ModSave.Image = global::ModManager5.Properties.Resources.export;
+                    ModSave.Image = global::ModManager5.Properties.Resources.shortcut;
                     ModSave.Margin = new System.Windows.Forms.Padding(0);
                     ModSave.Name = "ModSave";
                     ModSave.Size = new System.Drawing.Size(60, 50);
@@ -827,6 +867,37 @@ namespace ModManager5.Classes
                     });
                     allocatedControls.Add(ModSave);
                     ModPanel.Controls.Add(ModSave, 6, line);
+
+                    PictureBox ModFavorite = new PictureBox();
+                    ModFavorite.Dock = DockStyle.Fill;
+                    ModFavorite.Margin = new System.Windows.Forms.Padding(0);
+                    ModFavorite.Name = "ModFavorite";
+                    ModFavorite.Size = new System.Drawing.Size(60, 50);
+                    ModFavorite.Padding = new Padding(15, 10, 15, 10);
+                    ModFavorite.Margin = new Padding(10, 10, 10, 10);
+                    ModFavorite.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                    ModFavorite.TabStop = false;
+                    ModFavorite.Cursor = System.Windows.Forms.Cursors.Hand;
+                    if (ConfigManager.isFavoriteMod(m.id))
+                    {
+                        ModFavorite.Image = global::ModManager5.Properties.Resources.favoriteFilled;
+                        ModFavorite.Click += new EventHandler((object sender, EventArgs e) => {
+                            ConfigManager.removeFavoriteMod(m.id);
+                            reloadMods();
+                        });
+                    } else
+                    {
+                        ModFavorite.Image = global::ModManager5.Properties.Resources.favorite;
+                        ModFavorite.Click += new EventHandler((object sender, EventArgs e) => {
+                            ConfigManager.addFavoriteMod(m.id);
+                            reloadMods();
+                        });
+                    }
+                    
+
+                    allocatedControls.Add(ModFavorite);
+
+                    ModPanel.Controls.Add(ModFavorite, 7, line);
 
                     System.Windows.Forms.LinkLabel ModGithub = new System.Windows.Forms.LinkLabel();
                     ModGithub.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

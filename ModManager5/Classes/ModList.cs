@@ -200,21 +200,20 @@ namespace ModManager5.Classes
             shortcut.Description = "Mod Manager Mod";
             shortcut.TargetPath = ModManager.appPath + @"\ModManager5.exe";
             shortcut.Arguments = arguments;
-
-            /* Removed functionality
+            
             string localPath = ModManager.appDataPath + @"\icons\" + m.id + ".ico";
+            Utils.FileDelete(localPath);
             try
             {
                 using (var client = new WebClient())
                 {
-                    client.DownloadFile(ModManager.apiURL + @"/files/icons/" + m.id + ".ico", localPath);
+                    client.DownloadFile(ModManager.serverURL + @"/file/icons/" + m.id + ".ico", localPath);
                 }
                 shortcut.IconLocation = localPath;
-            } catch
+            } catch (Exception e)
             {
-
+                Utils.logEx(e, "ModList");
             }
-            */
 
             shortcut.Save();
             ModManagerUI.StatusLabel.Text = Translator.get("A shortcut has been created on your desktop !");

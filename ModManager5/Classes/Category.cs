@@ -12,13 +12,11 @@ namespace ModManager5.Classes
         [JsonProperty(PropertyName = "sId")]
         public string id;
         public string name;
-        public string type;
 
-        public Category(string id, string name, string type)
+        public Category(string id, string name)
         {
             this.id = id;
             this.name = name;
-            this.type = type;
         }
     }
 }

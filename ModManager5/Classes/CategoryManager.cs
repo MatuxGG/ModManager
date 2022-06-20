@@ -46,6 +46,8 @@ namespace ModManager5.Classes
 
         public static Category getCategoryById(string id)
         {
+            if (id == "Favorites")
+                return new Category("Favorites", "Favorites");
             return categories.Find(c => c.id == id);
         }
     }

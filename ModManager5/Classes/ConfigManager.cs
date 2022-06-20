@@ -212,6 +212,38 @@ namespace ModManager5.Classes
             return config.installedVanilla.Find(i => i.version == version) != null;
         }
 
+        public static List<Mod> getFavoriteMods()
+        {
+            if (config.favoriteMods.Count() == 0)
+                return null;
+
+            List<Mod> mods = new List<Mod>();
+            foreach (string modId in config.favoriteMods)
+            {
+                Mod m = ModList.getModById(modId);
+                if (m != null)
+                {
+                    mods.Add(m);
+                }
+            }
+            return mods;
+        }
+
+        public static Boolean isFavoriteMod(string modId)
+        {
+            return config.favoriteMods.Contains(modId);
+        }
+
+        public static void removeFavoriteMod(string modId)
+        {
+            config.favoriteMods.Remove(modId);
+        }
+
+        public static void addFavoriteMod(string modId)
+        {
+            config.favoriteMods.Add(modId);
+        }
+
         public static void logConfig()
         {
             Utils.log("Computer information", "ConfigManager");

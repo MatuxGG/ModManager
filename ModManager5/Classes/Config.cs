@@ -15,8 +15,9 @@ namespace ModManager5.Classes
         public string currentGameVersion;
         public string amongUsPath;
         public string lastMod;
+        public List<string> favoriteMods;
 
-        public Config(string modManagerVersion, List<InstalledMod> installedMods, List<InstalledVanilla> installedVanilla, string currentGameVersion, string amongUsPath, string lastMod)
+        public Config(string modManagerVersion, List<InstalledMod> installedMods, List<InstalledVanilla> installedVanilla, string currentGameVersion, string amongUsPath, string lastMod, List<string> faroriteMods)
         {
             this.ModManagerVersion = modManagerVersion;
             this.installedMods = installedMods;
@@ -24,6 +25,7 @@ namespace ModManager5.Classes
             this.currentGameVersion = currentGameVersion;
             this.amongUsPath = amongUsPath;
             this.lastMod = lastMod;
+            this.favoriteMods = faroriteMods;
         }
 
         public Config()
@@ -35,6 +37,7 @@ namespace ModManager5.Classes
             this.currentGameVersion = "";
             this.amongUsPath = "";
             this.lastMod = "";
+            this.favoriteMods = new List<string>() { };
         }
 
     }
