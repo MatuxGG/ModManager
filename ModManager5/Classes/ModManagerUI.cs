@@ -659,7 +659,7 @@ namespace ModManager5.Classes
             {
                 mods.AddRange(ModList.localMods);
                 int nextId = ModList.localMods.Count();
-                mods.Add(new Mod("LocalMod" + nextId, Translator.get("NewMod") + nextId, "local", "local", ServerConfig.get("gameVersion").value, new List<string>() { DependencyList.dependencies.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", "", "", ""));
+                mods.Add(new Mod("LocalMod" + nextId, Translator.get("NewMod") + nextId, "local", "local", ServerConfig.get("gameVersion").value, new List<string>() { DependencyList.dependencies.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", "", "", "", ""));
 
             } else if (cat.id == "Favorites")
             {
@@ -694,11 +694,12 @@ namespace ModManager5.Classes
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
             } else
             {
-                ModPanel.ColumnCount = 8;
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
+                ModPanel.ColumnCount = 9;
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
@@ -740,6 +741,7 @@ namespace ModManager5.Classes
 
                         if (o != null && System.IO.File.Exists(o.ToString() + @"\Better-CrewLink.exe"))
                         {
+                            ConfigManager.config.installedMods.RemoveAll(im => im.id == m.id);
                             InstalledMod bcl = new InstalledMod(m.id, "", "");
                             ConfigManager.config.installedMods.Add(bcl);
                             ConfigManager.update();
@@ -775,7 +777,7 @@ namespace ModManager5.Classes
 
                         allocatedControls.Add(ModDownload);
                         
-                        ModPanel.Controls.Add(ModDownload, 4, line);
+                        ModPanel.Controls.Add(ModDownload, 3, line);
                     }
                     else if (((m.type != "allInOne" || m.id == "Challenger" || m.id == "ChallengerBeta") && im.version != m.release.TagName) || (m.type != "allInOne" && im.gameVersion != m.gameVersion))
                     {
@@ -797,7 +799,7 @@ namespace ModManager5.Classes
                         });
                         allocatedControls.Add(ModUpdate);
 
-                        ModPanel.Controls.Add(ModUpdate, 4, line);
+                        ModPanel.Controls.Add(ModUpdate, 3, line);
                         
                     }
                     else
@@ -819,7 +821,7 @@ namespace ModManager5.Classes
                             ModWorker.startMod(m);
                         });
                         allocatedControls.Add(ModPlay);
-                        ModPanel.Controls.Add(ModPlay, 4, line);
+                        ModPanel.Controls.Add(ModPlay, 3, line);
                         
                     }
                     
@@ -835,7 +837,7 @@ namespace ModManager5.Classes
 
                     allocatedControls.Add(ModUninstall);
 
-                    ModPanel.Controls.Add(ModUninstall, 5, line);
+                    ModPanel.Controls.Add(ModUninstall, 4, line);
 
                     if (im != null && m.id != "BetterCrewlink")
                     {
@@ -848,23 +850,6 @@ namespace ModManager5.Classes
                         ModUninstall.Cursor = System.Windows.Forms.Cursors.Hand;
                         ModUninstall.Image = global::ModManager5.Properties.Resources.remove;
                     }
-
-                    PictureBox ModSave = new PictureBox();
-                    ModSave.Cursor = System.Windows.Forms.Cursors.Hand;
-                    ModSave.Dock = DockStyle.Fill;
-                    ModSave.Image = global::ModManager5.Properties.Resources.shortcut;
-                    ModSave.Margin = new System.Windows.Forms.Padding(0);
-                    ModSave.Name = "ModSave";
-                    ModSave.Size = new System.Drawing.Size(60, 50);
-                    ModSave.Padding = new Padding(15, 10, 15, 10);
-                    ModSave.Margin = new Padding(10, 10, 10, 10);
-                    ModSave.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                    ModSave.TabStop = false;
-                    ModSave.Click += new EventHandler((object sender, EventArgs e) => {
-                        ModList.createShortcut(m);
-                    });
-                    allocatedControls.Add(ModSave);
-                    ModPanel.Controls.Add(ModSave, 6, line);
 
                     PictureBox ModFavorite = new PictureBox();
                     ModFavorite.Dock = DockStyle.Fill;
@@ -892,36 +877,64 @@ namespace ModManager5.Classes
                         });
                     }
                     
-
                     allocatedControls.Add(ModFavorite);
+                    ModPanel.Controls.Add(ModFavorite, 8, line);
 
-                    ModPanel.Controls.Add(ModFavorite, 7, line);
+                    PictureBox ModSave = new PictureBox();
+                    ModSave.Cursor = System.Windows.Forms.Cursors.Hand;
+                    ModSave.Dock = DockStyle.Fill;
+                    ModSave.Image = global::ModManager5.Properties.Resources.shortcut;
+                    ModSave.Margin = new System.Windows.Forms.Padding(0);
+                    ModSave.Name = "ModSave";
+                    ModSave.Size = new System.Drawing.Size(60, 50);
+                    ModSave.Padding = new Padding(15, 10, 15, 10);
+                    ModSave.Margin = new Padding(10, 10, 10, 10);
+                    ModSave.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                    ModSave.TabStop = false;
+                    ModSave.Click += new EventHandler((object sender, EventArgs e) => {
+                        ModList.createShortcut(m);
+                    });
+                    allocatedControls.Add(ModSave);
+                    ModPanel.Controls.Add(ModSave, 7, line);
 
-                    System.Windows.Forms.LinkLabel ModGithub = new System.Windows.Forms.LinkLabel();
-                    ModGithub.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    ModGithub.LinkColor = System.Drawing.SystemColors.Control;
-                    ModGithub.ForeColor = System.Drawing.SystemColors.Control;
-                    ModGithub.Name = "ModGithub=" + m.id;
-                    ModGithub.TextAlign = ContentAlignment.MiddleLeft;
+                    if (m.social != null && m.social != "")
+                    {
+                        PictureBox ModDiscord = new PictureBox();
+                        ModDiscord.Cursor = System.Windows.Forms.Cursors.Hand;
+                        ModDiscord.Dock = DockStyle.Fill;
+                        ModDiscord.Image = global::ModManager5.Properties.Resources.discord;
+                        ModDiscord.Margin = new System.Windows.Forms.Padding(0);
+                        ModDiscord.Name = "ModDiscord";
+                        ModDiscord.Size = new System.Drawing.Size(60, 50);
+                        ModDiscord.Padding = new Padding(15, 10, 15, 10);
+                        ModDiscord.Margin = new Padding(10, 10, 10, 10);
+                        ModDiscord.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+                        ModDiscord.TabStop = false;
+                        allocatedControls.Add(ModDiscord);
+                        ModDiscord.Click += new EventHandler((object sender, EventArgs e) => {
+                            string link = m.social;
+                            Process.Start("explorer", link);
+                        });
+                        ModPanel.Controls.Add(ModDiscord, 6, line);
+                    }
+                    
+                    PictureBox ModGithub = new PictureBox();
+                    ModGithub.Cursor = System.Windows.Forms.Cursors.Hand;
+                    ModGithub.Dock = DockStyle.Fill;
+                    ModGithub.Image = global::ModManager5.Properties.Resources.information;
+                    ModGithub.Margin = new System.Windows.Forms.Padding(0);
+                    ModGithub.Name = "ModGithub";
+                    ModGithub.Size = new System.Drawing.Size(60, 50);
+                    ModGithub.Padding = new Padding(15, 10, 15, 10);
+                    ModGithub.Margin = new Padding(10, 10, 10, 10);
+                    ModGithub.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
                     ModGithub.TabStop = false;
-                    ModGithub.Dock = DockStyle.Left;
-                    ModGithub.Padding = new Padding(12, 0, 0, 0);
-                    ModGithub.Size = new System.Drawing.Size(700, 50);
                     allocatedControls.Add(ModGithub);
-                    if (m.githubLink == "1")
-                    {
-                        ModGithub.Text = "https://github.com/" + m.author + "/" + m.github;
-                    }
-                    else
-                    {
-                        ModGithub.Text = m.github;
-                    }
                     ModGithub.Click += new EventHandler((object sender, EventArgs e) => {
-                        LinkLabel clickedLink = ((LinkLabel)sender);
-                        string link = clickedLink.Text;
+                        string link = "https://github.com/" + m.author + "/" + m.github;
                         Process.Start("explorer", link);
                     });
-                    ModPanel.Controls.Add(ModGithub, 3, line);
+                    ModPanel.Controls.Add(ModGithub, 5, line);
 
                     System.Windows.Forms.Label ModVersion = new System.Windows.Forms.Label();
                     ModVersion.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -982,7 +995,7 @@ namespace ModManager5.Classes
                     ModTitle.Name = "ModTitle";
                     ModTitle.Padding = new Padding(12, 0, 0, 0);
                     ModTitle.Size = new System.Drawing.Size(250, 50);
-                    ModTitle.Text = (m.type == "allInOne" || m.gameVersion == ServerConfig.get("gameVersion").value) ? m.name : m.name + "*";
+                    ModTitle.Text = m.name;
                     ModTitle.TabStop = false;
                     ModPanel.Controls.Add(ModTitle, 0, line);
                     allocatedControls.Add(ModTitle);
@@ -1054,6 +1067,10 @@ namespace ModManager5.Classes
                     {
                         ModVersion.Items.Add(vanilla.version);
                     }
+                    if (!ModVersion.Items.Contains(ServerConfig.get("gameVersion").value))
+                    {
+                        ModVersion.Items.Add(ServerConfig.get("gameVersion").value);
+                    }
 
                     if (ModVersion.Items.Contains(m.gameVersion))
                     {
@@ -1113,11 +1130,13 @@ namespace ModManager5.Classes
                                 string tempPath = ModManager.tempPath + @"\ModZip";
                                 Utils.DirectoryDelete(tempPath);
                                 Directory.CreateDirectory(tempPath);
+                                string vanillaDestPath = ModManager.appDataPath + @"\vanilla\" + ModVersion.Text;
                                 ZipFile.ExtractToDirectory(FileButton.Text, tempPath);
                                 tempPath = ModWorker.getBepInExInsideRec(tempPath);
+                                Utils.DirectoryCopy(vanillaDestPath, newPath, true);
                                 Utils.DirectoryCopy(tempPath, newPath, true);
 
-                                Mod newLocalMod = new Mod(ModTitle.Name, ModTitle.Text, "local", "local", ModVersion.Text, new List<string>() { }, "", @"localMods\"+ModTitle.Text, "0", "", "", "") ;
+                                Mod newLocalMod = new Mod(ModTitle.Name, ModTitle.Text, "local", "local", ModVersion.Text, new List<string>() { }, "", @"localMods\"+ModTitle.Text, "0", "", "", "", "") ;
                                 
                                 ModList.localMods.Add(newLocalMod);
 

@@ -95,7 +95,6 @@ namespace ModManager5.Classes
             serverList.Regions.AddRange(remoteServers);
             serverList.CurrentRegionIdx = temp.CurrentRegionIdx;
             update();
-            Utils.debug("qs");
         }
         public static void add()
         {

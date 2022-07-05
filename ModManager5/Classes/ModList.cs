@@ -108,7 +108,7 @@ namespace ModManager5.Classes
 
             foreach (Mod m in mods)
             {
-                if (m.type != "allInOne" && (m.release == null || m.id == "Challenger" || m.id == "ChallengerBeta" || ConfigManager.containsGameVersion(m.gameVersion) == false))
+                if (m.type != "allInOne" && (m.release == null || m.id == "Challenger" || m.id == "ChallengerBeta"))
                 {
                     releasesToRemove.Add(m);
                 }

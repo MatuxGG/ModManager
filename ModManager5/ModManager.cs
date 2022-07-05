@@ -19,7 +19,7 @@ namespace ModManager5
     {
         public static string serverURL = "https://goodloss.fr";
         public static string apiURL = "https://goodloss.fr/api";
-        public static string fileURL = "https://goodloss.fr/file";
+        public static string fileURL = "https://goodloss.fr/files";
         public static string appPath = System.AppDomain.CurrentDomain.BaseDirectory;
         public static string appDataPath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + @"\ModManager";
         public static string tempPath = Path.GetTempPath() + "ModManager";
@@ -163,6 +163,7 @@ namespace ModManager5
                     if (o != null && System.IO.File.Exists(o.ToString() + @"\Better-CrewLink.exe"))
                     {
                         InstalledMod bcl = new InstalledMod(m.id, "", "");
+                        ConfigManager.config.installedMods.RemoveAll(im => im.id == m.id);
                         ConfigManager.config.installedMods.Add(bcl);
                         ConfigManager.update();
                         im = ConfigManager.getInstalledModById(m.id);

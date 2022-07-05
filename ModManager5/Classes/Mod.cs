@@ -20,12 +20,13 @@ namespace ModManager5.Classes
         public string author { get; set; }
         public string github { get; set; }
         public string githubLink { get; set; }
+        public string social { get; set; }
         public string ignorePattern { get; set; }
         public string needPattern { get; set; }
         public string data { get; set; }
         public Release release { get; set; }
 
-        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, string ignorePattern = "", string needPattern = "", string data = "")
+        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, string social, string ignorePattern = "", string needPattern = "", string data = "")
         {
             this.id = id;
             this.name = name;
@@ -35,6 +36,7 @@ namespace ModManager5.Classes
             this.author = author;
             this.github = github;
             this.githubLink = githubLink;
+            this.social = social;
             this.ignorePattern = ignorePattern;
             this.needPattern = needPattern;
             this.type = type;

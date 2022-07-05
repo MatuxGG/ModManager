@@ -343,31 +343,15 @@ namespace ModManager5.Classes
             panel.Dock = DockStyle.Top;
             panel.BackColor = ThemeList.theme.AppOverlayColor;
 
-            panel.ColumnCount = 7;
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 19F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 12F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 29F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 7F));
+            panel.ColumnCount = 4;
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
 
             panel.RowCount = 1;
             panel.Size = new System.Drawing.Size(100, 50);
             panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-
-
-            System.Windows.Forms.Label ModTitleGithub = new System.Windows.Forms.Label();
-            ModTitleGithub.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            ModTitleGithub.BackColor = Color.Transparent;
-            ModTitleGithub.ForeColor = SystemColors.Control;
-            ModTitleGithub.TextAlign = ContentAlignment.MiddleLeft;
-            ModTitleGithub.Dock = DockStyle.Left;
-            ModTitleGithub.Name = "ModTitleGithub";
-            ModTitleGithub.Padding = new Padding(12, 0, 0, 0);
-            ModTitleGithub.Size = new System.Drawing.Size(700, 50);
-            ModTitleGithub.Text = Translator.get("More information");
-            panel.Controls.Add(ModTitleGithub, 3, 0);
 
             System.Windows.Forms.Label ModTitleVersion = new System.Windows.Forms.Label();
             ModTitleVersion.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

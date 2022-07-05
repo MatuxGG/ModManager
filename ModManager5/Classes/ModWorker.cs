@@ -137,84 +137,70 @@ namespace ModManager5.Classes
                     return;
                 }
 
-                
-
                 string dirPath = (m.type != "local" ? ModManager.appDataPath + @"\mods\" + m.id : ModManager.appDataPath + @"\localMods\" + m.name);
 
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("Starting MODNAME ... Please wait...").Replace("MODNAME", m.name);
 
-                if (m.gameVersion == ServerConfig.get("gameVersion").value)
-                {
-                    Utils.log("Patching on official", "ModWorker");
-                    string amongUsPath = ConfigManager.config.amongUsPath;
-                    cleanGame(amongUsPath);
-                    Utils.DirectoryCopy(dirPath, amongUsPath, true);
-                    ConfigManager.config.lastMod = m.id;
-                    ConfigManager.update();
-                    if (!ModManager.silent)
-                        ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
-                    startGame(false);
-                } else
-                {
-                    Utils.log("Patching on vanilla", "ModWorker");
-                    string amongUsPath = ModManager.appDataPath + @"\vanilla\" + m.gameVersion;
-                    cleanGame(amongUsPath);
-                    Utils.DirectoryCopy(dirPath, amongUsPath, true);
-                    ConfigManager.config.lastMod = m.id;
-                    ConfigManager.update();
-                    if (!ModManager.silent)
-                        ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
-                    Process.Start("explorer", amongUsPath + @"\Among Us.exe");
-                }
-                
+                Utils.log("Patching on vanilla", "ModWorker");
+                if (!ModManager.silent)
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
+                Process.Start("explorer", dirPath + @"\Among Us.exe");
+
             }
 
             Utils.log("Start mod " + m.name + " END", "ModWorker");
         }
 
-        private static void cleanGame(string amongUsPath)
+        public static void dataSave(Mod mod)
         {
-            Utils.log("Clean game START", "ModWorker");
-            saveData(amongUsPath);
-            Utils.DirectoryDelete(amongUsPath + @"\BepInEx");
-            Utils.DirectoryDelete(amongUsPath + @"\mono");
-            Utils.FileDelete(amongUsPath + @"\doorstop_config.ini");
-            Utils.FileDelete(amongUsPath + @"\winhttp.dll");
-            Utils.log("Clean game END", "ModWorker");
-        }
-
-        public static void saveData(string amongUsPath)
-        {
-            Utils.log("Data save START", "ModWorker");
-            if (ConfigManager.config.lastMod != null)
+            List<string> tdata = new List<string>() { };
+            tdata.Add(mod.data);
+            tdata.Add("BepInEx/config");
+            string modSavePath = ModManager.tempPath + @"\" + mod.id;
+            Utils.DirectoryDelete(modSavePath);
+            foreach (string data in tdata)
             {
-                Mod mod = ModList.getModById(ConfigManager.config.lastMod);
-                if (mod != null)
+                Utils.log("Saving data in " + data, "ModWorker");
+                string origPath = ModManager.appDataPath + @"\mods\" + mod.id + @"\" + data;
+                string savePath = modSavePath + @"\" + data;
+                if (Directory.Exists(origPath))
                 {
-                    List<string> tdata = new List<string>() { };
-                    tdata.Add(mod.data);
-                    tdata.Add("BepInEx/config");
-                    foreach (string data in tdata)
-                    {
-                        Utils.log("Saving data in " + data, "ModWorker");
-                        string path = amongUsPath + @"\" + data;
-                        string destPath = ModManager.appDataPath + @"\mods\" + mod.id + @"\" + data;
-                        if (Directory.Exists(path))
-                        {
-                            Utils.log("Data directory found", "ModWorker");
-                            Utils.DirectoryCopy(path, destPath, true);
-                        }
-                        if (File.Exists(path))
-                        {
-                            Utils.log("Data file found", "ModWorker");
-                            Utils.FileDelete(destPath);
-                            File.Copy(path, destPath);
-                        }
-                    }
+                    Utils.log("Data directory found", "ModWorker");
+                    Utils.DirectoryDelete(savePath);
+                    Utils.DirectoryCopy(origPath, savePath, true);
+                }
+                if (File.Exists(origPath))
+                {
+                    Utils.log("Data file found", "ModWorker");
+                    Utils.FileDelete(savePath);
+                    File.Copy(origPath, savePath);
                 }
             }
-            Utils.log("Data save END", "ModWorker");
+        }
+
+        public static void dataLoad(Mod mod)
+        {
+            List<string> tdata = new List<string>() { };
+            tdata.Add(mod.data);
+            tdata.Add("BepInEx/config");
+            string modSavePath = ModManager.tempPath + @"\" + mod.id;
+            foreach (string data in tdata)
+            {
+                Utils.log("Loading data in " + data, "ModWorker");
+                string origPath = ModManager.appDataPath + @"\mods\" + mod.id + @"\" + data;
+                string savePath = modSavePath + @"\" + data;
+                if (Directory.Exists(savePath))
+                {
+                    Utils.log("Data directory found", "ModWorker");
+                    Utils.DirectoryCopy(savePath, origPath, true);
+                }
+                if (File.Exists(savePath))
+                {
+                    Utils.log("Data file found", "ModWorker");
+                    File.Copy(savePath, origPath);
+                }
+            }
         }
 
         public static Boolean isGameOpen()
@@ -257,12 +243,6 @@ namespace ModManager5.Classes
                 amongUsPath = (String)myKey.GetValue("InstallLocation");
                 if (amongUsPath == ConfigManager.config.amongUsPath && File.Exists(amongUsPath + @"\Among Us.exe"))
                 {
-                    if (vanilla)
-                    {
-                        cleanGame(amongUsPath);
-                        ConfigManager.config.lastMod = "";
-                        ConfigManager.update();
-                    }
                     Utils.log("Start game from Steam YES", "ModWorker");
                     Process.Start("explorer", "steam://rungameid/945360");
                     return;
@@ -279,12 +259,6 @@ namespace ModManager5.Classes
                 amongUsPath = d.Name + @"Program Files\Epic Games\AmongUs";
                 if (amongUsPath == ConfigManager.config.amongUsPath && File.Exists(amongUsPath + @"\Among Us.exe"))
                 {
-                    if (vanilla)
-                    {
-                        cleanGame(amongUsPath);
-                        ConfigManager.config.lastMod = "";
-                        ConfigManager.update();
-                    }
                     Utils.log("Start game from EGS YES", "ModWorker");
                     Process.Start(new ProcessStartInfo("cmd", $"/c start {"com.epicgames.launcher://apps/33956bcb55d4452d8c47e16b94e294bd%3A729a86a5146640a2ace9e8c595414c56%3A963137e4c29d4c79a81323b8fab03a40?action=launch&silent=true"}") { CreateNoWindow = true });
                     return;
@@ -296,12 +270,6 @@ namespace ModManager5.Classes
 
             Utils.log("Start game from config START", "ModWorker");
             amongUsPath = ConfigManager.config.amongUsPath;
-            if (vanilla)
-            {
-                cleanGame(amongUsPath);
-                ConfigManager.config.lastMod = "";
-                ConfigManager.update();
-            }
             Utils.log("Start game from config YES", "ModWorker");
             Process.Start("explorer", amongUsPath + @"\Among Us.exe");
         }
@@ -362,9 +330,9 @@ namespace ModManager5.Classes
             if (!ModManager.silent)
             {
                 ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", "Better Crewlink");
-
                 Form currentForm = ModManagerUI.getFormByCategoryId(m.category);
-                ModManagerUI.refreshModForm(currentForm);
+                ModManagerUI.activeForm = currentForm;
+                ModManagerUI.reloadMods();
             }
 
             finished = true;
@@ -403,9 +371,9 @@ namespace ModManager5.Classes
             if (!ModManager.silent)
             {
                 ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", "Skeld.net");
-
                 Form currentForm = ModManagerUI.getFormByCategoryId(m.category);
-                ModManagerUI.refreshModForm(currentForm);
+                ModManagerUI.activeForm = currentForm;
+                ModManagerUI.reloadMods();
             }
 
             finished = true;
@@ -527,7 +495,8 @@ namespace ModManager5.Classes
                 {
                     ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", ModToInstall.name);
                     Form currentForm = ModManagerUI.getFormByCategoryId(ModToInstall.category);
-                    ModManagerUI.refreshModForm(currentForm);
+                    ModManagerUI.activeForm = currentForm;
+                    ModManagerUI.reloadMods();
                 }
                 else
                 {
@@ -563,7 +532,8 @@ namespace ModManager5.Classes
 
             ModManagerUI.StatusLabel.Text = Translator.get("MODNAME uninstalled successfully.").Replace("MODNAME", m.name);
             Form currentForm = ModManagerUI.getFormByCategoryId(m.category);
-            ModManagerUI.refreshModForm(currentForm);
+            ModManagerUI.activeForm = currentForm;
+            ModManagerUI.reloadMods();
             Utils.log("Uninstall mod " + m.name + " END", "ModWorker");
 
         }
@@ -594,27 +564,51 @@ namespace ModManager5.Classes
             backgroundWorker.ReportProgress(10);
 
             InstalledMod im = ConfigManager.getInstalledModById(m.id);
+            Boolean isUpdate = false;
             if (im != null)
             {
                 ConfigManager.config.installedMods.Remove(im);
                 ConfigManager.update();
-            }
-
-            if (!ConfigManager.containsGameVersion(m.gameVersion))
-            {
-                backgroundWorker.ReportProgress(100);
-                return;
+                isUpdate = true;
             }
 
             string destPath = ModManager.appDataPath + @"\mods\" + m.id;
-            
+            string vanillaDestPath = ModManager.appDataPath + @"\vanilla\" + m.gameVersion;
+
+            dataSave(m);
+
             Utils.DirectoryDelete(destPath);
             Directory.CreateDirectory(destPath);
-            //Utils.DirectoryCopy(ModManager.appDataPath + @"\vanilla\" + m.gameVersion, destPath, true);
+
+            bool hasClient = false;
+            if (!ConfigManager.containsGameVersion(m.gameVersion))
+            {
+                string tempPath = ModManager.tempPath + @"\" + m.gameVersion + ".zip";
+                Utils.FileDelete(tempPath);
+                DownloadWorker.download(ModManager.fileURL + @"/client/" + m.gameVersion + @".zip", tempPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", 0, 33);
+
+                Utils.DirectoryDelete(vanillaDestPath);
+                Directory.CreateDirectory(vanillaDestPath);
+                try
+                {
+                    ZipFile.ExtractToDirectory(tempPath, vanillaDestPath);
+                }
+                catch (Exception ex)
+                {
+                    Utils.logE("Client zip extraction FAIL", "ModWorker");
+                    Utils.logEx(ex, "ModWorker");
+                    backgroundWorker.ReportProgress(100);
+                }
+                ConfigManager.config.installedVanilla.Add(new InstalledVanilla(m.gameVersion));
+                ConfigManager.update();
+                hasClient = true;
+            }
+
+            Utils.DirectoryCopy(vanillaDestPath, destPath, true);
 
             backgroundWorker.ReportProgress(20);
 
-            int result = installDependencies(m);
+            int result = installDependencies(m, hasClient);
 
             if (result == -1)
             {
@@ -624,8 +618,9 @@ namespace ModManager5.Classes
             }
 
             backgroundWorker.ReportProgress(30);
+            bool result2 = installFiles(m, result > 0, hasClient);
 
-            bool result2 = installFiles(m, result > 0);
+            dataLoad(m);
 
             if (!result2)
             {
@@ -662,7 +657,8 @@ namespace ModManager5.Classes
                 {
                     ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", ModToInstall.name);
                     Form currentForm = ModManagerUI.getFormByCategoryId(ModToInstall.category);
-                    ModManagerUI.refreshModForm(currentForm);
+                    ModManagerUI.activeForm = currentForm;
+                    ModManagerUI.reloadMods();
                 }
                 else
                 {
@@ -675,11 +671,12 @@ namespace ModManager5.Classes
             }
         }
 
-        public static int installDependencies(Mod m)
+        public static int installDependencies(Mod m, bool hasClient)
         {
             Utils.log("Install dependencies for mod " + m.name + " START", "ModWorker");
             string destPath = ModManager.appDataPath + @"\mods\" + m.id;
             int countDep = 0;
+            int max = m.dependencies.Count();
             foreach (string dependencie in m.dependencies)
             {
                 Utils.log("Install dependency " + dependencie, "ModWorker");
@@ -687,22 +684,10 @@ namespace ModManager5.Classes
                 string tempDestPath = tempPath + @"\" + dependencie + ".zip";
                 Utils.FileDelete(tempDestPath);
                 countDep++;
-                /*try
-                {
-                    using (var client = new WebClient())
-                    {
-                        client.DownloadFile(ModManager.apiURL + "/files/dependencies/" + dependencie + ".zip", tempDestPath);
-                    }
-                }
-                catch
-                {
-                    return false;
-                }
-                */
                 Dependency d = DependencyList.getDependencyById(dependencie);
-                Utils.log(ModManager.fileURL + "/dep/" + d.file + ".zip", "TEST");
-                DownloadWorker.download(ModManager.fileURL + "/dep/" + d.file, tempDestPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", 0, 50);
-
+                int offset =  hasClient ? (33 + countDep * 33 / max) : (countDep * 50 / max);
+                int percent = hasClient ? (33 / max) : (50 / max);
+                DownloadWorker.download(ModManager.fileURL + "/dep/" + d.file, tempDestPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", offset, percent);
                 try
                 {
                     ZipFile.ExtractToDirectory(tempDestPath, destPath);
@@ -718,7 +703,7 @@ namespace ModManager5.Classes
             return countDep;
         }
 
-        public static Boolean installFiles(Mod m, bool hasDependencies)
+        public static Boolean installFiles(Mod m, bool hasDependencies, bool hasClient)
         {
             Utils.log("Install files for mod " + m.name + " START", "ModWorker");
             if (m.type == "mod")
@@ -728,7 +713,7 @@ namespace ModManager5.Classes
                     string fileName = tab.Name;
                     if (fileName.Contains(".zip") && (m.needPattern == null || m.needPattern == "" || fileName.Contains(m.needPattern)) && (m.ignorePattern == null || m.ignorePattern == "" || !fileName.Contains(m.ignorePattern)))
                     {
-                        return installZip(m, tab, hasDependencies);
+                        return installZip(m, tab, hasDependencies, hasClient);
                     }
                 }
 
@@ -737,7 +722,7 @@ namespace ModManager5.Classes
                     string fileName = tab.Name;
                     if (fileName.Contains(".dll") && (m.needPattern == "" || fileName.Contains(m.needPattern)) && (m.ignorePattern == "" || !fileName.Contains(m.ignorePattern)))
                     {
-                        return installDll(m, tab, hasDependencies);
+                        return installDll(m, tab, hasDependencies, hasClient);
                     }
                 }
             }
@@ -748,7 +733,7 @@ namespace ModManager5.Classes
 
         
 
-        public static Boolean installDll(Mod m, ReleaseAsset file, bool hasDependencies)
+        public static Boolean installDll(Mod m, ReleaseAsset file, bool hasDependencies, bool hasClient)
         {
             string fileName = file.Name;
             string fileUrl = file.BrowserDownloadUrl;
@@ -769,12 +754,14 @@ namespace ModManager5.Classes
                 return false;
             }
             */
-            DownloadWorker.download(fileUrl, pluginsPath + @"\" + fileName, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", (hasDependencies ? 50 : 0), (hasDependencies ? 50 : 100));
+            int offset = (hasClient ? (hasDependencies ? 66 : 50) : (hasDependencies ? 50 : 0));
+            int percent = (hasClient ? (hasDependencies ? 34 : 50) : (hasDependencies ? 50 : 100));
+            DownloadWorker.download(fileUrl, pluginsPath + @"\" + fileName, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", offset, percent);
             Utils.log("Install dll file " + fileName + " END", "ModWorker");
             return true;
         }
 
-        public static Boolean installZip(Mod m, ReleaseAsset file, bool hasDependencies)
+        public static Boolean installZip(Mod m, ReleaseAsset file, bool hasDependencies, bool hasClient)
         {
             string fileName = file.Name;
             string fileUrl = file.BrowserDownloadUrl;
@@ -799,7 +786,9 @@ namespace ModManager5.Classes
             }
             */
 
-            DownloadWorker.download(fileUrl, zipPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", (hasDependencies ? 50 : 0), (hasDependencies ? 50 : 100));
+            int offset = (hasClient ? (hasDependencies ? 66 : 50) : (hasDependencies ? 50 : 0));
+            int percent = (hasClient ? (hasDependencies ? 34 : 50) : (hasDependencies ? 50 : 100));
+            DownloadWorker.download(fileUrl, zipPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", offset, percent);
 
             string newPath = ModManager.tempPath + @"\ModZip";
 

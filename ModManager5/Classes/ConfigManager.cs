@@ -54,20 +54,22 @@ namespace ModManager5.Classes
                 Utils.log("Config exists", "ConfigManager");
                 string json = System.IO.File.ReadAllText(path);
                 config = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(json);
-                if (ServerConfig.get("gameVersion").value != config.currentGameVersion)
+                /*if (ServerConfig.get("gameVersion").value != config.currentGameVersion)
                 {
                     Utils.log("New vanilla version", "ConfigManager");
                     duplicateVanillaAmongUs();
-                }
+                }*/
             } else
             {
+                /*
                 Utils.log("Config does not exist", "ConfigManager");
                 // Config doesn't exist
                 duplicateVanillaAmongUs();
+                */
             }
             Utils.log("Load config END", "ConfigManager");
         }
-
+        /*
         public static void duplicateVanillaAmongUs()
         {
             Utils.log("New backup for Vanilla START", "ConfigManager");
@@ -109,7 +111,6 @@ namespace ModManager5.Classes
             }
             Utils.log("EGS detection END", "ConfigManager");
 
-
             Utils.log("Config detection START", "ConfigManager");
             if (config.amongUsPath != null && config.amongUsPath != "")
             {
@@ -142,6 +143,7 @@ namespace ModManager5.Classes
                 return;
             }
         }
+        */
 
         public static Boolean generateFolder(string path)
         {
