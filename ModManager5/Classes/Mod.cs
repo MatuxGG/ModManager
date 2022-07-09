@@ -26,7 +26,7 @@ namespace ModManager5.Classes
         public string data { get; set; }
         public Release release { get; set; }
 
-        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, string social, string ignorePattern = "", string needPattern = "", string data = "")
+        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, string social = "", string ignorePattern = "", string needPattern = "", string data = "")
         {
             this.id = id;
             this.name = name;

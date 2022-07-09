@@ -508,7 +508,7 @@ namespace ModManager5.Classes
             });
             StartButton.Click += new EventHandler((object sender, EventArgs e) => {
 
-                ModWorker.startGame(true);
+                ModWorker.startGame();
             });
             ServersMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
@@ -839,7 +839,7 @@ namespace ModManager5.Classes
 
                     ModPanel.Controls.Add(ModUninstall, 4, line);
 
-                    if (im != null && m.id != "BetterCrewlink")
+                    if (im != null)
                     {
                         ModUninstall.Click += new EventHandler((object sender, EventArgs e) => {
                             if (MessageBox.Show(Translator.get("Are you sure you want to remove this mod ?"), Translator.get("Remove mod"), MessageBoxButtons.YesNo) == DialogResult.Yes) // TODO
@@ -1432,7 +1432,7 @@ namespace ModManager5.Classes
             SettingsForm.Name = "Settings";
 
             // Reset
-            MMButton ResetButton = new MMButton("rounded");
+            MMButton ResetButton = new MMButton("trans");
             ResetButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 if (MessageBox.Show(Translator.get("Mod Manager needs to restart to process this change. Do you want to continue ?"), Translator.get("Reset Mod Manager"), MessageBoxButtons.YesNo) == DialogResult.Yes)
@@ -1449,7 +1449,7 @@ namespace ModManager5.Classes
             SettingsForm.Controls.Add(Visuals.SettingsButton(ResetButton, Translator.get("Reset")));
 
             // Send log
-            MMButton LogButton = new MMButton("rounded");
+            MMButton LogButton = new MMButton("trans");
             LogButton.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 string argument = "/select, \"" + ModManager.appDataPath + @"\logs.txt" + "\"";
@@ -1458,6 +1458,68 @@ namespace ModManager5.Classes
             });
 
             SettingsForm.Controls.Add(Visuals.SettingsButton(LogButton, Translator.get("Log File")));
+
+            // Minimise in taskbar
+            MMButton MinimisationButton = new MMButton("trans");
+            MinimisationButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                MMButton c = (MMButton)sender;
+                if (c.Text == Translator.get("Enabled"))
+                {
+                    ConfigManager.config.miniEnabled = false;
+                    c.Text = Translator.get("Disabled");
+                } else
+                {
+                    ConfigManager.config.miniEnabled = true;
+                    c.Text = Translator.get("Enabled");
+                }
+                ConfigManager.update();
+            });
+            SettingsForm.Controls.Add(Visuals.SettingsButton(MinimisationButton, Translator.get("Minimise in taskbar")));
+            if (ConfigManager.config.miniEnabled)
+            {
+                MinimisationButton.Text = Translator.get("Enabled");
+            }
+            else
+            {
+                MinimisationButton.Text = Translator.get("Disabled");
+            }
+
+            // Launcher
+            ComboBox LauncherComboBox = new MMComboBox();
+            LauncherComboBox.SelectionChangeCommitted += new EventHandler(async (object sender, EventArgs e) => {
+                ComboBox control = (ComboBox)sender;
+                string launcher = (string)control.SelectedItem;
+
+                if (MessageBox.Show(Translator.get("Be careful! All mods will be uninstalled! Please, don't change this option if you don't know what you're doing. Do you want to continue?"), Translator.get("Change Launcher"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    string modsPath = ModManager.appDataPath + @"\mods";
+                    Utils.DirectoryDelete(modsPath);
+                    Directory.CreateDirectory(modsPath);
+                    string localPath = ModManager.appDataPath + @"\localMods";
+                    Utils.DirectoryDelete(localPath);
+                    Directory.CreateDirectory(localPath);
+                    string vanillaPath = ModManager.appDataPath + @"\vanilla";
+                    Utils.DirectoryDelete(vanillaPath);
+                    Directory.CreateDirectory(vanillaPath);
+                    ConfigManager.config.installedMods = new List<InstalledMod>() { };
+                    ConfigManager.config.installedVanilla = new List<InstalledVanilla>() { };
+                    ConfigManager.config.favoriteMods = new List<string>() { };
+                    ConfigManager.config.launcher = launcher;
+                    ConfigManager.update();
+                    Form f = activeForm;
+                    ModManagerUI.reloadMods();
+                    openForm(f);
+                }
+                else
+                {
+                    control.SelectedItem = ConfigManager.config.launcher;
+                }
+            });
+
+            List<string> launchers = new List<string>() { "Steam", "EGS", "Other" };
+
+            SettingsForm.Controls.Add(Visuals.SettingsCombobox(LauncherComboBox, Translator.get("Launcher"), launchers, ConfigManager.config.launcher));
 
             // Language
             ComboBox LanguageComboBox = new MMComboBox();
@@ -1514,7 +1576,6 @@ namespace ModManager5.Classes
             }
             
             SettingsForm.Controls.Add(Visuals.SettingsCombobox(ThemeComboBox, Translator.get("Theme"), themes, ThemeList.theme.name));
-
 
             SettingsForm.Controls.Add(Visuals.LabelTitle(Translator.get("Settings")));
 

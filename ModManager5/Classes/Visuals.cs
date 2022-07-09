@@ -208,10 +208,28 @@ namespace ModManager5.Classes
 
             button.Text = title;
             button.AutoSize = true;
-            button.Dock = DockStyle.Left;
+            button.Dock = DockStyle.Fill;
+            button.TextAlign = ContentAlignment.MiddleLeft;
 
 
             t.Controls.Add(button, 1, 0);
+
+            return t;
+        }
+
+        public static TableLayoutPanel SettingsCheckbox(CheckBox checkbox, string title)
+        {
+            TableLayoutPanel t = Visuals.createLayoutPanelH(0, 50, DockStyle.Top, new int[] { 30, 70 });
+
+            t.Margin = new System.Windows.Forms.Padding(20, 20, 20, 20);
+            t.BackColor = ThemeList.theme.AppOverlayColor;
+
+            Label label = Visuals.LabelContent(title, ContentAlignment.MiddleLeft, DockStyle.Fill);
+            t.Controls.Add(label, 0, 0);
+
+            checkbox.Dock = DockStyle.Left;
+
+            t.Controls.Add(checkbox, 1, 0);
 
             return t;
         }

@@ -54,119 +54,80 @@ namespace ModManager5.Classes
                 Utils.log("Config exists", "ConfigManager");
                 string json = System.IO.File.ReadAllText(path);
                 config = Newtonsoft.Json.JsonConvert.DeserializeObject<Config>(json);
-                /*if (ServerConfig.get("gameVersion").value != config.currentGameVersion)
-                {
-                    Utils.log("New vanilla version", "ConfigManager");
-                    duplicateVanillaAmongUs();
-                }*/
-            } else
-            {
-                /*
-                Utils.log("Config does not exist", "ConfigManager");
-                // Config doesn't exist
-                duplicateVanillaAmongUs();
-                */
             }
+
+            updateAmongUsPathIfNeeded();
+
             Utils.log("Load config END", "ConfigManager");
         }
-        /*
-        public static void duplicateVanillaAmongUs()
+
+        public static void update()
         {
-            Utils.log("New backup for Vanilla START", "ConfigManager");
-            string amongUsPath = null;
+            Utils.log("Config update START", "ConfigManager");
+            string json = JsonConvert.SerializeObject(config);
+            File.WriteAllText(path, json);
+            Utils.log("Config update END", "ConfigManager");
+        }
 
-            // Search for Among Us path
+        public static void updateGlobalConfig()
+        {
+            Utils.log("Global config update START", "ConfigManager");
+            string json = JsonConvert.SerializeObject(globalConfig);
+            File.WriteAllText(globalPath, json);
+            Utils.log("Global config update END", "ConfigManager");
+        }
 
-            // Detection from Steam
-            Utils.log("Steam detection START", "ConfigManager");
-            RegistryKey myKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 945360", false);
-
-            if (myKey != null)
+        public static void updateAmongUsPathIfNeeded()
+        {
+            if (ConfigManager.config.amongUsPath == null || ConfigManager.config.amongUsPath == "" || !File.Exists(ConfigManager.config.amongUsPath + @"\Among Us.exe"))
             {
-                Utils.log("Steam detection YES", "ConfigManager");
-                amongUsPath = (String)myKey.GetValue("InstallLocation");
-                if (generateFolder(amongUsPath))
+                string amongUsPath = null;
+
+                RegistryKey myKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 945360", false);
+
+                if (myKey != null)
                 {
-                    Utils.log("Steam detection CONFIRM", "ConfigManager");
-                    return;
+                    amongUsPath = (String)myKey.GetValue("InstallLocation");
+                    if (amongUsPath != null && File.Exists(amongUsPath + @"\Among Us.exe"))
+                    {
+                        config.launcher = "Steam";
+                        config.amongUsPath = amongUsPath;
+                        return;
+                    }
                 }
-            }
-            else
-            {
-                Utils.log("Steam detection NO", "ConfigManager");
-            }
-            Utils.log("Steam detection END", "ConfigManager");
 
-            // Detection from Epic Games Store
-            Utils.log("EGS detection START", "ConfigManager");
-            foreach (DriveInfo d in DriveInfo.GetDrives())
-            {
-                amongUsPath = d.Name + @"Program Files\Epic Games\AmongUs";
-                if (generateFolder(amongUsPath))
-                {
-                    Utils.log("EGS detection YES", "ConfigManager");
-                    Utils.log("EGS detection END", "ConfigManager");
-                    return;
-                }
-            }
-            Utils.log("EGS detection END", "ConfigManager");
+                // Found from EGS
 
-            Utils.log("Config detection START", "ConfigManager");
-            if (config.amongUsPath != null && config.amongUsPath != "")
-            {
-                Utils.log("Config detection YES", "ConfigManager");
-                amongUsPath = config.amongUsPath;
-                if (generateFolder(amongUsPath))
+                amongUsPath = null;
+                foreach (DriveInfo d in DriveInfo.GetDrives())
                 {
-                    Utils.log("Config detection CONFIRM", "ConfigManager");
-                    return;
+                    amongUsPath = d.Name + @"Program Files\Epic Games\AmongUs";
+                    if (amongUsPath != null && File.Exists(amongUsPath + @"\Among Us.exe"))
+                    {
+                        config.launcher = "EGS";
+                        config.amongUsPath = amongUsPath;
+                        return;
+                    }
                 }
-            }
-            Utils.log("Config detection END", "ConfigManager");
-            // No Among Us found
 
-            Utils.log("Manual selection START", "ConfigManager");
-            amongUsPath = null;
-            while (amongUsPath == null || File.Exists(amongUsPath + @"\Among Us.exe") == false)
-            {
-                if (MessageBox.Show("Among Us not found ! Please, select the Among Us executable", "Among Us not found", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
+                // Else
+
+                while (amongUsPath == null || File.Exists(amongUsPath + @"\Among Us.exe") == false)
                 {
-                    Utils.log("Manual selection LEFT", "ConfigManager");
-                    Environment.Exit(0);
+                    if (MessageBox.Show("Among Us not found ! Please, select the Among Us executable", "Among Us not found", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
+                    {
+                        Utils.log("Manual selection LEFT", "ConfigManager");
+                        Environment.Exit(0);
+                    }
+                    amongUsPath = selectFolderWorker();
                 }
-                amongUsPath = selectFolderWorker();
-            }
-            Utils.log("Manual selection YES", "ConfigManager");
-            if (generateFolder(amongUsPath))
-            {
-                Utils.log("Manual selection CONFIRM", "ConfigManager");
-                return;
+                Utils.log("Manual selection YES", "ConfigManager");
+
+                config.launcher = "EGS";
+                config.amongUsPath = amongUsPath;
             }
         }
-        */
 
-        public static Boolean generateFolder(string path)
-        {
-            Utils.log("Vanilla creation START", "ConfigManager");
-            if (File.Exists(path + @"\Among Us.exe"))
-            {
-                Utils.log("Vanilla creation YES", "ConfigManager");
-                string latest = ServerConfig.get("gameVersion").value;
-                string destPath = ModManager.appDataPath + @"\vanilla\" + latest;
-                Directory.CreateDirectory(destPath);
-
-                Utils.DirectoryCopy(path, destPath, true);
-                config.installedVanilla.Add(new InstalledVanilla(latest));
-                config.currentGameVersion = latest;
-                config.amongUsPath = path;
-                update();
-                Utils.log("Vanilla creation CONFIRM", "ConfigManager");
-                return true;
-            }
-            Utils.log("Vanilla creation NO", "ConfigManager");
-            return false;
-        }
-        
         public static string selectFolderWorker()
         {
             Utils.log("Select folder START", "ConfigManager");
@@ -186,22 +147,6 @@ namespace ModManager5.Classes
             }
             Utils.log("Select folder NO", "ConfigManager");
             return null;
-        }
-
-        public static void update()
-        {
-            Utils.log("Config update START", "ConfigManager");
-            string json = JsonConvert.SerializeObject(config);
-            File.WriteAllText(path, json);
-            Utils.log("Config update END", "ConfigManager");
-        }
-
-        public static void updateGlobalConfig()
-        {
-            Utils.log("Global config update START", "ConfigManager");
-            string json = JsonConvert.SerializeObject(globalConfig);
-            File.WriteAllText(globalPath, json);
-            Utils.log("Global config update END", "ConfigManager");
         }
 
         public static InstalledMod getInstalledModById(string id)

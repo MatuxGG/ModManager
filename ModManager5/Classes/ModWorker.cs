@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Management;
 using System.Net;
 using System.Text;
 using System.Threading;
@@ -137,15 +138,31 @@ namespace ModManager5.Classes
                     return;
                 }
 
-                string dirPath = (m.type != "local" ? ModManager.appDataPath + @"\mods\" + m.id : ModManager.appDataPath + @"\localMods\" + m.name);
+                string dirPath;
+                if (m.type == "local")
+                {
+                    dirPath = ModManager.appDataPath + @"\localMods\" + m.name;
+                } else
+                {
+                    dirPath = ModManager.appDataPath + @"\mods\" + m.id;
+                }
 
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("Starting MODNAME ... Please wait...").Replace("MODNAME", m.name);
 
-                Utils.log("Patching on vanilla", "ModWorker");
+                if (ConfigManager.config.launcher != "Steam")
+                {
+                    cleanGame();
+                    Utils.DirectoryCopy(dirPath, ConfigManager.config.amongUsPath, true);
+                    Process.Start("explorer", ConfigManager.config.amongUsPath + @"\Among Us.exe");
+                } else
+                {
+                    Process.Start("explorer", dirPath + @"\Among Us.exe");
+                }
+
+
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
-                Process.Start("explorer", dirPath + @"\Among Us.exe");
 
             }
 
@@ -214,64 +231,40 @@ namespace ModManager5.Classes
             return false;
         }
 
-        public static void startGame(Boolean vanilla)
+        public static void cleanGame()
         {
-            if (vanilla)
+            Utils.DirectoryDelete(ConfigManager.config.amongUsPath + @"\BepInEx");
+            Utils.DirectoryDelete(ConfigManager.config.amongUsPath + @"\mono");
+            Utils.FileDelete(ConfigManager.config.amongUsPath + @"\doorstop_config.ini");
+            Utils.FileDelete(ConfigManager.config.amongUsPath + @"\winhttp.dll");
+        }
+
+        public static void startGame()
+        {
+            if (isGameOpen())
+                return;
+
+            Utils.log("Start vanilla game START", "ModWorker");
+            if (!ModManager.silent)
+                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", "Vanilla Among Us");
+
+            ConfigManager.updateAmongUsPathIfNeeded();
+
+            cleanGame();
+
+            if (ConfigManager.config.launcher == "Steam")
             {
-                Utils.log("Start vanilla game START", "ModWorker");
-                if (!ModManager.silent)
-                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", "Vanilla Among Us");
+                Process.Start("explorer", "steam://rungameid/945360");
+                return;
+            } else if (ConfigManager.config.launcher == "EGS")
+            {
+                Process.Start(new ProcessStartInfo("cmd", $"/c start {"com.epicgames.launcher://apps/33956bcb55d4452d8c47e16b94e294bd%3A729a86a5146640a2ace9e8c595414c56%3A963137e4c29d4c79a81323b8fab03a40?action=launch&silent=true"}") { CreateNoWindow = true });
+                return;
             } else
             {
-                Utils.log("Start modded game START", "ModWorker");
-            }
-
-            Boolean vanillaOpen = (vanilla && isGameOpen());
-            if (vanillaOpen)
-            {
+                Process.Start("explorer", ConfigManager.config.amongUsPath + @"\Among Us.exe");
                 return;
             }
-            string amongUsPath;
-
-            // Start from Steam
-
-            Utils.log("Start game from Steam START", "ModWorker");
-            RegistryKey myKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 945360", false);
-            
-            if (myKey != null)
-            {
-                amongUsPath = (String)myKey.GetValue("InstallLocation");
-                if (amongUsPath == ConfigManager.config.amongUsPath && File.Exists(amongUsPath + @"\Among Us.exe"))
-                {
-                    Utils.log("Start game from Steam YES", "ModWorker");
-                    Process.Start("explorer", "steam://rungameid/945360");
-                    return;
-                }
-            }
-            Utils.log("Start game from Steam END", "ModWorker");
-
-            // Start from EGS
-
-            Utils.log("Start game from EGS START", "ModWorker");
-            amongUsPath = null;
-            foreach (DriveInfo d in DriveInfo.GetDrives())
-            {
-                amongUsPath = d.Name + @"Program Files\Epic Games\AmongUs";
-                if (amongUsPath == ConfigManager.config.amongUsPath && File.Exists(amongUsPath + @"\Among Us.exe"))
-                {
-                    Utils.log("Start game from EGS YES", "ModWorker");
-                    Process.Start(new ProcessStartInfo("cmd", $"/c start {"com.epicgames.launcher://apps/33956bcb55d4452d8c47e16b94e294bd%3A729a86a5146640a2ace9e8c595414c56%3A963137e4c29d4c79a81323b8fab03a40?action=launch&silent=true"}") { CreateNoWindow = true });
-                    return;
-                }
-            }
-            Utils.log("Start game from EGS END", "ModWorker");
-
-            // Else
-
-            Utils.log("Start game from config START", "ModWorker");
-            amongUsPath = ConfigManager.config.amongUsPath;
-            Utils.log("Start game from config YES", "ModWorker");
-            Process.Start("explorer", amongUsPath + @"\Among Us.exe");
         }
 
         public static void installAnyMod(Mod m)
@@ -284,10 +277,6 @@ namespace ModManager5.Classes
             else if(m.id == "ChallengerBeta")
             {
                 ModWorker.installChallenger(false);
-            }
-            else if (m.id == "Skeld")
-            {
-                ModWorker.installSkeld(m);
             }
             else if (m.id == "BetterCrewlink")
             {
@@ -308,13 +297,28 @@ namespace ModManager5.Classes
             }
 
             finished = false;
-            
-            string dlPath = ModManager.tempPath + @"\Better-CrewLink-Setup.exe";
+            ModToInstall = m;
 
-            using (var client = new WebClient())
-            {
-                client.DownloadFile("https://github.com/OhMyGuus/BetterCrewLink/releases/download/v3.0.1/Better-CrewLink-Setup-3.0.1.exe", dlPath);
-            }
+            if (!ModManager.silent)
+                ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", ModToInstall.name);
+
+            BackgroundWorker backgroundWorkerBcl = new BackgroundWorker();
+            backgroundWorkerBcl.WorkerReportsProgress = true;
+            backgroundWorkerBcl.DoWork += new DoWorkEventHandler(backgroundWorkerBcl_DoWork);
+            backgroundWorkerBcl.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerBcl_RunWorkerCompleted);
+            backgroundWorkerBcl.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerBcl_ProgressChanged);
+            backgroundWorkerBcl.RunWorkerAsync();
+        }
+
+        private static void backgroundWorkerBcl_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var backgroundWorker = sender as BackgroundWorker;
+
+            string dlPath = ModManager.tempPath + @"\Better-CrewLink-Setup.exe";
+            Utils.FileDelete(dlPath);
+
+            DownloadWorker.download(ModManager.serverURL + @"/bcl", dlPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", ModToInstall.name) + "\n(PERCENT)", 0, 80);
+
             Process.Start("explorer", dlPath);
 
             Boolean installed = false;
@@ -326,57 +330,38 @@ namespace ModManager5.Classes
                     installed = true;
                 }
             }
-
-            if (!ModManager.silent)
-            {
-                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", "Better Crewlink");
-                Form currentForm = ModManagerUI.getFormByCategoryId(m.category);
-                ModManagerUI.activeForm = currentForm;
-                ModManagerUI.reloadMods();
-            }
-
             finished = true;
+            backgroundWorker.ReportProgress(100);
+        }
+
+        private static void backgroundWorkerBcl_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
 
         }
 
-        public static void installSkeld(Mod m)
+        private static void backgroundWorkerBcl_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (!finished)
-            {
-                return;
-            }
-
-            finished = false;
-            //if (!ModManager.silent)
-            //    ModManagerUI.StatusLabel.Text = "Downloading Skeld.net...";
-
-            string path = ModManager.appDataPath + @"\mods\Skeld";
-
-            Directory.CreateDirectory(path);
-
-            /*
-            using (var client = new WebClient())
-            {
-                client.DownloadFile(ModManager.serverURL + "/skeld",  path + @"\Skeld.exe");
-            }
-            */
-            DownloadWorker.download(ModManager.serverURL + "/skeld", path + @"\Skeld.exe", Translator.get("Downloading Skeld.net...") + "\n(PERCENT)", 0, 100);
-
-            InstalledMod newMod = new InstalledMod("Skeld", "", "");
-            ConfigManager.config.installedMods.Add(newMod);
-            ConfigManager.update();
-            if (!ModManager.silent)
-                ContextMenu.load();
-
             if (!ModManager.silent)
             {
-                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", "Skeld.net");
-                Form currentForm = ModManagerUI.getFormByCategoryId(m.category);
-                ModManagerUI.activeForm = currentForm;
-                ModManagerUI.reloadMods();
+                if (finished)
+                {
+                    ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", ModToInstall.name) + "\n(100%)";
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", ModToInstall.name);
+                    Form currentForm = ModManagerUI.getFormByCategoryId(ModToInstall.category);
+                    ModManagerUI.activeForm = currentForm;
+                    ModManagerUI.reloadMods();
+                    ContextMenu.load();
+                }
+                else
+                {
+                    ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("installation canceled.");
+                    finished = true;
+                }
             }
-
-            finished = true;
+            else
+            {
+                finished = true;
+            }
         }
 
         public static void installChallenger(Boolean live)
@@ -404,7 +389,6 @@ namespace ModManager5.Classes
         private static void backgroundWorkerChallenger_DoWork(object sender, DoWorkEventArgs e)
         {
             var backgroundWorker = sender as BackgroundWorker;
-
 
             backgroundWorker.ReportProgress(10);
 
@@ -520,9 +504,24 @@ namespace ModManager5.Classes
 
             ModManagerUI.StatusLabel.Text = Translator.get("Uninstalling MODNAME, please wait...").Replace("MODNAME", m.name);
             
-
             InstalledMod im = ConfigManager.getInstalledModById(m.id);
-            Utils.DirectoryDelete(ModManager.appDataPath + @"\mods\" + m.id);
+
+            if (m.id == "BetterCrewlink")
+            {
+                ModToInstall = m;
+
+                BackgroundWorker backgroundWorkerUnBcl = new BackgroundWorker();
+                backgroundWorkerUnBcl.WorkerReportsProgress = true;
+                backgroundWorkerUnBcl.DoWork += new DoWorkEventHandler(backgroundWorkerUnBcl_DoWork);
+                backgroundWorkerUnBcl.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerUnBcl_RunWorkerCompleted);
+                backgroundWorkerUnBcl.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerUnBcl_ProgressChanged);
+                backgroundWorkerUnBcl.RunWorkerAsync();
+                return;
+            } else
+            {
+                Utils.DirectoryDelete(ModManager.appDataPath + @"\mods\" + m.id);
+            }
+
             ConfigManager.config.installedMods.Remove(im);
             ConfigManager.update();
             if (!ModManager.silent)
@@ -535,7 +534,73 @@ namespace ModManager5.Classes
             ModManagerUI.activeForm = currentForm;
             ModManagerUI.reloadMods();
             Utils.log("Uninstall mod " + m.name + " END", "ModWorker");
+        }
 
+        private static void backgroundWorkerUnBcl_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var backgroundWorker = sender as BackgroundWorker;
+
+            /*
+            System.Diagnostics.Process process = new System.Diagnostics.Process();
+            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
+            startInfo.UseShellExecute = false;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.RedirectStandardError = true;
+            startInfo.CreateNoWindow = true;
+            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
+            startInfo.FileName = "cmd.exe";
+            startInfo.Arguments = "/C winget uninstall BetterCrewLink.BetterCrewLink";
+            process.StartInfo = startInfo;
+            process.Start();*/
+
+            object uninsPath = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\03ceac78-9166-585d-b33a-90982f435933", "QuietUninstallString", null);
+            if (uninsPath != null)
+            {
+                Process.Start(new ProcessStartInfo("cmd", $"/c" + uninsPath.ToString()) { CreateNoWindow = true });
+
+                Boolean installed = true;
+                while (installed)
+                {
+                    installed = false;
+                    object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
+                    if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
+                    {
+                        installed = true;
+                    }
+                }
+                finished = true;
+            }
+
+            backgroundWorker.ReportProgress(100);
+        }
+
+        private static void backgroundWorkerUnBcl_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+
+        }
+
+        private static void backgroundWorkerUnBcl_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (!ModManager.silent)
+            {
+                if (finished)
+                {
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME uninstalled successfully.").Replace("MODNAME", ModToInstall.name);
+                    Form currentForm = ModManagerUI.getFormByCategoryId(ModToInstall.category);
+                    ModManagerUI.activeForm = currentForm;
+                    ModManagerUI.reloadMods();
+                    ContextMenu.load();
+                }
+                else
+                {
+                    ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("canceled.");
+                    finished = true;
+                }
+            }
+            else
+            {
+                finished = true;
+            }
         }
 
         public static void installMod(Mod m)
@@ -581,7 +646,7 @@ namespace ModManager5.Classes
             Directory.CreateDirectory(destPath);
 
             bool hasClient = false;
-            if (!ConfigManager.containsGameVersion(m.gameVersion))
+            if (!ConfigManager.containsGameVersion(m.gameVersion) && ConfigManager.config.launcher == "Steam")
             {
                 string tempPath = ModManager.tempPath + @"\" + m.gameVersion + ".zip";
                 Utils.FileDelete(tempPath);
@@ -604,7 +669,8 @@ namespace ModManager5.Classes
                 hasClient = true;
             }
 
-            Utils.DirectoryCopy(vanillaDestPath, destPath, true);
+            if (ConfigManager.config.launcher == "Steam")
+                Utils.DirectoryCopy(vanillaDestPath, destPath, true);
 
             backgroundWorker.ReportProgress(20);
 

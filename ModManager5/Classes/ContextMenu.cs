@@ -79,14 +79,18 @@ namespace ModManager5.Classes
 
         public static void onResize(object sender, EventArgs e)
         {
-            if (modManager.WindowState == FormWindowState.Minimized)
+            if (ConfigManager.config.miniEnabled)
             {
-                modManager.ShowInTaskbar = false;
+                if (modManager.WindowState == FormWindowState.Minimized)
+                {
+                    modManager.ShowInTaskbar = false;
+                }
+                else if (modManager.WindowState == FormWindowState.Normal)
+                {
+                    modManager.ShowInTaskbar = true;
+                }
             }
-            else if (modManager.WindowState == FormWindowState.Normal)
-            {
-                modManager.ShowInTaskbar = true;
-            }
+            
         }
 
         private static void open(object sender, EventArgs e)
@@ -102,7 +106,7 @@ namespace ModManager5.Classes
         private static void startGame(object sender, EventArgs e)
         {
             Utils.log("Start Game START", "ContextMenu");
-            ModWorker.startGame(true);
+            ModWorker.startGame();
             Utils.log("Start Game END", "ContextMenu");
         }
 

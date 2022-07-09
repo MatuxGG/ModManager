@@ -23,10 +23,14 @@ namespace ModManager5.Objects
             this.FlatStyle = FlatStyle.Flat;
             this.FlatAppearance.BorderSize = 0;
             this.ForeColor = Color.White;
-            this.Padding = new Padding(10, 0, 10, 0);
+            this.Padding = new Padding(0, 0, 0, 0);
+            this.Cursor = Cursors.Hand;
 
             this.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.BackColor = ThemeList.theme.ButtonsColor;
+            if (this.style != "trans")
+            {
+                this.BackColor = ThemeList.theme.ButtonsColor;
+            }
             this.TextAlign = ContentAlignment.MiddleCenter;
         }
 

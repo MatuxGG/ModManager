@@ -12,20 +12,20 @@ namespace ModManager5.Classes
         public string ModManagerVersion;
         public List<InstalledMod> installedMods;
         public List<InstalledVanilla> installedVanilla;
-        public string currentGameVersion;
         public string amongUsPath;
-        public string lastMod;
+        public string launcher;
         public List<string> favoriteMods;
+        public bool miniEnabled;
 
-        public Config(string modManagerVersion, List<InstalledMod> installedMods, List<InstalledVanilla> installedVanilla, string currentGameVersion, string amongUsPath, string lastMod, List<string> faroriteMods)
+        public Config(string modManagerVersion, List<InstalledMod> installedMods, List<InstalledVanilla> installedVanilla, string amongUsPath, string launcher, List<string> faroriteMods, bool miniEnabled)
         {
             this.ModManagerVersion = modManagerVersion;
             this.installedMods = installedMods;
             this.installedVanilla = installedVanilla;
-            this.currentGameVersion = currentGameVersion;
             this.amongUsPath = amongUsPath;
-            this.lastMod = lastMod;
+            this.launcher = launcher;
             this.favoriteMods = faroriteMods;
+            this.miniEnabled = miniEnabled;
         }
 
         public Config()
@@ -34,10 +34,10 @@ namespace ModManager5.Classes
             string version = ServerConfig.get("gameVersion").value;
             this.installedMods = new List<InstalledMod>() { };
             this.installedVanilla = new List<InstalledVanilla>() { };
-            this.currentGameVersion = "";
             this.amongUsPath = "";
-            this.lastMod = "";
+            this.launcher = "Steam";
             this.favoriteMods = new List<string>() { };
+            this.miniEnabled = true;
         }
 
     }

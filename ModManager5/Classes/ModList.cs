@@ -228,7 +228,10 @@ namespace ModManager5.Classes
 
         public static List<Mod> getModsByCategory(string category)
         {
-            return mods.FindAll(m => m.category == category);
+            if (ConfigManager.config.launcher == "Steam")
+                return mods.FindAll(m => m.category == category);
+            else
+                return mods.FindAll(m => m.category == category && (m.type == "allInOne" || m.type == "local" || m.gameVersion == ServerConfig.get("gameVersion").value));
         }
 
         public static List<Mod> getMyMods(List<string> listOfMods)
