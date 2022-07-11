@@ -2,7 +2,7 @@
 ; SEE THE DOCUMENTATION FOR DETAILS ON CREATING INNO SETUP SCRIPT FILES!
 
 #define public Dependency_NoExampleSetup
-#include "D:\visualstudio\ModManager5\Installer\CodeDependencies.iss"
+#include "Installer\CodeDependencies.iss"
 
 #define MyAppName "ModManager"
 #define MyAppVersion "5.1.4"
@@ -26,7 +26,7 @@ DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
 OutputBaseFilename=ModManagerInstaller
-SetupIconFile=D:\visualstudio\ModManager5\ModManager5\modmanager.ico
+SetupIconFile=ModManager5\modmanager.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern
@@ -76,18 +76,18 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.deps.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.runtimeconfig.dev.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\ModManager5.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\bin\Debug\net5.0-windows\Octokit.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "D:\visualstudio\ModManager5\ModManager5\token.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ModManager5\bin\Debug\net5.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.deps.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.pdb"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.runtimeconfig.dev.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ModManager5\bin\Debug\net5.0-windows\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ModManager5\bin\Debug\net5.0-windows\Octokit.dll"; DestDir: "{app}"; Flags: ignoreversion
+Source: "ModManager5\token.txt"; DestDir: "{app}"; Flags: ignoreversion
 
-Source: "D:\visualstudio\ModManager5\Installer\src\netcorecheck.exe"; Flags: dontcopy noencryption
-Source: "D:\visualstudio\ModManager5\Installer\src\netcorecheck_x64.exe"; Flags: dontcopy noencryption
+Source: "Installer\src\netcorecheck.exe"; Flags: dontcopy noencryption
+Source: "Installer\src\netcorecheck_x64.exe"; Flags: dontcopy noencryption
 
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
