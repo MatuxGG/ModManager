@@ -158,9 +158,7 @@ namespace ModManager5
 
                 if (m.id == "BetterCrewlink" && im == null)
                 {
-                    object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
-
-                    if (o != null && System.IO.File.Exists(o.ToString() + @"\Better-CrewLink.exe"))
+                    if (ConfigManager.isBetterCrewlinkInstalled())
                     {
                         InstalledMod bcl = new InstalledMod(m.id, "", "");
                         ConfigManager.config.installedMods.RemoveAll(im => im.id == m.id);

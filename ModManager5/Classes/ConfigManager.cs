@@ -57,6 +57,7 @@ namespace ModManager5.Classes
             }
 
             updateAmongUsPathIfNeeded();
+            updateAvailablePathsIfNeeded();
 
             Utils.log("Load config END", "ConfigManager");
         }
@@ -77,44 +78,64 @@ namespace ModManager5.Classes
             Utils.log("Global config update END", "ConfigManager");
         }
 
+        public static void updateAvailablePathsIfNeeded()
+        {
+            if (ConfigManager.config.availableAmongUsPaths == null)
+            {
+                ConfigManager.config.availableAmongUsPaths = new List<string>() { };
+            }
+
+            foreach (string path in ConfigManager.config.availableAmongUsPaths)
+            {
+                if (!File.Exists(path + @"\Among Us.exe"))
+                {
+                    ConfigManager.config.availableAmongUsPaths.Remove(path);
+                }
+            }
+
+            addAvailableAmongUsPath(ConfigManager.config.amongUsPath);
+            addAvailableAmongUsPath(getSteamAmongUsPath());
+            addAvailableAmongUsPath(getEGSAmongUsPath());
+            ConfigManager.update();
+        }
+
+        public static void addAvailableAmongUsPath(string path)
+        {
+            if (path != null && !ConfigManager.config.availableAmongUsPaths.Contains(path))
+            {
+                ConfigManager.config.availableAmongUsPaths.Add(path);
+            }
+        }
+
         public static void updateAmongUsPathIfNeeded()
         {
             if (ConfigManager.config.amongUsPath == null || ConfigManager.config.amongUsPath == "" || !File.Exists(ConfigManager.config.amongUsPath + @"\Among Us.exe"))
             {
-                string amongUsPath = null;
+                string amongUsPath = getSteamAmongUsPath();
 
-                RegistryKey myKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 945360", false);
-
-                if (myKey != null)
+                if (amongUsPath != null)
                 {
-                    amongUsPath = (String)myKey.GetValue("InstallLocation");
-                    if (amongUsPath != null && File.Exists(amongUsPath + @"\Among Us.exe"))
-                    {
-                        config.launcher = "Steam";
-                        config.amongUsPath = amongUsPath;
-                        return;
-                    }
+                    config.launcher = "Steam";
+                    config.amongUsPath = amongUsPath;
+                    return;
                 }
 
                 // Found from EGS
 
-                amongUsPath = null;
-                foreach (DriveInfo d in DriveInfo.GetDrives())
+                amongUsPath = getEGSAmongUsPath();
+
+                if (amongUsPath != null)
                 {
-                    amongUsPath = d.Name + @"Program Files\Epic Games\AmongUs";
-                    if (amongUsPath != null && File.Exists(amongUsPath + @"\Among Us.exe"))
-                    {
-                        config.launcher = "EGS";
-                        config.amongUsPath = amongUsPath;
-                        return;
-                    }
+                    config.launcher = "EGS";
+                    config.amongUsPath = amongUsPath;
+                    return;
                 }
 
                 // Else
 
                 while (amongUsPath == null || File.Exists(amongUsPath + @"\Among Us.exe") == false)
                 {
-                    if (MessageBox.Show("Among Us not found ! Please, select the Among Us executable", "Among Us not found", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
+                    if (MessageBox.Show(Translator.get("Among Us not found ! Please, select the Among Us executable"), Translator.get("Among Us not found"), MessageBoxButtons.OKCancel, MessageBoxIcon.Information) == DialogResult.Cancel)
                     {
                         Utils.log("Manual selection LEFT", "ConfigManager");
                         Environment.Exit(0);
@@ -126,6 +147,43 @@ namespace ModManager5.Classes
                 config.launcher = "EGS";
                 config.amongUsPath = amongUsPath;
             }
+        }
+
+
+        public static string getSteamAmongUsPath()
+        {
+            string amongUsPath = null;
+
+            RegistryKey myKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 945360", false);
+
+            if (myKey != null)
+            {
+                amongUsPath = (String)myKey.GetValue("InstallLocation");
+                if (amongUsPath != null && File.Exists(amongUsPath + @"\Among Us.exe"))
+                {
+                    return amongUsPath;
+                }
+            }
+            return null;
+        }
+
+        public static string getEGSAmongUsPath()
+        {
+            foreach (DriveInfo d in DriveInfo.GetDrives())
+            {
+                string amongUsPath = d.Name + @"Program Files\Epic Games\AmongUs";
+                if (amongUsPath != null && File.Exists(amongUsPath + @"\Among Us.exe"))
+                {
+                    return amongUsPath;
+                }
+            }
+            return null;
+        }
+
+        public static bool isBetterCrewlinkInstalled()
+        {
+            object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
+            return o != null && System.IO.File.Exists(o.ToString() + @"\Better-CrewLink.exe");
         }
 
         public static string selectFolderWorker()

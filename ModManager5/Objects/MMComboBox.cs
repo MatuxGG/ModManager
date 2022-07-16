@@ -46,6 +46,20 @@ namespace ModManager5.Objects
             });
         }
 
+        public int getAutoWidth()
+        {
+            int maxWidth = 0, temp = 0;
+            foreach (var obj in this.Items)
+            {
+                temp = TextRenderer.MeasureText(obj.ToString(), this.Font).Width;
+                if (temp > maxWidth)
+                {
+                    maxWidth = temp;
+                }
+            }
+            double supMaxWidth = (double)(maxWidth + 25);
+            return (int) (25 * Math.Ceiling(supMaxWidth / 25));
+        }
 
     }
 }

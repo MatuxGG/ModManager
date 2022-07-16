@@ -323,8 +323,7 @@ namespace ModManager5.Classes
             Boolean installed = false;
             while (!installed)
             {
-                object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
-                if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
+                if (ConfigManager.isBetterCrewlinkInstalled())
                 {
                     installed = true;
                 }
@@ -561,8 +560,7 @@ namespace ModManager5.Classes
                 while (installed)
                 {
                     installed = false;
-                    object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
-                    if (o != null && System.IO.File.Exists(o.ToString() + "\\Better-CrewLink.exe"))
+                    if (ConfigManager.isBetterCrewlinkInstalled())
                     {
                         installed = true;
                     }
@@ -837,20 +835,6 @@ namespace ModManager5.Classes
 
             Utils.FileDelete(zipPath);
 
-            /*
-            try
-            {
-                using (var client = new WebClient())
-                {
-                    client.DownloadFile(fileUrl, zipPath);
-                }
-            }
-            catch
-            {
-                return false;
-            }
-            */
-
             int offset = (hasClient ? (hasDependencies ? 66 : 50) : (hasDependencies ? 50 : 0));
             int percent = (hasClient ? (hasDependencies ? 34 : 50) : (hasDependencies ? 50 : 100));
             DownloadWorker.download(fileUrl, zipPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", offset, percent);
@@ -885,6 +869,22 @@ namespace ModManager5.Classes
                 }
             }
             return null;
+        }
+
+        public static void removeAllMods()
+        {
+            string modsPath = ModManager.appDataPath + @"\mods";
+            Utils.DirectoryDelete(modsPath);
+            Directory.CreateDirectory(modsPath);
+            string localPath = ModManager.appDataPath + @"\localMods";
+            Utils.DirectoryDelete(localPath);
+            Directory.CreateDirectory(localPath);
+            string vanillaPath = ModManager.appDataPath + @"\vanilla";
+            Utils.DirectoryDelete(vanillaPath);
+            Directory.CreateDirectory(vanillaPath);
+            ConfigManager.config.installedMods = new List<InstalledMod>() { };
+            ConfigManager.config.installedVanilla = new List<InstalledVanilla>() { };
+            ConfigManager.config.favoriteMods = new List<string>() { };
         }
     }
 }

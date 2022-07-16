@@ -737,9 +737,7 @@ namespace ModManager5.Classes
                     
                     if (m.id == "BetterCrewlink")
                     {
-                        object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
-
-                        if (o != null && System.IO.File.Exists(o.ToString() + @"\Better-CrewLink.exe"))
+                        if (ConfigManager.isBetterCrewlinkInstalled())
                         {
                             ConfigManager.config.installedMods.RemoveAll(im => im.id == m.id);
                             InstalledMod bcl = new InstalledMod(m.id, "", "");
@@ -752,8 +750,6 @@ namespace ModManager5.Classes
                             ConfigManager.update();
                             im = ConfigManager.getInstalledModById(m.id);
                         }
-
-
                     }
 
                     
@@ -999,7 +995,6 @@ namespace ModManager5.Classes
                     ModTitle.TabStop = false;
                     ModPanel.Controls.Add(ModTitle, 0, line);
                     allocatedControls.Add(ModTitle);
-
                 } else
                 {
                     Boolean last = line == mods.Count() - 1;
@@ -1485,28 +1480,68 @@ namespace ModManager5.Classes
                 MinimisationButton.Text = Translator.get("Disabled");
             }
 
+            // Among Us Path add
+            MMButton PathButton = new MMButton("trans");
+            PathButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                if (MessageBox.Show(Translator.get("Be careful! All mods will be uninstalled! Please, don't change this option if you don't know what you're doing. Do you want to continue?"), Translator.get("Change Among Us path"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    string amongUspath = ConfigManager.selectFolderWorker();
+
+                    if (amongUspath != null)
+                    {
+                        ModWorker.removeAllMods();
+                        ConfigManager.addAvailableAmongUsPath(amongUspath);
+                        ConfigManager.config.launcher = "Other";
+                        ConfigManager.config.amongUsPath = amongUspath;
+                        ConfigManager.update();
+                        SettingsForm.Controls.Clear();
+                        loadSettings();
+                        openForm(SettingsForm);
+                    }
+                }
+            });
+
+            SettingsForm.Controls.Add(Visuals.SettingsButton(PathButton, Translator.get("Search Among Us path")));
+
+            // Among Us Path
+            MMComboBox PathComboBox = new MMComboBox();
+            PathComboBox.SelectionChangeCommitted += new EventHandler(async (object sender, EventArgs e) => {
+                ComboBox control = (ComboBox)sender;
+                string path = (string)control.SelectedItem;
+
+                if (MessageBox.Show(Translator.get("Be careful! All mods will be uninstalled! Please, don't change this option if you don't know what you're doing. Do you want to continue?"), Translator.get("Change Among Us path"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    ModWorker.removeAllMods();
+                    ConfigManager.config.amongUsPath = path;
+                    ConfigManager.update();
+                    Form f = activeForm;
+                    ModManagerUI.reloadMods();
+                    openForm(f);
+                }
+                else
+                {
+                    control.SelectedItem = ConfigManager.config.amongUsPath;
+                }
+            });
+
+            List<string> paths = new List<string>() { };
+
+            paths.AddRange(ConfigManager.config.availableAmongUsPaths);
+
+            SettingsForm.Controls.Add(Visuals.SettingsCombobox(PathComboBox, Translator.get("Among Us Path"), paths, ConfigManager.config.amongUsPath));
+            PathComboBox.Width = PathComboBox.getAutoWidth();
+
             // Launcher
-            ComboBox LauncherComboBox = new MMComboBox();
+            MMComboBox LauncherComboBox = new MMComboBox();
             LauncherComboBox.SelectionChangeCommitted += new EventHandler(async (object sender, EventArgs e) => {
                 ComboBox control = (ComboBox)sender;
                 string launcher = (string)control.SelectedItem;
 
                 if (MessageBox.Show(Translator.get("Be careful! All mods will be uninstalled! Please, don't change this option if you don't know what you're doing. Do you want to continue?"), Translator.get("Change Launcher"), MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
-                    string modsPath = ModManager.appDataPath + @"\mods";
-                    Utils.DirectoryDelete(modsPath);
-                    Directory.CreateDirectory(modsPath);
-                    string localPath = ModManager.appDataPath + @"\localMods";
-                    Utils.DirectoryDelete(localPath);
-                    Directory.CreateDirectory(localPath);
-                    string vanillaPath = ModManager.appDataPath + @"\vanilla";
-                    Utils.DirectoryDelete(vanillaPath);
-                    Directory.CreateDirectory(vanillaPath);
-                    ConfigManager.config.installedMods = new List<InstalledMod>() { };
-                    ConfigManager.config.installedVanilla = new List<InstalledVanilla>() { };
-                    ConfigManager.config.favoriteMods = new List<string>() { };
+                    ModWorker.removeAllMods();
                     ConfigManager.config.launcher = launcher;
-                    ConfigManager.update();
                     Form f = activeForm;
                     ModManagerUI.reloadMods();
                     openForm(f);
@@ -1517,12 +1552,21 @@ namespace ModManager5.Classes
                 }
             });
 
-            List<string> launchers = new List<string>() { "Steam", "EGS", "Other" };
+            List<string> launchers = new List<string>() { };
+
+            if (ConfigManager.getSteamAmongUsPath() != null)
+            {
+                launchers.Add("Steam");
+            }
+
+            launchers.Add("EGS");
+            launchers.Add("Other");
 
             SettingsForm.Controls.Add(Visuals.SettingsCombobox(LauncherComboBox, Translator.get("Launcher"), launchers, ConfigManager.config.launcher));
+            LauncherComboBox.Width = LauncherComboBox.getAutoWidth();
 
             // Language
-            ComboBox LanguageComboBox = new MMComboBox();
+            MMComboBox LanguageComboBox = new MMComboBox();
             LanguageComboBox.SelectionChangeCommitted += new EventHandler(async (object sender, EventArgs e) => {
                 ComboBox control = (ComboBox) sender;
                 string lg = (string) control.SelectedItem;
@@ -1547,9 +1591,10 @@ namespace ModManager5.Classes
                 lgs.Add(l.name);
             }
             SettingsForm.Controls.Add(Visuals.SettingsCombobox(LanguageComboBox, Translator.get("Language"), lgs, Translator.getNameFromCode(ConfigManager.globalConfig.lg)));
+            LanguageComboBox.Width = LanguageComboBox.getAutoWidth();
 
             // Theme
-            ComboBox ThemeComboBox = new MMComboBox();
+            MMComboBox ThemeComboBox = new MMComboBox();
             ThemeComboBox.SelectionChangeCommitted += new EventHandler((object sender, EventArgs e) => {
                 ComboBox control = (ComboBox)sender;
                 string theme = (string)control.SelectedItem;
@@ -1576,6 +1621,7 @@ namespace ModManager5.Classes
             }
             
             SettingsForm.Controls.Add(Visuals.SettingsCombobox(ThemeComboBox, Translator.get("Theme"), themes, ThemeList.theme.name));
+            ThemeComboBox.Width = ThemeComboBox.getAutoWidth();
 
             SettingsForm.Controls.Add(Visuals.LabelTitle(Translator.get("Settings")));
 
