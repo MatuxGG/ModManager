@@ -38,13 +38,15 @@ namespace ModManager5
         public async Task Start(string[] args)
         {
             // Create folders if necessary
-            Directory.CreateDirectory(appDataPath);
-            Directory.CreateDirectory(appDataPath + @"\vanilla");
-            Directory.CreateDirectory(appDataPath + @"\mods");
-            Directory.CreateDirectory(appDataPath + @"\localMods");
-            Directory.CreateDirectory(appDataPath + @"\themes");
-            Directory.CreateDirectory(appDataPath + @"\icons");
-            Directory.CreateDirectory(tempPath);
+            
+            Utils.DirectoryCreate(appDataPath);
+            Utils.DirectoryCreate(appDataPath + @"\vanilla");
+            Utils.DirectoryCreate(appDataPath + @"\mods");
+            Utils.DirectoryCreate(appDataPath + @"\localMods");
+            Utils.DirectoryCreate(appDataPath + @"\themes");
+            Utils.DirectoryCreate(appDataPath + @"\icons");
+            Utils.DirectoryCreate(tempPath);
+            
 
             Utils.CleanLogs();
 
