@@ -84,14 +84,24 @@ namespace ModManager5.Classes
             {
                 ConfigManager.config.availableAmongUsPaths = new List<string>() { };
             }
-
+            List<string> toRemove = new List<string>() { };
             foreach (string path in ConfigManager.config.availableAmongUsPaths)
             {
-                if (!File.Exists(path + @"\Among Us.exe"))
+                try
                 {
-                    ConfigManager.config.availableAmongUsPaths.Remove(path);
+                    if (!File.Exists(path + @"\Among Us.exe"))
+                    {
+                        toRemove.Add(path);
+                    }
+                } catch (Exception ex)
+                {
+                    toRemove.Add(path);
+                    // Access denied
                 }
+
             }
+            if (toRemove.Count > 0)
+                ConfigManager.config.availableAmongUsPaths.RemoveAll(path => toRemove.Contains(path));
 
             addAvailableAmongUsPath(ConfigManager.config.amongUsPath);
             addAvailableAmongUsPath(getSteamAmongUsPath());
@@ -101,9 +111,15 @@ namespace ModManager5.Classes
 
         public static void addAvailableAmongUsPath(string path)
         {
-            if (path != null && !ConfigManager.config.availableAmongUsPaths.Contains(path))
+            try
             {
-                ConfigManager.config.availableAmongUsPaths.Add(path);
+                if (path != null && !ConfigManager.config.availableAmongUsPaths.Contains(path))
+                {
+                    ConfigManager.config.availableAmongUsPaths.Add(path);
+                }
+            } catch (Exception ex)
+            {
+                 // Access denied
             }
         }
 
