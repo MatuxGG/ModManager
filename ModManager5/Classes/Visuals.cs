@@ -41,6 +41,18 @@ namespace ModManager5.Classes
             return LabelSubTitle;
         }
 
+        public static TableLayoutPanel AlertLabel(string message)
+        {
+            TableLayoutPanel LayoutPanel = Visuals.createLayoutPanelH(0, 100, DockStyle.Bottom, new int[] { 100 });
+
+            Label AlertLabel = Visuals.LabelContent(message, ContentAlignment.MiddleCenter, DockStyle.Bottom);
+            AlertLabel.BackColor = Color.FromArgb(143, 113, 3);
+            AlertLabel.Padding = new Padding(5, 5, 5, 5);
+
+            LayoutPanel.Controls.Add(AlertLabel, 0, 0);
+            return LayoutPanel;
+        }
+
         public static Label LabelContent(string title, ContentAlignment align, DockStyle dockstyle)
         {
             MMLabel ContentLabel = new MMLabel();

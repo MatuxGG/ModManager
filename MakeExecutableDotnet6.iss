@@ -7,13 +7,16 @@
 #define MyAppName "ModManager"
 #define MyAppVersion "5.2.0"
 #define MyAppPublisher "Matux"
-#define MyAppURL "https://matux.fr"
+#define MyAppURL "https://goodloss.fr"
 #define MyAppExeName "ModManager5.exe"
+#define MyAppAssocName MyAppName + " File"
+#define MyAppAssocExt ".myp"
+#define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
 ; (To generate a new GUID, click Tools | Generate GUID inside the IDE.)
-AppId={{B0985205-5235-4036-8F71-CC67D10DA0BE}
+AppId={{ECB24C96-E312-45CB-A3A7-D5EBF862B8C4}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 ;AppVerName={#MyAppName} {#MyAppVersion}
@@ -21,15 +24,17 @@ AppPublisher={#MyAppPublisher}
 AppPublisherURL={#MyAppURL}
 AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
-DefaultDirName={autopf}\ModManager5
+DefaultDirName={autopf}\{#MyAppName}
+ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
+OutputDir=C:\Users\matthieu.artaud\Smile\ModManager\Output
 OutputBaseFilename=ModManagerInstaller
-SetupIconFile=ModManager5\modmanager.ico
+SetupIconFile=C:\Users\matthieu.artaud\Smile\ModManager\ModManager5\modmanager.ico
 Compression=lzma
 SolidCompression=yes
-WizardStyle=modern
+WizardStyle=modern  
 ArchitecturesInstallIn64BitMode=x64
 
 [Code]
@@ -39,8 +44,6 @@ begin
   ExtractTemporaryFile('netcorecheck_x64.exe');
   Dependency_AddDotNet60;
   Dependency_AddDotNet60Desktop;
-  
-
 
   Result := True;
 end;
@@ -76,20 +79,19 @@ Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
 
 [Files]
-Source: "ModManager5\bin\Debug\net5.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.deps.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.pdb"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.runtimeconfig.dev.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ModManager5\bin\Debug\net5.0-windows\ModManager5.runtimeconfig.json"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ModManager5\bin\Debug\net5.0-windows\Newtonsoft.Json.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ModManager5\bin\Debug\net5.0-windows\Octokit.dll"; DestDir: "{app}"; Flags: ignoreversion
-Source: "ModManager5\token.txt"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\matthieu.artaud\Smile\ModManager\ModManager5\bin\Debug\net6.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "C:\Users\matthieu.artaud\Smile\ModManager\ModManager5\bin\Debug\net6.0-windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 Source: "Installer\src\netcorecheck.exe"; Flags: dontcopy noencryption
 Source: "Installer\src\netcorecheck_x64.exe"; Flags: dontcopy noencryption
 
-; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+[Registry]
+Root: HKA; Subkey: "Software\Classes\{#MyAppAssocExt}\OpenWithProgids"; ValueType: string; ValueName: "{#MyAppAssocKey}"; ValueData: ""; Flags: uninsdeletevalue
+Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}"; ValueType: string; ValueName: ""; ValueData: "{#MyAppAssocName}"; Flags: uninsdeletekey
+Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\DefaultIcon"; ValueType: string; ValueName: ""; ValueData: "{app}\{#MyAppExeName},0"
+Root: HKA; Subkey: "Software\Classes\{#MyAppAssocKey}\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\{#MyAppExeName}"" ""%1"""
+Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes"; ValueType: string; ValueName: ".myp"; ValueData: ""
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"

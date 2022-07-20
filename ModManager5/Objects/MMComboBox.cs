@@ -38,9 +38,13 @@ namespace ModManager5.Objects
 
                     else { e.Graphics.FillRectangle(new SolidBrush(box.BackColor), e.Bounds); }
 
-                    e.Graphics.DrawString(box.Items[e.Index].ToString(),
-                         e.Font, new SolidBrush(box.ForeColor),
-                         new Point(e.Bounds.X, e.Bounds.Y));
+                    if (e.Index >= 0)
+                    {
+                        e.Graphics.DrawString(box.Items[e.Index].ToString(),
+                             e.Font, new SolidBrush(box.ForeColor),
+                             new Point(e.Bounds.X, e.Bounds.Y));
+                    }
+                    
                     e.DrawFocusRectangle();
 
             });

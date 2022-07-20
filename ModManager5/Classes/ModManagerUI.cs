@@ -670,6 +670,14 @@ namespace ModManager5.Classes
             }
             //mods.Reverse();
 
+            if (ConfigManager.config.launcher != "Steam" && f.Name != "local")
+            {
+                TableLayoutPanel AlertPanel = Visuals.AlertLabel(Translator.get("⚠ You are not using Among Us from Steam. As a consequence, some mods may not be available. ⚠\n") +
+                Translator.get("If you're using Among Us from Steam, please change launcher in Settings.")
+                );
+                f.Controls.Add(AlertPanel);
+            }
+
             Panel ContainerPanel = new Panel();
             ContainerPanel.Name = "ContainerPanel";
             ContainerPanel.BackColor = Color.Transparent;
@@ -1252,6 +1260,7 @@ namespace ModManager5.Classes
                 line++;
             }
 
+
             if (cat.id == "local")
             {
                 f.Controls.Add(Visuals.LocalModsOverlay());
@@ -1554,11 +1563,7 @@ namespace ModManager5.Classes
 
             List<string> launchers = new List<string>() { };
 
-            if (ConfigManager.getSteamAmongUsPath() != null)
-            {
-                launchers.Add("Steam");
-            }
-
+            launchers.Add("Steam");
             launchers.Add("EGS");
             launchers.Add("Other");
 
