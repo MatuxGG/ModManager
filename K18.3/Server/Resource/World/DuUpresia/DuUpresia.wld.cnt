@@ -1,0 +1,43 @@
+WORLD DuUpresia.wld
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name uplesia
+C_id 0
+C_bgm 0
+C_ambient  0.800  0.800  0.600
+C_diffuse  0.800  1.000  0.600
+C_fogstartend 60.000 170.000
+C_weather 0
+C_sky 1 skybox06.dds
+C_cloud 1 cloud05.dds
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 462 103 2108
+VERTEX 471 103 453
+VERTEX 2086 103 466
+VERTEX 1671 103 1654
+Continent END
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name uplesia_bosszone
+C_id 0
+C_bgm 0
+C_ambient  0.500  0.900  1.000
+C_diffuse  0.500  0.500  0.500
+C_fogstartend 60.000 200.000
+C_weather 0
+C_sky 1 skybox06.dds
+C_cloud 1 cloud05.dds
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 1949 103 1927
+VERTEX 2303 103 1935
+VERTEX 2342 103 1543
+VERTEX 1946 103 1536
+Continent END

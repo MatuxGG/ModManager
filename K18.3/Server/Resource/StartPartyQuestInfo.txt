@@ -1,0 +1,42 @@
+DATE : 20070312
+TIME : 2::11::23
+QUEST ID = 2, PARTY ID = 1, WORMON ID = 0
+돌고래
+가가가
+
+
+DATE : 20070312
+TIME : 2::14::34
+QUEST ID = 3, PARTY ID = 1, WORMON ID = 0
+돌고래
+가가가
+
+
+DATE : 20070312
+TIME : 2::18::15
+QUEST ID = 4, PARTY ID = 1, WORMON ID = 0
+돌고래
+가가가
+
+
+DATE : 20070312
+TIME : 9::57::45
+QUEST ID = 2, PARTY ID = 1, WORMON ID = 0
+가가가
+돌고래
+
+
+DATE : 20070312
+TIME : 10::1::47
+QUEST ID = 3, PARTY ID = 1, WORMON ID = 0
+가가가
+돌고래
+
+
+DATE : 20070312
+TIME : 10::3::53
+QUEST ID = 4, PARTY ID = 1, WORMON ID = 0
+가가가
+돌고래
+
+

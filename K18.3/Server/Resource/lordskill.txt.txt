@@ -1,0 +1,18 @@
+IDS_LORDSKILL_TXT_0000	Lord's Cheer
+IDS_LORDSKILL_TXT_0001	Increases the EXP and item-drop rate of the character by up to 110%
+IDS_LORDSKILL_TXT_0002	Lord's Blessing
+IDS_LORDSKILL_TXT_0003	Increases the attack power and defense power of the character by up to 110%
+IDS_LORDSKILL_TXT_0004	Lord's Love
+IDS_LORDSKILL_TXT_0005	Increases every stat of the character by as much as 15
+IDS_LORDSKILL_TXT_0006	Lord's Shout
+IDS_LORDSKILL_TXT_0007	Color of your shouting message is changed
+IDS_LORDSKILL_TXT_0008	Lord's Anger
+IDS_LORDSKILL_TXT_0009	Ban a character from sending chat messages
+IDS_LORDSKILL_TXT_0010	
+IDS_LORDSKILL_TXT_0011	
+IDS_LORDSKILL_TXT_0012	Lord's Call
+IDS_LORDSKILL_TXT_0013	Summon a character to the Lord
+IDS_LORDSKILL_TXT_0014	Lord's Teleport
+IDS_LORDSKILL_TXT_0015	Teleport to a character
+IDS_LORDSKILL_TXT_0016	Lord's Party
+IDS_LORDSKILL_TXT_0017	Duration of party skills increases by up to 400% (only when the Lord uses the party skills as a party leader)

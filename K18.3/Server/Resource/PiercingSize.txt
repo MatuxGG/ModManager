@@ -1,0 +1,57 @@
+// 소켓 확률
+PiercingPersent
+{
+	SUIT_PERSENT
+		ALL
+			DOWN	80	50	20	5	
+			UP	85	55	25	10
+	WEAPON_ONE_PERSENT
+		JOBBASE
+			DOWN	83	11
+			UP	88	16			// 8/3
+		EXPERT	
+			DOWN	61	6		
+			UP	66	12			// 6/3
+		PROFESSIONAL
+			DOWN	28	3		
+			UP	33	6		 	// 기준
+	WEAPON_TWO_PERSENT
+		JOBBASE
+			DOWN	95	85	25	7
+			UP	100	90	30	12	// 9/3
+		EXPERT	
+			DOWN	95	55	15	3
+			UP	100	60	20	8	// 6/3
+		PROFESSIONAL
+			DOWN	45	25	5	2
+			UP	50	30	10	4 	// 기준
+}
+
+// 피어싱 할때 Penya
+PiercingPenya
+{
+	SUIT		200
+	15		500
+	30		2000
+	45		6000
+	60		15000
+	80		25000
+	200		60000
+}
+
+// 카드 제거시 Penya
+// PiercingPenya의 배수로 들어감 
+PiercingRemovePenya
+{
+	SUIT		10
+	15		5
+	30		5
+	45		10
+	60		10
+	80		15
+	200		15
+}
+
+
+
+

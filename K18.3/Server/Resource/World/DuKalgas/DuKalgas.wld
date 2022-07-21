@@ -1,0 +1,20 @@
+// World script
+
+size 12, 5
+indoor 1
+ambient 0xff808080
+bgColor 0xffe0e0ff
+fly 0
+camera 414.217 333.514 651.875  1.328  5.629 
+revival 1 "ruendera" 
+diffuse 0xff000000
+lightDir  0.000  0.000  0.000 
+fogSetting 10.000 500.000  0.000 
+bgm 3691 
+pkmode 0 
+MPU 2 
+sky default default default
+cloud default default default
+sun default
+moon default
+seacloud default

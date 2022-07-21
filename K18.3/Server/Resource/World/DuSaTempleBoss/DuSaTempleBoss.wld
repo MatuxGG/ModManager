@@ -1,0 +1,14 @@
+// World script
+
+size 2, 2
+indoor 1
+ambient 0xff2882e6
+bgColor 0xffe0e0ff
+fly 0
+camera 418.362 52.187 403.445  0.571  0.803 
+revival 1 "saintmorning" 
+diffuse 0xff000000
+lightDir  0.000  1.000  0.000 
+fogSetting 70.000 400.000  0.000 
+bgm 0 
+pkmode 4194304 

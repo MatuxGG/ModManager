@@ -1,0 +1,20 @@
+// World script
+
+size 5, 5
+indoor 1
+ambient 0xff808080
+bgColor 0xffe0e0ff
+fly 0
+camera 734.948 184.901 283.322  0.587  6.203 
+revival 1 "Elliun" 
+diffuse 0xff001e32
+lightDir  0.000 -1.000  0.000 
+fogSetting  0.000 85.000  0.000 
+bgm 3686
+pkmode 0 
+MPU 4 
+sky default default default
+cloud default default default
+sun default
+moon default
+seacloud default

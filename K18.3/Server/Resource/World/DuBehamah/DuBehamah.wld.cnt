@@ -1,0 +1,88 @@
+WORLD DuBehamah.wld
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name redzone
+C_id 0
+C_ambient  0.400  0.400  0.400
+C_diffuse  0.300  0.100  0.200
+C_fogstartend  0.000 85.000
+C_weather 0
+C_sky 0 NO
+C_cloud 0 NO
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 659 103 718
+VERTEX 660 103 812
+VERTEX 1040 103 812
+VERTEX 1059 103 696
+VERTEX 831 103 695
+VERTEX 757 103 696
+Continent END
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name greezone
+C_id 0
+C_ambient  0.400  0.400  0.400
+C_diffuse  0.100  0.200  0.200
+C_fogstartend  0.000 85.000
+C_weather 0
+C_sky 0 NO
+C_cloud 0 NO
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 904 103 836
+VERTEX 680 103 834
+VERTEX 679 103 802
+VERTEX 620 103 804
+VERTEX 608 103 778
+VERTEX 607 103 715
+VERTEX 487 103 713
+VERTEX 491 103 860
+VERTEX 903 103 860
+Continent END
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name bluezone
+C_id 0
+C_ambient  0.400  0.400  0.400
+C_diffuse  0.100  0.100  0.300
+C_fogstartend  0.000 85.000
+C_weather 0
+C_sky 0 NO
+C_cloud 0 NO
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 498 103 861
+VERTEX 769 103 864
+VERTEX 760 103 1029
+VERTEX 498 103 1019
+Continent END
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name BossZone
+C_id 0
+C_ambient  0.400  0.400  0.400
+C_diffuse  0.100  0.400  0.400
+C_fogstartend  0.000 300.000
+C_weather 0
+C_sky 0 NO
+C_cloud 0 NO
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 970 103 1598
+VERTEX 1533 103 1616
+VERTEX 1512 103 1113
+VERTEX 1025 103 1109
+Continent END

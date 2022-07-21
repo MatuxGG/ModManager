@@ -1,0 +1,107 @@
+WORLD DuSanpres.wld
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name sanpres_outdoor
+C_id 0
+C_bgm 0
+C_ambient  0.600  0.800  0.600
+C_diffuse  0.800  1.000  0.600
+C_fogstartend 60.000 230.000
+C_weather 5
+C_sky 1 skybox05.dds
+C_cloud 1 cloud04.dds
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 1138 3 1948
+VERTEX 1197 3 1867
+VERTEX 1190 3 1591
+VERTEX 1541 3 1594
+VERTEX 1547 3 1868
+Continent END
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name sanpres_indoor_01
+C_id 0
+C_bgm 0
+C_ambient  0.900  0.900  0.450
+C_diffuse  0.300  0.300  0.300
+C_fogstartend 10.000 100.000
+C_weather 5
+C_sky 0 NO
+C_cloud 0 NO
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 696 103 250
+VERTEX 696 103 194
+VERTEX 832 153 191
+VERTEX 834 128 254
+Continent END
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name sanpres_indoor_02
+C_id 0
+C_bgm 0
+C_ambient  0.800  0.800  0.300
+C_diffuse  0.100  0.100  0.100
+C_fogstartend 10.000 130.000
+C_weather 5
+C_sky 0 NO
+C_cloud 0 NO
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 841 153 250
+VERTEX 831 103 101
+VERTEX 986 103 100
+VERTEX 981 103 269
+Continent END
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name sanpres_indoor_03
+C_id 0
+C_bgm 0
+C_ambient  1.000  1.000  0.500
+C_diffuse  0.100  0.100  0.100
+C_fogstartend 50.000 100.000
+C_weather 5
+C_sky 0 NO
+C_cloud 0 NO
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 1940 103 275
+VERTEX 1940 103 241
+VERTEX 1981 103 241
+VERTEX 1980 103 276
+Continent END
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name sanpres_indoor_04
+C_id 0
+C_bgm 0
+C_ambient  0.500  0.500  0.100
+C_diffuse  0.100  0.100  0.100
+C_fogstartend 20.000 130.000
+C_weather 5
+C_sky 0 NO
+C_cloud 0 NO
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 1910 128 210
+VERTEX 1905 149 327
+VERTEX 2023 153 330
+VERTEX 2020 153 205
+Continent END

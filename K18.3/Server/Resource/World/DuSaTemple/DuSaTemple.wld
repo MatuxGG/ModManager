@@ -1,0 +1,20 @@
+// World script
+
+size 4, 4
+indoor 1
+ambient 0xff3c8ce6
+bgColor 0xffe0e0ff
+fly 0
+camera 1082.319 21.688 1316.901  0.654  5.880 
+revival 1 "saintmorning" 
+diffuse 0xff808080
+lightDir  0.000  1.000  0.000 
+fogSetting 70.000 400.000  0.000 
+bgm 0 
+pkmode 4194304 
+MPU 4 
+sky default default default
+cloud default default default
+sun default
+moon default
+seacloud default

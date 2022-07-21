@@ -1,0 +1,22 @@
+WORLD WdFwc.wld
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name FWC
+C_id 0
+C_bgm 0
+C_ambient  0.400  0.600  0.800
+C_diffuse  0.700  0.900  0.900
+C_fogstartend 50.000 600.000
+C_weather 3
+C_sky 1 skybox05.dds
+C_cloud 1 cloud04.dds
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 5 103 2554
+VERTEX 2554 103 2538
+VERTEX 2554 103 3
+VERTEX 4 103 3
+Continent END

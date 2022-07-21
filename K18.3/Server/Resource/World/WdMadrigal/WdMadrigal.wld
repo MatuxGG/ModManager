@@ -1,0 +1,20 @@
+// World script
+
+size 30, 30
+indoor 0
+ambient 0x808080
+bgColor 0xffe0e0ff
+fly 1
+camera 7367.238281 87.628113 9180.990234 0.582833 -1.824000
+revival 0 ""
+diffuse 0x0
+lightDir 0.000000 0.000000 0.000000
+fogSetting 70.000000 400.000000 0.000000
+bgm 0
+pkmode 4194304
+MPU 4
+sky default default default
+cloud default default default
+sun default
+moon default
+seacloud default

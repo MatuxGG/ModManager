@@ -1,0 +1,19 @@
+// 모션인덱스        ,모션인덱스    ,모션아이콘               ,마지막프레임정지,한글 출력텍스트,영문 출력,일어 출력,중국어 출력,태국 출력,한글 설명,영문 설명,일어 설명,중국 설명,태국 설명
+ MOT_BASE_BATTLE     ,0, mot_baseBattle.dds    ,0,        ,=,=,=,=,전투자세를 취합니다. ,=,=,=,=
+ MOT_BASE_SIT        ,MTI_SIT       , mot_baseSit.dds       ,0,        ,=,=,=,=,앉아서 휴식을 취합니다.     ,=,=,=,=
+ MOT_BASE_PICKUP     ,MTI_PICKUP    , mot_basePickup.dds    ,0,        ,=,=,=,=,근처의 아이템을 얻습니다.     ,=,=,=,=
+ MOT_BASE_HANDSHAKE  ,MTI_HANDSHAKE , mot_baseHandshake.dds ,0,        ,=,=,=,=,악수를 합니다.,=,=,=,=
+ MOT_BASE_AMBIGUOUS  ,MTI_AMBIGUOUS , mot_baseAmbiguous.dds ,0,        ,=,=,=,=,고개를 갸우뚱합니다.,=,=,=,=
+ MOT_BASE_YES        ,MTI_YES       , mot_baseYes.dds       ,0,        ,=,=,=,=,긍정적인 표현을 합니다.,=,=,=,=
+ MOT_BASE_NO         ,MTI_NO        , mot_baseNo.dds        ,0,        ,=,=,=,=,부정적인 표현을 합니다.,=,=,=,=
+ MOT_BASE_SPRINT     ,MTI_SPRINT    , mot_baseSprint.dds    ,2,        ,=,=,=,=,제자리 달리기 흉내를 냅니다.,=,=,=,=
+ MOT_BASE_PARADEREST ,MTI_PARADEREST, mot_baseParaderest.dds,1,        ,=,=,=,=,열중쉬어 자세를 취합니다.,=,=,=,=
+ MOT_BASE_ATTENTION  ,MTI_ATTENTION , mot_baseAttention.dds ,1,        ,=,=,=,=,차려 자세를 취합니다.,=,=,=,=
+ MOT_BASE_SCISSORS   ,MTI_SCISSORS  , mot_baseScissors.dds  ,1, 가위!  ,=,=,=,=,가위바위보중 가위 자세를 취합니다.,=,=,=,=
+ MOT_BASE_ROCK       ,MTI_ROCK      , mot_baseRock.dds      ,1, 바위!  ,=,=,=,=,가위바위보중 바위 자세를 취합니다.,=,=,=,=
+ MOT_BASE_PAPER      ,MTI_PAPER     , mot_basePaper.dds     ,1, 보!    ,=,=,=,=,가위바위보중 보 자세를 취합니다.,=,=,=,=
+
+
+
+
+// 출력 텍스트  모션을 취할 때 이 텍스트가 플레이어가 말하는 것 처럼 출력된다. 즉 가위를 누르면 플레이어는 가위!라고 말하며 동작을 취하는 것이다.,,모션을 취할 때 이 텍스트가 플레이어가 말하는 것 처럼 출력된다. 즉 가위를 누르면 플레이어는 가위!라고 말하며 동작을 취하는 것이다.

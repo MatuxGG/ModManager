@@ -1,0 +1,18 @@
+2005/ 8/17   16:33:11   
+
+2005/ 8/17   16:33:18   Accept
+2005/ 8/17   16:33:18   Login...
+2005/ 8/17   16:33:18   Connecting...
+2005/ 8/17   16:33:19   Connected
+2005/ 8/17   16:33:19   OnPreJoin
+2005/ 8/17   16:33:19   WorldMng Open
+2005/ 8/17   16:33:20   WorldMng Read
+2005/ 8/17   16:33:25   Send Join
+2005/ 8/17   16:33:26   OnJoin
+2005/ 8/17   16:33:30   Player Set 2
+2005/ 8/17   16:33:30   WndWorld OnInit
+2005/ 8/17   16:33:32   WndWorld OnInit end
+2005/ 8/17   16:33:32   OpenField end 2
+2005/ 8/17   16:33:33   OnJoin finish
+2005/ 8/17   16:33:33   select char destroy
+2005/ 8/17   16:33:33   select char destroy finish

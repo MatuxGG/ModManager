@@ -1,0 +1,43 @@
+WORLD DuHerneos_1.wld
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name NEW_0
+C_id 0
+C_bgm 0
+C_ambient  0.800  0.800  0.900
+C_diffuse  0.400  0.900  1.000
+C_fogstartend 10.000 250.000
+C_weather 0
+C_sky 0 skybox05.dds
+C_cloud 0 cloud04.dds
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 305 103 1229
+VERTEX 1674 103 1220
+VERTEX 1704 103 50
+VERTEX 440 103 64
+Continent END
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 1
+C_useRealData 0
+C_name indoor
+C_id 0
+C_bgm 0
+C_ambient  0.600  0.700  0.900
+C_diffuse  0.300  0.300  0.600
+C_fogstartend 10.000 250.000
+C_weather 5
+C_sky 0 NO
+C_cloud 0 NO
+C_sun 0 NO
+C_moon 0 NO
+VERTEX 1529 103 2061
+VERTEX 3073 103 2054
+VERTEX 3076 103 504
+VERTEX 1529 183 508
+Continent END

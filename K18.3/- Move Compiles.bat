@@ -1,0 +1,10 @@
+@echo off
+COPY "Source\Output\AccountServer\Release\AccountServer.exe" "Server\Program\1. Account.exe"
+COPY "Source\Output\CacheServer\Release\CacheServer.exe" "Server\Program\6. Cache.exe"
+COPY "Source\Output\Certifier\Release\Certifier.exe" "Server\Program\2. Certifier.exe"
+COPY "Source\Output\CoreServer\Release\CoreServer.exe" "Server\Program\4. Core.exe"
+COPY "Source\Output\DatabaseServer\Release\DatabaseServer.exe" "Server\Resource\3. Database.exe"
+COPY "Source\Output\LoginServer\Release\LoginServer.exe" "Server\Program\5. Login.exe"
+COPY "Source\Output\WorldServer\Release\WorldServer.exe" "Server\Resource\7. World.exe"
+COPY "Source\Output\Neuz\NoGameguard\Neuz.exe" "Client\Neuz.exe"
+COPY "Source\Output\BetaPatchClient\Debug\BetaPatchClient.exe" "Client\Flyff.exe"

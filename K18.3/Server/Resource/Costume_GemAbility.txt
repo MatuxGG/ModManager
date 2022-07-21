@@ -1,0 +1,62 @@
+// ABILITY 적용 DST
+// 적용 DST 추가 가능, 보석 추가 가능
+
+//	1개	2개	3개	4개	
+
+ABILITY	DST_STR
+{
+	3	6	10	15	
+}
+
+ABILITY	DST_STA
+{
+	3	6	10	15
+}
+	
+ABILITY	DST_DEX
+{
+	3	6	10	15
+}
+	
+ABILITY	DST_INT
+{
+	3	6	10	15
+}
+
+ABILITY	DST_MELEE_STEALHP
+{
+	1	2	3	6
+}
+
+ABILITY	DST_ATKPOWER_RATE
+{
+	2	4	6	10
+}	
+
+ABILITY	DST_PVP_DMG
+{
+	2	4	6	10
+}
+
+ABILITY	DST_ATTACKSPEED_RATE
+{
+	2	4	6	10
+}	
+
+
+ABILITY	DST_SPELL_RATE
+{
+	2	4	6	10
+}
+
+ABILITY	DST_BLOCK_RANGE
+{
+	2	4	6	10
+}
+
+ABILITY	DST_BLOCK_MELEE
+{
+	2	4	6	10
+}
+
+

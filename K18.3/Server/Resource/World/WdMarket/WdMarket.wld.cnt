@@ -1,0 +1,14 @@
+WORLD WdMarket.wld
+
+Continent BEGIN
+TOWN 0
+C_useEnvir 0
+C_useRealData 0
+C_name market
+C_id 0
+C_bgm 0
+VERTEX 606 103 947
+VERTEX 625 103 717
+VERTEX 939 103 712
+VERTEX 877 103 965
+Continent END

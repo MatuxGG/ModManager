@@ -1,0 +1,20 @@
+// World script
+
+size 5, 5
+indoor 0
+ambient 0xff808080
+bgColor 0xffe0e0ff
+fly 1
+camera 927.089 183.376 1768.410  0.874  0.575 
+revival 1 "flaris" 
+diffuse 0xff000000
+lightDir  0.000  0.000  0.000 
+fogSetting 70.000 400.000  0.000 
+bgm 3688 
+pkmode 0 
+MPU 4 
+sky default default default
+cloud default default default
+sun default
+moon default
+seacloud rartesia_cloud.dds

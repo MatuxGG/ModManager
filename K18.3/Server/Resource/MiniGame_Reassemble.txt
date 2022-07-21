@@ -1,0 +1,49 @@
+/*
+============================================================================
+	퍼즐 맞추기 스크립트 작성법
+============================================================================
+CARD	- 퍼즐 조각을 정의. 순서대로 정의하여야 한다.(아이템ID)
+{
+	II_SYS_SYS_EVE_A_CARD
+	II_SYS_SYS_EVE_B_CARD
+	...	...	...
+	...	...	...
+	--총 9개(3*3 퍼즐)
+}
+
+ITEM	- 퍼즐이 완성 되었을 때 지급 되는 아이템의 지급 갯수와 확률을 정의.
+{
+	아이템ID			갯수	확률(n/1000000)
+	II_GEN_FOO_INS_LOLLIPOP		10	500000
+	II_GEN_FOO_INS_BISCUIT		10	500000
+	...	...	...	...
+	...	...	...	...
+}
+
+-- 아이템 지급 확률의 총합이 1000000이 되도록 한다.
+============================================================================
+*/
+
+
+// Begin Script
+// 퍼즐 그림에 사용될 아이템
+CARD
+{
+
+	II_SYS_SYS_QUE_HOLYRED
+	II_SYS_SYS_QUE_HOLYRED
+	II_SYS_SYS_QUE_HOLYRED
+	II_SYS_SYS_QUE_HOLYBLUE
+	II_SYS_SYS_QUE_HOLYBLUE
+	II_SYS_SYS_QUE_HOLYBLUE
+	II_SYS_SYS_QUE_HOLYYELLOW
+	II_SYS_SYS_QUE_HOLYYELLOW
+	II_SYS_SYS_QUE_HOLYYELLOW
+}
+
+// 퍼즐 완성시 지급될 아이템 및 지급 확률
+ITEM
+{
+	//아이템ID			갯수	확률
+	II_SYS_SYS_SCR_BXTREASURE03	1	1000000
+}

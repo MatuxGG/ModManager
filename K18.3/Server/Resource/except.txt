@@ -1,0 +1,3781 @@
+// fFlightSpeed
+// dwShopAble
+// dwCircleTime
+// worldDrop
+// dwFlag
+
+LANG_KOR	// kor
+{
+	ItemProp
+	{
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+LANG_USA	// eng
+{
+	ItemProp
+	{
+		II_CHR_SYS_SCR_SHOUTFULL15
+		{
+			dwLimitLevel1	= 20;
+		}
+		II_CHR_SYS_SCR_SHOUTFULL30
+		{
+			dwLimitLevel1	= 20;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		II_ARM_S_CLO_HAT_STATHAT
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_HAT_MUSHROOM
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_GOGLE
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_BUTTERFLY
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_IRON
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+LANG_PHP	// php
+{
+	ItemProp
+	{
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+
+		II_ARM_M_CHR_DARKVADER01HAT
+		{
+			dwFlag	= 1;
+		}
+		II_ARM_M_CHR_DARKVADER01SUIT
+		{
+			dwFlag	= 1;
+		}
+		II_ARM_M_CHR_DARKVADER01GLOVES
+		{
+			dwFlag	= 1;
+		}
+		II_ARM_M_CHR_DARKVADER01SHOES
+		{
+			dwFlag	= 1;
+		}
+		II_ARM_F_CHR_DARKVADER01HAT
+		{
+			dwFlag	= 1;
+		}
+		II_ARM_F_CHR_DARKVADER01SUIT
+		{
+			dwFlag	= 1;
+		}
+		II_ARM_F_CHR_DARKVADER01GLOVES
+		{
+			dwFlag	= 1;
+		}
+		II_ARM_F_CHR_DARKVADER01SHOES
+		{
+			dwFlag	= 1;
+		}
+		II_ARM_S_CLO_CLO_DARKVADER
+		{
+			dwFlag	= 1;
+		}
+		II_RID_RID_STI_WOODHORSE
+		{
+			dwFlag	= 1;
+		}
+		II_RID_RID_STI_BIKE2
+		{
+			dwFlag	= 1;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			dwFlag	= 1;
+		}
+		II_SYS_SYS_SCR_BXMDARKVADER
+		{
+			dwFlag	= 1;
+		}
+		II_SYS_SYS_SCR_BXFDARKVADER
+		{
+			dwFlag	= 1;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		II_ARM_S_CLO_HAT_STATHAT
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_HAT_MUSHROOM
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_GOGLE
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_BUTTERFLY
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_IRON
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+LANG_JAP
+{
+	ItemProp
+	{
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+LANG_CHI
+{
+	ItemProp
+	{
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+LANG_THA
+{
+	ItemProp
+	{
+/*
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+*/
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+LANG_TWN	
+{
+	ItemProp
+	{
+/*
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+*/
+		II_CHR_SYS_SCR_SHOUTFULL15
+		{
+			dwLimitLevel1	= 15;
+		}
+		II_CHR_SYS_SCR_SHOUTFULL30
+		{
+			dwLimitLevel1	= 15;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		II_ARM_S_CLO_HAT_STATHAT
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_HAT_MUSHROOM
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_GOGLE
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_BUTTERFLY
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_IRON
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+//			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+LANG_GER		// ger
+{
+	ItemProp
+	{
+		II_CHR_SYS_SCR_SHOUTFULL15
+		{
+			dwLimitLevel1	= 20;
+		}
+		II_CHR_SYS_SCR_SHOUTFULL30
+		{
+			dwLimitLevel1	= 20;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		II_ARM_S_CLO_HAT_STATHAT
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_HAT_MUSHROOM
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_GOGLE
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_BUTTERFLY
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_IRON
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+LANG_SPA		// chl
+{
+	ItemProp
+	{
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		II_ARM_S_CLO_HAT_STATHAT
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_HAT_MUSHROOM
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_GOGLE
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_BUTTERFLY
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_IRON
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+
+LANG_FRE		// fre
+{
+	ItemProp
+	{
+		II_CHR_SYS_SCR_SHOUTFULL15
+		{
+			dwLimitLevel1	= 20;
+		}
+		II_CHR_SYS_SCR_SHOUTFULL30
+		{
+			dwLimitLevel1	= 20;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		II_ARM_S_CLO_HAT_STATHAT
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_HAT_MUSHROOM
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_GOGLE
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_BUTTERFLY
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_IRON
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+
+LANG_POR	
+{
+	ItemProp
+	{
+		II_CHR_SYS_SCR_SHOUTFULL15
+		{
+			dwLimitLevel1	= 20;
+		}
+		II_CHR_SYS_SCR_SHOUTFULL30
+		{
+			dwLimitLevel1	= 20;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		II_ARM_S_CLO_HAT_STATHAT
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_HAT_MUSHROOM
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_GOGLE
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_BUTTERFLY
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_IRON
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
+
+LANG_VTN	
+{
+	ItemProp
+	{
+		II_SYS_SYS_SCR_FRIENDSUMMON_A
+		{
+			dwSkillReadyType	= 0;
+		}
+		II_SYS_SYS_SCR_FRIENDSUMMON_B
+		{
+			dwSkillReadyType	= 30000;
+		}
+		II_GEN_FOO_ICE_STRAWBERRYSHAKE_TWN
+		{
+			dwShopAble	=	-1;
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE01
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_FOO_COO_MEDICINE02
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_BUCKET
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_CONEPISEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_FIRSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PERSIMSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PEARSEED
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_EVE_PINESEED
+		{
+			worldDrop	=	0;
+		}
+		II_GEN_SKILL_BUFFBREAKER_X
+		{
+			worldDrop	=	0;
+		}
+		II_ARM_S_CLO_HAT_STATHAT
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_HAT_MUSHROOM
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_GOGLE
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_BUTTERFLY
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_IRON
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_ARM_S_CLO_MAS_DEVIL
+		{
+			dwShopAble	=	-1;
+		}
+		II_ARM_S_CLO_MAS_ANGEL
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LAWOLF1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_AIBATT1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LEYENA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_PET_LUIA1
+		{
+			dwShopAble	=	-1;
+		}
+		II_RID_AFU_ACC_SPEED
+		{
+			dwShopAble	=	-1;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_SYS_SYS_GM_DIS_YOUNGAIBATT
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_AIBATT4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CUTELAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LAWOLF4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MUSHPANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_NYANGNYANG1
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LEYENA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA2
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LUIA4
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BANG5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MRPUMPKIN5
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_LOSHA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_BOBOKU
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_JURIA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARCHE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_MARTIN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_REWARD
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_GUARDIAN
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_SANTA
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_DWARPETMAS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNIBLIS
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNSHADE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_DIS_CROWNBUBBLE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_NODISGUISE
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_GM_UNDYING2
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_REF_REF_HOLD
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_POT_DRI_VITALX
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_CHR_FOO_COO_BULLHAMS
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_FOO_COO_GRILLEDEEL
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_ACTIVITION
+		{
+			worldDrop	=	0;
+		}
+		II_CHR_SYS_SCR_UPCUTSTONE    
+		{
+			worldDrop	=	0;
+			dwCircleTime	=	1200;
+		}
+		II_SYS_SYS_SCR_BLESSING
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_RESURRECTION
+		{
+			worldDrop	=	0;
+		}
+		II_SYS_SYS_SCR_VELOCIJUMP
+		{
+			worldDrop	=	0;
+		}
+		////////////////////////////////////////////////////////////////////////////////
+		II_RID_RID_STI_MAGIC
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_STI_KESTREL
+		{
+			fFlightSpeed	= 0.0023;
+		}
+		II_RID_RID_STI_FLICKER
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_STI_PROJAN
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_HOVER
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_AERO
+		{
+			fFlightSpeed	= 0.0023;
+		}	
+		II_RID_RID_BOR_WILDUCK
+		{
+			fFlightSpeed	= 0.0026;
+		}
+		II_RID_RID_BOR_IGNICE
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_RIDINGCLOUD
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_LADOLF
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_BOR_JLADOLF
+		{
+			fFlightSpeed	= 0.002;
+		}
+		II_RID_RID_BOR_FLYSWORD
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_BIKE
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_TIGER
+		{
+			fFlightSpeed	= 0.003;
+		}
+		II_RID_RID_STI_DRAGON
+		{
+			fFlightSpeed	= 0.0032;
+		}
+		II_RID_RID_BOR_FPLANET
+		{
+			fFlightSpeed	= 0.002;
+		}
+	}
+}
