@@ -384,7 +384,7 @@ begin
     Dependency_Add('dotnet60' + Dependency_ArchSuffix + '.exe',
       '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
       '.NET Runtime 6.0.1' + Dependency_ArchTitle,
-      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/a4583478-b841-4b42-8118-a40069a16ba7/402e04d30b6df8b9f0e191bbbf45a217/dotnet-runtime-6.0.1-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/df4372ca-82c8-4bfa-acf9-c49e27279e7e/6bddefd26964017ff520dc1443029e04/dotnet-runtime-6.0.1-win-x64.exe'),
+      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/a549cf2d-5198-477c-b5ee-afc5fb6f2ddd/a3a43236eb7338685c8d2932db60115b/dotnet-runtime-6.0.7-win-x86.zip', 'https://download.visualstudio.microsoft.com/download/pr/5cd66804-64a8-45e5-886e-708788fc8029/0fb15515f1a8661b973ad7222d277d0a/dotnet-runtime-6.0.7-win-x64.zip'),
       '', False, False);
   end;
 end;
@@ -404,11 +404,11 @@ end;
 procedure Dependency_AddDotNet60Desktop;
 begin
   // https://dotnet.microsoft.com/download/dotnet/6.0
-  if not Dependency_IsNetCoreInstalled('Microsoft.WindowsDesktop.App 6.0.1') then begin
+  if not Dependency_IsNetCoreInstalled('Microsoft.WindowsDesktop.App 6.0.7') then begin
     Dependency_Add('dotnet60desktop' + Dependency_ArchSuffix + '.exe',
       '/lcid ' + IntToStr(GetUILanguage) + ' /passive /norestart',
-      '.NET Desktop Runtime 6.0.1' + Dependency_ArchTitle,
-      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/7977218c-1a01-4b69-a8ec-9d9311a6de5b/4c74f995295be78a9ebe1d5fede8f7f3/windowsdesktop-runtime-6.0.1-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/bf058765-6f71-4971-aee1-15229d8bfb3e/c3366e6b74bec066487cd643f915274d/windowsdesktop-runtime-6.0.1-win-x64.exe'),
+      '.NET Desktop Runtime 6.0.7' + Dependency_ArchTitle,
+      Dependency_String('https://download.visualstudio.microsoft.com/download/pr/f21307ec-9007-48ba-80cb-0b1b7c3c212a/366a3d6b4c092d85d7979c6bb818f1b6/windowsdesktop-runtime-6.0.7-win-x86.exe', 'https://download.visualstudio.microsoft.com/download/pr/dc0e0e83-0115-4518-8b6a-590ed594f38a/65b63e41f6a80decb37fa3c5af79a53d/windowsdesktop-runtime-6.0.7-win-x64.exe'),
       '', False, False);
   end;
 end;

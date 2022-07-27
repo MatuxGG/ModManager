@@ -80,6 +80,7 @@ namespace ModManager5.Classes
 
         public static void updateAvailablePathsIfNeeded()
         {
+            Utils.log("Update available paths START", "ConfigManager");
             if (ConfigManager.config.availableAmongUsPaths == null)
             {
                 ConfigManager.config.availableAmongUsPaths = new List<string>() { };
@@ -107,6 +108,7 @@ namespace ModManager5.Classes
             addAvailableAmongUsPath(getSteamAmongUsPath());
             addAvailableAmongUsPath(getEGSAmongUsPath());
             ConfigManager.update();
+            Utils.log("Update available paths END", "ConfigManager");
         }
 
         public static void addAvailableAmongUsPath(string path)
@@ -119,12 +121,14 @@ namespace ModManager5.Classes
                 }
             } catch (Exception ex)
             {
+
                  // Access denied
             }
         }
 
         public static void updateAmongUsPathIfNeeded()
         {
+            Utils.log("Update available paths START", "ConfigManager");
             if (ConfigManager.config.amongUsPath == null || ConfigManager.config.amongUsPath == "" || !File.Exists(ConfigManager.config.amongUsPath + @"\Among Us.exe"))
             {
                 string amongUsPath = getSteamAmongUsPath();
@@ -163,11 +167,13 @@ namespace ModManager5.Classes
                 config.launcher = "EGS";
                 config.amongUsPath = amongUsPath;
             }
+            Utils.log("Update available paths END", "ConfigManager");
         }
 
 
         public static string getSteamAmongUsPath()
         {
+            Utils.log("Get Steam Among Us Path START", "ConfigManager");
             string amongUsPath = null;
 
             RegistryKey myKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 945360", false);
@@ -177,22 +183,27 @@ namespace ModManager5.Classes
                 amongUsPath = (String)myKey.GetValue("InstallLocation");
                 if (amongUsPath != null && File.Exists(amongUsPath + @"\Among Us.exe"))
                 {
+                    Utils.log("Get Steam Among Us Path SUCCESS", "ConfigManager");
                     return amongUsPath;
                 }
             }
+            Utils.log("Get Steam Among Us Path FAIL", "ConfigManager");
             return null;
         }
 
         public static string getEGSAmongUsPath()
         {
+            Utils.log("Get EGS Among Us Path START", "ConfigManager");
             foreach (DriveInfo d in DriveInfo.GetDrives())
             {
                 string amongUsPath = d.Name + @"Program Files\Epic Games\AmongUs";
                 if (amongUsPath != null && File.Exists(amongUsPath + @"\Among Us.exe"))
                 {
+                    Utils.log("Get EGS Among Us Path SUCCESS", "ConfigManager");
                     return amongUsPath;
                 }
             }
+            Utils.log("Get EGS Among Us Path FAIL", "ConfigManager");
             return null;
         }
 
@@ -268,6 +279,32 @@ namespace ModManager5.Classes
 
         public static void logConfig()
         {
+            Utils.log("MM Config", "ConfigManager");
+
+            try
+            {
+                Utils.log("- Launcher: " + ConfigManager.config.launcher, "ConfigManager");
+                Utils.log("- Among Us Path: " + ConfigManager.config.amongUsPath, "ConfigManager");
+                Utils.log("- Minimisation: " + (ConfigManager.config.miniEnabled ? "Enabled" : "Disabled"), "ConfigManager");
+                Utils.log("- Installed mods:", "ConfigManager");
+                foreach (InstalledMod im in ConfigManager.config.installedMods)
+                {
+                    Utils.log("-- " + im.id + " (" + im.version + ")", "ConfigManager");
+                }
+                Utils.log("- Installed vanilla:", "ConfigManager");
+                foreach (InstalledVanilla iv in ConfigManager.config.installedVanilla)
+                {
+                    Utils.log("-- " + iv.version, "ConfigManager");
+                }
+            }
+            catch (Exception e)
+            {
+                Utils.logE("Loading MM Config FAIL", "ConfigManager");
+                Utils.logEx(e, "ConfigManager");
+            }
+        } 
+        public static void logGlobalConfig()
+        {
             Utils.log("Computer information", "ConfigManager");
             try
             {
@@ -293,7 +330,20 @@ namespace ModManager5.Classes
                 Utils.logE("Loading computer info FAIL", "ConfigManager");
                 Utils.logEx(e, "ConfigManager");
             }
-            
+
+            Utils.log("MM Global Config", "ConfigManager");
+
+            try
+            {
+                Utils.log("- Theme: " + ConfigManager.globalConfig.theme, "ConfigManager");
+                Utils.log("- Language: " + ConfigManager.globalConfig.lg, "ConfigManager");
+                Utils.log("- Started: " + ConfigManager.globalConfig.startTime, "ConfigManager");
+            }
+            catch (Exception e)
+            {
+                Utils.logE("Loading MM Global Config FAIL", "ConfigManager");
+                Utils.logEx(e, "ConfigManager");
+            }
         }
     }
 

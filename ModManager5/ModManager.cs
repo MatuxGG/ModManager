@@ -82,7 +82,7 @@ namespace ModManager5
 
             Utils.log("Loading global config", "ModManager");
             ConfigManager.loadGlobalConfig();
-            ConfigManager.logConfig();
+            ConfigManager.logGlobalConfig();
 
             // If not silent, load theme
             if (args.Count() <= 0) 
@@ -113,6 +113,7 @@ namespace ModManager5
             ServerConfig.load();
             Utils.log("Loading config", "ModManager");
             ConfigManager.load();
+            ConfigManager.logConfig();
 
             Utils.log("Loading mods", "ModManager");
             ModList.load();

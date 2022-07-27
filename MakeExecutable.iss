@@ -37,8 +37,8 @@ function InitializeSetup: Boolean;
 begin
   ExtractTemporaryFile('netcorecheck.exe');     
   ExtractTemporaryFile('netcorecheck_x64.exe');
-  Dependency_AddDotNet60;
-  Dependency_AddDotNet60Desktop;
+  Dependency_AddDotNet50;
+  Dependency_AddDotNet50Desktop;
   
 
 
