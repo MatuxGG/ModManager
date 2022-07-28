@@ -55,6 +55,26 @@ namespace ModManager5.Classes
 
         }
 
+        public Mod()
+        {
+            this.id = null;
+            this.name = null;
+            this.category = "local";
+            this.gameVersion = "";
+            this.dependencies = new List<string>() { };
+            this.author = "";
+            this.github = "";
+            this.githubLink = "0";
+            this.social = "";
+            this.ignorePattern = "";
+            this.needPattern = "";
+            this.type = "local";
+            this.release = null;
+            this.data = "";
+            this.dependencies = new List<string>() { };
+            this.data = "";
+        }
+
         public async Task getGithubRelease()
         {
             var client = new GitHubClient(new ProductHeaderValue("ModManager"));

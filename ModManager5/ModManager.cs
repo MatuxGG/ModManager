@@ -52,6 +52,7 @@ namespace ModManager5
 
             Utils.logNewLine();
             Utils.log("ModManager Started", "ModManager");
+            Utils.log("Version " + ModManager.visibleVersion, "ModManager");
 
             // Disable multiple MM run
             if (System.Diagnostics.Process.GetProcessesByName("ModManager5").Length > 1 && (args.Count() == 0 || args[0] != "force"))

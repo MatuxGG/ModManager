@@ -12,6 +12,8 @@
 #define MyAppAssocName MyAppName + " File"
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
+#define devDir "C:\Users\matthieu.artaud\Smile\ModManager"
+#define style "TabletDark.vsf"
 
 [Setup]
 ; NOTE: The value of AppId uniquely identifies this application. Do not use the same AppId value in installers for other applications.
@@ -29,23 +31,41 @@ ChangesAssociations=yes
 DisableProgramGroupPage=yes
 ; Uncomment the following line to run in non administrative install mode (install for current user only.)
 ;PrivilegesRequired=lowest
-OutputDir=C:\Users\matthieu.artaud\Smile\ModManager\Output
+OutputDir={#devDir}\Output
 OutputBaseFilename=ModManagerInstaller
-SetupIconFile=C:\Users\matthieu.artaud\Smile\ModManager\ModManager5\modmanager.ico
+SetupIconFile={#devDir}\ModManager5\modmanager.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern  
 ArchitecturesInstallIn64BitMode=x64
+WizardSmallImageFile={#devDir}\ModManager5\Assets\installer_mini.bmp
+WizardImageFile={#devDir}\ModManager5\Assets\installer_large.bmp
 
 [Code]
+  
+// Import the LoadVCLStyle function from VclStylesInno.DLL
+procedure LoadVCLStyle(VClStyleFile: String); external 'LoadVCLStyleW@files:VclStylesInno.dll stdcall';
+// Import the UnLoadVCLStyles function from VclStylesInno.DLL
+procedure UnLoadVCLStyles; external 'UnLoadVCLStyles@files:VclStylesInno.dll stdcall';
+
 function InitializeSetup: Boolean;
 begin
+  ExtractTemporaryFile('{#style}');
+  LoadVCLStyle(ExpandConstant('{tmp}\{#style}'));
+  Result := True;
+
   ExtractTemporaryFile('netcorecheck.exe');     
   ExtractTemporaryFile('netcorecheck_x64.exe');
   Dependency_AddDotNet60Desktop;
 
   Result := True;
 end;
+ 
+procedure DeinitializeSetup();
+begin
+  UnLoadVCLStyles;
+end;
+
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -75,11 +95,15 @@ Name: "turkish"; MessagesFile: "compiler:Languages\Turkish.isl"
 Name: "ukrainian"; MessagesFile: "compiler:Languages\Ukrainian.isl"
 
 [Tasks]
-Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked
+Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{cm:AdditionalIcons}"; Flags: unchecked  
 
 [Files]
-Source: "C:\Users\matthieu.artaud\Smile\ModManager\ModManager5\bin\Debug\net6.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "C:\Users\matthieu.artaud\Smile\ModManager\ModManager5\bin\Debug\net6.0-windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+
+Source: Installer\VclStylesinno.dll; DestDir: {app}; Flags: dontcopy
+Source: Installer\Styles\{#style}; DestDir: {app}; Flags: dontcopy
+ 
+Source: "{#devDir}\ModManager5\bin\Debug\net6.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#devDir}\ModManager5\bin\Debug\net6.0-windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 Source: "Installer\src\netcorecheck.exe"; Flags: dontcopy noencryption
@@ -95,7 +119,7 @@ Root: HKA; Subkey: "Software\Classes\Applications\{#MyAppExeName}\SupportedTypes
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
 Name: "{autodesktop}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
-
 [Run]
 Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+Filename: "https://goodloss.fr/discord"; Description: "Join Support Discord Server"; Flags: nowait postinstall skipifsilent shellexec runasoriginaluser unchecked 
 

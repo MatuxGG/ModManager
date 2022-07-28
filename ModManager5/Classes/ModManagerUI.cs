@@ -20,21 +20,21 @@ namespace ModManager5.Classes
         public static Panel MenuPanel;
         public static PictureBox LogoPict;
         public static Panel BottomRightPanel;
-        public static Button ModsMenuButton;
+        public static Panel ModsPanel;
         public static Panel BottomLeftPanel;
         public static Panel IconsMenuPanel;
         public static PictureBox RoadmapPict;
         public static PictureBox GithubPict;
         public static PictureBox DiscordPict;
+        public static PictureBox AccountPict;
+        public static PictureBox NewsPict;
+        public static PictureBox FaqPict;
         public static Label VersionLabel;
         public static Panel AppPanel;
         public static Label LoadingLabel;
-        public static Button CreditsMenuButton;
-        public static Button SettingsMenuButton;
-        public static Button FaqMenuButton;
-        public static Button NewsMenuButton;
-        public static Button AccountMenuButton;
-        public static Button ServersMenuButton;
+        public static Panel CreditsPanel;
+        public static Panel SettingsPanel;
+        public static Panel ServersPanel;
         public static Label StatusLabel;
         public static Panel ModsCategoriesPanel;
         public static MMButton StartButton;
@@ -62,20 +62,10 @@ namespace ModManager5.Classes
             ThemeList.theme.MSize = (int)(ratio * ThemeList.theme.MSize);
 
             MenuPanel = new Panel();
-            CreditsMenuButton = new Button();
-            SettingsMenuButton = new Button();
-            FaqMenuButton = new Button();
-            NewsMenuButton = new Button();
-            AccountMenuButton = new Button();
-            ServersMenuButton = new Button();
             ModsCategoriesPanel = new Panel();
             BottomLeftPanel = new Panel();
             IconsMenuPanel = new Panel();
-            RoadmapPict = new PictureBox();
-            GithubPict = new PictureBox();
-            DiscordPict = new PictureBox();
             VersionLabel = new MMLabel();
-            ModsMenuButton = new Button();
             LogoPict = new PictureBox();
             BottomRightPanel = new Panel();
             AppPanel = new Panel();
@@ -89,145 +79,28 @@ namespace ModManager5.Classes
 
             modManager.BackColor = ThemeList.theme.AppBackgroundColor;
 
+            ServersPanel = Visuals.MenuPanel("ServersPanel", "Servers", global::ModManager5.Properties.Resources.servers);
+            SettingsPanel = Visuals.MenuPanel("SettingsPanel", "Settings", global::ModManager5.Properties.Resources.settings);
+            CreditsPanel = Visuals.MenuPanel("CreditsPanel", "Credits", global::ModManager5.Properties.Resources.credits);
+            ModsPanel = Visuals.MenuPanel("ModsPanel", "Mods", global::ModManager5.Properties.Resources.mods);
+
             // 
             // MenuPanel
             // 
             MenuPanel.AutoScroll = true;
             MenuPanel.BackColor = ThemeList.theme.MenuBackgroundColor;
-            MenuPanel.Controls.Add(CreditsMenuButton);
-            MenuPanel.Controls.Add(SettingsMenuButton);
-            MenuPanel.Controls.Add(FaqMenuButton);
-            MenuPanel.Controls.Add(NewsMenuButton);
-            MenuPanel.Controls.Add(AccountMenuButton);
-            MenuPanel.Controls.Add(ServersMenuButton);
+            MenuPanel.Controls.Add(CreditsPanel);
+            MenuPanel.Controls.Add(SettingsPanel);
+            MenuPanel.Controls.Add(ServersPanel);
             MenuPanel.Controls.Add(ModsCategoriesPanel);
             MenuPanel.Controls.Add(BottomLeftPanel);
-            MenuPanel.Controls.Add(ModsMenuButton);
+            MenuPanel.Controls.Add(ModsPanel);
             MenuPanel.Controls.Add(LogoPict);
             MenuPanel.Dock = System.Windows.Forms.DockStyle.Left;
             MenuPanel.Location = new System.Drawing.Point(0, 0);
             MenuPanel.Margin = new System.Windows.Forms.Padding(0);
             MenuPanel.Name = "MenuPanel";
             MenuPanel.Size = new System.Drawing.Size(300, 1041);
-            // 
-            // CreditsMenuButton
-            // 
-            CreditsMenuButton.BackColor = ThemeList.theme.MenuButtonsColor;
-            CreditsMenuButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            CreditsMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
-            CreditsMenuButton.FlatAppearance.BorderSize = 0;
-            CreditsMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            CreditsMenuButton.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            CreditsMenuButton.ForeColor = ThemeList.theme.TextColor;
-            CreditsMenuButton.Location = new System.Drawing.Point(0, 455);
-            CreditsMenuButton.Margin = new System.Windows.Forms.Padding(0);
-            CreditsMenuButton.Name = "CreditsMenuButton";
-            CreditsMenuButton.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            CreditsMenuButton.Size = new System.Drawing.Size(300, 50);
-            CreditsMenuButton.Text = Translator.get("Credits");
-            CreditsMenuButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            CreditsMenuButton.UseVisualStyleBackColor = false;
-            CreditsMenuButton.TabStop = false;
-
-            // 
-            // SettingsMenuButton
-            // 
-            SettingsMenuButton.BackColor = ThemeList.theme.MenuButtonsColor;
-            SettingsMenuButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            SettingsMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
-            SettingsMenuButton.FlatAppearance.BorderSize = 0;
-            SettingsMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            SettingsMenuButton.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            SettingsMenuButton.ForeColor = ThemeList.theme.TextColor;
-            SettingsMenuButton.Location = new System.Drawing.Point(0, 405);
-            SettingsMenuButton.Margin = new System.Windows.Forms.Padding(0);
-            SettingsMenuButton.Name = "SettingsMenuButton";
-            SettingsMenuButton.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            SettingsMenuButton.Size = new System.Drawing.Size(300, 50);
-            SettingsMenuButton.Text = Translator.get("Settings");
-            SettingsMenuButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            SettingsMenuButton.UseVisualStyleBackColor = false;
-            SettingsMenuButton.TabStop = false;
-
-            // 
-            // FaqMenuButton
-            // 
-            FaqMenuButton.BackColor = ThemeList.theme.MenuButtonsColor;
-            FaqMenuButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            FaqMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
-            FaqMenuButton.FlatAppearance.BorderSize = 0;
-            FaqMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            FaqMenuButton.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            FaqMenuButton.ForeColor = ThemeList.theme.TextColor;
-            FaqMenuButton.Location = new System.Drawing.Point(0, 355);
-            FaqMenuButton.Margin = new System.Windows.Forms.Padding(0);
-            FaqMenuButton.Name = "FaqMenuButton";
-            FaqMenuButton.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            FaqMenuButton.Size = new System.Drawing.Size(300, 50);
-            FaqMenuButton.Text = Translator.get("FAQ");
-            FaqMenuButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            FaqMenuButton.UseVisualStyleBackColor = false;
-            FaqMenuButton.TabStop = false;
-
-            // 
-            // NewsMenuButton
-            // 
-            NewsMenuButton.BackColor = ThemeList.theme.MenuButtonsColor;
-            NewsMenuButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            NewsMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
-            NewsMenuButton.FlatAppearance.BorderSize = 0;
-            NewsMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            NewsMenuButton.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            NewsMenuButton.ForeColor = ThemeList.theme.TextColor;
-            NewsMenuButton.Location = new System.Drawing.Point(0, 305);
-            NewsMenuButton.Margin = new System.Windows.Forms.Padding(0);
-            NewsMenuButton.Name = "NewsMenuButton";
-            NewsMenuButton.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            NewsMenuButton.Size = new System.Drawing.Size(300, 50);
-            NewsMenuButton.Text = Translator.get("News");
-            NewsMenuButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            NewsMenuButton.UseVisualStyleBackColor = false;
-            NewsMenuButton.TabStop = false;
-
-            // 
-            // NewsMenuButton
-            // 
-            ServersMenuButton.BackColor = ThemeList.theme.MenuButtonsColor;
-            ServersMenuButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            ServersMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
-            ServersMenuButton.FlatAppearance.BorderSize = 0;
-            ServersMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            ServersMenuButton.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            ServersMenuButton.ForeColor = ThemeList.theme.TextColor;
-            ServersMenuButton.Location = new System.Drawing.Point(0, 305);
-            ServersMenuButton.Margin = new System.Windows.Forms.Padding(0);
-            ServersMenuButton.Name = "ServersMenuButton";
-            ServersMenuButton.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            ServersMenuButton.Size = new System.Drawing.Size(300, 50);
-            ServersMenuButton.Text = Translator.get("Servers");
-            ServersMenuButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            ServersMenuButton.UseVisualStyleBackColor = false;
-            ServersMenuButton.TabStop = false;
-
-            // 
-            // AccountMenuButton
-            // 
-            AccountMenuButton.BackColor = ThemeList.theme.MenuButtonsColor;
-            AccountMenuButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            AccountMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
-            AccountMenuButton.FlatAppearance.BorderSize = 0;
-            AccountMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            AccountMenuButton.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            AccountMenuButton.ForeColor = ThemeList.theme.TextColor;
-            AccountMenuButton.Location = new System.Drawing.Point(0, 255);
-            AccountMenuButton.Margin = new System.Windows.Forms.Padding(0);
-            AccountMenuButton.Name = "AccountMenuButton";
-            AccountMenuButton.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            AccountMenuButton.Size = new System.Drawing.Size(300, 50);
-            AccountMenuButton.Text = Translator.get("Account");
-            AccountMenuButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            AccountMenuButton.UseVisualStyleBackColor = false;
-            AccountMenuButton.TabStop = false;
 
             // 
             // ModsCategoriesPanel
@@ -239,12 +112,21 @@ namespace ModManager5.Classes
             // BottomLeftPanel
             // 
             BottomLeftPanel.BackColor = ThemeList.theme.MenuButtonsColor;
+            //BottomLeftPanel.Controls.Add(IconsMenuPanel2);
             BottomLeftPanel.Controls.Add(IconsMenuPanel);
             BottomLeftPanel.Controls.Add(VersionLabel);
             BottomLeftPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             BottomLeftPanel.Location = new System.Drawing.Point(0, 941);
             BottomLeftPanel.Name = "BottomLeftPanel";
-            BottomLeftPanel.Size = new System.Drawing.Size(300, 100);
+            BottomLeftPanel.Size = new System.Drawing.Size(300, 200);
+
+            RoadmapPict = Visuals.BottomLeftPict(global::ModManager5.Properties.Resources.roadmap);
+            GithubPict = Visuals.BottomLeftPict(global::ModManager5.Properties.Resources.github);
+            DiscordPict = Visuals.BottomLeftPict(global::ModManager5.Properties.Resources.discord);
+            AccountPict = Visuals.BottomLeftPict(global::ModManager5.Properties.Resources.account);
+            NewsPict = Visuals.BottomLeftPict(global::ModManager5.Properties.Resources.news);
+            FaqPict = Visuals.BottomLeftPict(global::ModManager5.Properties.Resources.faq);
+
             // 
             // IconsMenuPanel
             // 
@@ -252,55 +134,19 @@ namespace ModManager5.Classes
             IconsMenuPanel.Controls.Add(RoadmapPict);
             IconsMenuPanel.Controls.Add(GithubPict);
             IconsMenuPanel.Controls.Add(DiscordPict);
+            IconsMenuPanel.Controls.Add(FaqPict);
+            IconsMenuPanel.Controls.Add(NewsPict);
+            IconsMenuPanel.Controls.Add(AccountPict);
             IconsMenuPanel.Dock = System.Windows.Forms.DockStyle.Bottom;
             IconsMenuPanel.Location = new System.Drawing.Point(0, 30);
             IconsMenuPanel.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
             IconsMenuPanel.Name = "IconsMenuPanel";
             IconsMenuPanel.Size = new System.Drawing.Size(300, 60);
-            IconsMenuPanel.Padding = new Padding(0, 15, 0, 15);
-            // 
-            // RoadmapPict
-            // 
-            RoadmapPict.Cursor = System.Windows.Forms.Cursors.Hand;
-            RoadmapPict.Dock = System.Windows.Forms.DockStyle.Left;
-            RoadmapPict.Image = global::ModManager5.Properties.Resources.roadmap;
-            RoadmapPict.Location = new System.Drawing.Point(163, 0);
-            RoadmapPict.Margin = new System.Windows.Forms.Padding(0);
-            RoadmapPict.Name = "RoadmapPict";
-            RoadmapPict.Size = new System.Drawing.Size(90, 30);
-            RoadmapPict.Padding = new Padding(30, 0, 30, 0);
-            RoadmapPict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            RoadmapPict.TabStop = false;
+            IconsMenuPanel.Padding = new Padding(30, 15, 30, 15);
+
             
-            // 
-            // GithubPict
-            // 
-            GithubPict.Cursor = System.Windows.Forms.Cursors.Hand;
-            GithubPict.Dock = System.Windows.Forms.DockStyle.Left;
-            GithubPict.Image = global::ModManager5.Properties.Resources.github;
-            GithubPict.Location = new System.Drawing.Point(93, 0);
-            GithubPict.Margin = new System.Windows.Forms.Padding(0);
-            GithubPict.Name = "GithubPict";
-            GithubPict.Size = new System.Drawing.Size(90, 30);
-            GithubPict.Padding = new Padding(30, 0, 30, 0);
-            GithubPict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            GithubPict.TabStop = false;
             
-            // 
-            // DiscordPict
-            // 
-            DiscordPict.Cursor = System.Windows.Forms.Cursors.Hand;
-            DiscordPict.Dock = System.Windows.Forms.DockStyle.Left;
-            DiscordPict.Image = global::ModManager5.Properties.Resources.discord;
-            DiscordPict.Location = new System.Drawing.Point(23, 0);
-            DiscordPict.Margin = new System.Windows.Forms.Padding(0);
-            DiscordPict.Name = "DiscordPict";
-            DiscordPict.Size = new System.Drawing.Size(90, 30);
-            DiscordPict.Padding = new Padding(30, 0, 30, 0);
-            DiscordPict.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
-            DiscordPict.TabStop = false;
-            
-            // 
+            //
             // VersionLabel
             // 
             VersionLabel.BackColor = ThemeList.theme.MenuButtonsColor;
@@ -314,25 +160,6 @@ namespace ModManager5.Classes
             VersionLabel.Size = new System.Drawing.Size(300, 40);
             VersionLabel.Text = "Mod Manager Version " + (ModManager.version.Major == 5 ? ModManager.visibleVersion : "5 Beta");
             VersionLabel.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // ModsMenuButton
-            // 
-            ModsMenuButton.BackColor = ThemeList.theme.MenuButtonsColor;
-            ModsMenuButton.Cursor = System.Windows.Forms.Cursors.Hand;
-            ModsMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
-            ModsMenuButton.FlatAppearance.BorderSize = 0;
-            ModsMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            ModsMenuButton.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            ModsMenuButton.ForeColor = ThemeList.theme.TextColor;
-            ModsMenuButton.Location = new System.Drawing.Point(0, 115);
-            ModsMenuButton.Margin = new System.Windows.Forms.Padding(0);
-            ModsMenuButton.Name = "ModsMenuButton";
-            ModsMenuButton.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
-            ModsMenuButton.Size = new System.Drawing.Size(300, 50);
-            ModsMenuButton.Text = Translator.get("Mods");
-            ModsMenuButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            ModsMenuButton.UseVisualStyleBackColor = false;
-            ModsMenuButton.TabStop = false;
 
             // 
             // LogoPict
@@ -471,26 +298,49 @@ namespace ModManager5.Classes
 
         public static void InitListeners()
         {
-            ModsMenuButton.Click += new EventHandler((object sender, EventArgs e) => {
-                showMenuPanel(ModsCategoriesPanel);
-            });
-            CreditsMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
+            foreach (Control c in ModsPanel.Controls)
             {
-                showMenuPanel();
-            });
-            SettingsMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
+                c.Click += new EventHandler((object sender, EventArgs e) => {
+                    showMenuPanel(ModsCategoriesPanel);
+                });
+            }
+            
+            foreach (Control c in ServersPanel.Controls)
             {
-                showMenuPanel();
-            });
-            FaqMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
+                c.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    showMenuPanel();
+                    openForm(ServersForm);
+                });
+            }
+
+            foreach (Control c in CreditsPanel.Controls)
+            {
+                c.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    showMenuPanel();
+                    openForm(CreditsForm);
+                });
+            }
+
+            foreach (Control c in SettingsPanel.Controls)
+            {
+                c.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    showMenuPanel();
+                    openForm(SettingsForm);
+                });
+            }
+
+            FaqPict.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 Process.Start("explorer", ModManager.serverURL + @"\faq");
             });
-            NewsMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
+            NewsPict.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 Process.Start("explorer", ModManager.serverURL + @"\news");
             });
-            AccountMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
+            AccountPict.Click += new EventHandler((object sender, EventArgs e) =>
             {
                 Process.Start("explorer", ModManager.serverURL + @"\login");
             });
@@ -510,19 +360,7 @@ namespace ModManager5.Classes
 
                 ModWorker.startGame();
             });
-            ServersMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
-            {
-                showMenuPanel();
-                openForm(ServersForm);
-            });
-            SettingsMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
-            {
-                openForm(SettingsForm);
-            });
-            CreditsMenuButton.Click += new EventHandler((object sender, EventArgs e) =>
-            {
-                openForm(CreditsForm);
-            });
+            
         }
 
         public static void hideMenuPanels()
@@ -789,7 +627,7 @@ namespace ModManager5.Classes
                         PictureBox ModUpdate = new PictureBox();
                         ModUpdate.Cursor = System.Windows.Forms.Cursors.Hand;
                         ModUpdate.Dock = DockStyle.Fill;
-                        ModUpdate.Image = global::ModManager5.Properties.Resources.updateMod;
+                        ModUpdate.Image = global::ModManager5.Properties.Resources.update;
                         ModUpdate.Margin = new System.Windows.Forms.Padding(0);
                         ModUpdate.Name = "ModUpdate";
                         ModUpdate.Size = new System.Drawing.Size(60, 50);
@@ -852,7 +690,7 @@ namespace ModManager5.Classes
                             }
                         });
                         ModUninstall.Cursor = System.Windows.Forms.Cursors.Hand;
-                        ModUninstall.Image = global::ModManager5.Properties.Resources.remove;
+                        ModUninstall.Image = global::ModManager5.Properties.Resources.delete;
                     }
 
                     PictureBox ModFavorite = new PictureBox();
@@ -925,7 +763,7 @@ namespace ModManager5.Classes
                     PictureBox ModGithub = new PictureBox();
                     ModGithub.Cursor = System.Windows.Forms.Cursors.Hand;
                     ModGithub.Dock = DockStyle.Fill;
-                    ModGithub.Image = global::ModManager5.Properties.Resources.information;
+                    ModGithub.Image = global::ModManager5.Properties.Resources.info;
                     ModGithub.Margin = new System.Windows.Forms.Padding(0);
                     ModGithub.Name = "ModGithub";
                     ModGithub.Size = new System.Drawing.Size(60, 50);
@@ -1122,7 +960,7 @@ namespace ModManager5.Classes
                     if (last)
                     {
                         // Add a local mod
-                        ModRemovedPic.Image = global::ModManager5.Properties.Resources.plus;
+                        ModRemovedPic.Image = global::ModManager5.Properties.Resources.add;
                         ModRemovedPic.Click += new EventHandler((object sender, EventArgs e) => {
                             if (FileButton.Text != "" && FileButton.Text != Translator.get("No file selected"))
                             {
@@ -1154,7 +992,7 @@ namespace ModManager5.Classes
                     } else
                     {
                         // Remove a local mod
-                        ModRemovedPic.Image = global::ModManager5.Properties.Resources.remove;
+                        ModRemovedPic.Image = global::ModManager5.Properties.Resources.delete;
                         ModRemovedPic.Click += new EventHandler((object sender, EventArgs e) => {
                             ModWorker.startTransaction();
                             StatusLabel.Text = Translator.get("Removing local mod...");

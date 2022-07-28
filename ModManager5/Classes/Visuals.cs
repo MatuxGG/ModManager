@@ -119,7 +119,7 @@ namespace ModManager5.Classes
 
             TitlePanel.Controls.Add(Visuals.LabelSubTitle(title));
 
-            left.Image = global::ModManager5.Properties.Resources.next;
+            left.Image = global::ModManager5.Properties.Resources.right;
             left.Dock = DockStyle.Top;
             left.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             left.TabStop = false;
@@ -127,7 +127,7 @@ namespace ModManager5.Classes
             left.Visible = false;
             HeaderPanel.Controls.Add(left, 2, 0);
 
-            right.Image = global::ModManager5.Properties.Resources.back;
+            right.Image = global::ModManager5.Properties.Resources.left;
             right.Dock = DockStyle.Top;
             right.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             right.TabStop = false;
@@ -307,10 +307,10 @@ namespace ModManager5.Classes
 
             if (last)
             {
-                ServerRemovePic.Image = global::ModManager5.Properties.Resources.plus;
+                ServerRemovePic.Image = global::ModManager5.Properties.Resources.add;
             } else
             {
-                ServerRemovePic.Image = global::ModManager5.Properties.Resources.remove;
+                ServerRemovePic.Image = global::ModManager5.Properties.Resources.delete;
             }
             ServerRemovePic.BackColor = ThemeList.theme.AppBackgroundColor;
             ServerRemovePic.ForeColor = ThemeList.theme.TextColor;
@@ -577,6 +577,68 @@ namespace ModManager5.Classes
             panel.Controls.Add(ServerName, 0, 0);
 
             return panel;
+        }
+
+        public static PictureBox BottomLeftPict(Image img)
+        {
+            PictureBox pb = new PictureBox();
+            pb.Cursor = System.Windows.Forms.Cursors.Hand;
+            pb.Dock = System.Windows.Forms.DockStyle.Left;
+            pb.Image = img;
+            pb.Location = new System.Drawing.Point(163, 0);
+            pb.Margin = new System.Windows.Forms.Padding(0);
+            pb.Size = new System.Drawing.Size(40, 30);
+            pb.Padding = new Padding(5, 0, 5, 0);
+            pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            pb.TabStop = false;
+
+            return pb;
+        }
+
+        public static Panel MenuPanel(string name, string text, Image img)
+        {
+            Panel p = new Panel();
+            p.BackColor = ThemeList.theme.MenuButtonsColor;
+            p.Dock = System.Windows.Forms.DockStyle.Top;
+            p.Margin = new System.Windows.Forms.Padding(0);
+            p.Name = name;
+            p.Cursor = System.Windows.Forms.Cursors.Hand;
+            p.Size = new System.Drawing.Size(300, 50);
+
+            PictureBox pb = new PictureBox();
+            pb.Cursor = System.Windows.Forms.Cursors.Hand;
+            pb.Dock = System.Windows.Forms.DockStyle.Left;
+            pb.Image = img;
+            pb.Location = new System.Drawing.Point(163, 0);
+            pb.Margin = new System.Windows.Forms.Padding(0);
+            pb.Size = new System.Drawing.Size(50, 50);
+            pb.Padding = new Padding(10);
+            pb.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            pb.TabStop = false;
+
+            Button b = new Button();
+            b.BackColor = ThemeList.theme.MenuButtonsColor;
+            b.Cursor = System.Windows.Forms.Cursors.Hand;
+            b.Dock = System.Windows.Forms.DockStyle.Left;
+            b.FlatAppearance.BorderSize = 0;
+            b.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            b.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            b.ForeColor = ThemeList.theme.TextColor;
+            b.Location = new System.Drawing.Point(0, 405);
+            b.Margin = new System.Windows.Forms.Padding(0);
+            b.Name = "SettingsMenuButton";
+            b.Padding = new System.Windows.Forms.Padding(12, 0, 0, 0);
+            b.Size = new System.Drawing.Size(250, 50);
+            b.Text = Translator.get(text);
+            b.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            b.UseVisualStyleBackColor = false;
+            b.TabStop = false;
+
+
+            p.Controls.Add(b);
+            p.Controls.Add(pb);
+
+            return p;
         }
     }
 }
