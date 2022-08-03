@@ -27,6 +27,8 @@ namespace ModManager5
         public static string visibleVersion = version.ToString().Substring(0, version.ToString().Length - 2);
         public static string token = System.IO.File.ReadAllText(appPath + @"\token.txt");
 
+        public static bool debug = false;
+
         public static Boolean silent;
 
         public ModManager(string[] args)
@@ -72,6 +74,10 @@ namespace ModManager5
                 {
                     Utils.log("Restart detected", "ModManager");
                     args = new string[] { };
+                } else if (args[0] == "debug")
+                {
+                    Utils.log("Debug Mode", "ModManager");
+                    debug = true;
                 } else
                 {
                     Utils.log("Silent mode detected", "ModManager");
