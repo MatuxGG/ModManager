@@ -48,7 +48,6 @@ namespace ModManager5
             Utils.DirectoryCreate(appDataPath + @"\themes");
             Utils.DirectoryCreate(appDataPath + @"\icons");
             Utils.DirectoryCreate(tempPath);
-            
 
             Utils.CleanLogs();
 

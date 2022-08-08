@@ -26,7 +26,7 @@ namespace ModManager5.Classes
         public string data { get; set; }
         public Release release { get; set; }
 
-        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author, string github, string githubLink, string social = "", string ignorePattern = "", string needPattern = "", string data = "")
+        public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies, string author = "", string github = "", string githubLink = "", string social = "", string ignorePattern = "", string needPattern = "", string data = "")
         {
             this.id = id;
             this.name = name;
@@ -53,26 +53,6 @@ namespace ModManager5.Classes
                 this.data = "";
             }
 
-        }
-
-        public Mod()
-        {
-            this.id = null;
-            this.name = null;
-            this.category = "local";
-            this.gameVersion = "";
-            this.dependencies = new List<string>() { };
-            this.author = "";
-            this.github = "";
-            this.githubLink = "0";
-            this.social = "";
-            this.ignorePattern = "";
-            this.needPattern = "";
-            this.type = "local";
-            this.release = null;
-            this.data = "";
-            this.dependencies = new List<string>() { };
-            this.data = "";
         }
 
         public async Task getGithubRelease()

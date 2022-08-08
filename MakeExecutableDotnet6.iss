@@ -5,14 +5,14 @@
 #include "Installer\CodeDependencies.iss"
 
 #define MyAppName "ModManager"
-#define MyAppVersion "5.2.0"
+#define MyAppVersion "5.2.2"
 #define MyAppPublisher "Matux"
 #define MyAppURL "https://goodloss.fr"
 #define MyAppExeName "ModManager5.exe"
 #define MyAppAssocName MyAppName + " File"
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
-#define devDir "C:\Users\matthieu.artaud\Smile\ModManager"
+#define devDir "D:\visualstudio\ModManager5"
 #define style "TabletDark.vsf"
 
 [Setup]
