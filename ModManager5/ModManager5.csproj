@@ -4,8 +4,8 @@
     <TargetFramework>net6.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
     <ApplicationIcon>modmanager.ico</ApplicationIcon>
-    <AssemblyVersion>5.2.1.0</AssemblyVersion>
-    <FileVersion>5.2.1.0</FileVersion>
+    <AssemblyVersion>5.2.3.0</AssemblyVersion>
+    <FileVersion>5.2.3.0</FileVersion>
   </PropertyGroup>
   <ItemGroup>
     <COMReference Include="IWshRuntimeLibrary">

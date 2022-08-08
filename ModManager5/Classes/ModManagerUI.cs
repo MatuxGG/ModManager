@@ -495,10 +495,13 @@ namespace ModManager5.Classes
             
             if (cat.id == "local")
             {
+                TableLayoutPanel InfoPanel = Visuals.InfoLabel(Translator.get("In your ZIP file, you need to include:\n") +
+                Translator.get("ⓘ BepInEx folder, mono folder, doorstop_config.ini & winhttp.dll ⓘ")
+                );
+                f.Controls.Add(InfoPanel);
                 mods.AddRange(ModList.localMods);
                 int nextId = ModList.localMods.Count();
                 mods.Add(new Mod("LocalMod" + nextId, Translator.get("NewMod") + nextId, "local", "local", ServerConfig.get("gameVersion").value, new List<string>() { DependencyList.dependencies.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", "", "", "", ""));
-
             } else if (cat.id == "Favorites")
             {
                 mods = ConfigManager.getFavoriteMods();
