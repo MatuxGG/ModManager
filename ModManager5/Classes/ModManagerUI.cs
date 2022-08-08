@@ -776,7 +776,7 @@ namespace ModManager5.Classes
                     ModGithub.TabStop = false;
                     allocatedControls.Add(ModGithub);
                     ModGithub.Click += new EventHandler((object sender, EventArgs e) => {
-                        string link = "https://github.com/" + m.author + "/" + m.github;
+                        string link = m.getLink();
                         Process.Start("explorer", link);
                     });
                     ModPanel.Controls.Add(ModGithub, 5, line);
@@ -820,7 +820,7 @@ namespace ModManager5.Classes
                         ModAuthor.Click += new EventHandler((object sender, EventArgs e) => {
                             LinkLabel clickedLink = ((LinkLabel)sender);
                             string link = clickedLink.Text;
-                            Process.Start("explorer", "https://github.com/" + link);
+                            Process.Start("explorer", m.getAuthorLink());
                         });
                     }
                     else

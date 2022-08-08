@@ -34,7 +34,7 @@ namespace ModManager5.Classes
 
         public static void notHere(string text)
         {
-            if (a == null)
+            if (text == null)
             {
                 Utils.logE("Assert error: Not here (" + text + ")", "Assert");
             }
