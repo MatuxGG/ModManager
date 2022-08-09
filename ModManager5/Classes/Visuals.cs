@@ -607,6 +607,56 @@ namespace ModManager5.Classes
             return pb;
         }
 
+        public static PictureBox ModPic(string name, Bitmap img)
+        {
+            PictureBox Picture = new PictureBox();
+            Picture.Cursor = System.Windows.Forms.Cursors.Hand;
+            Picture.Dock = DockStyle.Fill;
+            Picture.Image = img;
+            Picture.Margin = new System.Windows.Forms.Padding(0);
+            Picture.Name = name;
+            Picture.Size = new System.Drawing.Size(60, 50);
+            Picture.Padding = new Padding(15, 10, 15, 10);
+            Picture.Margin = new Padding(10, 10, 10, 10);
+            Picture.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            Picture.TabStop = false;
+
+            return Picture;
+        }
+        public static Label ModLabel(string name, string text)
+        {
+            Label Label = new System.Windows.Forms.Label();
+            Label.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            Label.BackColor = Color.Transparent;
+            Label.ForeColor = SystemColors.Control;
+            Label.TextAlign = ContentAlignment.MiddleLeft;
+            Label.Dock = DockStyle.Left;
+            Label.Name = name;
+            Label.Text = text;
+            Label.Padding = new Padding(12, 0, 0, 0);
+            Label.Size = new System.Drawing.Size(150, 50);
+            Label.TabStop = false;
+
+            return Label;
+        }
+
+        public static LinkLabel ModLinkLabel(string name, string text)
+        {
+            LinkLabel LinkLabel = new LinkLabel();
+            LinkLabel.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            LinkLabel.LinkColor = SystemColors.Control;
+            LinkLabel.ForeColor = SystemColors.Control;
+            LinkLabel.TextAlign = ContentAlignment.MiddleLeft;
+            LinkLabel.Dock = DockStyle.Left;
+            LinkLabel.Name = name;
+            LinkLabel.Padding = new Padding(12, 0, 0, 0);
+            LinkLabel.Size = new System.Drawing.Size(250, 50);
+            LinkLabel.Text = text;
+            LinkLabel.TabStop = false;
+
+            return LinkLabel;
+        }
+
         public static Panel MenuPanel(string name, string text, Image img)
         {
             Panel p = new Panel();

@@ -275,13 +275,16 @@ namespace ModManager5.Classes
             CategoryForms.Clear();
             ModsCategoriesPanel.Controls.Clear();
             loadMods();
-            if (ConfigManager.getFavoriteMods() != null)
+            Form f = CategoryForms.Find(f => f.Name == fName);
+            if (f != null)
             {
-                openForm(CategoryForms.Find(f => f.Name == fName));
+                openForm(f);
             } else
             {
                 openForm(CategoryForms.Last());
             }
+            if (!ModManager.silent)
+                ContextMenu.load();
         }
 
         public static void InitForm()
@@ -452,7 +455,6 @@ namespace ModManager5.Classes
 
                     ModsCategoriesPanel.Controls.Add(b);
                 }
-                
             }
 
             if (ConfigManager.getFavoriteMods() != null)
@@ -501,7 +503,7 @@ namespace ModManager5.Classes
                 f.Controls.Add(InfoPanel);
                 mods.AddRange(ModList.localMods);
                 int nextId = ModList.localMods.Count();
-                mods.Add(new Mod("LocalMod" + nextId, Translator.get("NewMod") + nextId, "local", "local", ServerConfig.get("gameVersion").value, new List<string>() { DependencyList.dependencies.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", "", "", "", ""));
+                mods.Add(new Mod("LocalMod" + nextId, Translator.get("NewMod") + nextId, "local", "local", ServerConfig.get("gameVersion").value, new List<string>() { ModList.mods.Find(d => d.id.Contains("BepInEx")).id }, "", "", "0", "", "", "", "", "", new List<string>() { }));
             } else if (cat.id == "Favorites")
             {
                 mods = ConfigManager.getFavoriteMods();
@@ -509,7 +511,6 @@ namespace ModManager5.Classes
             {
                 mods = ModList.getModsByCategory(f.Name);
             }
-            //mods.Reverse();
 
             if (ConfigManager.config.launcher != "Steam" && f.Name != "local")
             {
@@ -569,7 +570,6 @@ namespace ModManager5.Classes
 
             } else
             {
-
                 ModPanel.Size = new System.Drawing.Size(100, 50 * size);
             }
             foreach (Mod m in mods)
@@ -601,87 +601,44 @@ namespace ModManager5.Classes
                         }
                     }
 
+                    if (m.options.Count() > 0)
+                    {
+                        line++;
+                    }
                     
                     if (im == null)
                     {
-                        PictureBox ModDownload = new PictureBox();
-                        ModDownload.Cursor = System.Windows.Forms.Cursors.Hand;
-                        ModDownload.Dock = DockStyle.Fill;
-                        ModDownload.Image = global::ModManager5.Properties.Resources.download;
-                        ModDownload.Margin = new System.Windows.Forms.Padding(0);
-                        ModDownload.Name = "ModDownload";
-                        ModDownload.Size = new System.Drawing.Size(60, 50);
-                        ModDownload.Padding = new Padding(15, 10, 15, 10);
-                        ModDownload.Margin = new Padding(10, 10, 10, 10);
-                        ModDownload.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                        ModDownload.TabStop = false;
+                        PictureBox ModDownload = Visuals.ModPic("ModDownload", global::ModManager5.Properties.Resources.download);
                         ModDownload.Click += new EventHandler((object sender, EventArgs e) =>
                         {
                             ModWorker.installAnyMod(m);
                         });
-
                         allocatedControls.Add(ModDownload);
-                        
                         ModPanel.Controls.Add(ModDownload, 3, line);
                     }
                     else if (((m.type != "allInOne" || m.id == "Challenger" || m.id == "ChallengerBeta") && im.version != m.release.TagName) || (m.type != "allInOne" && im.gameVersion != m.gameVersion))
                     {
-                        
-                        PictureBox ModUpdate = new PictureBox();
-                        ModUpdate.Cursor = System.Windows.Forms.Cursors.Hand;
-                        ModUpdate.Dock = DockStyle.Fill;
-                        ModUpdate.Image = global::ModManager5.Properties.Resources.update;
-                        ModUpdate.Margin = new System.Windows.Forms.Padding(0);
-                        ModUpdate.Name = "ModUpdate";
-                        ModUpdate.Size = new System.Drawing.Size(60, 50);
-                        ModUpdate.Padding = new Padding(15, 10, 15, 10);
-                        ModUpdate.Margin = new Padding(10, 10, 10, 10);
-                        ModUpdate.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                        ModUpdate.TabStop = false;
+                        PictureBox ModUpdate = Visuals.ModPic("ModUpdate", global::ModManager5.Properties.Resources.update);
                         ModUpdate.Click += new EventHandler((object sender, EventArgs e) =>
                         {
                             ModWorker.installAnyMod(m);
                         });
                         allocatedControls.Add(ModUpdate);
-
                         ModPanel.Controls.Add(ModUpdate, 3, line);
-                        
                     }
                     else
                     {
-                        
-                        PictureBox ModPlay = new PictureBox();
-                        ModPlay.Cursor = System.Windows.Forms.Cursors.Hand;
-                        ModPlay.Dock = DockStyle.Fill;
-                        ModPlay.Image = global::ModManager5.Properties.Resources.play;
-                        ModPlay.Margin = new System.Windows.Forms.Padding(0);
-                        ModPlay.Name = "ModPlay";
-                        ModPlay.Size = new System.Drawing.Size(60, 50);
-                        ModPlay.Padding = new Padding(15, 10, 15, 10);
-                        ModPlay.Margin = new Padding(10, 10, 10, 10);
-                        ModPlay.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                        ModPlay.TabStop = false;
+                        PictureBox ModPlay = Visuals.ModPic("ModPlay", global::ModManager5.Properties.Resources.play);
                         ModPlay.Click += new EventHandler((object sender, EventArgs e) =>
                         {
                             ModWorker.startMod(m);
                         });
                         allocatedControls.Add(ModPlay);
                         ModPanel.Controls.Add(ModPlay, 3, line);
-                        
                     }
                     
-                    PictureBox ModUninstall = new PictureBox();
-                    ModUninstall.Dock = DockStyle.Fill;
-                    ModUninstall.Margin = new System.Windows.Forms.Padding(0);
-                    ModUninstall.Name = "ModUninstall";
-                    ModUninstall.Size = new System.Drawing.Size(60, 50);
-                    ModUninstall.Padding = new Padding(15, 10, 15, 10);
-                    ModUninstall.Margin = new Padding(10, 10, 10, 10);
-                    ModUninstall.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                    ModUninstall.TabStop = false;
-
+                    PictureBox ModUninstall = Visuals.ModPic("ModUninstall", global::ModManager5.Properties.Resources.delete);
                     allocatedControls.Add(ModUninstall);
-
                     ModPanel.Controls.Add(ModUninstall, 4, line);
 
                     if (im != null)
@@ -693,19 +650,13 @@ namespace ModManager5.Classes
                             }
                         });
                         ModUninstall.Cursor = System.Windows.Forms.Cursors.Hand;
-                        ModUninstall.Image = global::ModManager5.Properties.Resources.delete;
+                    } else
+                    {
+                        ModUninstall.Cursor = System.Windows.Forms.Cursors.Default;
+                        ModUninstall.Image = null;
                     }
 
-                    PictureBox ModFavorite = new PictureBox();
-                    ModFavorite.Dock = DockStyle.Fill;
-                    ModFavorite.Margin = new System.Windows.Forms.Padding(0);
-                    ModFavorite.Name = "ModFavorite";
-                    ModFavorite.Size = new System.Drawing.Size(60, 50);
-                    ModFavorite.Padding = new Padding(15, 10, 15, 10);
-                    ModFavorite.Margin = new Padding(10, 10, 10, 10);
-                    ModFavorite.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                    ModFavorite.TabStop = false;
-                    ModFavorite.Cursor = System.Windows.Forms.Cursors.Hand;
+                    PictureBox ModFavorite = Visuals.ModPic("ModFavorite", global::ModManager5.Properties.Resources.favorite);
                     if (ConfigManager.isFavoriteMod(m.id))
                     {
                         ModFavorite.Image = global::ModManager5.Properties.Resources.favoriteFilled;
@@ -715,7 +666,6 @@ namespace ModManager5.Classes
                         });
                     } else
                     {
-                        ModFavorite.Image = global::ModManager5.Properties.Resources.favorite;
                         ModFavorite.Click += new EventHandler((object sender, EventArgs e) => {
                             ConfigManager.addFavoriteMod(m.id);
                             reloadMods();
@@ -725,17 +675,7 @@ namespace ModManager5.Classes
                     allocatedControls.Add(ModFavorite);
                     ModPanel.Controls.Add(ModFavorite, 8, line);
 
-                    PictureBox ModSave = new PictureBox();
-                    ModSave.Cursor = System.Windows.Forms.Cursors.Hand;
-                    ModSave.Dock = DockStyle.Fill;
-                    ModSave.Image = global::ModManager5.Properties.Resources.shortcut;
-                    ModSave.Margin = new System.Windows.Forms.Padding(0);
-                    ModSave.Name = "ModSave";
-                    ModSave.Size = new System.Drawing.Size(60, 50);
-                    ModSave.Padding = new Padding(15, 10, 15, 10);
-                    ModSave.Margin = new Padding(10, 10, 10, 10);
-                    ModSave.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                    ModSave.TabStop = false;
+                    PictureBox ModSave = Visuals.ModPic("ModSave", global::ModManager5.Properties.Resources.shortcut);
                     ModSave.Click += new EventHandler((object sender, EventArgs e) => {
                         ModList.createShortcut(m);
                     });
@@ -744,17 +684,7 @@ namespace ModManager5.Classes
 
                     if (m.social != null && m.social != "")
                     {
-                        PictureBox ModDiscord = new PictureBox();
-                        ModDiscord.Cursor = System.Windows.Forms.Cursors.Hand;
-                        ModDiscord.Dock = DockStyle.Fill;
-                        ModDiscord.Image = global::ModManager5.Properties.Resources.discord;
-                        ModDiscord.Margin = new System.Windows.Forms.Padding(0);
-                        ModDiscord.Name = "ModDiscord";
-                        ModDiscord.Size = new System.Drawing.Size(60, 50);
-                        ModDiscord.Padding = new Padding(15, 10, 15, 10);
-                        ModDiscord.Margin = new Padding(10, 10, 10, 10);
-                        ModDiscord.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                        ModDiscord.TabStop = false;
+                        PictureBox ModDiscord = Visuals.ModPic("ModDiscord", global::ModManager5.Properties.Resources.discord);
                         allocatedControls.Add(ModDiscord);
                         ModDiscord.Click += new EventHandler((object sender, EventArgs e) => {
                             string link = m.social;
@@ -763,85 +693,35 @@ namespace ModManager5.Classes
                         ModPanel.Controls.Add(ModDiscord, 6, line);
                     }
                     
-                    PictureBox ModGithub = new PictureBox();
-                    ModGithub.Cursor = System.Windows.Forms.Cursors.Hand;
-                    ModGithub.Dock = DockStyle.Fill;
-                    ModGithub.Image = global::ModManager5.Properties.Resources.info;
-                    ModGithub.Margin = new System.Windows.Forms.Padding(0);
-                    ModGithub.Name = "ModGithub";
-                    ModGithub.Size = new System.Drawing.Size(60, 50);
-                    ModGithub.Padding = new Padding(15, 10, 15, 10);
-                    ModGithub.Margin = new Padding(10, 10, 10, 10);
-                    ModGithub.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-                    ModGithub.TabStop = false;
+                    PictureBox ModGithub = Visuals.ModPic("ModGithub", global::ModManager5.Properties.Resources.info);
                     allocatedControls.Add(ModGithub);
+                    ModPanel.Controls.Add(ModGithub, 5, line);
                     ModGithub.Click += new EventHandler((object sender, EventArgs e) => {
                         string link = m.getLink();
                         Process.Start("explorer", link);
                     });
-                    ModPanel.Controls.Add(ModGithub, 5, line);
+                    
 
-                    System.Windows.Forms.Label ModVersion = new System.Windows.Forms.Label();
-                    ModVersion.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    ModVersion.BackColor = Color.Transparent;
-                    ModVersion.ForeColor = SystemColors.Control;
-                    ModVersion.TextAlign = ContentAlignment.MiddleLeft;
-                    ModVersion.Dock = DockStyle.Left;
-                    ModVersion.Name = "ModVersion=" + m.id;
-                    ModVersion.Padding = new Padding(12, 0, 0, 0);
-                    ModVersion.Size = new System.Drawing.Size(150, 50);
-                    ModVersion.TabStop = false;
+                    Label ModVersion = Visuals.ModLabel("ModVersion", m.githubLink == "1" ? m.release.TagName : "");
                     allocatedControls.Add(ModVersion);
-                    if (m.githubLink == "1")
-                    {
-                        ModVersion.Text = m.release.TagName;
-                    }
-                    else
-                    {
-                        ModVersion.Text = "";
-                    }
                     ModPanel.Controls.Add(ModVersion, 2, line);
 
-                    System.Windows.Forms.LinkLabel ModAuthor = new System.Windows.Forms.LinkLabel();
-                    ModAuthor.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    ModAuthor.LinkColor = SystemColors.Control;
-                    ModAuthor.ForeColor = SystemColors.Control;
-                    ModAuthor.TextAlign = ContentAlignment.MiddleLeft;
-                    ModAuthor.Dock = DockStyle.Left;
-                    ModAuthor.Name = "ModAuthor=" + m.id;
-                    ModAuthor.Padding = new Padding(12, 0, 0, 0);
-                    ModAuthor.Size = new System.Drawing.Size(250, 50);
-                    ModAuthor.Text = m.author;
-                    ModAuthor.TabStop = false;
+                    LinkLabel ModAuthor = Visuals.ModLinkLabel("ModAuthor", m.author);
                     allocatedControls.Add(ModAuthor);
+                    ModPanel.Controls.Add(ModAuthor, 1, line);
 
                     if (m.githubLink == "1")
                     {
                         ModAuthor.Click += new EventHandler((object sender, EventArgs e) => {
-                            LinkLabel clickedLink = ((LinkLabel)sender);
-                            string link = clickedLink.Text;
                             Process.Start("explorer", m.getAuthorLink());
                         });
                     }
                     else
                     {
-                        ModAuthor.LinkBehavior = System.Windows.Forms.LinkBehavior.NeverUnderline;
+                        ModAuthor.LinkBehavior = LinkBehavior.NeverUnderline;
                     }
 
-                    ModPanel.Controls.Add(ModAuthor, 1, line);
-
-                    System.Windows.Forms.Label ModTitle = new System.Windows.Forms.Label();
-
-                    ModTitle.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-                    ModTitle.BackColor = Color.Transparent;
-                    ModTitle.ForeColor = SystemColors.Control;
-                    ModTitle.TextAlign = ContentAlignment.MiddleLeft;
-                    ModTitle.Dock = DockStyle.Left;
-                    ModTitle.Name = "ModTitle";
-                    ModTitle.Padding = new Padding(12, 0, 0, 0);
-                    ModTitle.Size = new System.Drawing.Size(250, 50);
-                    ModTitle.Text = m.name;
-                    ModTitle.TabStop = false;
+                    Label ModTitle = Visuals.ModLabel("ModTitle", m.name);
                     ModPanel.Controls.Add(ModTitle, 0, line);
                     allocatedControls.Add(ModTitle);
                 } else

@@ -73,10 +73,6 @@ namespace ModManager5
                 {
                     Utils.log("Restart detected", "ModManager");
                     args = new string[] { };
-                } else if (args[0] == "debug")
-                {
-                    Utils.log("Debug Mode", "ModManager");
-                    debug = true;
                 } else
                 {
                     Utils.log("Silent mode detected", "ModManager");
@@ -127,8 +123,6 @@ namespace ModManager5
             ModList.loadLocalMods();
             Utils.log("Loading releases", "ModManager");
             await ModList.loadReleases();
-            Utils.log("Loading dependencies", "ModManager");
-            DependencyList.load();
             Utils.log("Loading categories", "ModManager");
             CategoryManager.load();
             if (args.Count() <= 0)

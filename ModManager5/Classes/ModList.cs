@@ -108,7 +108,7 @@ namespace ModManager5.Classes
 
             foreach (Mod m in mods)
             {
-                if (m.type != "allInOne" && (m.release == null || m.id == "Challenger" || m.id == "ChallengerBeta"))
+                if (m.type != "allInOne" && ((m.release == null && m.githubLink == "1") || m.id == "Challenger" || m.id == "ChallengerBeta"))
                 {
                     releasesToRemove.Add(m);
                 }
@@ -229,9 +229,9 @@ namespace ModManager5.Classes
         public static List<Mod> getModsByCategory(string category)
         {
             if (ConfigManager.config.launcher == "Steam")
-                return mods.FindAll(m => m.category == category);
+                return mods.FindAll(m => m.category == category && m.type != "dependency");
             else
-                return mods.FindAll(m => m.category == category && (m.type == "allInOne" || m.type == "local" || m.gameVersion == ServerConfig.get("gameVersion").value));
+                return mods.FindAll(m => m.category == category && m.type != "dependency" && (m.type == "allInOne" || m.type == "local" || m.gameVersion == ServerConfig.get("gameVersion").value));
         }
 
         public static List<Mod> getMyMods(List<string> listOfMods)
