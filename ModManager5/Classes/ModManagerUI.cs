@@ -589,7 +589,7 @@ namespace ModManager5.Classes
                         if (ConfigManager.isBetterCrewlinkInstalled())
                         {
                             ConfigManager.config.installedMods.RemoveAll(im => im.id == m.id);
-                            InstalledMod bcl = new InstalledMod(m.id, "", "");
+                            InstalledMod bcl = new InstalledMod(m.id, "", "", new List<string>() { });
                             ConfigManager.config.installedMods.Add(bcl);
                             ConfigManager.update();
                             im = ConfigManager.getInstalledModById(m.id);
@@ -601,11 +601,6 @@ namespace ModManager5.Classes
                         }
                     }
 
-                    if (m.options.Count() > 0)
-                    {
-                        line++;
-                    }
-                    
                     if (im == null)
                     {
                         PictureBox ModDownload = Visuals.ModPic("ModDownload", global::ModManager5.Properties.Resources.download);
@@ -693,15 +688,20 @@ namespace ModManager5.Classes
                         ModPanel.Controls.Add(ModDiscord, 6, line);
                     }
                     
-                    PictureBox ModGithub = Visuals.ModPic("ModGithub", global::ModManager5.Properties.Resources.info);
-                    allocatedControls.Add(ModGithub);
-                    ModPanel.Controls.Add(ModGithub, 5, line);
-                    ModGithub.Click += new EventHandler((object sender, EventArgs e) => {
-                        string link = m.getLink();
-                        Process.Start("explorer", link);
-                    });
+                    PictureBox ModEdit = Visuals.ModPic("ModEdit", global::ModManager5.Properties.Resources.edit);
+                    allocatedControls.Add(ModEdit);
+                    ModPanel.Controls.Add(ModEdit, 5, line);
+                    if (m.options.Count() == 0 || im == null)
+                    {
+                        ModEdit.Image = null;
+                        ModEdit.Cursor = System.Windows.Forms.Cursors.Default;
+                    } else
+                    {
+                        ModEdit.Click += new EventHandler((object sender, EventArgs e) => {
+                            openOptionsForm(m);
+                        });
+                    }
                     
-
                     Label ModVersion = Visuals.ModLabel("ModVersion", m.githubLink == "1" ? m.release.TagName : "");
                     allocatedControls.Add(ModVersion);
                     ModPanel.Controls.Add(ModVersion, 2, line);
@@ -721,9 +721,14 @@ namespace ModManager5.Classes
                         ModAuthor.LinkBehavior = LinkBehavior.NeverUnderline;
                     }
 
-                    Label ModTitle = Visuals.ModLabel("ModTitle", m.name);
+                    LinkLabel ModTitle = Visuals.ModLinkLabel("ModTitle", m.name);
                     ModPanel.Controls.Add(ModTitle, 0, line);
                     allocatedControls.Add(ModTitle);
+                    ModTitle.Click += new EventHandler((object sender, EventArgs e) => {
+                        string link = m.getLink();
+                        Process.Start("explorer", link);
+                    });
+
                 } else
                 {
                     Boolean last = line == mods.Count() - 1;
@@ -991,6 +996,50 @@ namespace ModManager5.Classes
             }
 
             f.Controls.Add(Visuals.LabelTitle(Translator.get(cat.name)));
+        }
+
+        public static void openOptionsForm(Mod m)
+        {
+            var formPopup = new Form();
+            formPopup.MinimumSize = new System.Drawing.Size(600, 100 * m.options.Count());
+            int width = (int)((60 * Screen.PrimaryScreen.Bounds.Width) / 100);
+            if (width < formPopup.MinimumSize.Width)
+                width = formPopup.MinimumSize.Width;
+            int height = (int)((60 * Screen.PrimaryScreen.Bounds.Height) / 100);
+            if (height < formPopup.MinimumSize.Height)
+                height = formPopup.MinimumSize.Height;
+            formPopup.Size = new Size(width, height);
+            formPopup.StartPosition = FormStartPosition.CenterScreen;
+            formPopup.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            formPopup.BackColor = ThemeList.theme.AppBackgroundColor;
+            formPopup.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            formPopup.ForeColor = ThemeList.theme.TextColor;
+            formPopup.Icon = global::ModManager5.Properties.Resources.modmanager;
+            formPopup.Name = "OptionsPopup";
+            formPopup.Text = m.name + " options";
+
+            Panel ContainerOptionsPanel = new Panel();
+            ContainerOptionsPanel.Name = "ContainerOptionsPanel";
+            ContainerOptionsPanel.BackColor = Color.Transparent;
+            ContainerOptionsPanel.Dock = DockStyle.Fill;
+            ContainerOptionsPanel.AutoScroll = true;
+            formPopup.Controls.Add(ContainerOptionsPanel);
+
+            TableLayoutPanel ModOptionsPanel = new TableLayoutPanel();
+            ModOptionsPanel.Name = "ModOptionsPanel";
+            ModOptionsPanel.BackColor = Color.Transparent;
+            ModOptionsPanel.Dock = DockStyle.Top;
+            ContainerOptionsPanel.Controls.Add(ModOptionsPanel);
+
+            foreach (string optionName in m.options)
+            {
+                Mod option = ModList.getModById(optionName);
+                formPopup.Controls.Add(Visuals.ModLabel(optionName, optionName));
+            }
+
+
+
+            formPopup.ShowDialog();
         }
 
         public static void loadServers()

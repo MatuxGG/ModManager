@@ -43,7 +43,7 @@ namespace ModManager5.Classes
             this.category = category;
             this.gameVersion = gameVersion;
             this.dependencies = dependencies;
-            this.dependencies = options;
+            this.options = options;
             this.author = author;
             this.github = github;
             this.githubLink = githubLink;

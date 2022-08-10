@@ -163,7 +163,7 @@ namespace ModManager5
                 {
                     if (ConfigManager.isBetterCrewlinkInstalled())
                     {
-                        InstalledMod bcl = new InstalledMod(m.id, "", "");
+                        InstalledMod bcl = new InstalledMod(m.id, "", "", new List<string>() { });
                         ConfigManager.config.installedMods.RemoveAll(im => im.id == m.id);
                         ConfigManager.config.installedMods.Add(bcl);
                         ConfigManager.update();

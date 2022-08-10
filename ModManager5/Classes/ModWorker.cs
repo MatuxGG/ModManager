@@ -456,7 +456,7 @@ namespace ModManager5.Classes
             {
                 ConfigManager.config.installedMods.Remove(existingMod);
             }
-            InstalledMod newMod = new InstalledMod(ModToInstall.id, ModToInstall.release.TagName, ModToInstall.gameVersion);
+            InstalledMod newMod = new InstalledMod(ModToInstall.id, ModToInstall.release.TagName, ModToInstall.gameVersion, new List<string>() { });
             ConfigManager.config.installedMods.Add(newMod);
             ConfigManager.update();
 
@@ -704,7 +704,7 @@ namespace ModManager5.Classes
 
             dataLoad(m);
 
-            InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion);
+            InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion, existingMod.options);
             ConfigManager.config.installedMods.Add(newMod);
             ConfigManager.update();
             

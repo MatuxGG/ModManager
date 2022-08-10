@@ -11,12 +11,14 @@ namespace ModManager5.Classes
         public string id;
         public string version;
         public string gameVersion;
+        public List<string> options;
 
-        public InstalledMod(string id, string version, string gameVersion)
+        public InstalledMod(string id, string version, string gameVersion, List<string> options)
         {
             this.id = id;
             this.version = version;
             this.gameVersion = gameVersion;
+            this.options = options;
         }
 
         public InstalledMod()
@@ -24,6 +26,7 @@ namespace ModManager5.Classes
             this.id = "";
             this.version = "";
             this.gameVersion = "";
+            this.options = new List<string>() { };
         }
     }
 }
