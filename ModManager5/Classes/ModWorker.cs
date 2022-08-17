@@ -140,7 +140,10 @@ namespace ModManager5.Classes
                     return;
                 }
 
+                InstalledMod im = ConfigManager.getInstalledModById(m.id);
+
                 string dirPath;
+                string optionsPath = dirPath = ModManager.appDataPath + @"\mods\" + m.id + "-options";
                 if (m.type == "local")
                 {
                     dirPath = ModManager.appDataPath + @"\localMods\" + m.name;
@@ -156,10 +159,25 @@ namespace ModManager5.Classes
                 {
                     cleanGame();
                     Utils.DirectoryCopy(dirPath, ConfigManager.config.amongUsPath, true);
+                    foreach(string optionName in m.options)
+                    {
+                        Utils.DirectoryCopy(ModManager.appDataPath + @"\mods\" + optionName, ConfigManager.config.amongUsPath, true);
+                    }
                     Process.Start("explorer", ConfigManager.config.amongUsPath + @"\Among Us.exe");
                 } else
                 {
-                    Process.Start("explorer", dirPath + @"\Among Us.exe");
+                    if (im.options.Count() > 0)
+                    {
+                        Utils.DirectoryCopy(dirPath, optionsPath, true);
+                        foreach (string optionName in m.options)
+                        {
+                            Utils.DirectoryCopyWithoutReplacement(ModManager.appDataPath + @"\mods\" + optionName, optionsPath);
+                        }
+                        Process.Start("explorer", optionsPath + @"\Among Us.exe");
+                    } else
+                    {
+                        Process.Start("explorer", dirPath + @"\Among Us.exe");
+                    }
                 }
 
 
@@ -517,7 +535,9 @@ namespace ModManager5.Classes
                 return;
             } else
             {
-                Utils.DirectoryDelete(ModManager.appDataPath + @"\mods\" + m.id);
+                string modPath = ModManager.appDataPath + @"\mods\" + m.id;
+                Utils.DirectoryDelete(modPath);
+                Utils.DirectoryDelete(modPath + "-options");
             }
 
             ConfigManager.config.installedMods.Remove(im);
@@ -704,7 +724,7 @@ namespace ModManager5.Classes
 
             dataLoad(m);
 
-            InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion, existingMod.options);
+            InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion, existingMod == null ? new List<string>() { } : existingMod.options);
             ConfigManager.config.installedMods.Add(newMod);
             ConfigManager.update();
             
@@ -767,8 +787,6 @@ namespace ModManager5.Classes
             return true;
         }
 
-        
-
         public static Boolean installDll(Mod m, ReleaseAsset file, string destPath)
         {
             string fileName = file.Name;
@@ -828,6 +846,8 @@ namespace ModManager5.Classes
                     return dir.FullName;
                 }
             }
+
+            ModManagerUI.reloadMods();
             return null;
         }
 

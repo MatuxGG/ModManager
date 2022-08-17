@@ -45,6 +45,7 @@ namespace ModManager5.Classes
         public static Form SettingsForm;
         public static Form CreditsForm;
         public static Form EmptyForm;
+        public static Form OptionsForm;
 
         public static TextBox LoginPseudoText;
         public static TextBox LoginPasswordText;
@@ -497,7 +498,7 @@ namespace ModManager5.Classes
             
             if (cat.id == "local")
             {
-                TableLayoutPanel InfoPanel = Visuals.InfoLabel(Translator.get("In your ZIP file, you need to include:\n") +
+                TableLayoutPanel InfoPanel = Visuals.InfoLabel(Translator.get("In your ZIP file, you need to include") + "\n" +
                 Translator.get("ⓘ BepInEx folder, mono folder, doorstop_config.ini & winhttp.dll ⓘ")
                 );
                 f.Controls.Add(InfoPanel);
@@ -514,7 +515,7 @@ namespace ModManager5.Classes
 
             if (ConfigManager.config.launcher != "Steam" && f.Name != "local")
             {
-                TableLayoutPanel AlertPanel = Visuals.AlertLabel(Translator.get("⚠ You are not using Among Us from Steam. As a consequence, some mods may not be available. ⚠\n") +
+                TableLayoutPanel AlertPanel = Visuals.AlertLabel(Translator.get("⚠ You are not using Among Us from Steam. As a consequence, some mods may not be available. ⚠") + "\n" +
                 Translator.get("If you're using Among Us from Steam, please change launcher in Settings.")
                 );
                 f.Controls.Add(AlertPanel);
@@ -548,7 +549,6 @@ namespace ModManager5.Classes
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
@@ -657,12 +657,14 @@ namespace ModManager5.Classes
                         ModFavorite.Image = global::ModManager5.Properties.Resources.favoriteFilled;
                         ModFavorite.Click += new EventHandler((object sender, EventArgs e) => {
                             ConfigManager.removeFavoriteMod(m.id);
+                            ConfigManager.update();
                             reloadMods();
                         });
                     } else
                     {
                         ModFavorite.Click += new EventHandler((object sender, EventArgs e) => {
                             ConfigManager.addFavoriteMod(m.id);
+                            ConfigManager.update();
                             reloadMods();
                         });
                     }
@@ -687,7 +689,6 @@ namespace ModManager5.Classes
                         });
                         ModPanel.Controls.Add(ModDiscord, 6, line);
                     }
-                    
                     PictureBox ModEdit = Visuals.ModPic("ModEdit", global::ModManager5.Properties.Resources.edit);
                     allocatedControls.Add(ModEdit);
                     ModPanel.Controls.Add(ModEdit, 5, line);
@@ -695,13 +696,13 @@ namespace ModManager5.Classes
                     {
                         ModEdit.Image = null;
                         ModEdit.Cursor = System.Windows.Forms.Cursors.Default;
-                    } else
+                    }
+                    else
                     {
                         ModEdit.Click += new EventHandler((object sender, EventArgs e) => {
                             openOptionsForm(m);
                         });
                     }
-                    
                     Label ModVersion = Visuals.ModLabel("ModVersion", m.githubLink == "1" ? m.release.TagName : "");
                     allocatedControls.Add(ModVersion);
                     ModPanel.Controls.Add(ModVersion, 2, line);
@@ -986,7 +987,6 @@ namespace ModManager5.Classes
                 line++;
             }
 
-
             if (cat.id == "local")
             {
                 f.Controls.Add(Visuals.LocalModsOverlay());
@@ -997,33 +997,29 @@ namespace ModManager5.Classes
 
             f.Controls.Add(Visuals.LabelTitle(Translator.get(cat.name)));
         }
-
         public static void openOptionsForm(Mod m)
         {
-            var formPopup = new Form();
-            formPopup.MinimumSize = new System.Drawing.Size(600, 100 * m.options.Count());
-            int width = (int)((60 * Screen.PrimaryScreen.Bounds.Width) / 100);
-            if (width < formPopup.MinimumSize.Width)
-                width = formPopup.MinimumSize.Width;
-            int height = (int)((60 * Screen.PrimaryScreen.Bounds.Height) / 100);
-            if (height < formPopup.MinimumSize.Height)
-                height = formPopup.MinimumSize.Height;
-            formPopup.Size = new Size(width, height);
-            formPopup.StartPosition = FormStartPosition.CenterScreen;
-            formPopup.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            formPopup.BackColor = ThemeList.theme.AppBackgroundColor;
-            formPopup.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            formPopup.ForeColor = ThemeList.theme.TextColor;
-            formPopup.Icon = global::ModManager5.Properties.Resources.modmanager;
-            formPopup.Name = "OptionsPopup";
-            formPopup.Text = m.name + " options";
+            InstalledMod im = ConfigManager.getInstalledModById(m.id);
+
+            OptionsForm = new Form();
+            OptionsForm.FormBorderStyle = FormBorderStyle.FixedSingle;
+            OptionsForm.MaximizeBox = false;
+            OptionsForm.Size = new Size(800, 40 + 50 * m.options.Count());
+            OptionsForm.StartPosition = FormStartPosition.CenterScreen;
+            OptionsForm.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            OptionsForm.BackColor = ThemeList.theme.AppBackgroundColor;
+            OptionsForm.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
+            OptionsForm.ForeColor = ThemeList.theme.TextColor;
+            OptionsForm.Icon = global::ModManager5.Properties.Resources.modmanager;
+            OptionsForm.Name = "OptionsForm";
+            OptionsForm.Text = m.name + " options";
 
             Panel ContainerOptionsPanel = new Panel();
             ContainerOptionsPanel.Name = "ContainerOptionsPanel";
             ContainerOptionsPanel.BackColor = Color.Transparent;
             ContainerOptionsPanel.Dock = DockStyle.Fill;
-            ContainerOptionsPanel.AutoScroll = true;
-            formPopup.Controls.Add(ContainerOptionsPanel);
+            ContainerOptionsPanel.AutoScroll = false;
+            OptionsForm.Controls.Add(ContainerOptionsPanel);
 
             TableLayoutPanel ModOptionsPanel = new TableLayoutPanel();
             ModOptionsPanel.Name = "ModOptionsPanel";
@@ -1034,14 +1030,39 @@ namespace ModManager5.Classes
             foreach (string optionName in m.options)
             {
                 Mod option = ModList.getModById(optionName);
-                formPopup.Controls.Add(Visuals.ModLabel(optionName, optionName));
+                MMButton OptionButton = new MMButton("trans");
+                OptionsForm.Controls.Add(Visuals.OptionsLine(OptionButton, optionName));
+
+                OptionButton.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    MMButton c = (MMButton)sender;
+                    if (c.Text == Translator.get("Enabled"))
+                    {
+                        im.options.Remove(optionName);
+                        ConfigManager.update();
+                        c.Text = Translator.get("Disabled");
+                    } else if (c.Text == Translator.get("Disabled"))
+                    {
+                        im.options.Add(optionName);
+                        ConfigManager.update();
+                        c.Text = Translator.get("Enabled");
+                    }
+                });
+
+                if (im.hasOption(optionName))
+                {
+                    OptionButton.Text = Translator.get("Enabled");
+                } else if (ConfigManager.getInstalledModById(optionName) != null)
+                {
+                    OptionButton.Text = Translator.get("Disabled");
+                } else
+                {
+                    OptionButton.Text = Translator.get("Not installed");
+                }
             }
 
-
-
-            formPopup.ShowDialog();
+            OptionsForm.ShowDialog();
         }
-
         public static void loadServers()
         {
             Utils.log("Load servers START", "ModManagerUI");
@@ -1321,6 +1342,7 @@ namespace ModManager5.Classes
                 {
                     ModWorker.removeAllMods();
                     ConfigManager.config.launcher = launcher;
+                    ConfigManager.update();
                     Form f = activeForm;
                     ModManagerUI.reloadMods();
                     openForm(f);

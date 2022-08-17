@@ -152,6 +152,39 @@ namespace ModManager5.Classes
             }
         }
 
+        public static void DirectoryCopyWithoutReplacement(string sourceDirName, string destDirName)
+        {
+            // Get the subdirectories for the specified directory.
+            DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+            if (!dir.Exists)
+            {
+                return;
+            }
+
+            DirectoryInfo[] dirs = dir.GetDirectories();
+
+            // If the destination directory doesn't exist, create it.
+            Directory.CreateDirectory(destDirName);
+
+            // Get the files in the directory and copy them to the new location.
+            FileInfo[] files = dir.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                string tempPath = Path.Combine(destDirName, file.Name);
+                if (!new FileInfo(tempPath).Exists)
+                {
+                    file.CopyTo(tempPath, false);
+                }
+            }
+
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string tempPath = Path.Combine(destDirName, subdir.Name);
+                DirectoryCopyWithoutReplacement(subdir.FullName, tempPath);
+            }
+        }
+
         public static void DirectoryDelete(string dirName)
         {
             if (Directory.Exists(dirName))

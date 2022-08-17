@@ -28,5 +28,10 @@ namespace ModManager5.Classes
             this.gameVersion = "";
             this.options = new List<string>() { };
         }
+
+        public bool hasOption(string optionName)
+        {
+            return options.Contains(optionName);
+        }
     }
 }

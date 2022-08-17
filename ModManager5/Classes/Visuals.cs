@@ -79,6 +79,24 @@ namespace ModManager5.Classes
             return ContentLabel;
         }
 
+        public static TableLayoutPanel OptionsLine(Button OptionButton, string title)
+        {
+            TableLayoutPanel t = Visuals.createLayoutPanelH(0, 50, DockStyle.Top, new int[] { 30, 70 });
+
+            t.Margin = new System.Windows.Forms.Padding(20, 20, 20, 20);
+            t.BackColor = ThemeList.theme.AppOverlayColor;
+
+            Label label = Visuals.LabelContent(title, ContentAlignment.MiddleLeft, DockStyle.Fill);
+            label.Text = title;
+            t.Controls.Add(label, 1, 0);
+
+            OptionButton.AutoSize = true;
+            OptionButton.Dock = DockStyle.Fill;
+            t.Controls.Add(OptionButton, 0, 0);
+
+            return t;
+        }
+
         public static TableLayoutPanel centeredTextbox(string title, TextBox textbox)
         {
             TableLayoutPanel LayoutPanel = Visuals.createLayoutPanelH(0, 100, DockStyle.Fill, new int[] { 20, 60, 20 });
