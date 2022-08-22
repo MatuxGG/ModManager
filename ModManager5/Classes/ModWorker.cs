@@ -724,12 +724,40 @@ namespace ModManager5.Classes
 
             dataLoad(m);
 
+            // MatuxMod Patch
+
+            if (ConfigManager.config.launcher == "Steam")
+            {
+                ModWorker.addMatuxMod(destPath + @"\BepInEx\plugins");
+                File.Create(destPath + @"\BepInEx\config\" + m.id + ".mm");
+            }
+
             InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion, existingMod == null ? new List<string>() { } : existingMod.options);
             ConfigManager.config.installedMods.Add(newMod);
             ConfigManager.update();
             
             finished = true;
             backgroundWorker.ReportProgress(100);
+        }
+
+        public static void addMatuxMod(string destPath)
+        {
+            string modPath = ModManager.appDataPath + @"\MatuxMod.dll";
+            string fileUrl = ModManager.fileURL + "/MatuxMod.dll";
+            if (!File.Exists(modPath))
+            {
+                try
+                {
+                    DownloadWorker.download(fileUrl, modPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", "Matux Mod") + "\n(PERCENT)", 0, 100);
+
+                }
+                catch (Exception e)
+                {
+
+                }
+            }
+
+            Utils.FileCopy(modPath, destPath + @"\MatuxMod.dll");
         }
 
         private static void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)

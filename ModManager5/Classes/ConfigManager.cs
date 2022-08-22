@@ -345,6 +345,7 @@ namespace ModManager5.Classes
                 Utils.logEx(e, "ConfigManager");
             }
         }
+
     }
 
 }
