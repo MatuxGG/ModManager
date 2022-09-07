@@ -749,7 +749,6 @@ namespace ModManager5.Classes
                 try
                 {
                     DownloadWorker.download(fileUrl, modPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", "Matux Mod") + "\n(PERCENT)", 0, 100);
-
                 }
                 catch (Exception e)
                 {
