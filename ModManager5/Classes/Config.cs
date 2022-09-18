@@ -16,7 +16,21 @@ namespace ModManager5.Classes
         public string launcher;
         public List<string> favoriteMods;
         public bool miniEnabled;
+        public bool multipleGames;
         public List<string> availableAmongUsPaths;
+
+        public Config(string modManagerVersion, List<InstalledMod> installedMods, List<InstalledVanilla> installedVanilla, string amongUsPath, string launcher, List<string> faroriteMods, bool miniEnabled, bool multipleGames)
+        {
+            this.ModManagerVersion = modManagerVersion;
+            this.installedMods = installedMods;
+            this.installedVanilla = installedVanilla;
+            this.amongUsPath = amongUsPath;
+            this.launcher = launcher;
+            this.favoriteMods = faroriteMods;
+            this.miniEnabled = miniEnabled;
+            this.multipleGames = multipleGames;
+            this.availableAmongUsPaths = new List<string>() { };
+        }
 
         public Config(string modManagerVersion, List<InstalledMod> installedMods, List<InstalledVanilla> installedVanilla, string amongUsPath, string launcher, List<string> faroriteMods, bool miniEnabled)
         {
@@ -27,6 +41,7 @@ namespace ModManager5.Classes
             this.launcher = launcher;
             this.favoriteMods = faroriteMods;
             this.miniEnabled = miniEnabled;
+            this.multipleGames = false;
             this.availableAmongUsPaths = new List<string>() { };
         }
 
@@ -39,6 +54,7 @@ namespace ModManager5.Classes
             this.launcher = launcher;
             this.favoriteMods = faroriteMods;
             this.miniEnabled = miniEnabled;
+            this.multipleGames = false;
             this.availableAmongUsPaths = availableAmongUsPaths;
         }
 
@@ -52,6 +68,7 @@ namespace ModManager5.Classes
             this.launcher = "Steam";
             this.favoriteMods = new List<string>() { };
             this.miniEnabled = true;
+            this.multipleGames = false;
             this.availableAmongUsPaths = new List<string>() { };
         }
 

@@ -1254,6 +1254,33 @@ namespace ModManager5.Classes
 
             SettingsForm.Controls.Add(Visuals.SettingsButton(LogButton, Translator.get("Log File")));
 
+            // Multiple game instances
+            MMButton MultipleGamesButton = new MMButton("trans");
+            MultipleGamesButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                MMButton c = (MMButton)sender;
+                if (c.Text == Translator.get("Enabled"))
+                {
+                    ConfigManager.config.multipleGames = false;
+                    c.Text = Translator.get("Disabled");
+                }
+                else
+                {
+                    ConfigManager.config.multipleGames = true;
+                    c.Text = Translator.get("Enabled");
+                }
+                ConfigManager.update();
+            });
+            SettingsForm.Controls.Add(Visuals.SettingsButton(MultipleGamesButton, Translator.get("Multiple game instances")));
+            if (ConfigManager.config.multipleGames)
+            {
+                MultipleGamesButton.Text = Translator.get("Enabled");
+            }
+            else
+            {
+                MultipleGamesButton.Text = Translator.get("Disabled");
+            }
+
             // Minimise in taskbar
             MMButton MinimisationButton = new MMButton("trans");
             MinimisationButton.Click += new EventHandler((object sender, EventArgs e) =>

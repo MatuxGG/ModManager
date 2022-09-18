@@ -134,11 +134,7 @@ namespace ModManager5.Classes
                 Process.Start("explorer", ModManager.appDataPath + @"\mods\" + m.id + @"\Among Us.exe");
             } else
             {
-                Boolean modOpen = isGameOpen();
-                if (modOpen)
-                {
-                    return;
-                }
+                if (!ConfigManager.config.multipleGames && isGameOpen()) return;
 
                 InstalledMod im = ConfigManager.getInstalledModById(m.id);
 
@@ -261,7 +257,7 @@ namespace ModManager5.Classes
 
         public static void startGame()
         {
-            if (isGameOpen())
+            if (!ConfigManager.config.multipleGames && isGameOpen())
                 return;
 
             Utils.log("Start vanilla game START", "ModWorker");
@@ -739,6 +735,10 @@ namespace ModManager5.Classes
                     backgroundWorker.ReportProgress(100);
                     return;
                 }
+                if (toInstallMod.id == "GLMod")
+                {
+                    File.Create(destPath + @"\BepInEx\config\" + m.id + ".mm");
+                }
                 backgroundWorker.ReportProgress(installOffset);
             }
 
@@ -782,8 +782,9 @@ namespace ModManager5.Classes
 
         public static Boolean installFiles(Mod m, string destPath)
         {
+
             Utils.log("Install files for mod " + m.name + " START", "ModWorker");
-            if (m.type == "mod")
+            if (m.type != "allInOne")
             {
                 foreach (ReleaseAsset tab in m.release.Assets)
                 {
