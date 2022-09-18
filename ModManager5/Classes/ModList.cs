@@ -19,6 +19,7 @@ namespace ModManager5.Classes
         public static List<Mod> mods;
         public static List<Mod> localMods;
         public static Release challengerClient;
+        public static Release challengerClientBeta;
 
         public static void load()
         {
@@ -159,6 +160,7 @@ namespace ModManager5.Classes
             m.release = releases.First();
             // There is no management of Challenger down because we assume that it will be always up
             challengerClient = null;
+            challengerClientBeta = null;
             Release challengerMod = null;
             foreach (Release r in releases)
             {
@@ -166,8 +168,11 @@ namespace ModManager5.Classes
                 {
                     challengerClient = r;
                 }
+                if (r.TagName.Contains("D") && challengerClientBeta == null) {
+                    challengerClientBeta = r;
+                }
                 if (live) {
-                    if (r.TagName.Contains("C") == false && r.TagName.Contains("B") == false && r.TagName.Contains("L") == false && r.TagName.Contains("A") == false && challengerMod == null)
+                    if (r.TagName.Contains("C") == false && r.TagName.Contains("D") == false && r.TagName.Contains("B") == false && r.TagName.Contains("L") == false && r.TagName.Contains("A") == false && challengerMod == null)
                     {
                         challengerMod = r;
                     }
@@ -178,7 +183,7 @@ namespace ModManager5.Classes
                         challengerMod = r;
                     }
                 }
-                if (challengerMod != null && challengerClient != null)
+                if (challengerMod != null && ((live && challengerClient != null) || (!live && challengerClientBeta != null)))
                 {
                     m.release = challengerMod;
                     break;

@@ -412,14 +412,28 @@ namespace ModManager5.Classes
 
             ReleaseAsset asset = new ReleaseAsset();
 
-            foreach (ReleaseAsset ra in ModList.challengerClient.Assets)
+            if (ModToInstall.id == "Challenger")
             {
-                if (ra.Name.Contains("zip"))
+                foreach (ReleaseAsset ra in ModList.challengerClient.Assets)
                 {
-                    asset = ra;
-                    break;
+                    if (ra.Name.Contains("zip"))
+                    {
+                        asset = ra;
+                        break;
+                    }
+                }
+            } else
+            {
+                foreach (ReleaseAsset ra in ModList.challengerClientBeta.Assets)
+                {
+                    if (ra.Name.Contains("zip"))
+                    {
+                        asset = ra;
+                        break;
+                    }
                 }
             }
+            
 
             string path = ModManager.tempPath + @"\" + asset.Name;
             Utils.FileDelete(path);
@@ -659,7 +673,13 @@ namespace ModManager5.Classes
             {
                 Mod toInstallMod = ModList.getModById(modName);
                 if (!queue.Contains(toInstallMod))
-                    queue.Add(toInstallMod);
+                {
+                    if (toInstallMod.id != "GLMod" ||
+                        (toInstallMod.id == "GLMod" && ConfigManager.config.launcher == "Steam"))
+                    {
+                        queue.Add(toInstallMod);
+                    }
+                }
             }
 
             string destPath = ModManager.appDataPath + @"\mods\" + m.id;
@@ -724,13 +744,6 @@ namespace ModManager5.Classes
 
             dataLoad(m);
 
-            // MatuxMod Patch
-
-            if (ConfigManager.config.launcher == "Steam")
-            {
-                ModWorker.addMatuxMod(destPath + @"\BepInEx\plugins");
-                File.Create(destPath + @"\BepInEx\config\" + m.id + ".mm");
-            }
 
             InstalledMod newMod = new InstalledMod(m.id, m.release.TagName, m.gameVersion, existingMod == null ? new List<string>() { } : existingMod.options);
             ConfigManager.config.installedMods.Add(newMod);
@@ -738,25 +751,6 @@ namespace ModManager5.Classes
             
             finished = true;
             backgroundWorker.ReportProgress(100);
-        }
-
-        public static void addMatuxMod(string destPath)
-        {
-            string modPath = ModManager.appDataPath + @"\MatuxMod.dll";
-            string fileUrl = ModManager.fileURL + "/MatuxMod.dll";
-            if (!File.Exists(modPath))
-            {
-                try
-                {
-                    DownloadWorker.download(fileUrl, modPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", "Matux Mod") + "\n(PERCENT)", 0, 100);
-                }
-                catch (Exception e)
-                {
-
-                }
-            }
-
-            Utils.FileCopy(modPath, destPath + @"\MatuxMod.dll");
         }
 
         private static void backgroundWorker_ProgressChanged(object sender, ProgressChangedEventArgs e)
