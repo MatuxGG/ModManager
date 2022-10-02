@@ -1317,6 +1317,8 @@ namespace ModManager5.Classes
 
                     if (amongUspath != null)
                     {
+                        if (ConfigManager.config.launcher != "Steam")
+                            ModWorker.cleanGame();
                         ModWorker.removeAllMods();
                         ConfigManager.addAvailableAmongUsPath(amongUspath);
                         ConfigManager.config.launcher = "Other";
@@ -1339,6 +1341,8 @@ namespace ModManager5.Classes
 
                 if (MessageBox.Show(Translator.get("Be careful! All mods will be uninstalled! Please, don't change this option if you don't know what you're doing. Do you want to continue?"), Translator.get("Change Among Us path"), MessageBoxButtons.YesNo) == DialogResult.Yes)
                 {
+                    if (ConfigManager.config.launcher != "Steam")
+                        ModWorker.cleanGame();
                     ModWorker.removeAllMods();
                     ConfigManager.config.amongUsPath = path;
                     ConfigManager.update();

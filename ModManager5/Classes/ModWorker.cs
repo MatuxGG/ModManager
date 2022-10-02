@@ -113,8 +113,59 @@ namespace ModManager5.Classes
             Utils.log("Start mod " + m.name + " START", "ModWorker");
 
             //startSteam();
+            if (m.type == "local")
+            {
+                string dirPath = ModManager.appDataPath + @"\localMods\" + m.name;
 
-            if (m.id == "Skeld")
+                if (!ModManager.silent)
+                    ModManagerUI.StatusLabel.Text = Translator.get("Starting MODNAME ... Please wait...").Replace("MODNAME", m.name);
+
+                if (ConfigManager.config.launcher != "Steam")
+                {
+                    cleanGame();
+                    Utils.DirectoryCopy(dirPath, ConfigManager.config.amongUsPath, true);
+                    Process.Start("explorer", ConfigManager.config.amongUsPath + @"\Among Us.exe");
+                }
+                else
+                {
+                    string dirPathLocal = ModManager.appDataPath + @"\localMods\" + m.name + @"-work";
+                    string vanillaDestPath = ModManager.appDataPath + @"\vanilla\" + m.gameVersion;
+                    
+                    if (!ConfigManager.containsGameVersion(m.gameVersion))
+                    {
+                        string tempPath = ModManager.tempPath + @"\" + m.gameVersion + ".zip";
+                        Utils.FileDelete(tempPath);
+
+                        DownloadWorker.download(ModManager.fileURL + @"/client/" + m.gameVersion + @".zip", tempPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", 0, 100);
+
+                        Utils.DirectoryDelete(vanillaDestPath);
+                        Directory.CreateDirectory(vanillaDestPath);
+                        try
+                        {
+                            ZipFile.ExtractToDirectory(tempPath, vanillaDestPath);
+                        }
+                        catch (Exception ex)
+                        {
+                            Utils.logE("Client zip extraction FAIL", "ModWorker");
+                            Utils.logEx(ex, "ModWorker");
+                            return;
+                        }
+                        ConfigManager.config.installedVanilla.Add(new InstalledVanilla(m.gameVersion));
+                        ConfigManager.update();
+                    }
+
+                    Utils.DirectoryDelete(dirPathLocal);
+                    Utils.DirectoryCreate(dirPathLocal);
+                    Utils.DirectoryCopy(vanillaDestPath, dirPathLocal, true);
+                    Utils.DirectoryCopy(dirPath, dirPathLocal, true);
+                    Process.Start("explorer", dirPathLocal + @"\Among Us.exe");
+                }
+
+                if (!ModManager.silent)
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
+
+            }
+            else if (m.id == "Skeld")
             {
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
@@ -138,15 +189,9 @@ namespace ModManager5.Classes
 
                 InstalledMod im = ConfigManager.getInstalledModById(m.id);
 
-                string dirPath;
-                string optionsPath = dirPath = ModManager.appDataPath + @"\mods\" + m.id + "-options";
-                if (m.type == "local")
-                {
-                    dirPath = ModManager.appDataPath + @"\localMods\" + m.name;
-                } else
-                {
-                    dirPath = ModManager.appDataPath + @"\mods\" + m.id;
-                }
+                string dirPath = ModManager.appDataPath + @"\mods\" + m.id;
+                string optionsPath = dirPath + "-options";
+
 
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("Starting MODNAME ... Please wait...").Replace("MODNAME", m.name);
@@ -162,7 +207,10 @@ namespace ModManager5.Classes
                     Process.Start("explorer", ConfigManager.config.amongUsPath + @"\Among Us.exe");
                 } else
                 {
-                    if (im.options.Count() > 0)
+                    if (im.options.Count() <= 0)
+                    {
+                        Process.Start("explorer", dirPath + @"\Among Us.exe");
+                    } else
                     {
                         Utils.DirectoryCopy(dirPath, optionsPath, true);
                         foreach (string optionName in m.options)
@@ -170,9 +218,6 @@ namespace ModManager5.Classes
                             Utils.DirectoryCopyWithoutReplacement(ModManager.appDataPath + @"\mods\" + optionName, optionsPath);
                         }
                         Process.Start("explorer", optionsPath + @"\Among Us.exe");
-                    } else
-                    {
-                        Process.Start("explorer", dirPath + @"\Among Us.exe");
                     }
                 }
 
