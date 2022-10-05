@@ -1,7 +1,7 @@
 # Mod Manager
 Among Us Mod Manager is an open-source launcher for the popular game Among Us. It allows you to switch between many established mods with only a few clicks!
 
-Join the discord: https://goodloss.fr/discord
+Join the discord: https://goodloss.fr/discord \
 Official website: https://goodloss.fr
 
 ![ModManagerv5.0.1](https://amodsus.com/attachments/1642431805864-png.530/)
