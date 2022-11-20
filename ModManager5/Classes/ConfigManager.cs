@@ -316,7 +316,7 @@ namespace ModManager5.Classes
                 Utils.log("- OS Language: " + c.InstalledUICulture.Name, "ConfigManager");
                 Utils.log("- Processor: " + System.Environment.GetEnvironmentVariable("PROCESSOR_IDENTIFIER"), "ConfigManager");
                 Utils.log("- RAM: " + ram.ToString() + "Go", "ConfigManager");
-                Utils.log("- Drives:", "ConfigManager");
+                /*Utils.log("- Drives:", "ConfigManager");
                 foreach (DriveInfo d in DriveInfo.GetDrives())
                 {
                     decimal free = d.AvailableFreeSpace;
@@ -325,7 +325,7 @@ namespace ModManager5.Classes
                     total = Math.Round(total / (1024 * 1024 * 1024), 1);
 
                     Utils.log(" - Drive " + d.Name + ":" + free + "/" + total, "ConfigManager");
-                }
+                }*/
             } catch (Exception e)
             {
                 Utils.logE("Loading computer info FAIL", "ConfigManager");
