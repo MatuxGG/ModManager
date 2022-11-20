@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Specialized;
 using System.IO;
 using System.Linq;
+using System.Net;
+using System.Text;
 using System.Windows.Forms;
 
 namespace ModManager5.Classes
@@ -77,6 +80,29 @@ namespace ModManager5.Classes
         {
             Utils.logE("Error: " + e.Message, className);
             Utils.logE("Source: " + e.Source, className);
+        }
+
+        public static void logToServ(Exception e, string className)
+        {
+            logToServ("Mod Manager " + ModManager.visibleVersion + " - Client id: " + ConfigManager.config.supportId + " - Class: " + className + " - Message: " + e.Message + " - Source = " + e.Source);
+        }
+
+        public static void logToServ(string text)
+        {
+            if (!String.IsNullOrEmpty(text))
+            {
+                using (var client = new WebClient())
+                {
+                    var values = new NameValueCollection();
+                    values["text"] = text;
+
+                    var response = client.UploadValues(ModManager.apiURL + "/log", values);
+
+                    var responseString = Encoding.Default.GetString(response);
+
+                }
+            }
+
         }
 
         // Spec : str <= 15

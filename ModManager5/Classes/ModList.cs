@@ -28,6 +28,8 @@ namespace ModManager5.Classes
                 ModManagerUI.StatusLabel.Text = Translator.get("Loading Mods...");
             string modlistURL = ModManager.apiURL + "/mod";
             string modlist = "";
+            challengerClient = null;
+            challengerClientBeta = null;
             try
             {
                 using (var client = new WebClient())
@@ -141,10 +143,10 @@ namespace ModManager5.Classes
             {
                 await m.getGithubRelease();
             }
-            else if (m.id == "Challenger")
+            else if (m.id == "Challenger" && challengerClient == null)
             {
                 await getChallengerReleases(m, true);
-            } else if (m.id == "ChallengerBeta")
+            } else if (m.id == "ChallengerBeta" && challengerClientBeta == null)
             {
                 await getChallengerReleases(m, false);
             }
@@ -159,8 +161,6 @@ namespace ModManager5.Classes
             IReadOnlyList<Release> releases = await client.Repository.Release.GetAll(m.author, m.github);
             m.release = releases.First();
             // There is no management of Challenger down because we assume that it will be always up
-            challengerClient = null;
-            challengerClientBeta = null;
             Release challengerMod = null;
             foreach (Release r in releases)
             {
@@ -218,6 +218,7 @@ namespace ModManager5.Classes
             } catch (Exception e)
             {
                 Utils.logEx(e, "ModList");
+                Utils.logToServ(e, "ModList");
             }
 
             shortcut.Save();

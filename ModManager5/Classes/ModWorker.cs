@@ -115,51 +115,65 @@ namespace ModManager5.Classes
             //startSteam();
             if (m.type == "local")
             {
-                string dirPath = ModManager.appDataPath + @"\localMods\" + m.name;
+                string dirPath = ModManager.appDataPath + @"\localMods\" + m.name + ".zip";
 
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("Starting MODNAME ... Please wait...").Replace("MODNAME", m.name);
 
+                if (!ConfigManager.config.multipleGames && isGameOpen()) return;
+
                 if (ConfigManager.config.launcher != "Steam")
                 {
                     cleanGame();
-                    Utils.DirectoryCopy(dirPath, ConfigManager.config.amongUsPath, true);
+
+                    string newPath = ModManager.tempPath + @"\ModZip";
+                    Utils.DirectoryDelete(newPath);
+                    Directory.CreateDirectory(newPath);
+                    try
+                    {
+                        ZipFile.ExtractToDirectory(dirPath, newPath);
+                    }
+                    catch (Exception ex)
+                    {
+                        Utils.logE("Local mod zip extraction FAIL", "ModWorker");
+                        Utils.logEx(ex, "ModWorker");
+                        Utils.logToServ(ex, "ModWorker");
+                        return;
+                    }
+                    newPath = getBepInExInsideRec(newPath);
+
+                    Utils.DirectoryCopy(newPath, ConfigManager.config.amongUsPath, true);
                     Process.Start("explorer", ConfigManager.config.amongUsPath + @"\Among Us.exe");
                 }
                 else
                 {
-                    string dirPathLocal = ModManager.appDataPath + @"\localMods\" + m.name + @"-work";
-                    string vanillaDestPath = ModManager.appDataPath + @"\vanilla\" + m.gameVersion;
-                    
-                    if (!ConfigManager.containsGameVersion(m.gameVersion))
+                    string vanillaPath = ModManager.appDataPath + @"\vanilla\" + m.gameVersion;
+                    string playPath = ModManager.appDataPath + @"\epicplay";
+                    Utils.DirectoryDelete(playPath);
+                    Utils.DirectoryCreate(playPath);
+
+                    string newPath = ModManager.tempPath + @"\ModZip";
+                    Utils.DirectoryDelete(newPath);
+                    Directory.CreateDirectory(newPath);
+                    try
                     {
-                        string tempPath = ModManager.tempPath + @"\" + m.gameVersion + ".zip";
-                        Utils.FileDelete(tempPath);
-
-                        DownloadWorker.download(ModManager.fileURL + @"/client/" + m.gameVersion + @".zip", tempPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name) + "\n(PERCENT)", 0, 100);
-
-                        Utils.DirectoryDelete(vanillaDestPath);
-                        Directory.CreateDirectory(vanillaDestPath);
-                        try
-                        {
-                            ZipFile.ExtractToDirectory(tempPath, vanillaDestPath);
-                        }
-                        catch (Exception ex)
-                        {
-                            Utils.logE("Client zip extraction FAIL", "ModWorker");
-                            Utils.logEx(ex, "ModWorker");
-                            return;
-                        }
-                        ConfigManager.config.installedVanilla.Add(new InstalledVanilla(m.gameVersion));
-                        ConfigManager.update();
+                        ZipFile.ExtractToDirectory(dirPath, newPath);
                     }
+                    catch (Exception ex)
+                    {
+                        Utils.logE("Local mod zip extraction FAIL", "ModWorker");
+                        Utils.logEx(ex, "ModWorker");
+                        Utils.logToServ(ex, "ModWorker");
+                        return;
+                    }
+                    newPath = getBepInExInsideRec(newPath);
 
-                    Utils.DirectoryDelete(dirPathLocal);
-                    Utils.DirectoryCreate(dirPathLocal);
-                    Utils.DirectoryCopy(vanillaDestPath, dirPathLocal, true);
-                    Utils.DirectoryCopy(dirPath, dirPathLocal, true);
-                    Process.Start("explorer", dirPathLocal + @"\Among Us.exe");
+                    Utils.DirectoryCopy(vanillaPath, playPath, true);
+                    Utils.DirectoryCopy(newPath, playPath, true);
+
+                    Process.Start("explorer", playPath + @"\Among Us.exe");
                 }
+
 
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
@@ -758,6 +772,7 @@ namespace ModManager5.Classes
                 {
                     Utils.logE("Client zip extraction FAIL", "ModWorker");
                     Utils.logEx(ex, "ModWorker");
+                    Utils.logToServ(ex, "ModWorker");
                     backgroundWorker.ReportProgress(100);
                 }
                 ConfigManager.config.installedVanilla.Add(new InstalledVanilla(m.gameVersion));

@@ -26,6 +26,7 @@ namespace ModManager5
         public static Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         public static string visibleVersion = version.ToString().Substring(0, version.ToString().Length - 2);
         public static string token = System.IO.File.ReadAllText(appPath + @"\token.txt");
+        public static string supportIdChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789";
 
         public static bool debug = false;
 
@@ -151,6 +152,8 @@ namespace ModManager5
                 ConfigManager.globalConfig.startTime++;
                 ConfigManager.updateGlobalConfig();
             }
+
+            VersionUpdater.applyUpdates(ConfigManager.config.ModManagerVersion, visibleVersion);
 
             if (args.Count() > 0)
             {

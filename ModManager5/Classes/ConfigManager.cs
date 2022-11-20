@@ -301,6 +301,7 @@ namespace ModManager5.Classes
             {
                 Utils.logE("Loading MM Config FAIL", "ConfigManager");
                 Utils.logEx(e, "ConfigManager");
+                Utils.logToServ(e, "ConfigManager");
             }
         } 
         public static void logGlobalConfig()
@@ -329,6 +330,7 @@ namespace ModManager5.Classes
             {
                 Utils.logE("Loading computer info FAIL", "ConfigManager");
                 Utils.logEx(e, "ConfigManager");
+                Utils.logToServ(e, "ConfigManager");
             }
 
             Utils.log("MM Global Config", "ConfigManager");
@@ -343,6 +345,7 @@ namespace ModManager5.Classes
             {
                 Utils.logE("Loading MM Global Config FAIL", "ConfigManager");
                 Utils.logEx(e, "ConfigManager");
+                Utils.logToServ(e, "ConfigManager");
             }
         }
 

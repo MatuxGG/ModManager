@@ -855,18 +855,10 @@ namespace ModManager5.Classes
                             {
                                 ModWorker.startTransaction();
                                 StatusLabel.Text = Translator.get("Adding local mod...");
-                                string newPath = ModManager.appDataPath + @"\localMods\" + ModTitle.Text;
-                                Directory.CreateDirectory(newPath);
-                                string tempPath = ModManager.tempPath + @"\ModZip";
-                                Utils.DirectoryDelete(tempPath);
-                                Directory.CreateDirectory(tempPath);
-                                string vanillaDestPath = ModManager.appDataPath + @"\vanilla\" + ModVersion.Text;
-                                ZipFile.ExtractToDirectory(FileButton.Text, tempPath);
-                                tempPath = ModWorker.getBepInExInsideRec(tempPath);
-                                Utils.DirectoryCopy(vanillaDestPath, newPath, true);
-                                Utils.DirectoryCopy(tempPath, newPath, true);
+                                string newPath = ModManager.appDataPath + @"\localMods\" + ModTitle.Text + ".zip";
+                                Utils.FileCopy(FileButton.Text, newPath);
 
-                                Mod newLocalMod = new Mod(ModTitle.Name, ModTitle.Text, "local", "local", ModVersion.Text, new List<string>() { }, "", @"localMods\"+ModTitle.Text, "0", "", "", "", "") ;
+                                Mod newLocalMod = new Mod(ModTitle.Name, ModTitle.Text, "local", "local", ModVersion.Text, new List<string>() { }, "", @"localMods\"+ModTitle.Text+".zip", "0", "", "", "", "") ;
                                 
                                 ModList.localMods.Add(newLocalMod);
 
@@ -890,7 +882,8 @@ namespace ModManager5.Classes
                             Mod m = ModList.getLocalModById(modId);
 
                             string path = m.github.Replace(@"localMods\", ModManager.appDataPath + @"\localMods\");
-                            Utils.DirectoryDelete(path);
+
+                            Utils.FileDelete(path);
 
                             ModList.localMods.Remove(m);
                             ModList.updateLocalMods();
@@ -1242,6 +1235,15 @@ namespace ModManager5.Classes
             });
 
             SettingsForm.Controls.Add(Visuals.SettingsButton(ResetButton, Translator.get("Reset")));
+
+            // Support Id
+            MMButton SupportIdButton = new MMButton("trans");
+            SupportIdButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                Clipboard.SetText(ConfigManager.config.supportId);
+            });
+
+            SettingsForm.Controls.Add(Visuals.SettingsButton(SupportIdButton, Translator.get("Copy Support Id")));
 
             // Send log
             MMButton LogButton = new MMButton("trans");
