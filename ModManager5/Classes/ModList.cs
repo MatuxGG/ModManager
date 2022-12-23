@@ -11,6 +11,7 @@ using System.Windows.Forms;
 using IWshRuntimeLibrary;
 using System.Drawing;
 using System.Drawing.Imaging;
+using Microsoft.Win32;
 
 namespace ModManager5.Classes
 {
@@ -243,6 +244,12 @@ namespace ModManager5.Classes
         public static List<Mod> getMyMods(List<string> listOfMods)
         {
             return mods.FindAll(m => listOfMods.Contains(m.id));
+        }
+
+        public static bool isChallengerInstalled()
+        {
+            RegistryKey challKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2160150", false);
+            return challKey != null;
         }
     }
 }

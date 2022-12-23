@@ -174,7 +174,6 @@ namespace ModManager5.Classes
                     Process.Start("explorer", playPath + @"\Among Us.exe");
                 }
 
-
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
 
@@ -192,12 +191,18 @@ namespace ModManager5.Classes
                     ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
                 Process.Start("explorer", o.ToString() + @"\Better-CrewLink.exe");
             }
-            else if (m.id == "Challenger" || m.id == "ChallengerBeta")
+            else if (m.id == "ChallengerBeta")
             {
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
                 Process.Start("explorer", ModManager.appDataPath + @"\mods\" + m.id + @"\Among Us.exe");
-            } else
+            }
+            else if (m.id == "Challenger")
+            {
+                ModWorker.openOrInstallChall();
+                return;
+            }
+            else
             {
                 if (!ConfigManager.config.multipleGames && isGameOpen()) return;
 
@@ -243,6 +248,51 @@ namespace ModManager5.Classes
 
             Utils.log("Start mod " + m.name + " END", "ModWorker");
         }
+
+        public static void openOrInstallChall()
+        {
+            if (ModList.isChallengerInstalled())
+            {
+                Process.Start("explorer", "steam://rungameid/2160150");
+            }
+            else
+            {
+                Process.Start("explorer", "steam://run/2160150");
+                BackgroundWorker backgroundWorkerChall = new BackgroundWorker();
+                backgroundWorkerChall.WorkerReportsProgress = true;
+
+                backgroundWorkerChall.DoWork += new DoWorkEventHandler(ModWorker.backgroundWorkerChall_DoWork);
+                backgroundWorkerChall.RunWorkerCompleted += new RunWorkerCompletedEventHandler(ModWorker.backgroundWorkerChall_RunWorkerCompleted);
+                backgroundWorkerChall.ProgressChanged += new ProgressChangedEventHandler(ModWorker.backgroundWorkerChall_ProgressChanged);
+                backgroundWorkerChall.RunWorkerAsync();
+            }
+        }
+
+        public static void backgroundWorkerChall_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var backgroundWorker = sender as BackgroundWorker;
+
+            Boolean installed = false;
+            while (!installed)
+            {
+                if (ModList.isChallengerInstalled())
+                {
+                    installed = true;
+                }
+            }
+            backgroundWorker.ReportProgress(100);
+        }
+
+        private static void backgroundWorkerChall_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+
+        }
+
+        private static void backgroundWorkerChall_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ModManagerUI.reloadMods();
+        }
+
 
         public static void dataSave(Mod mod)
         {
@@ -347,7 +397,9 @@ namespace ModManager5.Classes
             Utils.log("Install mod " + m.name + " START", "ModWorker");
             if (m.id == "Challenger")
             {
-                ModWorker.installChallenger(true);
+                Utils.debug("tst");
+                ModWorker.openOrInstallChall();
+                //ModWorker.installChallenger(true);
             }
             else if(m.id == "ChallengerBeta")
             {
@@ -602,6 +654,13 @@ namespace ModManager5.Classes
                 backgroundWorkerUnBcl.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerUnBcl_ProgressChanged);
                 backgroundWorkerUnBcl.RunWorkerAsync();
                 return;
+            } else if (m.id == "Challenger") {
+                BackgroundWorker backgroundWorkerUnChall = new BackgroundWorker();
+                backgroundWorkerUnChall.WorkerReportsProgress = true;
+                backgroundWorkerUnChall.DoWork += new DoWorkEventHandler(backgroundWorkerUnChall_DoWork);
+                backgroundWorkerUnChall.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerUnChall_RunWorkerCompleted);
+                backgroundWorkerUnChall.ProgressChanged += new ProgressChangedEventHandler(backgroundWorkerUnChall_ProgressChanged);
+                backgroundWorkerUnChall.RunWorkerAsync();
             } else
             {
                 string modPath = ModManager.appDataPath + @"\mods\" + m.id;
@@ -621,22 +680,43 @@ namespace ModManager5.Classes
             Utils.log("Uninstall mod " + m.name + " END", "ModWorker");
         }
 
-        private static void backgroundWorkerUnBcl_DoWork(object sender, DoWorkEventArgs e)
+        private static void backgroundWorkerUnChall_DoWork(object sender, DoWorkEventArgs e)
         {
             var backgroundWorker = sender as BackgroundWorker;
 
-            /*
-            System.Diagnostics.Process process = new System.Diagnostics.Process();
-            System.Diagnostics.ProcessStartInfo startInfo = new System.Diagnostics.ProcessStartInfo();
-            startInfo.UseShellExecute = false;
-            startInfo.RedirectStandardOutput = true;
-            startInfo.RedirectStandardError = true;
-            startInfo.CreateNoWindow = true;
-            startInfo.WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden;
-            startInfo.FileName = "cmd.exe";
-            startInfo.Arguments = "/C winget uninstall BetterCrewLink.BetterCrewLink";
-            process.StartInfo = startInfo;
-            process.Start();*/
+            object uninsPath = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2160150", "QuietUninstallString", null);
+            if (uninsPath != null)
+            {
+                Process.Start(new ProcessStartInfo("cmd", $"/c" + uninsPath.ToString()) { CreateNoWindow = true });
+
+                Boolean installed = true;
+                while (installed)
+                {
+                    installed = false;
+                    if (ModList.isChallengerInstalled())
+                    {
+                        installed = true;
+                    }
+                }
+                finished = true;
+            }
+
+            backgroundWorker.ReportProgress(100);
+        }
+
+        private static void backgroundWorkerUnChall_ProgressChanged(object sender, ProgressChangedEventArgs e)
+        {
+
+        }
+
+        private static void backgroundWorkerUnChall_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            ModManagerUI.reloadMods();
+        }
+
+        private static void backgroundWorkerUnBcl_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var backgroundWorker = sender as BackgroundWorker;
 
             object uninsPath = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\03ceac78-9166-585d-b33a-90982f435933", "QuietUninstallString", null);
             if (uninsPath != null)

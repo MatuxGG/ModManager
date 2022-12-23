@@ -583,7 +583,7 @@ namespace ModManager5.Classes
                 InstalledMod im = ConfigManager.getInstalledModById(m.id);
                 
                 if (m.type != "local") {
-                    
+
                     if (m.id == "BetterCrewlink")
                     {
                         if (ConfigManager.isBetterCrewlinkInstalled())
@@ -601,7 +601,7 @@ namespace ModManager5.Classes
                         }
                     }
 
-                    if (im == null)
+                    if ((im == null && m.id != "Challenger") || (m.id == "Challenger" && !ModList.isChallengerInstalled()))
                     {
                         PictureBox ModDownload = Visuals.ModPic("ModDownload", global::ModManager5.Properties.Resources.download);
                         ModDownload.Click += new EventHandler((object sender, EventArgs e) =>
@@ -611,7 +611,7 @@ namespace ModManager5.Classes
                         allocatedControls.Add(ModDownload);
                         ModPanel.Controls.Add(ModDownload, 3, line);
                     }
-                    else if (((m.type != "allInOne" || m.id == "Challenger" || m.id == "ChallengerBeta") && im.version != m.release.TagName) || (m.type != "allInOne" && im.gameVersion != m.gameVersion))
+                    else if (m.id != "Challenger" && (((m.type != "allInOne" || m.id == "ChallengerBeta") && im.version != m.release.TagName) || (m.type != "allInOne" && im.gameVersion != m.gameVersion)))
                     {
                         PictureBox ModUpdate = Visuals.ModPic("ModUpdate", global::ModManager5.Properties.Resources.update);
                         ModUpdate.Click += new EventHandler((object sender, EventArgs e) =>
@@ -636,7 +636,7 @@ namespace ModManager5.Classes
                     allocatedControls.Add(ModUninstall);
                     ModPanel.Controls.Add(ModUninstall, 4, line);
 
-                    if (im != null)
+                    if ((im == null && m.id != "Challenger") || (m.id == "Challenger" && ModList.isChallengerInstalled()))
                     {
                         ModUninstall.Click += new EventHandler((object sender, EventArgs e) => {
                             if (MessageBox.Show(Translator.get("Are you sure you want to remove this mod ?"), Translator.get("Remove mod"), MessageBoxButtons.YesNo) == DialogResult.Yes) // TODO
