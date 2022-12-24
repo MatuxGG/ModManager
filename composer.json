@@ -1,0 +1,5 @@
+{
+    "require": {
+        "symfony/symfony": "^6.2"
+    }
+}

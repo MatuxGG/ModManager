@@ -1,0 +1,43 @@
+{
+    "name": "symfony/workflow",
+    "type": "library",
+    "description": "Provides tools for managing a workflow or finite state machine",
+    "keywords": ["workflow", "petrinet", "place", "transition", "statemachine", "state"],
+    "homepage": "https://symfony.com",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Fabien Potencier",
+            "email": "fabien@symfony.com"
+        },
+        {
+            "name": "Grégoire Pineau",
+            "email": "lyrixx@lyrixx.info"
+        },
+        {
+            "name": "Symfony Community",
+            "homepage": "https://symfony.com/contributors"
+        }
+    ],
+    "require": {
+        "php": ">=8.1"
+    },
+    "require-dev": {
+        "psr/log": "^1|^2|^3",
+        "symfony/dependency-injection": "^5.4|^6.0",
+        "symfony/event-dispatcher": "^5.4|^6.0",
+        "symfony/expression-language": "^5.4|^6.0",
+        "symfony/security-core": "^5.4|^6.0",
+        "symfony/validator": "^5.4|^6.0"
+    },
+    "conflict": {
+        "symfony/event-dispatcher": "<5.4"
+    },
+    "autoload": {
+        "psr-4": { "Symfony\\Component\\Workflow\\": "" },
+        "exclude-from-classmap": [
+            "/Tests/"
+        ]
+    },
+    "minimum-stability": "dev"
+}

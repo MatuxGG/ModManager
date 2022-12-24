@@ -1,0 +1,65 @@
+{
+    "name": "laminas/laminas-code",
+    "description": "Extensions to the PHP Reflection API, static code scanning, and code generation",
+    "keywords": [
+        "laminas",
+        "laminasframework",
+        "code"
+    ],
+    "homepage": "https://laminas.dev",
+    "license": "BSD-3-Clause",
+    "require": {
+        "php": "~8.1.0 || ~8.2.0"
+    },
+    "require-dev": {
+        "ext-phar": "*",
+        "doctrine/annotations": "^1.13.3",
+        "laminas/laminas-coding-standard": "^2.3.0",
+        "laminas/laminas-stdlib": "^3.6.1",
+        "phpunit/phpunit": "^9.5.26",
+        "psalm/plugin-phpunit": "^0.18.0",
+        "vimeo/psalm": "^5.1.0"
+    },
+    "suggest": {
+        "doctrine/annotations": "Doctrine\\Common\\Annotations >=1.0 for annotation features",
+        "laminas/laminas-stdlib": "Laminas\\Stdlib component"
+    },
+    "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        },
+        "platform": {
+            "php": "8.1.99"
+        },
+        "sort-packages": true
+    },
+    "autoload": {
+        "psr-4": {
+            "Laminas\\Code\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "LaminasTest\\Code\\": "test/"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@cs-check",
+            "@test"
+        ],
+        "cs-check": "phpcs",
+        "cs-fix": "phpcbf",
+        "static-analysis": "psalm --shepherd --stats",
+        "test": "phpunit --colors=always",
+        "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
+    },
+    "support": {
+        "issues": "https://github.com/laminas/laminas-code/issues",
+        "forum": "https://discourse.laminas.dev",
+        "chat": "https://laminas.dev/chat",
+        "source": "https://github.com/laminas/laminas-code",
+        "docs": "https://docs.laminas.dev/laminas-code/",
+        "rss": "https://github.com/laminas/laminas-code/releases.atom"
+    }
+}

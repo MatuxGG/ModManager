@@ -1,0 +1,30 @@
+{
+    "name": "psr/link",
+    "type": "library",
+    "homepage": "https://github.com/php-fig/link",
+    "description": "Common interfaces for HTTP links",
+    "keywords": ["psr", "psr-13", "http", "http-link", "link", "rest"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "PHP-FIG",
+            "homepage": "http://www.php-fig.org/"
+        }
+    ],
+    "require": {
+        "php": ">=8.0.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "Psr\\Link\\": "src/"
+        }
+    },
+    "suggest": {
+        "fig/link-util": "Provides some useful PSR-13 utilities"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}

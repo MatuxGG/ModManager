@@ -1,0 +1,33 @@
+{
+  "name": "ModManagerElectron",
+  "version": "1.0.0",
+  "description": "ModManagerElectron",
+  "author": "Matux",
+  "main": "main.js",
+  "dependencies": {
+    "tailwindcss": "^3.2.4"
+  },
+  "devDependencies": {
+    "electron": "^22.0.0",
+    "electron-builder": "^23.6.0",
+    "nodemon": "^2.0.20"
+  },
+  "scripts": {
+	  "watch": "nodemon --watch src --exec \"npm start\"",
+	  "start": "npm-run-all --parallel serve start",
+	  "serve": "php -S localhost:8232 -t app/public",
+	  "start": "electron .",
+      "build": "electron-builder"
+  },
+  "build": {
+    "appId": "com.example.app",
+    "win": {
+      "target": "nsis"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": true,
+      "allowToChangeInstallationDirectory": true
+    }
+  }
+}
