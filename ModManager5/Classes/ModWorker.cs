@@ -383,7 +383,7 @@ namespace ModManager5.Classes
                 return;
             } else if (ConfigManager.config.launcher == "EGS")
             {
-                Process.Start(new ProcessStartInfo("cmd", $"/c start {"com.epicgames.launcher://apps/33956bcb55d4452d8c47e16b94e294bd%3A729a86a5146640a2ace9e8c595414c56%3A963137e4c29d4c79a81323b8fab03a40?action=launch&silent=true"}") { CreateNoWindow = true });
+                Process.Start(new ProcessStartInfo("com.epicgames.launcher://apps/963137e4c29d4c79a81323b8fab03a40?action=launch&silent=true") { UseShellExecute = true });
                 return;
             } else
             {
@@ -397,7 +397,6 @@ namespace ModManager5.Classes
             Utils.log("Install mod " + m.name + " START", "ModWorker");
             if (m.id == "Challenger")
             {
-                Utils.debug("tst");
                 ModWorker.openOrInstallChall();
                 //ModWorker.installChallenger(true);
             }
@@ -684,7 +683,7 @@ namespace ModManager5.Classes
         {
             var backgroundWorker = sender as BackgroundWorker;
 
-            object uninsPath = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2160150", "QuietUninstallString", null);
+            object uninsPath = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2160150", "UninstallString", null);
             if (uninsPath != null)
             {
                 Process.Start(new ProcessStartInfo("cmd", $"/c" + uninsPath.ToString()) { CreateNoWindow = true });
