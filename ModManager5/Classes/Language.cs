@@ -37,7 +37,7 @@ namespace ModManager5.Classes
             string tr = "";
             try
             {
-                using (var client = new WebClient())
+                using (var client = Utils.getClient())
                 {
                     tr = client.DownloadString(translationsURL);
                 }

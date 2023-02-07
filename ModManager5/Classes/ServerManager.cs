@@ -35,7 +35,7 @@ namespace ModManager5.Classes
             string serverlist = "";
             try
             {
-                using (var client = new WebClient())
+                using (var client = Utils.getClient())
                 {
                     serverlist = client.DownloadString(serverlistURL);
                 }

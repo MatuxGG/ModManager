@@ -91,7 +91,7 @@ namespace ModManager5.Classes
         {
             if (!String.IsNullOrEmpty(text))
             {
-                using (var client = new WebClient())
+                using (var client = Utils.getClient())
                 {
                     var values = new NameValueCollection();
                     values["text"] = text;
@@ -128,6 +128,13 @@ namespace ModManager5.Classes
         public static void debug(string s)
         {
             MessageBox.Show(s, "DEBUG", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        public static WebClient getClient()
+        {
+            WebClient client = new WebClient();
+            client.Proxy = GlobalProxySelection.GetEmptyWebProxy();
+            return client;
         }
 
         public static void DirectoryCreate(string dirName)

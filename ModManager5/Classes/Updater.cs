@@ -82,7 +82,7 @@ namespace ModManager5.Classes
                     {
                         try
                         {
-                            using (WebClient client = new WebClient())
+                            using (WebClient client = Utils.getClient())
                             {
                                 client.DownloadFile(ra.BrowserDownloadUrl, installerPath);
                             }

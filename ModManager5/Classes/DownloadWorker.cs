@@ -38,7 +38,7 @@ namespace ModManager5.Classes
                     ModManagerUI.StatusLabel.Text = Translator.get(thisSentence).Replace("PERCENT", thisOffset.ToString() + "%");
                 }
             });
-            WebClient client = new WebClient();
+            WebClient client = Utils.getClient();
             client.DownloadProgressChanged += new DownloadProgressChangedEventHandler(client_DownloadProgressChanged);
             client.DownloadFileCompleted += new AsyncCompletedEventHandler(client_DownloadFileCompleted);
             client.DownloadFileAsync(new Uri(path), destPath);

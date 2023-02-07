@@ -19,6 +19,24 @@ namespace ModManager5.Classes
                 ModList.updateLocalMods();
             }
 
+            if (Version.Parse(oldVersion) < Version.Parse("5.3.5"))
+            {
+                InstalledMod im = ConfigManager.getInstalledModById("TownOfHost");
+                if (im != null)
+                {
+                    Mod m = ModList.getModById("TownOfUs");
+                    if (m != null)
+                    {
+                        string modPath = ModManager.appDataPath + @"\mods\" + m.id;
+                        Utils.DirectoryDelete(modPath);
+                        Utils.DirectoryDelete(modPath + "-options");
+                        ConfigManager.config.installedMods.Remove(im);
+                        ConfigManager.update();
+                    }
+                }
+                ConfigManager.update();
+            }
+
             if (oldVersion != newVersion)
             {
                 ConfigManager.config.ModManagerVersion = newVersion;

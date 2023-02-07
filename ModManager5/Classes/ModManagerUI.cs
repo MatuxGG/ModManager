@@ -636,7 +636,7 @@ namespace ModManager5.Classes
                     allocatedControls.Add(ModUninstall);
                     ModPanel.Controls.Add(ModUninstall, 4, line);
 
-                    if ((im == null && m.id != "Challenger") || (m.id == "Challenger" && ModList.isChallengerInstalled()))
+                    if ((im != null && m.id != "Challenger") || (m.id == "Challenger" && ModList.isChallengerInstalled()))
                     {
                         ModUninstall.Click += new EventHandler((object sender, EventArgs e) => {
                             if (MessageBox.Show(Translator.get("Are you sure you want to remove this mod ?"), Translator.get("Remove mod"), MessageBoxButtons.YesNo) == DialogResult.Yes) // TODO

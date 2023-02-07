@@ -20,7 +20,7 @@ namespace ModManager5.Classes
             string lg = "";
             try
             {
-                using (var client = new WebClient())
+                using (var client = Utils.getClient())
                 {
                     lg = client.DownloadString(languagesURL);
                 }

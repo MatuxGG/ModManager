@@ -21,7 +21,7 @@ namespace ModManager5.Classes
             string config = "";
             try
             {
-                using (var client = new WebClient())
+                using (var client = Utils.getClient())
                 {
                     config = client.DownloadString(configURL);
                 }

@@ -33,7 +33,7 @@ namespace ModManager5.Classes
             challengerClientBeta = null;
             try
             {
-                using (var client = new WebClient())
+                using (var client = Utils.getClient())
                 {
                     modlist = client.DownloadString(modlistURL);
                 }
@@ -211,7 +211,7 @@ namespace ModManager5.Classes
             Utils.FileDelete(localPath);
             try
             {
-                using (var client = new WebClient())
+                using (var client = Utils.getClient())
                 {
                     client.DownloadFile(ModManager.serverURL + @"/file/icons/" + m.id + ".ico", localPath);
                 }

@@ -12,6 +12,7 @@ using System.Windows.Forms;
 using ModManager5.Forms;
 using ModManager5.Classes;
 using Microsoft.Win32;
+using System.Net.Http;
 
 namespace ModManager5
 {

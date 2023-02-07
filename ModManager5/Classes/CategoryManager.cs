@@ -21,7 +21,7 @@ namespace ModManager5.Classes
             string cat = "";
             try
             {
-                using (var client = new WebClient())
+                using (var client = Utils.getClient())
                 {
                     cat = client.DownloadString(catlistURL);
                 }
