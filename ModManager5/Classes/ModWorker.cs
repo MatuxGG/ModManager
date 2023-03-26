@@ -876,6 +876,7 @@ namespace ModManager5.Classes
                 }
                 if (toInstallMod.id == "GLMod")
                 {
+                    Utils.DirectoryCreate(destPath + @"\BepInEx\config\");
                     File.Create(destPath + @"\BepInEx\config\" + m.id + ".mm");
                 }
                 backgroundWorker.ReportProgress(installOffset);

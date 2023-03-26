@@ -118,6 +118,7 @@ namespace ModManager5.Classes
                 }
             }
 
+
             foreach (Mod toRemove in releasesToRemove)
             {
                 mods.Remove(toRemove);

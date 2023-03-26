@@ -103,7 +103,8 @@ namespace ModManager5.Classes
             {
                 if (this.githubTag == null || this.githubTag == "")
                 {
-                    this.release = await client.Repository.Release.GetLatest(this.author, this.github);
+                    var releases = await client.Repository.Release.GetAll(this.author, this.github);
+                    this.release = releases.First();
                 } else
                 {
                     this.release = await client.Repository.Release.Get(this.author, this.github, this.githubTag);
