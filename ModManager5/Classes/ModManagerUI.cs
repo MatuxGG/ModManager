@@ -545,15 +545,16 @@ namespace ModManager5.Classes
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
             } else
             {
-                ModPanel.ColumnCount = 9;
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+                ModPanel.ColumnCount = 10;
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // Name
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // Author
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Version
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Download / Start
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Uninstall
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Edit
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Discord
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Desktop
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Favorite
             }
             
             int size = mods.Count();
@@ -650,7 +651,7 @@ namespace ModManager5.Classes
                         ModUninstall.Cursor = System.Windows.Forms.Cursors.Default;
                         ModUninstall.Image = null;
                     }
-
+                    
                     PictureBox ModFavorite = Visuals.ModPic("ModFavorite", global::ModManager5.Properties.Resources.favorite);
                     if (ConfigManager.isFavoriteMod(m.id))
                     {

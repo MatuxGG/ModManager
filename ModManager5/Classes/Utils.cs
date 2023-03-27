@@ -1,8 +1,12 @@
-﻿using System;
+﻿using Svg;
+using System;
 using System.Collections.Specialized;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Speech.Recognition.SrgsGrammar;
 using System.Text;
 using System.Windows.Forms;
 
@@ -135,6 +139,28 @@ namespace ModManager5.Classes
             WebClient client = new WebClient();
             client.Proxy = GlobalProxySelection.GetEmptyWebProxy();
             return client;
+        }
+
+        public static Bitmap getOrDownload(string serverPath, string localPath)
+        {
+            try
+            {
+                if (!File.Exists(localPath))
+                {
+                    using (var client = Utils.getClient())
+                    {
+                        client.DownloadFile(serverPath, localPath);
+                    }
+                }
+
+            }
+            catch (Exception e)
+            {
+                Utils.logEx(e, "getOrDownload");
+                Utils.logToServ(e, "getOrDownload");
+            }
+
+            return new Bitmap(localPath);
         }
 
         public static void DirectoryCreate(string dirName)
