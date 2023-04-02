@@ -13,6 +13,7 @@ using ModManager5.Forms;
 using ModManager5.Classes;
 using Microsoft.Win32;
 using System.Net.Http;
+using Octokit;
 
 namespace ModManager5
 {
@@ -26,8 +27,12 @@ namespace ModManager5
         public static string tempPath = Path.GetTempPath() + "ModManager";
         public static Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         public static string visibleVersion = version.ToString().Substring(0, version.ToString().Length - 2);
-        public static string token = System.IO.File.ReadAllText(appPath + @"\token.txt");
+        public static List<string> tokens = new List<string>() {
+            "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",
+            "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",
+        };
         public static string supportIdChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789";
+        public static GitHubClient githubClient;
 
         public static bool debug = false;
 
@@ -108,6 +113,12 @@ namespace ModManager5
                 this.Size = new Size(width, height);
                 this.CenterToScreen();
             }
+
+            // Load Github Client
+            Random random = new Random();
+            int randomNumber = random.Next(0, 2);
+            githubClient = new GitHubClient(new ProductHeaderValue("ModManager"));
+            githubClient.Credentials = new Credentials(ModManager.tokens[randomNumber]);
 
             // Check update
             Utils.log("Looking for updates updates", "ModManager");

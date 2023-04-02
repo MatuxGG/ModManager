@@ -157,10 +157,7 @@ namespace ModManager5.Classes
 
         public static async Task getChallengerReleases(Mod m, Boolean live)
         {
-            var client = new GitHubClient(new ProductHeaderValue("ModManager"));
-            var tokenAuth = new Credentials(ModManager.token);
-            client.Credentials = tokenAuth;
-            IReadOnlyList<Release> releases = await client.Repository.Release.GetAll(m.author, m.github);
+            IReadOnlyList<Release> releases = await ModManager.githubClient.Repository.Release.GetAll(m.author, m.github);
             m.release = releases.First();
             // There is no management of Challenger down because we assume that it will be always up
             Release challengerMod = null;
@@ -237,9 +234,9 @@ namespace ModManager5.Classes
         public static List<Mod> getModsByCategory(string category)
         {
             if (ConfigManager.config.launcher == "Steam")
-                return mods.FindAll(m => m.category == category && m.type != "dependency");
+                return mods.FindAll(m => m.category == category && m.type != "dependency" && m.enabled);
             else
-                return mods.FindAll(m => m.category == category && m.type != "dependency" && (m.type == "allInOne" || m.type == "local" || m.gameVersion == ServerConfig.get("gameVersion").value));
+                return mods.FindAll(m => m.category == category && m.type != "dependency" && m.enabled && (m.type == "allInOne" || m.type == "local" || m.gameVersion == ServerConfig.get("gameVersion").value));
         }
 
         public static List<Mod> getMyMods(List<string> listOfMods)

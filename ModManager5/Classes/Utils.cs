@@ -1,4 +1,5 @@
-﻿using Svg;
+﻿using Octokit;
+using Svg;
 using System;
 using System.Collections.Specialized;
 using System.Drawing;

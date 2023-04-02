@@ -112,13 +112,10 @@ namespace ModManager5.Classes
 
         public static async Task GetGithubVersion()
         {
-            var client = new GitHubClient(new ProductHeaderValue("ModManager"));
-            var tokenAuth = new Credentials(ModManager.token);
-            client.Credentials = tokenAuth;
             Release r = new Release() { };
             try
             {
-                r = await client.Repository.Release.GetLatest("MatuxGG", "ModManager");
+                r = await ModManager.githubClient.Repository.Release.GetLatest("MatuxGG", "ModManager");
             }
             catch (Exception e)
             {

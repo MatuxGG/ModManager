@@ -31,12 +31,16 @@ namespace ModManager5.Classes
         public string ignorePattern { get; set; }
         public string needPattern { get; set; }
         public string data { get; set; }
+        public string countries { get; set; }
+        public bool hasUpdater { get; set; }
+        public bool enabled { get; set; }
 
         public Release release { get; set; }
 
         public Mod(string id, string name, string category, string type, string gameVersion, List<string> dependencies,
             string author = "", string github = "", string githubLink = "", string githubTag = "", string social = "",
-            string ignorePattern = "", string needPattern = "", string data = "", List<string> options = null)
+            string ignorePattern = "", string needPattern = "", string data = "",
+            List<string> options = null, string countries = "en", bool enabled = true, bool hasUpdater = false)
         {
             this.id = id;
             this.name = name;
@@ -69,7 +73,9 @@ namespace ModManager5.Classes
             {
                 this.options = new List<string>() { };
             }
-
+            this.countries = countries;
+            this.enabled = enabled;
+            this.hasUpdater = hasUpdater;
         }
 
         public string getLink()
@@ -96,18 +102,15 @@ namespace ModManager5.Classes
 
         public async Task getGithubRelease()
         {
-            var client = new GitHubClient(new ProductHeaderValue("ModManager"));
-            var tokenAuth = new Credentials(ModManager.token);
-            client.Credentials = tokenAuth;
             try
             {
                 if (this.githubTag == null || this.githubTag == "")
                 {
-                    var releases = await client.Repository.Release.GetAll(this.author, this.github);
+                    var releases = await ModManager.githubClient.Repository.Release.GetAll(this.author, this.github);
                     this.release = releases.First();
                 } else
                 {
-                    this.release = await client.Repository.Release.Get(this.author, this.github, this.githubTag);
+                    this.release = await ModManager.githubClient.Repository.Release.Get(this.author, this.github, this.githubTag);
                 }
             }
             catch
@@ -116,5 +119,11 @@ namespace ModManager5.Classes
             }
         }
 
+
+        public List<string> getCountries()
+        {
+            string[] myArray = this.countries.Split(';');
+            return myArray.ToList();
+        }
     }
 }

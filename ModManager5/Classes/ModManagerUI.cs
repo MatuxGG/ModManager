@@ -3,6 +3,7 @@ using ModManager5.Forms;
 using ModManager5.Objects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
@@ -272,6 +273,7 @@ namespace ModManager5.Classes
 
         public static void reloadMods()
         {
+            if (activeForm == null) return;
             string fName = activeForm.Name;
             CategoryForms.Clear();
             ModsCategoriesPanel.Controls.Clear();
@@ -545,10 +547,12 @@ namespace ModManager5.Classes
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
             } else
             {
-                ModPanel.ColumnCount = 10;
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // Name
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // Author
-                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Version
+                ModPanel.ColumnCount = 12;
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Flags
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Name
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F)); // Author
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F)); // Version
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F)); // Game version
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Download / Start
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Uninstall
                 ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Edit
@@ -568,7 +572,6 @@ namespace ModManager5.Classes
             if (cat.id == "local")
             {
                 ModPanel.Size = new System.Drawing.Size(100, 100 * size);
-
             } else
             {
                 ModPanel.Size = new System.Drawing.Size(100, 50 * size);
@@ -602,7 +605,7 @@ namespace ModManager5.Classes
                         }
                     }
 
-                    if ((im == null && m.id != "Challenger") || (m.id == "Challenger" && !ModList.isChallengerInstalled()))
+                    if (m.id == "Challenger" ? !ModList.isChallengerInstalled() : im == null && m.id != "Challenger")
                     {
                         PictureBox ModDownload = Visuals.ModPic("ModDownload", global::ModManager5.Properties.Resources.download);
                         ModDownload.Click += new EventHandler((object sender, EventArgs e) =>
@@ -610,9 +613,9 @@ namespace ModManager5.Classes
                             ModWorker.installAnyMod(m);
                         });
                         allocatedControls.Add(ModDownload);
-                        ModPanel.Controls.Add(ModDownload, 3, line);
+                        ModPanel.Controls.Add(ModDownload, 5, line);
                     }
-                    else if (m.id != "Challenger" && (((m.type != "allInOne" || m.id == "ChallengerBeta") && im.version != m.release.TagName) || (m.type != "allInOne" && im.gameVersion != m.gameVersion)))
+                    else if (!m.hasUpdater && m.id != "Challenger" && (((m.type != "allInOne" || m.id == "ChallengerBeta") && im.version != m.release.TagName) || (m.type != "allInOne" && im.gameVersion != m.gameVersion)))
                     {
                         PictureBox ModUpdate = Visuals.ModPic("ModUpdate", global::ModManager5.Properties.Resources.update);
                         ModUpdate.Click += new EventHandler((object sender, EventArgs e) =>
@@ -620,7 +623,7 @@ namespace ModManager5.Classes
                             ModWorker.installAnyMod(m);
                         });
                         allocatedControls.Add(ModUpdate);
-                        ModPanel.Controls.Add(ModUpdate, 3, line);
+                        ModPanel.Controls.Add(ModUpdate, 5, line);
                     }
                     else
                     {
@@ -630,12 +633,12 @@ namespace ModManager5.Classes
                             ModWorker.startMod(m);
                         });
                         allocatedControls.Add(ModPlay);
-                        ModPanel.Controls.Add(ModPlay, 3, line);
+                        ModPanel.Controls.Add(ModPlay, 5, line);
                     }
                     
                     PictureBox ModUninstall = Visuals.ModPic("ModUninstall", global::ModManager5.Properties.Resources.delete);
                     allocatedControls.Add(ModUninstall);
-                    ModPanel.Controls.Add(ModUninstall, 4, line);
+                    ModPanel.Controls.Add(ModUninstall, 6, line);
 
                     if ((im != null && m.id != "Challenger") || (m.id == "Challenger" && ModList.isChallengerInstalled()))
                     {
@@ -671,14 +674,14 @@ namespace ModManager5.Classes
                     }
                     
                     allocatedControls.Add(ModFavorite);
-                    ModPanel.Controls.Add(ModFavorite, 8, line);
+                    ModPanel.Controls.Add(ModFavorite, 10, line);
 
                     PictureBox ModSave = Visuals.ModPic("ModSave", global::ModManager5.Properties.Resources.shortcut);
                     ModSave.Click += new EventHandler((object sender, EventArgs e) => {
                         ModList.createShortcut(m);
                     });
                     allocatedControls.Add(ModSave);
-                    ModPanel.Controls.Add(ModSave, 7, line);
+                    ModPanel.Controls.Add(ModSave, 9, line);
 
                     if (m.social != null && m.social != "")
                     {
@@ -688,11 +691,11 @@ namespace ModManager5.Classes
                             string link = m.social;
                             Process.Start("explorer", link);
                         });
-                        ModPanel.Controls.Add(ModDiscord, 6, line);
+                        ModPanel.Controls.Add(ModDiscord, 8, line);
                     }
                     PictureBox ModEdit = Visuals.ModPic("ModEdit", global::ModManager5.Properties.Resources.edit);
                     allocatedControls.Add(ModEdit);
-                    ModPanel.Controls.Add(ModEdit, 5, line);
+                    ModPanel.Controls.Add(ModEdit, 7, line);
                     if (m.options.Count() == 0 || im == null)
                     {
                         ModEdit.Image = null;
@@ -706,11 +709,15 @@ namespace ModManager5.Classes
                     }
                     Label ModVersion = Visuals.ModLabel("ModVersion", m.githubLink == "1" ? m.release.TagName : "");
                     allocatedControls.Add(ModVersion);
-                    ModPanel.Controls.Add(ModVersion, 2, line);
+                    ModPanel.Controls.Add(ModVersion, 3, line);
+
+                    Label GameVersion = Visuals.ModLabel("GameVersion", m.type == "allInOne" ? "" : m.gameVersion);
+                    allocatedControls.Add(GameVersion);
+                    ModPanel.Controls.Add(GameVersion, 4, line);
 
                     LinkLabel ModAuthor = Visuals.ModLinkLabel("ModAuthor", m.author);
                     allocatedControls.Add(ModAuthor);
-                    ModPanel.Controls.Add(ModAuthor, 1, line);
+                    ModPanel.Controls.Add(ModAuthor, 2, line);
 
                     if (m.githubLink == "1")
                     {
@@ -724,12 +731,36 @@ namespace ModManager5.Classes
                     }
 
                     LinkLabel ModTitle = Visuals.ModLinkLabel("ModTitle", m.name);
-                    ModPanel.Controls.Add(ModTitle, 0, line);
+                    ModPanel.Controls.Add(ModTitle, 1, line);
                     allocatedControls.Add(ModTitle);
                     ModTitle.Click += new EventHandler((object sender, EventArgs e) => {
                         string link = m.getLink();
                         Process.Start("explorer", link);
                     });
+
+                    Bitmap lgMap;
+                    switch (m.countries)
+                    {
+                        case "fr":
+                            lgMap = global::ModManager5.Properties.Resources.fr;
+                            break;
+                        case "es":
+                            lgMap = global::ModManager5.Properties.Resources.es;
+                            break;
+                        case "cn":
+                            lgMap = global::ModManager5.Properties.Resources.cn;
+                            break;
+                        case "jp":
+                            lgMap = global::ModManager5.Properties.Resources.jp;
+                            break;
+                        default:
+                            lgMap = global::ModManager5.Properties.Resources.en;
+                            break;
+                    }
+
+                    PictureBox ModLg = Visuals.ModPic("ModLg", lgMap);
+                    allocatedControls.Add(ModLg);
+                    ModPanel.Controls.Add(ModLg, 0, line);
 
                 } else
                 {
@@ -994,6 +1025,7 @@ namespace ModManager5.Classes
         public static void openOptionsForm(Mod m)
         {
             InstalledMod im = ConfigManager.getInstalledModById(m.id);
+            if (im == null) return;
 
             OptionsForm = new Form();
             OptionsForm.FormBorderStyle = FormBorderStyle.FixedSingle;
@@ -1024,8 +1056,9 @@ namespace ModManager5.Classes
             foreach (string optionName in m.options)
             {
                 Mod option = ModList.getModById(optionName);
+                if (option == null) continue;
                 MMButton OptionButton = new MMButton("trans");
-                OptionsForm.Controls.Add(Visuals.OptionsLine(OptionButton, optionName));
+                OptionsForm.Controls.Add(Visuals.OptionsLine(OptionButton, option.name));
 
                 OptionButton.Click += new EventHandler((object sender, EventArgs e) =>
                 {
@@ -1040,6 +1073,11 @@ namespace ModManager5.Classes
                         im.options.Add(optionName);
                         ConfigManager.update();
                         c.Text = Translator.get("Enabled");
+                    } else if (c.Text == Translator.get("Install"))
+                    {
+                        if (!ModWorker.finished) return;
+                        ModWorker.installMod(option);
+                        OptionsForm.Close();
                     }
                 });
 
@@ -1051,12 +1089,13 @@ namespace ModManager5.Classes
                     OptionButton.Text = Translator.get("Disabled");
                 } else
                 {
-                    OptionButton.Text = Translator.get("Not installed");
+                    OptionButton.Text = Translator.get("Install");
                 }
             }
 
             OptionsForm.ShowDialog();
         }
+
         public static void loadServers()
         {
             Utils.log("Load servers START", "ModManagerUI");

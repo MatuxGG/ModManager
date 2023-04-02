@@ -403,15 +403,29 @@ namespace ModManager5.Classes
             panel.Dock = DockStyle.Top;
             panel.BackColor = ThemeList.theme.AppOverlayColor;
 
-            panel.ColumnCount = 4;
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 23F));
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 24F));
+            panel.ColumnCount = 6;
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F));
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F));
 
             panel.RowCount = 1;
             panel.Size = new System.Drawing.Size(100, 50);
             panel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            System.Windows.Forms.Label ModTitleGameVersion = new System.Windows.Forms.Label();
+            ModTitleGameVersion.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ModTitleGameVersion.BackColor = Color.Transparent;
+            ModTitleGameVersion.ForeColor = SystemColors.Control;
+            ModTitleGameVersion.TextAlign = ContentAlignment.MiddleLeft;
+            ModTitleGameVersion.Dock = DockStyle.Left;
+            ModTitleGameVersion.Name = "ModTitleGameVersion";
+            ModTitleGameVersion.Padding = new Padding(12, 0, 0, 0);
+            ModTitleGameVersion.Size = new System.Drawing.Size(150, 50);
+            ModTitleGameVersion.Text = Translator.get("Game Version");
+            panel.Controls.Add(ModTitleGameVersion, 4, 0);
 
             System.Windows.Forms.Label ModTitleVersion = new System.Windows.Forms.Label();
             ModTitleVersion.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -423,7 +437,7 @@ namespace ModManager5.Classes
             ModTitleVersion.Padding = new Padding(12, 0, 0, 0);
             ModTitleVersion.Size = new System.Drawing.Size(150, 50);
             ModTitleVersion.Text = Translator.get("Version");
-            panel.Controls.Add(ModTitleVersion, 2, 0);
+            panel.Controls.Add(ModTitleVersion, 3, 0);
 
             System.Windows.Forms.Label ModTitleAuthor = new System.Windows.Forms.Label();
             ModTitleAuthor.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -435,7 +449,7 @@ namespace ModManager5.Classes
             ModTitleAuthor.Padding = new Padding(12, 0, 0, 0);
             ModTitleAuthor.Size = new System.Drawing.Size(250, 50);
             ModTitleAuthor.Text = Translator.get("Author");
-            panel.Controls.Add(ModTitleAuthor, 1, 0);
+            panel.Controls.Add(ModTitleAuthor, 2, 0);
 
             System.Windows.Forms.Label ModTitleTitle = new System.Windows.Forms.Label();
             ModTitleTitle.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
@@ -447,7 +461,7 @@ namespace ModManager5.Classes
             ModTitleTitle.Padding = new Padding(12, 0, 0, 0);
             ModTitleTitle.Size = new System.Drawing.Size(250, 50);
             ModTitleTitle.Text = Translator.get("Name");
-            panel.Controls.Add(ModTitleTitle, 0, 0);
+            panel.Controls.Add(ModTitleTitle, 1, 0);
 
             return panel;
         }

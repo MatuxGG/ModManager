@@ -211,7 +211,6 @@ namespace ModManager5.Classes
                 string dirPath = ModManager.appDataPath + @"\mods\" + m.id;
                 string optionsPath = dirPath + "-options";
 
-
                 if (!ModManager.silent)
                     ModManagerUI.StatusLabel.Text = Translator.get("Starting MODNAME ... Please wait...").Replace("MODNAME", m.name);
 
@@ -231,6 +230,7 @@ namespace ModManager5.Classes
                         Process.Start("explorer", dirPath + @"\Among Us.exe");
                     } else
                     {
+                        Utils.DirectoryDelete(optionsPath);
                         Utils.DirectoryCopy(dirPath, optionsPath, true);
                         foreach (string optionName in m.options)
                         {
@@ -665,6 +665,17 @@ namespace ModManager5.Classes
                 string modPath = ModManager.appDataPath + @"\mods\" + m.id;
                 Utils.DirectoryDelete(modPath);
                 Utils.DirectoryDelete(modPath + "-options");
+                foreach (InstalledMod subIm in ConfigManager.config.installedMods)
+                {
+                    foreach (string option in subIm.options)
+                    {
+                        if (option == m.id)
+                        {
+                            subIm.options.Remove(option);
+                            break;
+                        }
+                    }
+                }
             }
 
             ConfigManager.config.installedMods.Remove(im);
