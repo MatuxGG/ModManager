@@ -5,7 +5,7 @@
 #include "Installer\CodeDependencies.iss"
 
 #define MyAppName "ModManager"
-#define MyAppVersion "5.3.6"
+#define MyAppVersion "5.3.7"
 #define MyAppPublisher "Matux"
 #define MyAppURL "https://goodloss.fr"
 #define MyAppExeName "ModManager5.exe"
