@@ -28,8 +28,8 @@ namespace ModManager5
         public static Version version = System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
         public static string visibleVersion = version.ToString().Substring(0, version.ToString().Length - 2);
         public static List<string> tokens = new List<string>() {
-            "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",
-            "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",
+            System.IO.File.ReadAllText(appPath + @"\token.txt"),
+            System.IO.File.ReadAllText(appPath + @"\token2.txt"),
         };
         public static string supportIdChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz123456789";
         public static GitHubClient githubClient;
