@@ -34,15 +34,17 @@ namespace ModManager6
             // 
             // ModManager
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(10F, 25F);
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.SystemColors.ControlText;
-            BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch;
-            ClientSize = new System.Drawing.Size(1949, 1248);
+            BackgroundImage = Properties.Resources.modmanager1;
+            BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            ClientSize = new System.Drawing.Size(184, 161);
+            DoubleBuffered = true;
             ForeColor = System.Drawing.SystemColors.ControlText;
             Icon = (System.Drawing.Icon)resources.GetObject("$this.Icon");
-            Margin = new System.Windows.Forms.Padding(6, 5, 6, 5);
-            MinimumSize = new System.Drawing.Size(1705, 763);
+            Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            MinimumSize = new System.Drawing.Size(200, 200);
             Name = "ModManager";
             Text = "Mod Manager";
             ResumeLayout(false);

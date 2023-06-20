@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,9 @@ namespace ModManager6.Classes
     public static class Log
     {
         public static string logFile = ModManager.appDataPath + @"\logs.txt";
+
+        public static Stopwatch stopwatch = new Stopwatch();
+        public static string formattedTime;
 
         public static void logNewLine()
         {
@@ -36,7 +40,7 @@ namespace ModManager6.Classes
             {
                 try
                 {
-                    File.AppendAllText(logFile, "[" + DateTime.UtcNow + "][" + className + "]" + line + Environment.NewLine);
+                    File.AppendAllText(logFile, "[" + DateTime.UtcNow + "][" + className + "] " + line + Environment.NewLine);
                     written = true;
                 }
                 catch
@@ -62,6 +66,23 @@ namespace ModManager6.Classes
             MessageBox.Show("An error has occured.\nPlease restart Mod Manager and try again.\nIf this happen again, please create a ticket on Mod Manager's support discord server.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Environment.Exit(0);
         }
+
+        public static void startTimer()
+        {
+            stopwatch.Start();
+        }
+
+        public static string endTimer()
+        {
+            stopwatch.Stop();
+            TimeSpan elapsedTime = stopwatch.Elapsed;
+            return string.Format("{0}:{1:D2}", (int)elapsedTime.TotalMinutes, elapsedTime.Seconds);
+        }
+
+        public static void logTime(string line, string className)
+        {
+            log(line + " (" + endTimer() + ")", className);
+        } 
 
         // TODO: Log to serv 
     }

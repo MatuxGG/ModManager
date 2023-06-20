@@ -14,6 +14,7 @@ using Microsoft.Win32;
 using System.Net.Http;
 using Octokit;
 using System.Net;
+using Newtonsoft.Json;
 
 namespace ModManager6
 {
@@ -38,6 +39,7 @@ namespace ModManager6
         public ModManager(string[] args)
         {
             InitializeComponent();
+            this.CenterToScreen();
             _ = this.Start(args);
         }
 
@@ -81,23 +83,30 @@ namespace ModManager6
 
             Download.load(this);
 
+            Log.startTimer();
             token = await Download.downloadString(apiURL + "/github/token");
+            Log.logTime("Initialisation", "ModManager");
 
-            Log.log("ConfigManager component", "ModManager");
+            Log.startTimer();
             ConfigManager.load();
+            Log.logTime("Config load", "ModManager");
 
             // If not silent, load theme
             if (args.Count() <= 0)
             {
-                Log.log("Translator component", "ModManager");
+                Log.startTimer();
                 await Translator.load();
+                Log.logTime("Translations load", "ModManager");
 
-                Log.log("ThemeList component", "ModManager");
+                Log.startTimer();
                 ThemeList.load();
+                Log.logTime("Themes load", "ModManager");
 
-                Log.log("UI component", "ModManager");
+                Log.startTimer();
                 ModManagerUI.load(this);
+                Log.logTime("UI load (1/2)", "ModManager");
 
+                this.MinimumSize = new System.Drawing.Size(1200, 480);
                 int width = (int)((80 * Screen.PrimaryScreen.Bounds.Width) / 100);
                 if (width < this.MinimumSize.Width)
                     width = this.MinimumSize.Width;
@@ -108,14 +117,71 @@ namespace ModManager6
                 this.CenterToScreen();
             }
 
+            Log.startTimer();
             // Load Github Client
             githubClient = new GitHubClient(new ProductHeaderValue("ModManager"));
             githubClient.Credentials = new Credentials(ModManager.token);
+            Log.logTime("Github client load", "ModManager");
 
-            Log.log("Updater component", "ModManager");
+            Log.startTimer();
             await Updater.CheckRunUpdateOnStart();
+            Log.logTime("Updater load", "ModManager");
 
+            Log.startTimer();
             ConfigManager.updateAmongUs();
+            Log.logTime("AU folder load", "ModManager");
+
+            Log.startTimer();
+            await ModList.load();
+            Log.logTime("Modlist load", "ModManager");
+
+            Log.startTimer();
+            await ModList.loadReleases();
+            Log.logTime("Releases load", "ModManager");
+
+            //foreach (ModSource source in ModList.modSources)
+            //{
+            //    Log.log("Source " + source.name, "Debug");
+            //    foreach (Mod m in source.mods)
+            //    {
+            //        Log.log("Mod " + m.id, "Debug");
+            //    }
+            //}
+
+            Log.startTimer();
+            ServerManager.load();
+            Log.logTime("Servers load", "ModManager");
+
+            Log.startTimer();
+            ModWorker.load();
+            Log.logTime("ModWorker load", "ModManager");
+
+            if (args.Count() <= 0)
+            {
+                Log.startTimer();
+                ContextMenu.init(this);
+                ContextMenu.load();
+                Log.logTime("Context menu load", "ModManager");
+            }
+
+            VersionUpdater.applyUpdates(ConfigManager.config.ModManagerVersion, visibleVersion);
+
+            if (args.Count() > 0)
+            {
+                // TODO : shortcuts
+            }
+
+            Log.startTimer();
+            ModManagerUI.InitUI();
+            ModManagerUI.InitListeners();
+            ModManagerUI.hideMenuPanels();
+            ModManagerUI.InitForm();
+            Log.logTime("UI load (2/2)", "ModManager");
+
+            ModManagerUI.LoadingLabel.Visible = false;
+            ModManagerUI.StatusLabel.Text = "";
+
+            Log.log("Ready", "ModManager");
 
         }
     }

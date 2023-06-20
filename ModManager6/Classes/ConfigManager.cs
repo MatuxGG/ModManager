@@ -11,6 +11,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Runtime.CompilerServices;
 
 namespace ModManager6.Classes
 {
@@ -156,6 +157,11 @@ namespace ModManager6.Classes
                 return folderPath;
             }
             return null;
+        }
+
+        public static InstalledMod getInstalledMod(string modId, string version)
+        {
+            return config.installedMods.Find(im => im.id == modId && im.version == version);
         }
 
     }

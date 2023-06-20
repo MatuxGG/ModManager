@@ -16,7 +16,7 @@ namespace ModManager6.Classes
                 Directory.CreateDirectory(dirName);
             }
         }
-        public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+        public static void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs = true)
         {
             // Get the subdirectories for the specified directory.
             DirectoryInfo dir = new DirectoryInfo(sourceDirName);

@@ -12,8 +12,10 @@ namespace ModManager6.Classes
         public bool enabled;
         public List<Mod> mods;
 
-        public ModSource() {
-            
+        public ModSource(string name = "", bool enabled = true, List<Mod> mods = null) {
+            this.name = name;
+            this.enabled = enabled;
+            this.mods = mods != null ? mods : new List<Mod>() { };
         }
     }
 }

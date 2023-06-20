@@ -1,17 +1,28 @@
-﻿using ModManager6.Objects;
+﻿using ModManager5.Forms;
+using ModManager6.Objects;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
+using System.IO.Compression;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement;
+using Button = System.Windows.Forms.Button;
+using System.Security.Policy;
+using System.Text.RegularExpressions;
+using TextBox = System.Windows.Forms.TextBox;
+using ComboBox = System.Windows.Forms.ComboBox;
 
 namespace ModManager6.Classes
 {
     public static class ModManagerUI
     {
+        public static Form activeForm = null;
+
         public static Panel MenuPanel;
         public static PictureBox LogoPict;
         public static Panel BottomRightPanel;
@@ -240,6 +251,661 @@ namespace ModManager6.Classes
             modManager.Controls.Add(AppPanel);
             modManager.Controls.Add(BottomRightPanel);
             modManager.Controls.Add(MenuPanel);
+        }
+
+        public static void InitUI()
+        {
+            loadEmpty();
+            loadMods();
+            loadServers();
+            loadSettings();
+            loadCredits();
+        }
+
+        public static void reloadMods()
+        {
+            if (activeForm == null) return;
+            string fName = activeForm.Name;
+            CategoryForms.Clear();
+            ModsCategoriesPanel.Controls.Clear();
+            loadMods();
+            Form f = CategoryForms.Find(f => f.Name == fName);
+            if (f != null)
+            {
+                openForm(f);
+            }
+            else
+            {
+                openForm(CategoryForms.Last());
+            }
+            if (!ModManager.silent)
+                ContextMenu.load();
+        }
+
+        public static void InitForm()
+        {
+            if (CategoryForms.Count() > 0)
+            {
+                showMenuPanel(ModsCategoriesPanel);
+                openForm(CategoryForms.Last());
+            }
+            else
+            {
+                openForm(EmptyForm);
+            }
+        }
+
+
+        public static void InitListeners()
+        {
+            foreach (Control c in ModsPanel.Controls)
+            {
+                c.Click += new EventHandler((object sender, EventArgs e) => {
+                    showMenuPanel(ModsCategoriesPanel);
+                });
+            }
+
+            foreach (Control c in ServersPanel.Controls)
+            {
+                c.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    showMenuPanel();
+                    openForm(ServersForm);
+                });
+            }
+
+            foreach (Control c in CreditsPanel.Controls)
+            {
+                c.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    showMenuPanel();
+                    openForm(CreditsForm);
+                });
+            }
+
+            foreach (Control c in SettingsPanel.Controls)
+            {
+                c.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    showMenuPanel();
+                    openForm(SettingsForm);
+                });
+            }
+
+            FaqPict.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                Process.Start("explorer", ModManager.serverURL + @"\faq");
+            });
+            NewsPict.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                Process.Start("explorer", ModManager.serverURL + @"\news");
+            });
+            AccountPict.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                Process.Start("explorer", ModManager.serverURL + @"\login");
+            });
+            RoadmapPict.Click += new EventHandler((object sender, EventArgs e) => {
+
+                Process.Start("explorer", ModManager.serverURL + @"\roadmap");
+            });
+            GithubPict.Click += new EventHandler((object sender, EventArgs e) => {
+
+                Process.Start("explorer", ModManager.serverURL + @"\github");
+            });
+            DiscordPict.Click += new EventHandler((object sender, EventArgs e) => {
+
+                Process.Start("explorer", ModManager.serverURL + @"\discord");
+            });
+            StartButton.Click += new EventHandler((object sender, EventArgs e) => {
+
+                ModWorker.startGame();
+            });
+
+        }
+
+        public static void hideMenuPanels()
+        {
+            if (ModsCategoriesPanel.Visible == true)
+                ModsCategoriesPanel.Visible = false;
+        }
+
+        public static void showMenuPanel(Panel subMenu = null)
+        {
+            if (subMenu == null || subMenu.Visible == false)
+            {
+                hideMenuPanels();
+                if (subMenu != null)
+                {
+                    subMenu.Visible = true;
+                }
+            }
+            else
+            {
+                subMenu.Visible = false;
+            }
+        }
+
+
+        public static void openForm(Form form)
+        {
+            if (activeForm != null)
+                activeForm.Close();
+            activeForm = form;
+            form.TopLevel = false;
+            form.FormBorderStyle = FormBorderStyle.None;
+            form.Dock = DockStyle.Fill;
+            form.BackColor = ThemeList.theme.AppBackgroundColor;
+            AppPanel.Controls.Add(form);
+            AppPanel.Tag = form;
+            form.BringToFront();
+            form.Show();
+        }
+
+        private static Button CreateSubMenuButton(string name)
+        {
+            Button SubMenuButton = new Button();
+            SubMenuButton.BackColor = ThemeList.theme.MenuSubButtonsColor;
+            SubMenuButton.Cursor = System.Windows.Forms.Cursors.Hand;
+            SubMenuButton.Dock = System.Windows.Forms.DockStyle.Top;
+            SubMenuButton.FlatAppearance.BorderSize = 0;
+            SubMenuButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            SubMenuButton.Font = new System.Drawing.Font(ThemeList.theme.MFont, ThemeList.theme.MSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            SubMenuButton.ForeColor = System.Drawing.SystemColors.Control;
+            SubMenuButton.Margin = new System.Windows.Forms.Padding(0);
+            SubMenuButton.Name = "SubMenuButton";
+            SubMenuButton.Padding = new System.Windows.Forms.Padding(20, 0, 0, 0);
+            SubMenuButton.Size = new System.Drawing.Size(300, 40);
+            SubMenuButton.Text = Translator.get(name);
+            SubMenuButton.UseMnemonic = false;
+            SubMenuButton.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            SubMenuButton.UseVisualStyleBackColor = false;
+            SubMenuButton.TabStop = false;
+
+            return SubMenuButton;
+        }
+
+        public static void loadMods()
+        {
+            // SubMenus
+
+            List<Category> oriCats = ModList.getAllCategories();
+            List<Category> cats = new List<Category>() { };
+            cats.AddRange(oriCats);
+            cats.Reverse();
+            int size = 0;
+            foreach (Category c in cats)
+            {
+                if (ModList.getModsByCategoryId(c.id).Count() > 0)
+                {
+                    size++;
+                    Button b = CreateSubMenuButton(c.name);
+
+                    Form f = new GenericPanel();
+                    f.Name = c.id;
+                    CategoryForms.Add(f);
+
+                    b.Click += new EventHandler((object sender, EventArgs e) => {
+                        openForm(f);
+                    });
+
+                    ModsCategoriesPanel.Controls.Add(b);
+                }
+            }
+
+            //if (ConfigManager.getFavoriteMods() != null)
+            //{
+            //    size++;
+            //    Button b = CreateSubMenuButton(Translator.get("Favorites"));
+            //    Form f = new GenericPanel();
+            //    f.Name = "Favorites";
+            //    CategoryForms.Add(f);
+            //    b.Click += new EventHandler((object sender, EventArgs e) => {
+            //        openForm(f);
+            //    });
+            //    ModsCategoriesPanel.Controls.Add(b);
+            //} TODO
+
+            ModsCategoriesPanel.Size = new Size(300, 40 * size);
+
+            // Forms
+
+            foreach (Form f in CategoryForms)
+            {
+                refreshModForm(f);
+            }
+
+        }
+
+
+        public static void refreshModForm(Form f)
+        {
+            f.Controls.Clear();
+
+            Category cat = ModList.getCategoryById(f.Name);
+
+            List<Mod> mods = new List<Mod>() { };
+
+            if (cat.id == "Favorites")
+            {
+                //mods = ConfigManager.getFavoriteMods();
+            }
+            else
+            {
+                mods = ModList.getModsByCategoryId(f.Name);
+            }
+
+            Panel ContainerPanel = new Panel();
+            ContainerPanel.Name = "ContainerPanel";
+            ContainerPanel.BackColor = Color.Transparent;
+            ContainerPanel.Dock = DockStyle.Fill;
+            ContainerPanel.AutoScroll = true;
+            f.Controls.Add(ContainerPanel);
+
+            foreach (Mod m in mods)
+            {
+                TableLayoutPanel ModPanel = new TableLayoutPanel();
+                ModPanel.Name = "ModPanel";
+                ModPanel.BackColor = ThemeList.theme.AppOverlayColor;
+                ModPanel.Dock = DockStyle.Top;
+                ContainerPanel.Controls.Add(ModPanel);
+
+                ModPanel.ColumnCount = 5;
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Flags
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Name
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F)); // Author
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Discord
+                ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Desktop
+                ModPanel.RowCount = 1;
+                ModPanel.Size = new System.Drawing.Size(100, 50);
+                ModPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
+
+                if (m.social != null && m.social != "")
+                {
+                    PictureBox ModDiscord = ModManagerComponents.ModPic("ModDiscord", global::ModManager6.Properties.Resources.discord);
+                    ModDiscord.Click += new EventHandler((object sender, EventArgs e) => {
+                        string link = m.social;
+                        Process.Start("explorer", link);
+                    });
+                    ModPanel.Controls.Add(ModDiscord, 8, 0);
+                }
+
+                LinkLabel ModAuthor = ModManagerComponents.ModLinkLabel("ModAuthor", m.author);
+                ModPanel.Controls.Add(ModAuthor, 2, 0);
+
+                if (m.githubLink == "1")
+                {
+                    ModAuthor.Click += new EventHandler((object sender, EventArgs e) => {
+                        Process.Start("explorer", m.getAuthorLink());
+                    });
+                }
+                else
+                {
+                    ModAuthor.LinkBehavior = LinkBehavior.NeverUnderline;
+                }
+
+                LinkLabel ModTitle = ModManagerComponents.ModLinkLabel("ModTitle", m.name);
+                ModPanel.Controls.Add(ModTitle, 1, 0);
+                ModTitle.Click += new EventHandler((object sender, EventArgs e) => {
+                    string link = m.getLink();
+                    Process.Start("explorer", link);
+                });
+
+                Bitmap lgMap;
+                switch (m.countries)
+                {
+                    case "fr":
+                        lgMap = global::ModManager6.Properties.Resources.fr;
+                        break;
+                    case "es":
+                        lgMap = global::ModManager6.Properties.Resources.es;
+                        break;
+                    case "cn":
+                        lgMap = global::ModManager6.Properties.Resources.cn;
+                        break;
+                    case "jp":
+                        lgMap = global::ModManager6.Properties.Resources.jp;
+                        break;
+                    default:
+                        lgMap = global::ModManager6.Properties.Resources.en;
+                        break;
+                }
+
+                PictureBox ModLg = ModManagerComponents.ModPic("ModLg", lgMap);
+                ModPanel.Controls.Add(ModLg, 0, 0);
+            }
+
+            f.Controls.Add(ModManagerComponents.ModsOverlay());
+
+            f.Controls.Add(ModManagerComponents.LabelTitle(Translator.get(cat.name)));
+        }
+
+        public static void loadServers()
+        {
+            ServersForm = new GenericPanel();
+            ServersForm.Name = "Servers";
+
+            List<Server> servers = new List<Server>();
+            servers.AddRange(ServerManager.serverList.Regions);
+            servers.Add(new Server("DnsRegionInfo, Assembly-CSharp", "127.0.0.1", "127.0.0.1", 22023, Translator.get("New Server"), 1003));
+            //servers.Reverse();
+
+            int max = servers.Count();
+            int i = 0;
+
+            //bindWIP(ServersForm);
+
+            Panel ServersContainerPanel = ModManagerComponents.createPanel();
+            ServersForm.Controls.Add(ServersContainerPanel);
+
+            TableLayoutPanel ServersPanel = new TableLayoutPanel();
+            ServersPanel.Size = new Size(0, 50 * max);
+            ServersPanel.Dock = DockStyle.Top;
+
+            ServersPanel.ColumnCount = 5;
+            ServersPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            ServersPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+            ServersPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+            ServersPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+            ServersPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+
+            ServersPanel.RowCount = max;
+            int row = 0;
+            while (row < max)
+            {
+                ServersPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100 / max));
+                row++;
+            }
+
+            ServersContainerPanel.Controls.Add(ServersPanel);
+
+            MMButton ResetButton = new MMButton("rounded");
+            ResetButton.Dock = DockStyle.Bottom;
+            TableLayoutPanel t = ModManagerComponents.centeredButton(Translator.get("Reset to default"), ResetButton);
+            t.Dock = DockStyle.Bottom;
+            ServersForm.Controls.Add(t);
+
+            ResetButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                ModWorker.startTransaction();
+                ServerManager.reset();
+                ModManagerUI.loadServers();
+                openForm(ServersForm);
+                ModWorker.endTransaction();
+            });
+
+
+
+            //TableLayoutPanel panel = Visuals.createLayoutPanelH(0, 50, DockStyle.Top, new int[] { 25, 35, 20, 10, 10 });
+
+            foreach (Server s in servers)
+            {
+                TextBox ServerName = new TextBox();
+                TextBox ServerIP = new TextBox();
+                TextBox ServerPort = new TextBox();
+                PictureBox ServerValidPic = new PictureBox();
+                ServerValidPic.Name = "ServerValidPic=" + i;
+                PictureBox ServerRemovePic = new PictureBox();
+                ServerRemovePic.Name = "ServerRemovePic=" + i;
+                ModManagerComponents.ServerLine(ServersPanel, i, s, ServerName, ServerIP, ServerPort, ServerValidPic, ServerRemovePic, (i < 3), (i + 1 == max));
+
+                if (i + 1 != max)
+                {
+                    ServerName.TextChanged += new EventHandler((object sender, EventArgs e) =>
+                    {
+                        ServerValidPic.Visible = true;
+                    });
+
+                    ServerIP.TextChanged += new EventHandler((object sender, EventArgs e) =>
+                    {
+                        ServerValidPic.Visible = true;
+                    });
+
+                    ServerPort.TextChanged += new EventHandler((object sender, EventArgs e) =>
+                    {
+                        Regex portRegex = new Regex(@"^\d+$");
+                        MatchCollection result = portRegex.Matches(ServerPort.Text);
+                        if (result.Count() == 0)
+                            return;
+
+                        ServerValidPic.Visible = true;
+                    });
+
+                    ServerValidPic.Click += new EventHandler((object sender, EventArgs e) =>
+                    {
+                        // Check if Ip valid
+                        Regex ipReg = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
+                        MatchCollection result = ipReg.Matches(ServerIP.Text);
+                        if (result.Count() == 0)
+                            return;
+
+                        ModWorker.startTransaction();
+
+                        string picName = ServerValidPic.Name;
+                        int serverId = int.Parse(picName.Substring(picName.IndexOf("=") + 1));
+
+                        ServerManager.serverList.Regions[serverId].name = ServerName.Text;
+                        ServerManager.serverList.Regions[serverId].DefaultIp = result[0].Value;
+                        ServerManager.serverList.Regions[serverId].Fqdn = result[0].Value;
+                        ServerManager.serverList.Regions[serverId].port = int.Parse(ServerPort.Text);
+                        ServerManager.update();
+                        ModManagerUI.loadServers();
+                        openForm(ServersForm);
+                        ModWorker.endTransaction();
+                    });
+
+                    ServerRemovePic.Click += new EventHandler((object sender, EventArgs e) =>
+                    {
+                        ModWorker.startTransaction();
+                        string picName = ServerRemovePic.Name;
+                        int serverId = int.Parse(picName.Substring(picName.IndexOf("=") + 1));
+
+                        ServerManager.serverList.Regions.RemoveAt(serverId);
+                        ServerManager.update();
+                        ModManagerUI.loadServers();
+                        openForm(ServersForm);
+                        ModWorker.endTransaction();
+                    });
+
+                }
+                else
+                {
+                    ServerRemovePic.Click += new EventHandler((object sender, EventArgs e) =>
+                    {
+                        ModWorker.startTransaction();
+                        // Check if Ip valid
+                        Regex ipReg = new Regex(@"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b");
+                        MatchCollection result = ipReg.Matches(ServerIP.Text);
+                        if (result.Count() == 0)
+                            return;
+
+                        Server newServ = new Server("DnsRegionInfo, Assembly - CSharp", result[0].Value, result[0].Value, int.Parse(ServerPort.Text), ServerName.Text, 1003);
+                        ServerManager.serverList.Regions.Add(newServ);
+                        ServerManager.update();
+                        ModManagerUI.loadServers();
+                        openForm(ServersForm);
+                        ModWorker.endTransaction();
+                    });
+                }
+                i++;
+            }
+
+            ServersForm.Controls.Add(ModManagerComponents.ServersOverlay());
+
+            ServersForm.Controls.Add(ModManagerComponents.LabelTitle(Translator.get("Servers")));
+        }
+
+        public static void loadSettings()
+        {
+            SettingsForm = new GenericPanel();
+            SettingsForm.Name = "Settings";
+
+            // Reset
+            MMButton ResetButton = new MMButton("trans");
+            ResetButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                if (MessageBox.Show(Translator.get("Mod Manager needs to restart to process this change. Do you want to continue ?"), Translator.get("Reset Mod Manager"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    ModWorker.startTransaction();
+
+                    FileSystem.DirectoryDelete(ModManager.appDataPath);
+                    string path = ModManager.appPath + "ModManager5.exe";
+                    Process.Start(path, "force " + activeForm.Name);
+                    Environment.Exit(0);
+                }
+            });
+
+            SettingsForm.Controls.Add(ModManagerComponents.SettingsButton(ResetButton, Translator.get("Reset")));
+
+            // Support Id
+            MMButton SupportIdButton = new MMButton("trans");
+            SupportIdButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                Clipboard.SetText(ConfigManager.config.supportId);
+            });
+
+            SettingsForm.Controls.Add(ModManagerComponents.SettingsButton(SupportIdButton, Translator.get("Copy Support Id")));
+
+            // Send log
+            MMButton LogButton = new MMButton("trans");
+            LogButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                string argument = "/select, \"" + ModManager.appDataPath + @"\logs.txt" + "\"";
+
+                Process.Start("explorer.exe", argument);
+            });
+
+            SettingsForm.Controls.Add(ModManagerComponents.SettingsButton(LogButton, Translator.get("Log File")));
+
+            // Minimise in taskbar
+            MMButton MinimisationButton = new MMButton("trans");
+            MinimisationButton.Click += new EventHandler((object sender, EventArgs e) =>
+            {
+                MMButton c = (MMButton)sender;
+                if (c.Text == Translator.get("Enabled"))
+                {
+                    ConfigManager.config.miniEnabled = false;
+                    c.Text = Translator.get("Disabled");
+                }
+                else
+                {
+                    ConfigManager.config.miniEnabled = true;
+                    c.Text = Translator.get("Enabled");
+                }
+                ConfigManager.update();
+            });
+            SettingsForm.Controls.Add(ModManagerComponents.SettingsButton(MinimisationButton, Translator.get("Minimise in taskbar")));
+            if (ConfigManager.config.miniEnabled)
+            {
+                MinimisationButton.Text = Translator.get("Enabled");
+            }
+            else
+            {
+                MinimisationButton.Text = Translator.get("Disabled");
+            }
+
+            // Language
+            MMComboBox LanguageComboBox = new MMComboBox();
+            LanguageComboBox.SelectionChangeCommitted += new EventHandler(async (object sender, EventArgs e) => {
+                ComboBox control = (ComboBox)sender;
+                string lg = (string)control.SelectedItem;
+                if (MessageBox.Show(Translator.get("Mod Manager needs to restart to process this change. Do you want to continue ?"), Translator.get("Change Language"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    ModWorker.startTransaction();
+
+                    ConfigManager.config.lg = Translator.getCodeFromName(lg);
+                    ConfigManager.update();
+                    string path = ModManager.appPath + "ModManager5.exe";
+                    Process.Start(path, "force");
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    control.SelectedItem = ConfigManager.config.lg;
+                }
+            });
+
+            List<string> lgs = new List<string>() { };
+            foreach (Language l in Translator.languages)
+            {
+                lgs.Add(l.name);
+            }
+            SettingsForm.Controls.Add(ModManagerComponents.SettingsCombobox(LanguageComboBox, Translator.get("Language"), lgs, Translator.getNameFromCode(ConfigManager.config.lg)));
+            LanguageComboBox.Width = LanguageComboBox.getAutoWidth();
+
+            // Theme
+            MMComboBox ThemeComboBox = new MMComboBox();
+            ThemeComboBox.SelectionChangeCommitted += new EventHandler((object sender, EventArgs e) => {
+                ComboBox control = (ComboBox)sender;
+                string theme = (string)control.SelectedItem;
+                if (MessageBox.Show(Translator.get("Mod Manager needs to restart to process this change. Do you want to continue ?"), Translator.get("Change Theme"), MessageBoxButtons.YesNo) == DialogResult.Yes)
+                {
+                    ModWorker.startTransaction();
+
+                    ConfigManager.config.theme = theme;
+                    ConfigManager.update();
+                    string path = ModManager.appPath + "ModManager5.exe";
+                    Process.Start(path, "force");
+                    Environment.Exit(0);
+                }
+                else
+                {
+                    control.SelectedItem = ThemeList.theme.name;
+                }
+            });
+
+            List<string> themes = new List<string>() { };
+            foreach (Theme theme in ThemeList.availableThemes)
+            {
+                themes.Add(theme.name);
+            }
+
+            SettingsForm.Controls.Add(ModManagerComponents.SettingsCombobox(ThemeComboBox, Translator.get("Theme"), themes, ThemeList.theme.name));
+            ThemeComboBox.Width = ThemeComboBox.getAutoWidth();
+
+            SettingsForm.Controls.Add(ModManagerComponents.LabelTitle(Translator.get("Settings")));
+        }
+
+        public static void loadCredits()
+        {
+            CreditsForm = new GenericPanel();
+            CreditsForm.Name = "Credits";
+
+            MMLabel CreditsContentLabel = new MMLabel();
+            CreditsContentLabel.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            CreditsContentLabel.BackColor = Color.Transparent;
+            CreditsContentLabel.ForeColor = SystemColors.Control;
+            CreditsContentLabel.TextAlign = ContentAlignment.MiddleCenter;
+            CreditsContentLabel.Dock = DockStyle.Top;
+            CreditsContentLabel.Name = "CreditsContentLabel";
+            CreditsContentLabel.Margin = new System.Windows.Forms.Padding(20, 20, 20, 20);
+            CreditsContentLabel.UseMnemonic = false;
+            CreditsContentLabel.Size = new System.Drawing.Size(250, 150);
+            string creditsText = Translator.get("creditsContent").Replace("\\n", "\n");
+            CreditsContentLabel.Text = creditsText;
+            CreditsForm.Controls.Add(CreditsContentLabel);
+
+            CreditsForm.Controls.Add(ModManagerComponents.LabelTitle(Translator.get("Credits")));
+        }
+
+        public static void loadEmpty()
+        {
+            EmptyForm = new GenericPanel();
+            EmptyForm.Name = "Empty";
+        }
+
+        public static void bindWIP(Form f)
+        {
+            MMLabel PageWIPContent = new MMLabel();
+            PageWIPContent.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            PageWIPContent.BackColor = Color.Transparent;
+            PageWIPContent.ForeColor = SystemColors.Control;
+            PageWIPContent.TextAlign = ContentAlignment.MiddleCenter;
+            PageWIPContent.Dock = DockStyle.Top;
+            PageWIPContent.Name = "PageWIPContent";
+            PageWIPContent.Padding = new Padding(0, 25, 0, 25);
+            PageWIPContent.Size = new System.Drawing.Size(250, 150);
+            PageWIPContent.Text = "This page is still under construction and will be available in a future update.\nThanks for your patience !";
+            f.Controls.Add(PageWIPContent);
         }
     }
 }

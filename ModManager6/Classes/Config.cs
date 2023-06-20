@@ -16,13 +16,13 @@ namespace ModManager6.Classes
         public string amongUsPath;
         public List<string> favoriteMods;
         public bool miniEnabled;
-        public bool multipleGames;
         public List<string> availableAmongUsPaths;
         public string supportId;
         public string theme;
         public string lg;
+        public List<string> sources;
 
-        public Config(string modManagerVersion = null, List<InstalledMod> installedMods = null, List<InstalledVanilla> installedVanilla = null, string amongUsPath = "", List<string> faroriteMods = null, bool miniEnabled = true, List<string> availableAmongUsPaths = null, string supportId = null, bool multipleGames = false, string lg = null, string theme = null)
+        public Config(string modManagerVersion = null, List<InstalledMod> installedMods = null, List<InstalledVanilla> installedVanilla = null, string amongUsPath = "", List<string> faroriteMods = null, bool miniEnabled = true, List<string> availableAmongUsPaths = null, string supportId = null, string lg = null, string theme = null , List<string> sources = null)
         {
             this.ModManagerVersion = modManagerVersion != null ? modManagerVersion : ModManager.visibleVersion;
             this.installedMods = installedMods != null ? installedMods : new List<InstalledMod>() { };
@@ -30,7 +30,6 @@ namespace ModManager6.Classes
             this.amongUsPath = amongUsPath;
             this.favoriteMods = faroriteMods != null ? favoriteMods : new List<string>() { };
             this.miniEnabled = miniEnabled;
-            this.multipleGames = multipleGames;
             this.availableAmongUsPaths = availableAmongUsPaths != null ? availableAmongUsPaths : new List<string>() { };
             this.supportId = supportId;
             if (this.supportId == null)
@@ -41,6 +40,7 @@ namespace ModManager6.Classes
             }
             this.lg = lg;
             this.theme = theme;
+            this.sources = sources != null ? sources : new List<string>() { ModManager.apiURL + "/mm" };
         }
     }
 }
