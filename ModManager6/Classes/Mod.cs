@@ -18,7 +18,7 @@ namespace ModManager6.Classes
         public string type { get; set; }
         public string author { get; set; }
         public string github { get; set; }
-        public string githubLink { get; set; }
+        public bool githubLink { get; set; }
         public string social { get; set; }
         public string countries { get; set; }
         public bool enabled { get; set; }
@@ -29,7 +29,7 @@ namespace ModManager6.Classes
         //public string data { get; set; }
 
         public Mod(string id = "", string name = "", Category category = null, string type = "",
-            string author = "", string github = "", string githubLink = "", string social = "",
+            string author = "", string github = "", bool githubLink = true, string social = "",
             string countries = "EN", bool enabled = true,
             List<ModVersion> versions = null)
         {
@@ -53,7 +53,7 @@ namespace ModManager6.Classes
 
         public string getLink()
         {
-            if (this.githubLink == "1")
+            if (this.githubLink)
             {
                 return "https://github.com/" + this.author + "/" + this.github;
             }
@@ -65,7 +65,7 @@ namespace ModManager6.Classes
 
         public string getAuthorLink()
         {
-            if (this.githubLink == "1")
+            if (this.githubLink)
             {
                 return "https://github.com/" + this.author;
             }
@@ -77,7 +77,7 @@ namespace ModManager6.Classes
 
         public string getReleaseLink(ModVersion v)
         {
-            return v.release.Url;
+            return v.release.HtmlUrl;
         }
     }
 }

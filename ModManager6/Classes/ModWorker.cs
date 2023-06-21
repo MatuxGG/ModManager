@@ -83,26 +83,26 @@ namespace ModManager6.Classes
 
             foreach (string option in optionsToInstall)
             {
-                ModDependency dependency = versionToInstall.options.Find(o => o.dependency == option);
-                if (dependency == null)
+                ModOption opt = versionToInstall.options.Find(o => o.modOption == option);
+                if (opt == null)
                 {
                     Log.log("Option " + option + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (1)", "ModWorker");
                     continue;
                 }
 
-                Mod m = ModList.getModById(dependency.dependency);
+                Mod m = ModList.getModById(opt.modOption);
 
                 if (m == null)
                 {
-                    Log.log("Option " + dependency.dependency + ", version " + dependency.version + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (2)", "ModWorker");
+                    Log.log("Option " + opt.modOption + ", version " + opt.version + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (2)", "ModWorker");
                     continue;
                 }
 
-                ModVersion v = m.versions.Find(version =>  version.version == dependency.version);
+                ModVersion v = m.versions.Find(version =>  version.version == opt.version);
 
                 if (v == null)
                 {
-                    Log.log("Option " + dependency.dependency + ", version " + dependency.version + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (3)", "ModWorker");
+                    Log.log("Option " + opt.modOption + ", version " + opt.version + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (3)", "ModWorker");
                     continue;
                 }
 
@@ -150,7 +150,6 @@ namespace ModManager6.Classes
 
             Process.Start("explorer", "steam://rungameid/945360");
             return;
-          
         }
 
         public static void installMod(Mod m, ModVersion v, List<string> options)
@@ -164,29 +163,39 @@ namespace ModManager6.Classes
                 versionToInstall = v;
                 optionsToInstall = options;
 
+                ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", modToInstall.name);
+
                 BackgroundWorker backgroundWorkerStart = new BackgroundWorker();
                 backgroundWorkerStart.WorkerReportsProgress = true;
                 backgroundWorkerStart.DoWork += new DoWorkEventHandler(backgroundWorkerInstall_DoWork);
+                backgroundWorkerStart.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
                 backgroundWorkerStart.RunWorkerAsync();
             }
         }
 
-        public static async void backgroundWorkerInstall_DoWork(object sender, DoWorkEventArgs e)
+        public static void backgroundWorkerInstall_DoWork(object sender, DoWorkEventArgs e)
         {
             var backgroundWorker = sender as BackgroundWorker;
 
             List<Task> tasks = new List<Task>() { };
 
+            int offset = 0;
+            int percent = 0;
+
             if (ConfigManager.config.installedVanilla.Find(iv => iv.version == versionToInstall.gameVersion) == null)
             {
-                tasks.Add(installVanilla(versionToInstall.gameVersion));
+                percent = 50;
+                bool result = installVanilla(versionToInstall.gameVersion, offset, percent);
+                if (!result) backgroundWorker.ReportProgress(100); // Error
+                
+                offset += percent;
             }
-            try
+
+            if (ConfigManager.config.installedMods.Find(im => im.id == modToInstall.id && im.version == versionToInstall.version) == null)
             {
-                await Task.WhenAll(tasks);
-            } catch
-            {
-                backgroundWorker.ReportProgress(100);
+                percent = (100 - offset) / 2;
+                bool result = installMod(modToInstall, versionToInstall, offset, percent);
+                offset += percent;
             }
 
             finished = true;
@@ -194,16 +203,32 @@ namespace ModManager6.Classes
             backgroundWorker.ReportProgress(100);
         }
 
-        public static async Task<bool> installVanilla(string version)
+        private static void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (finished)
+            {
+                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", modToInstall.name);
+                Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
+                ModManagerUI.activeForm = currentForm;
+                ModManagerUI.reloadMods();
+            }
+            else
+            {
+                ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("installation canceled.");
+                finished = true;
+            }
+        }
+
+
+        public static bool installVanilla(string version, int offset, int percent)
         {
             string vanillaPath = ModManager.appDataPath + @"\vanilla\" + version;
             string vanillaUrl = ModManager.fileURL + "/client/" + version + ".zip";
             string tempPath = ModManager.tempPath + @"\" + version + ".zip";
-            string tempPath2 = ModManager.tempPath + @"\ModZip";
 
             try
             {
-                await Download.downloadPath(vanillaUrl, tempPath);
+                Download.download(vanillaUrl, tempPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", modToInstall.name) + "\n(PERCENT)", offset, percent);
             } catch (Exception ex)
             {
                 Log.showError("ModWorker", ex.Source, ex.Message);
@@ -214,21 +239,19 @@ namespace ModManager6.Classes
             {
                 FileSystem.DirectoryDelete(vanillaPath);
                 FileSystem.DirectoryCreate(vanillaPath);
-                FileSystem.DirectoryDelete(tempPath2);
-                FileSystem.DirectoryCreate(tempPath2);
-                ZipFile.ExtractToDirectory(tempPath, tempPath2);
-                tempPath2 = getBepInExInsideRec(tempPath2);
-                FileSystem.DirectoryCopy(tempPath2, vanillaPath);
+                ZipFile.ExtractToDirectory(tempPath, vanillaPath);
             } catch (Exception ex)
             {
                 Log.showError("ModWorker", ex.Source, ex.Message);
                 return false;
             }
 
+            ConfigManager.config.installedVanilla.Add(new InstalledVanilla(version));
+            ConfigManager.update();
             return true;
         }
 
-        public static async Task<bool> installMod(Mod m, ModVersion v)
+        public static bool installMod(Mod m, ModVersion v, int offset, int percent)
         {
             return true; // TODO
         }

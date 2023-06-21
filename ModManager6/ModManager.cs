@@ -139,15 +139,6 @@ namespace ModManager6
             await ModList.loadReleases();
             Log.logTime("Releases load", "ModManager");
 
-            //foreach (ModSource source in ModList.modSources)
-            //{
-            //    Log.log("Source " + source.name, "Debug");
-            //    foreach (Mod m in source.mods)
-            //    {
-            //        Log.log("Mod " + m.id, "Debug");
-            //    }
-            //}
-
             Log.startTimer();
             ServerManager.load();
             Log.logTime("Servers load", "ModManager");

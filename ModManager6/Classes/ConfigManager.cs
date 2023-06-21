@@ -164,6 +164,19 @@ namespace ModManager6.Classes
             return config.installedMods.Find(im => im.id == modId && im.version == version);
         }
 
+        public static bool isInstalled(Mod m, ModVersion v, List<ModOption> options)
+        {
+            if (getInstalledMod(m.id, v.version) == null) return false;
+            
+            foreach (ModOption option in options)
+            {
+                if (getInstalledMod(option.modOption, option.version) == null) return false;
+            }
+
+            return true;
+        }
+
+
     }
 
 }

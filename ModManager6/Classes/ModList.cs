@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Octokit;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -37,25 +40,74 @@ namespace ModManager6.Classes
             {
                 foreach (Mod m in source.mods)
                 {
-                    foreach (ModVersion version in m.versions)
-                    {
-                        tasks.Add(loadRelease(m, version));
-                    }
+                    tasks.Add(loadRelease(m));
                 }
             }
             await Task.WhenAll(tasks);
+
+            // Remove mods without releases / versions
+            foreach (ModSource source in modSources)
+            {
+                List<Mod> modsToRemove = new List<Mod>() { };
+                foreach (Mod m in source.mods)
+                {
+                    List<ModVersion> versionsToRemove = new List<ModVersion>() { };
+
+                    // Find versions without release
+                    foreach (ModVersion v in m.versions)
+                    {
+                        if (v.release == null)
+                        {
+                            versionsToRemove.Add(v);
+                        }
+                    }
+
+                    // Remove versions without release
+                    foreach (ModVersion v in versionsToRemove)
+                    {
+                        m.versions.Remove(v);
+                    }
+
+                    // Find mods without version
+                    if (m.versions.Count() == 0)
+                    {
+                        modsToRemove.Add(m);
+                    }
+                }
+
+                // Remove mods without version
+                foreach (Mod m in modsToRemove)
+                {
+                    source.mods.Remove(m);
+                }
+            }
         }
 
-        public static async Task loadRelease(Mod m, ModVersion v)
+        public static async Task loadRelease(Mod m)
         {
             try
             {
-                v.release = await ModManager.githubClient.Repository.Release.Get(m.author, m.github, v.version);
+                if (m.type == "mod")
+                {
+                    IReadOnlyCollection<Release> releases = await ModManager.githubClient.Repository.Release.GetAll(m.author, m.github);
+                    
+                    foreach (Release release in releases)
+                    {
+                        foreach (ModVersion v in m.versions)
+                        {
+                            if (release.TagName == v.version)
+                            {
+                                v.release = release;
+                                break;
+                            }
+                        }
+
+                    }
+                }
             }
             catch (Exception e) 
             {
-                Log.logError("ModList", e.Source, e.Message);
-                m.versions.Remove(v);
+                Log.logError("ModList loadRelease", e.Source, e.Message);
             }
         }
 
@@ -114,5 +166,6 @@ namespace ModManager6.Classes
             }
             return null;
         }
+
     }
 }
