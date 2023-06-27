@@ -164,10 +164,12 @@ namespace ModManager6.Classes
             return config.installedMods.Find(im => im.id == modId && im.version == version);
         }
 
-        public static bool isInstalled(Mod m, ModVersion v, List<ModOption> options)
+        public static bool isInstalled(Mod m, ModVersion v, List<ModOption> options = null)
         {
             if (getInstalledMod(m.id, v.version) == null) return false;
-            
+
+            if (options == null) return true;
+
             foreach (ModOption option in options)
             {
                 if (getInstalledMod(option.modOption, option.version) == null) return false;
@@ -176,7 +178,79 @@ namespace ModManager6.Classes
             return true;
         }
 
+        public static InstalledVanilla getInstalledVanilla(string version)
+        {
+            return config.installedVanilla.Find(v => v.version == version);
+        }
 
+        public static List<ModOption> getActiveOptions(string modId, string version)
+        {
+            foreach (ModState ms in config.modStates)
+            {
+                if (ms.modId == modId && ms.version == version)
+                {
+                    return ms.options;
+                }
+            }
+            return null;
+        }
+
+        public static bool isActiveOption(string modId, string version, ModOption option)
+        {
+            foreach (ModState ms in config.modStates)
+            {
+                if (ms.modId == modId && ms.version == version)
+                {
+                    foreach (ModOption mo in ms.options)
+                    {
+                        if (mo.modOption == option.modOption && mo.version == option.version)
+                        {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
+
+        public static void addActiveOption(string modId, string modVersion, ModOption option)
+        {
+            if (!isActiveOption(modId, modVersion, option))
+            {
+                if (ConfigManager.config.modStates.Find(s => s.modId == modId) == null)
+                {
+                    ConfigManager.config.modStates.Add(new ModState(modId, modVersion, new List<ModOption>() { }));
+                }
+                ConfigManager.config.modStates.Find(s => s.modId == modId).options.Add(option);
+            }
+            ConfigManager.update();
+        }
+
+        public static void removeActiveOption(string modId, string modVersion, ModOption option)
+        {
+            if (isActiveOption(modId, modVersion, option))
+            {
+                ConfigManager.config.modStates.Find(s => s.modId == modId).options.Remove(option);
+            }
+            ConfigManager.update();
+        }
+
+        public static string getActiveVersion(string modId)
+        {
+            ModState ms = ConfigManager.config.modStates.Find(s => s.modId == modId);
+            if (ms == null) return null;
+            return ms.version;
+        }
+
+        public static void setActiveVersion(string modId, string modVersion)
+        {
+            if (ConfigManager.config.modStates.Find(s => s.modId == modId) == null)
+            {
+                ConfigManager.config.modStates.Add(new ModState(modId, modVersion, new List<ModOption>() { }));
+            }
+            ConfigManager.config.modStates.Find(s => s.modId == modId).version = modVersion;
+            ConfigManager.update();
+        }
     }
 
 }

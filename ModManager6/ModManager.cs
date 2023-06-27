@@ -81,7 +81,7 @@ namespace ModManager6
                 }
             }
 
-            Download.load(this);
+            FileDownloadManager.load(this);
 
             Log.startTimer();
             token = await Download.downloadString(apiURL + "/github/token");
@@ -173,6 +173,11 @@ namespace ModManager6
             ModManagerUI.StatusLabel.Text = "";
 
             Log.log("Ready", "ModManager");
+
+            //List<DownloadLine> lines = new List<DownloadLine>() { };
+            //lines.Add(new DownloadLine("https://goodloss.fr/files/client/2023.6.13.zip", ModManager.appDataPath + @"\2023.6.13.zip"));
+            //lines.Add(new DownloadLine("https://github.com/LaicosVK/TheEpicRoles/releases/download/v1.1.2/TheEpicRoles.zip", ModManager.appDataPath + @"\TheEpicRoles.zip"));
+            //FileDownloadManager.download(lines, ModManagerUI.StatusLabel);
 
         }
     }

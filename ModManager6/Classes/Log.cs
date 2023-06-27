@@ -13,7 +13,7 @@ namespace ModManager6.Classes
     {
         public static string logFile = ModManager.appDataPath + @"\logs.txt";
 
-        public static Stopwatch stopwatch = new Stopwatch();
+        public static Stopwatch stopwatch;
         public static string formattedTime;
 
         public static void logNewLine()
@@ -69,6 +69,7 @@ namespace ModManager6.Classes
 
         public static void startTimer()
         {
+            stopwatch = new Stopwatch();
             stopwatch.Start();
         }
 
@@ -76,7 +77,7 @@ namespace ModManager6.Classes
         {
             stopwatch.Stop();
             TimeSpan elapsedTime = stopwatch.Elapsed;
-            return string.Format("{0}:{1:D2}", (int)elapsedTime.TotalMinutes, elapsedTime.Seconds);
+            return string.Format("{0}:{1:D2}:{2:D2}", (int)elapsedTime.TotalMinutes, elapsedTime.Seconds, elapsedTime.Milliseconds / 10);
         }
 
         public static void logTime(string line, string className)

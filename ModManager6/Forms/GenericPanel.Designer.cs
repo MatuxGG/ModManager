@@ -1,5 +1,5 @@
 ﻿
-namespace ModManager5.Forms
+namespace ModManager6.Forms
 {
     partial class GenericPanel
     {

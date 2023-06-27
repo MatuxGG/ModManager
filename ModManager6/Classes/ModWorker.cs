@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Octokit;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -36,6 +38,8 @@ namespace ModManager6.Classes
             ModWorker.finished = true;
         }
 
+        /* Start Mod */
+
         public static void startMod(Mod m, ModVersion v, List<string> options)
         {
             if (!finished) return;
@@ -67,19 +71,20 @@ namespace ModManager6.Classes
                 backgroundWorkerStart.WorkerReportsProgress = true;
 
                 backgroundWorkerStart.DoWork += new DoWorkEventHandler(backgroundWorkerStart_DoWork);
+                backgroundWorkerStart.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerStart_RunWorkerCompleted);
                 backgroundWorkerStart.RunWorkerAsync();
             }
         }
 
-        public static async void backgroundWorkerStart_DoWork(object sender, DoWorkEventArgs e)
+        public static void backgroundWorkerStart_DoWork(object sender, DoWorkEventArgs e)
         {
             var backgroundWorker = sender as BackgroundWorker;
 
-            await enableVanilla(versionToInstall.gameVersion);
+            enableVanilla(versionToInstall.gameVersion);
 
             List<Task> tasks = new List<Task>();
 
-            tasks.Add(enableMod(modToInstall, versionToInstall));
+            enableMod(modToInstall, versionToInstall);
 
             foreach (string option in optionsToInstall)
             {
@@ -106,17 +111,31 @@ namespace ModManager6.Classes
                     continue;
                 }
 
-                tasks.Add(enableMod(m, v));
+                enableMod(m, v);
             }
-
-            await Task.WhenAll(tasks);
             
             finished = true;
 
             backgroundWorker.ReportProgress(100);
         }
 
-        public static async Task enableVanilla(string version)
+        private static void backgroundWorkerStart_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (finished)
+            {
+                //ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", modToInstall.name);
+                //Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
+                //ModManagerUI.activeForm = currentForm;
+                //ModManagerUI.reloadMods();
+            }
+            else
+            {
+                //ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("installation canceled.");
+                //finished = true;
+            }
+        }
+
+        public static void enableVanilla(string version)
         {
             string modPath = ModManager.appDataPath + @"\mod";
             string toInstallPath = ModManager.appDataPath + @"\vanilla\" + version;
@@ -130,7 +149,7 @@ namespace ModManager6.Classes
             }
         }
 
-        public static async Task enableMod(Mod m, ModVersion v)
+        public static void enableMod(Mod m, ModVersion v)
         {
             string modPath = ModManager.appDataPath + @"\mod";
             string toInstallPath = m.getPathForVersion(v);
@@ -152,7 +171,7 @@ namespace ModManager6.Classes
             return;
         }
 
-        public static void installMod(Mod m, ModVersion v, List<string> options)
+        public static void installAnyMod(Mod m, ModVersion v, List<string> options)
         {
             if (!finished) return;
 
@@ -168,7 +187,6 @@ namespace ModManager6.Classes
                 BackgroundWorker backgroundWorkerStart = new BackgroundWorker();
                 backgroundWorkerStart.WorkerReportsProgress = true;
                 backgroundWorkerStart.DoWork += new DoWorkEventHandler(backgroundWorkerInstall_DoWork);
-                backgroundWorkerStart.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorker_RunWorkerCompleted);
                 backgroundWorkerStart.RunWorkerAsync();
             }
         }
@@ -177,83 +195,152 @@ namespace ModManager6.Classes
         {
             var backgroundWorker = sender as BackgroundWorker;
 
-            List<Task> tasks = new List<Task>() { };
+            List<DownloadLine> lines = new List<DownloadLine>() { };
+            List<DownloadLine> toExtract = new List<DownloadLine>() { };
 
-            int offset = 0;
-            int percent = 0;
+            bool needVanilla = false;
+            List<InstalledMod> installedMods = new List<InstalledMod>() { };
 
+            // Add Download {vanilla} to Temp
             if (ConfigManager.config.installedVanilla.Find(iv => iv.version == versionToInstall.gameVersion) == null)
             {
-                percent = 50;
-                bool result = installVanilla(versionToInstall.gameVersion, offset, percent);
-                if (!result) backgroundWorker.ReportProgress(100); // Error
-                
-                offset += percent;
+                needVanilla = true;
+                string vanillaPath = ModManager.appDataPath + @"\vanilla\" + versionToInstall.gameVersion;
+                string vanillaUrl = ModManager.fileURL + "/client/" + versionToInstall.gameVersion + ".zip";
+                string vanillaTempPath = ModManager.tempPath + @"\client.zip";
+                FileSystem.DirectoryCreate(vanillaPath);
+                FileSystem.FileDelete(vanillaTempPath);
+                lines.Add(new DownloadLine(vanillaUrl, vanillaTempPath));
+                toExtract.Add(new DownloadLine(vanillaTempPath, vanillaPath));
             }
 
+            // Add Download {mod,version} to Temp
             if (ConfigManager.config.installedMods.Find(im => im.id == modToInstall.id && im.version == versionToInstall.version) == null)
             {
-                percent = (100 - offset) / 2;
-                bool result = installMod(modToInstall, versionToInstall, offset, percent);
-                offset += percent;
+                installedMods.Add(new InstalledMod(modToInstall.id, versionToInstall.version));
+                addModToInstall(lines, toExtract, modToInstall, versionToInstall);
             }
 
-            finished = true;
+            foreach (string option in optionsToInstall)
+            {
+                ModOption modOption = versionToInstall.options.Find(o => o.modOption == option);
+                Mod foundMod = ModList.getModById(option);
+                ModVersion versionOption = foundMod.versions.Find(v => v.version == modOption.version);
+                if (ConfigManager.config.installedMods.Find(im => im.id == option && im.version == versionOption.version) == null)
+                {
+                    installedMods.Add(new InstalledMod(foundMod.id, versionOption.version));
+                    addModToInstall(lines, toExtract, foundMod, versionOption);
+                }
+            }
 
-            backgroundWorker.ReportProgress(100);
+            FileDownloadManager.DownloadCompleted += () =>
+            {
+                // When finished
+
+                ModManagerUI.StatusLabel.Invoke((MethodInvoker)delegate
+                {
+                    ModManagerUI.StatusLabel.Text = Translator.get("Extracting files...");
+                });
+
+                string tempPath = ModManager.tempPath + @"\Modzip";
+                foreach (DownloadLine te in toExtract)
+                {
+                    FileSystem.DirectoryDelete(tempPath);
+                    FileSystem.DirectoryCreate(tempPath);
+                    ZipFile.ExtractToDirectory(te.source, tempPath);
+                    string newPath = getBepInExInsideRec(tempPath);
+                    if (newPath == null)
+                    {
+                        newPath = tempPath;
+                    }
+                    FileSystem.DirectoryCopy(newPath, te.target);
+                }
+
+                if (needVanilla)
+                {
+                    if (ConfigManager.getInstalledVanilla(versionToInstall.gameVersion) == null)
+                    {
+                        ConfigManager.config.installedVanilla.Add(new InstalledVanilla(versionToInstall.gameVersion));
+                    }
+                }
+
+                foreach(InstalledMod im in installedMods)
+                {
+                    if (ConfigManager.getInstalledMod(im.id, im.version) == null)
+                    {
+                        ConfigManager.config.installedMods.Add(im);
+                    }
+                }
+
+                ConfigManager.update();
+
+                ModManagerUI.StatusLabel.Invoke((MethodInvoker)delegate
+                {
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", modToInstall.name);
+                    Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
+                    ModManagerUI.activeForm = currentForm;
+                    ModManagerUI.reloadMods();
+                    finished = true;
+                });
+
+                
+            };
+
+            ModManagerUI.StatusLabel.Invoke((MethodInvoker)delegate
+            {
+                FileDownloadManager.download(lines, ModManagerUI.StatusLabel);
+            });
+
+
         }
 
-        private static void backgroundWorker_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        public static bool addModToInstall(List<DownloadLine> lines, List<DownloadLine> toExtract, Mod m, ModVersion v)
         {
-            if (finished)
+            // Looking for .zip file
+            foreach (ReleaseAsset ra in v.release.Assets)
             {
-                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", modToInstall.name);
-                Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
-                ModManagerUI.activeForm = currentForm;
-                ModManagerUI.reloadMods();
+                if (ra.Name.Contains(".zip"))
+                {
+                    return addZipModToInstall(lines, toExtract, m, v, ra);
+                }
             }
-            else
+
+            foreach (ReleaseAsset ra in versionToInstall.release.Assets)
             {
-                ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("installation canceled.");
-                finished = true;
+                if (ra.Name.Contains(".dll"))
+                {
+                    return addDllModToInstall(lines, toExtract, m, v, ra);
+                }
             }
+
+            return false;
         }
 
-
-        public static bool installVanilla(string version, int offset, int percent)
+        public static bool addZipModToInstall(List<DownloadLine> lines, List<DownloadLine> toExtract, Mod m, ModVersion v, ReleaseAsset ra)
         {
-            string vanillaPath = ModManager.appDataPath + @"\vanilla\" + version;
-            string vanillaUrl = ModManager.fileURL + "/client/" + version + ".zip";
-            string tempPath = ModManager.tempPath + @"\" + version + ".zip";
+            string modPath = ModManager.appDataPath + @"\mods\" + m.id + "_" + versionToInstall.gameVersion;
+            string modUrl = ra.BrowserDownloadUrl;
+            string modTempPath = ModManager.tempPath + @"\" + ra.Name;
 
-            try
-            {
-                Download.download(vanillaUrl, tempPath, Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", modToInstall.name) + "\n(PERCENT)", offset, percent);
-            } catch (Exception ex)
-            {
-                Log.showError("ModWorker", ex.Source, ex.Message);
-                return false;
-            }
+            FileSystem.DirectoryDelete(modPath);
+            FileSystem.DirectoryCreate(modPath);
+            FileSystem.DirectoryDelete(modTempPath);
 
-            try
-            {
-                FileSystem.DirectoryDelete(vanillaPath);
-                FileSystem.DirectoryCreate(vanillaPath);
-                ZipFile.ExtractToDirectory(tempPath, vanillaPath);
-            } catch (Exception ex)
-            {
-                Log.showError("ModWorker", ex.Source, ex.Message);
-                return false;
-            }
-
-            ConfigManager.config.installedVanilla.Add(new InstalledVanilla(version));
-            ConfigManager.update();
+            lines.Add(new DownloadLine(modUrl, modTempPath));
+            toExtract.Add(new DownloadLine(modTempPath, modPath));
             return true;
         }
 
-        public static bool installMod(Mod m, ModVersion v, int offset, int percent)
+        public static bool addDllModToInstall(List<DownloadLine> lines, List<DownloadLine> toExtract, Mod m, ModVersion v, ReleaseAsset ra)
         {
-            return true; // TODO
+            string modPath = ModManager.appDataPath + @"\mods\" + m.id + @"_" + versionToInstall.gameVersion + @"\BepInEx\plugins";
+            string modUrl = ra.BrowserDownloadUrl;
+
+            FileSystem.DirectoryDelete(modPath);
+            FileSystem.DirectoryCreate(modPath);
+
+            lines.Add(new DownloadLine(modUrl, modPath + @"\" + ra.Name));
+            return true;
         }
 
         public static Boolean isGameOpen()
