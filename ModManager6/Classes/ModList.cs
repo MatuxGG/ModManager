@@ -28,7 +28,7 @@ namespace ModManager6.Classes
 
         public static async Task FetchSource(string source)
         {
-            string result = await Download.downloadString(source);
+            string result = await Downloader.downloadString(source);
             ModSource modSource = Newtonsoft.Json.JsonConvert.DeserializeObject<ModSource>(result);
             modSources.Add(modSource);
         }
@@ -51,34 +51,36 @@ namespace ModManager6.Classes
                 List<Mod> modsToRemove = new List<Mod>() { };
                 foreach (Mod m in source.mods)
                 {
-                    List<ModVersion> versionsToRemove = new List<ModVersion>() { };
-
-                    // Find versions without release
-                    foreach (ModVersion v in m.versions)
+                    if (m.type == "mod")
                     {
-                        if (v.release == null)
+                        List<ModVersion> versionsToRemove = new List<ModVersion>() { };
+
+                        // Find versions without release
+                        foreach (ModVersion v in m.versions)
                         {
-                            versionsToRemove.Add(v);
+                            if (v.release == null)
+                            {
+                                versionsToRemove.Add(v);
+                            }
+                        }
+
+                        // Remove versions without release
+                        foreach (ModVersion v in versionsToRemove)
+                        {
+                            m.versions.Remove(v);
+                        }
+
+                        // Find mods without version
+                        if (m.versions.Count() == 0)
+                        {
+                            modsToRemove.Add(m);
                         }
                     }
-
-                    // Remove versions without release
-                    foreach (ModVersion v in versionsToRemove)
-                    {
-                        m.versions.Remove(v);
-                    }
-
-                    // Find mods without version
-                    if (m.versions.Count() == 0)
-                    {
-                        modsToRemove.Add(m);
-                    }
                 }
-
                 // Remove mods without version
-                foreach (Mod m in modsToRemove)
+                foreach (Mod mo in modsToRemove)
                 {
-                    source.mods.Remove(m);
+                    source.mods.Remove(mo);
                 }
             }
         }
@@ -148,7 +150,7 @@ namespace ModManager6.Classes
         public static List<Mod> getModsByCategoryId(string categoryId)
         {
             List<Mod> mods = new List<Mod>() { };
-            modSources.ForEach(s => s.mods.FindAll(m => m.type == "mod" && m.category.id == categoryId).ForEach(m => mods.Add(m)));
+            modSources.ForEach(s => s.mods.FindAll(m => (m.type == "mod" || m.type == "allInOne") && m.category.id == categoryId).ForEach(m => mods.Add(m)));
             return mods;
         }
 

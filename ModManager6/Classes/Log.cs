@@ -18,7 +18,7 @@ namespace ModManager6.Classes
 
         public static void logNewLine()
         {
-            Boolean written = false;
+            bool written = false;
             while (written == false)
             {
                 try
@@ -35,7 +35,7 @@ namespace ModManager6.Classes
 
         public static void log(string line, string className)
         {
-            Boolean written = false;
+            bool written = false;
             while (written == false)
             {
                 try

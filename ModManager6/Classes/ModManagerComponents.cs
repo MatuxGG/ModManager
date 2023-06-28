@@ -274,7 +274,7 @@ namespace ModManager6.Classes
             return t;
         }
 
-        public static void ServerLine(TableLayoutPanel panel, int y, Server server, TextBox ServerName, TextBox ServerIP, TextBox ServerPort, PictureBox ServerValidPic, PictureBox ServerRemovePic, Boolean official, Boolean last)
+        public static void ServerLine(TableLayoutPanel panel, int y, Server server, TextBox ServerName, TextBox ServerIP, TextBox ServerPort, PictureBox ServerValidPic, PictureBox ServerRemovePic, bool official, bool last)
         {
             ServerName.Text = server.name;
             ServerName.Dock = DockStyle.Bottom;

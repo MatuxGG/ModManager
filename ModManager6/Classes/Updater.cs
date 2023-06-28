@@ -17,7 +17,6 @@ namespace ModManager6.Classes
     {
         public static Version latestVersion = null;
         public static Release latestRelease = null;
-        public static BackgroundWorker backgroundWorker;
         public static async Task CheckRunUpdateOnStart()
         {
             await GetGithubVersion();
@@ -42,7 +41,7 @@ namespace ModManager6.Classes
                     {
                         try
                         {
-                            await Download.downloadPath(ra.BrowserDownloadUrl, installerPath);
+                            await Downloader.downloadPath(ra.BrowserDownloadUrl, installerPath);
                         }
                         catch (Exception e)
                         {

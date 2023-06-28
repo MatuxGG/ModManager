@@ -22,7 +22,7 @@ namespace ModManager6.Classes
             string lg = "";
             try
             {
-                lg = await Download.downloadString(languagesURL);
+                lg = await Downloader.downloadString(languagesURL);
             }
             catch (Exception e)
             {

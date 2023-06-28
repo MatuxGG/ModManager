@@ -504,11 +504,6 @@ namespace ModManager6.Classes
             foreach (ModOption option in v.options)
             {
                 Mod modOption = ModList.getModById(option.modOption);
-                if (modOption == null)
-                {
-                    Log.debug(option.modOption);
-                    Log.debug(ModList.modSources[0].mods.Count().ToString());
-                }
                 ModVersion versionOption = modOption.versions.Find(ver => ver.version == option.version);
 
                 TableLayoutPanel SubModLinePanel = new TableLayoutPanel();
@@ -634,7 +629,6 @@ namespace ModManager6.Classes
             foreach (Mod m in mods)
             {
                 int nbVersions = m.versions.Count();
-                //Log.debug(m.id + " / " + nbVersions.ToString());
 
                 TableLayoutPanel SubModPanel = new TableLayoutPanel();
                 SubModPanel.Name = "SubModPanel";

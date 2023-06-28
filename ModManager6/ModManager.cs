@@ -35,7 +35,7 @@ namespace ModManager6
 
         public static bool debug = false;
 
-        public static Boolean silent;
+        public static bool silent;
 
         public ModManager(string[] args)
         {
@@ -82,10 +82,10 @@ namespace ModManager6
                 }
             }
 
-            FileDownloadManager.load(this);
+            Downloader.load();
 
             Log.startTimer();
-            token = await Download.downloadString(apiURL + "/github/token");
+            token = await Downloader.downloadString(apiURL + "/github/token");
             Log.logTime("Initialisation", "ModManager");
 
             Log.startTimer();
@@ -129,24 +129,26 @@ namespace ModManager6
             Log.logTime("Updater load", "ModManager");
 
             Log.startTimer();
+            ModManagerUI.StatusLabel.Text = Translator.get("Loading Local Config...");
             ConfigManager.updateAmongUs();
             Log.logTime("AU folder load", "ModManager");
 
             Log.startTimer();
+            ModManagerUI.StatusLabel.Text = Translator.get("Loading Mods...");
             await ModList.load();
             Log.logTime("Modlist load", "ModManager");
 
             Log.startTimer();
+            ModManagerUI.StatusLabel.Text = Translator.get("Loading Releases...");
             await ModList.loadReleases();
             Log.logTime("Releases load", "ModManager");
 
             Log.startTimer();
+            ModManagerUI.StatusLabel.Text = Translator.get("Loading Among Us Servers...");
             ServerManager.load();
             Log.logTime("Servers load", "ModManager");
 
-            Log.startTimer();
             ModWorker.load();
-            Log.logTime("ModWorker load", "ModManager");
 
             if (args.Count() <= 0)
             {
@@ -164,6 +166,7 @@ namespace ModManager6
             }
 
             Log.startTimer();
+            ModManagerUI.StatusLabel.Text = Translator.get("Loading UI...");
             ModManagerUI.InitUI();
             ModManagerUI.InitListeners();
             ModManagerUI.hideMenuPanels();
@@ -174,12 +177,6 @@ namespace ModManager6
             ModManagerUI.StatusLabel.Text = "";
 
             Log.log("Ready", "ModManager");
-
-            //List<DownloadLine> lines = new List<DownloadLine>() { };
-            //lines.Add(new DownloadLine("https://goodloss.fr/files/client/2023.6.13.zip", ModManager.appDataPath + @"\2023.6.13.zip"));
-            //lines.Add(new DownloadLine("https://github.com/LaicosVK/TheEpicRoles/releases/download/v1.1.2/TheEpicRoles.zip", ModManager.appDataPath + @"\TheEpicRoles.zip"));
-            //FileDownloadManager.download(lines, ModManagerUI.StatusLabel);
-
         }
     }
 }

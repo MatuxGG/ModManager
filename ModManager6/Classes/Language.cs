@@ -35,7 +35,7 @@ namespace ModManager6.Classes
             string tr = "";
             try
             {
-                tr = await Download.downloadString(translationsURL);
+                tr = await Downloader.downloadString(translationsURL);
             }
             catch (Exception e)
             {
