@@ -15,6 +15,7 @@ using System.Net.Http;
 using Octokit;
 using System.Net;
 using Newtonsoft.Json;
+using System.Threading;
 
 namespace ModManager6
 {

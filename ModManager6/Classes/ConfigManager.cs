@@ -168,7 +168,7 @@ namespace ModManager6.Classes
         {
             if (getInstalledMod(m.id, v.version) == null) return false;
 
-            if (options == null) return true;
+            if (options == null || options.Count() == 0) return true;
 
             foreach (ModOption option in options)
             {
@@ -221,7 +221,7 @@ namespace ModManager6.Classes
                 {
                     ConfigManager.config.modStates.Add(new ModState(modId, modVersion, new List<ModOption>() { }));
                 }
-                ConfigManager.config.modStates.Find(s => s.modId == modId).options.Add(option);
+                ConfigManager.config.modStates.Find(s => s.modId == modId && s.version == modVersion).options.Add(option);
             }
             ConfigManager.update();
         }
@@ -230,7 +230,15 @@ namespace ModManager6.Classes
         {
             if (isActiveOption(modId, modVersion, option))
             {
-                ConfigManager.config.modStates.Find(s => s.modId == modId).options.Remove(option);
+                List<ModOption> mos = ConfigManager.config.modStates.Find(s => s.modId == modId && s.version == modVersion).options;
+                foreach (ModOption mo in mos)
+                {
+                    if (mo.version == option.version && mo.modOption == option.modOption)
+                    {
+                        mos.Remove(mo);
+                        break;
+                    }
+                }
             }
             ConfigManager.update();
         }
@@ -244,10 +252,8 @@ namespace ModManager6.Classes
 
         public static void setActiveVersion(string modId, string modVersion)
         {
-            if (ConfigManager.config.modStates.Find(s => s.modId == modId) == null)
-            {
-                ConfigManager.config.modStates.Add(new ModState(modId, modVersion, new List<ModOption>() { }));
-            }
+            ConfigManager.config.modStates.FindAll(s => s.modId == modId).ForEach(s => ConfigManager.config.modStates.Remove(s));
+            ConfigManager.config.modStates.Add(new ModState(modId, modVersion, new List<ModOption>() { }));
             ConfigManager.config.modStates.Find(s => s.modId == modId).version = modVersion;
             ConfigManager.update();
         }

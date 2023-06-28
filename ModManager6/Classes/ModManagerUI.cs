@@ -59,6 +59,7 @@ namespace ModManager6.Classes
         public static Form CreditsForm;
         public static Form EmptyForm;
         public static Form OptionsForm;
+        public static string lastVersion;
 
         public static void load(ModManager modManager)
         {
@@ -587,8 +588,7 @@ namespace ModManager6.Classes
             if (cb.Checked)
             {
                 ConfigManager.addActiveOption(m.id, v.version, option);
-            }
-            else
+            } else
             {
                 ConfigManager.removeActiveOption(m.id, v.version, option);
             }
@@ -753,7 +753,7 @@ namespace ModManager6.Classes
                     }
                     i++;
                 }
-                VersionCombobox.SelectedIndex = foundIndex != -1 ? foundIndex : 0; 
+                VersionCombobox.SelectedIndex = foundIndex != -1 ? foundIndex : 0;
                 ModPanel.Controls.Add(VersionCombobox, 3, 0);
 
                 ModDownload.Click += new EventHandler((object sender, EventArgs e) =>
@@ -770,14 +770,21 @@ namespace ModManager6.Classes
 
                 ModPlay.Click += new EventHandler((object sender, EventArgs e) =>
                 {
-                    //
+                    string selected = VersionCombobox.SelectedItem.ToString();
+                    List<ModOption> options = ConfigManager.getActiveOptions(m.id, selected);
+                    if (options == null) options = new List<ModOption>() { };
+                    List<string> modOptionStrings = options.Select(modOption => modOption.modOption).ToList();
+                    ModVersion v = m.versions.Find(v => v.version == selected);
+                    ModWorker.startMod(m, v, modOptionStrings);
                 });
                 ModPlay.Visible = false;
                 ModPanel.Controls.Add(ModPlay, 6, 0);
 
                 ModUnins.Click += new EventHandler((object sender, EventArgs e) =>
                 {
-                    //
+                    string selected = VersionCombobox.SelectedItem.ToString();
+                    ModVersion v = m.versions.Find(v => v.version == selected);
+                    ModWorker.uninsMod(m, v);
                 });
                 ModUnins.Visible = false;
                 ModPanel.Controls.Add(ModUnins, 7, 0);

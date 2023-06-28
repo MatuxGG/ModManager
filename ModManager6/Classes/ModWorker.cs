@@ -63,13 +63,10 @@ namespace ModManager6.Classes
                 versionToInstall = v;
                 optionsToInstall = options;
 
-                string modPath = ModManager.appDataPath + @"\mod";
-                FileSystem.DirectoryDelete(modPath);
-                FileSystem.DirectoryCreate(modPath);
+                ModManagerUI.StatusLabel.Text = Translator.get("Starting MODNAME, please wait...").Replace("MODNAME", modToInstall.name);
 
                 BackgroundWorker backgroundWorkerStart = new BackgroundWorker();
                 backgroundWorkerStart.WorkerReportsProgress = true;
-
                 backgroundWorkerStart.DoWork += new DoWorkEventHandler(backgroundWorkerStart_DoWork);
                 backgroundWorkerStart.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerStart_RunWorkerCompleted);
                 backgroundWorkerStart.RunWorkerAsync();
@@ -84,11 +81,12 @@ namespace ModManager6.Classes
 
             List<Task> tasks = new List<Task>();
 
-            enableMod(modToInstall, versionToInstall);
+            enableMod(modToInstall, versionToInstall, true);
 
             foreach (string option in optionsToInstall)
             {
                 ModOption opt = versionToInstall.options.Find(o => o.modOption == option);
+
                 if (opt == null)
                 {
                     Log.log("Option " + option + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (1)", "ModWorker");
@@ -123,15 +121,12 @@ namespace ModManager6.Classes
         {
             if (finished)
             {
-                //ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", modToInstall.name);
-                //Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
-                //ModManagerUI.activeForm = currentForm;
-                //ModManagerUI.reloadMods();
+                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", modToInstall.name);
             }
             else
             {
-                //ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("installation canceled.");
-                //finished = true;
+                ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("installation canceled.");
+                finished = true;
             }
         }
 
@@ -139,6 +134,9 @@ namespace ModManager6.Classes
         {
             string modPath = ModManager.appDataPath + @"\mod";
             string toInstallPath = ModManager.appDataPath + @"\vanilla\" + version;
+
+            FileSystem.DirectoryDelete(modPath);
+            FileSystem.DirectoryCreate(modPath);
 
             try
             {
@@ -149,14 +147,22 @@ namespace ModManager6.Classes
             }
         }
 
-        public static void enableMod(Mod m, ModVersion v)
+        public static void enableMod(Mod m, ModVersion v, bool replacement = false)
         {
-            string modPath = ModManager.appDataPath + @"\mod";
-            string toInstallPath = m.getPathForVersion(v);
+            string modPath = m.getPathForVersion(v);
+            string toInstallPath = ModManager.appDataPath + @"\mod";
+
+            Log.debug(modPath + " / " + toInstallPath);
 
             try
             {
-                FileSystem.DirectoryCopy(modPath, toInstallPath);
+                if (replacement)
+                {
+                    FileSystem.DirectoryCopy(modPath, toInstallPath);
+                } else
+                {
+                    FileSystem.DirectoryCopyWithoutReplacement(modPath, toInstallPath);
+                }
             } catch (Exception ex)
             {
                 Log.logError("ModWoker", ex.Source, ex.Message);
@@ -184,10 +190,10 @@ namespace ModManager6.Classes
 
                 ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", modToInstall.name);
 
-                BackgroundWorker backgroundWorkerStart = new BackgroundWorker();
-                backgroundWorkerStart.WorkerReportsProgress = true;
-                backgroundWorkerStart.DoWork += new DoWorkEventHandler(backgroundWorkerInstall_DoWork);
-                backgroundWorkerStart.RunWorkerAsync();
+                BackgroundWorker backgroundWorkerInstall = new BackgroundWorker();
+                backgroundWorkerInstall.WorkerReportsProgress = true;
+                backgroundWorkerInstall.DoWork += new DoWorkEventHandler(backgroundWorkerInstall_DoWork);
+                backgroundWorkerInstall.RunWorkerAsync();
             }
         }
 
@@ -318,7 +324,7 @@ namespace ModManager6.Classes
 
         public static bool addZipModToInstall(List<DownloadLine> lines, List<DownloadLine> toExtract, Mod m, ModVersion v, ReleaseAsset ra)
         {
-            string modPath = ModManager.appDataPath + @"\mods\" + m.id + "_" + versionToInstall.gameVersion;
+            string modPath = m.getPathForVersion(v);
             string modUrl = ra.BrowserDownloadUrl;
             string modTempPath = ModManager.tempPath + @"\" + ra.Name;
 
@@ -333,7 +339,7 @@ namespace ModManager6.Classes
 
         public static bool addDllModToInstall(List<DownloadLine> lines, List<DownloadLine> toExtract, Mod m, ModVersion v, ReleaseAsset ra)
         {
-            string modPath = ModManager.appDataPath + @"\mods\" + m.id + @"_" + versionToInstall.gameVersion + @"\BepInEx\plugins";
+            string modPath = m.getPathForVersion(v) + @"\BepInEx\plugins";
             string modUrl = ra.BrowserDownloadUrl;
 
             FileSystem.DirectoryDelete(modPath);
@@ -341,6 +347,71 @@ namespace ModManager6.Classes
 
             lines.Add(new DownloadLine(modUrl, modPath + @"\" + ra.Name));
             return true;
+        }
+
+        /* Unins Mod */
+
+        public static void uninsMod(Mod m, ModVersion v)
+        {
+            if (!finished) return;
+
+            if (m.type == "mod")
+            {
+                if (isGameOpen()) return;
+
+                InstalledMod im = ConfigManager.getInstalledMod(m.id, v.version);
+
+                if (im == null)
+                {
+                    Log.log("Mod " + m.id + " doesn't exist", "ModManager");
+                    MessageBox.Show("The mod you're trying to uninstall doesn't exist.\nPlease, try again.\nIf this happen again, please create a ticket on Mod Manager's support discord server.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    return;
+                }
+
+
+                finished = false;
+                modToInstall = m;
+                versionToInstall = v;
+
+                ModManagerUI.StatusLabel.Text = Translator.get("Uninstalling MODNAME, please wait...").Replace("MODNAME", modToInstall.name);
+
+                BackgroundWorker backgroundWorkerUnins = new BackgroundWorker();
+                backgroundWorkerUnins.WorkerReportsProgress = true;
+                backgroundWorkerUnins.DoWork += new DoWorkEventHandler(backgroundWorkerUnins_DoWork);
+                backgroundWorkerUnins.RunWorkerCompleted += new RunWorkerCompletedEventHandler(backgroundWorkerUnins_RunWorkerCompleted);
+                backgroundWorkerUnins.RunWorkerAsync();
+            }
+        }
+
+        public static void backgroundWorkerUnins_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var backgroundWorker = sender as BackgroundWorker;
+
+            string modPath = modToInstall.getPathForVersion(versionToInstall);
+            FileSystem.DirectoryDelete(modPath);
+
+            InstalledMod im = ConfigManager.getInstalledMod(modToInstall.id, versionToInstall.version);
+            ConfigManager.config.installedMods.Remove(im);
+
+            finished = true;
+
+            backgroundWorker.ReportProgress(100);
+        }
+
+        private static void backgroundWorkerUnins_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            if (finished)
+            {
+                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME uninstalled successfully.").Replace("MODNAME", modToInstall.name);
+                Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
+                ModManagerUI.activeForm = currentForm;
+                ModManagerUI.reloadMods();
+            }
+            else
+            {
+                ModManagerUI.StatusLabel.Text = Translator.get("Error") + " : " + Translator.get("uninstallation canceled.");
+                finished = true;
+            }
         }
 
         public static Boolean isGameOpen()
