@@ -258,6 +258,20 @@ namespace ModManager6.Classes
             ConfigManager.update();
         }
 
+        public static bool isAllInOneInstalled(Mod m)
+        {
+            if (m.id == "Challenger")
+            {
+                return isChallengerInstalled();
+            } else if (m.id == "BetterCrewlink")
+            {
+                return isBetterCrewlinkInstalled();
+            } else
+            {
+                return false;
+            }
+        }
+
         public static bool isChallengerInstalled()
         {
             RegistryKey challKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2160150", false);

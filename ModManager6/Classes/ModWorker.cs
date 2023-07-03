@@ -107,16 +107,18 @@ namespace ModManager6.Classes
                 ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", modToInstall.name);
                 finished = true;
 
-            } else if (m.id == "Challenger")
+            } else if (m.type == "allInOne")
             {
-                ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name);
-                await installOrUpdateChall();
+                ModManagerUI.StatusLabel.Text = Translator.get("Starting MODNAME, please wait...").Replace("MODNAME", m.name);
+                if (m.id == "Challenger")
+                {
+                    await installOrUpdateChall();
+                } else if (m.id == "BetterCrewlink")
+                {
+                    await installOrUpdateBcl();
+                }
                 ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
-            } else if (m.id == "BetterCrewlink")
-            {
-                ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name);
-                await installOrUpdateBcl();
-                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME started.").Replace("MODNAME", m.name);
+                ModManagerUI.reloadMods();
             }
         }
 
@@ -153,7 +155,7 @@ namespace ModManager6.Classes
                 }
             } catch (Exception ex)
             {
-                Log.logError("ModWoker", ex.Source, ex.Message);
+                Log.logError("ModWorker", ex.Source, ex.Message);
             }
         }
 
@@ -176,9 +178,21 @@ namespace ModManager6.Classes
                 versionToInstall = v;
                 optionsToInstall = options;
 
-                ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", modToInstall.name);
+                ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name);
 
                 await installModWorker();
+            } else if (m.type == "allInOne")
+            {
+                ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name);
+                if (m.id == "Challenger")
+                {
+                    await installOrUpdateChall();
+                } else if (m.id == "BetterCrewlink")
+                {
+                    await installOrUpdateBcl();
+                }
+                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", m.name);
+                ModManagerUI.reloadMods();
             }
         }
 
@@ -224,7 +238,7 @@ namespace ModManager6.Classes
             }
 
             // Download content
-            await Downloader.DownloadFiles("Downloading content, please wait...", lines);
+            await Downloader.DownloadFiles(Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", modToInstall.name), lines);
 
             // When finished
 
@@ -345,20 +359,28 @@ namespace ModManager6.Classes
 
 
                 finished = false;
-                modToInstall = m;
-                versionToInstall = v;
 
-                ModManagerUI.StatusLabel.Text = Translator.get("Uninstalling MODNAME, please wait...").Replace("MODNAME", modToInstall.name);
+                ModManagerUI.StatusLabel.Text = Translator.get("Uninstalling MODNAME, please wait...").Replace("MODNAME", m.name);
 
-                string modPath = modToInstall.getPathForVersion(versionToInstall);
+                string modPath = modToInstall.getPathForVersion(v);
                 FileSystem.DirectoryDelete(modPath);
 
                 ConfigManager.config.installedMods.Remove(im);
 
-                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME uninstalled successfully.").Replace("MODNAME", modToInstall.name);
-                Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
-                ModManagerUI.activeForm = currentForm;
+                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME uninstalled successfully.").Replace("MODNAME", m.name);
                 ModManagerUI.reloadMods();
+            } else if (m.type == "allInOne")
+            {
+                ModManagerUI.StatusLabel.Text = Translator.get("Uninstalling MODNAME, please wait...").Replace("MODNAME", m.name);
+                if (m.id == "Challenger")
+                {
+                    await uninsChall();
+                } else if (m.id == "BetterCrewlink")
+                {
+                    await uninsBcl();
+                }
+                ModManagerUI.reloadMods();
+                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME uninstalled successfully.").Replace("MODNAME", m.name);
             }
         }
 
@@ -366,6 +388,7 @@ namespace ModManager6.Classes
 
         public static async Task installOrUpdateChall()
         {
+            finished = false;
             await Task.Run(() =>
             {
                 if (ConfigManager.isChallengerInstalled())
@@ -379,13 +402,14 @@ namespace ModManager6.Classes
                     {
 
                     }
-                    ModManagerUI.reloadMods();
                 }
             });
+            finished = true;
         }
 
         public static async Task installOrUpdateBcl()
         {
+            finished = false;
             if (ConfigManager.isBetterCrewlinkInstalled())
             {
                 object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
@@ -395,14 +419,60 @@ namespace ModManager6.Classes
                 string dlPath = ModManager.tempPath + @"\Better-CrewLink-Setup.exe";
                 FileSystem.FileDelete(dlPath);
 
-                await Downloader.downloadPath(ModManager.serverURL + @"/bcl", dlPath);
+                List<DownloadLine> lines = new List<DownloadLine>() { new DownloadLine(ModManager.serverURL + @"/bcl", dlPath) };
 
-                while (!ConfigManager.isBetterCrewlinkInstalled())
+                await Downloader.DownloadFiles(Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", "BetterCrewlink"), lines);
+
+                Process.Start("explorer", dlPath);
+
+                await Task.Run(() =>
                 {
+                    while (!ConfigManager.isBetterCrewlinkInstalled())
+                    {
 
-                }
-                ModManagerUI.reloadMods();
+                    }
+                });
             }
+            finished = true;
+        }
+
+        public static async Task uninsChall()
+        {
+            finished = false;
+            await Task.Run(() =>
+            {
+                object uninsPath = Registry.GetValue(@"HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Steam App 2160150", "UninstallString", null);
+                if (uninsPath != null)
+                {
+                    Process.Start(new ProcessStartInfo("cmd", $"/c" + uninsPath.ToString()) { CreateNoWindow = true });
+
+                    while (ConfigManager.isChallengerInstalled())
+                    {
+
+                    }
+                }
+            });
+            finished = true;
+        }
+
+
+        public static async Task uninsBcl()
+        {
+            finished = false;
+            await Task.Run(() =>
+            {
+                object uninsPath = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\03ceac78-9166-585d-b33a-90982f435933", "QuietUninstallString", null);
+                if (uninsPath != null)
+                {
+                    Process.Start(new ProcessStartInfo("cmd", $"/c" + uninsPath.ToString()) { CreateNoWindow = true });
+
+                    while (ConfigManager.isBetterCrewlinkInstalled())
+                    {
+
+                    }
+                }
+            });
+            finished = true;
         }
 
         // Various

@@ -1,4 +1,5 @@
-﻿using Octokit;
+﻿using Newtonsoft.Json;
+using Octokit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,7 +12,9 @@ namespace ModManager6.Classes
     {
         public string version { get; set; }
         public string gameVersion { get; set; }
+        [JsonProperty(PropertyName = "modDependencies")]
         public List<ModDependency> dependencies { get; set; }
+        [JsonProperty(PropertyName = "modOptions")]
         public List<ModOption> options { get; set; }
         public Release release { get; set; }
 

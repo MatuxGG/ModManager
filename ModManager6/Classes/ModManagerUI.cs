@@ -154,8 +154,6 @@ namespace ModManager6.Classes
             IconsMenuPanel.Size = new System.Drawing.Size(300, 60);
             IconsMenuPanel.Padding = new Padding(30, 15, 30, 15);
 
-
-
             //
             // VersionLabel
             // 
@@ -254,7 +252,6 @@ namespace ModManager6.Classes
             StatusLabel.Name = "StatusLabel";
             StatusLabel.Text = Translator.get("Loading...");
             StatusLabel.TabStop = false;
-
 
             modManager.Controls.Add(AppPanel);
             modManager.Controls.Add(BottomRightPanel);
@@ -500,6 +497,8 @@ namespace ModManager6.Classes
                 play.Visible = false;
                 unins.Visible = false;
             }
+            int nbOptions = v.options.Count();
+            SubModPanel.Size = new Size(100, nbOptions > 0 ? nbOptions * 50 + 10 : 0);
             // Refresh options panel
             foreach (ModOption option in v.options)
             {
@@ -548,12 +547,12 @@ namespace ModManager6.Classes
                     Process.Start("explorer", modOption.getReleaseLink(versionOption));
                 });
 
-                PictureBox ModDiscord = ModManagerComponents.ModPic("ModDiscord", global::ModManager6.Properties.Resources.discord);
-                ModDiscord.Click += new EventHandler((object sender, EventArgs e) => {
-                    string link = modOption.social;
-                    Process.Start("explorer", link);
-                });
-                SubModLinePanel.Controls.Add(ModDiscord, 4, 0);
+                //PictureBox ModDiscord = ModManagerComponents.ModPic("ModDiscord", global::ModManager6.Properties.Resources.discord);
+                //ModDiscord.Click += new EventHandler((object sender, EventArgs e) => {
+                //    string link = modOption.social;
+                //    Process.Start("explorer", link);
+                //});
+                //SubModLinePanel.Controls.Add(ModDiscord, 4, 0);
 
                 CheckBox ModBox = new CheckBox();
                 SubModLinePanel.Controls.Add(ModBox, 0, 0);
@@ -639,7 +638,8 @@ namespace ModManager6.Classes
                 SubModPanel.ColumnCount = 1;
                 SubModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
                 SubModPanel.RowCount = nbVersions;
-                SubModPanel.Size = new System.Drawing.Size(100, 50 * nbVersions + 20);
+                SubModPanel.Size = new Size(100, 0);
+//                SubModPanel.Size = new System.Drawing.Size(100, 50 * nbVersions + 20);
                 SubModPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
 
                 TableLayoutPanel ModPanel = new TableLayoutPanel();
@@ -671,7 +671,17 @@ namespace ModManager6.Classes
                     ModPanel.Controls.Add(ModDiscord, 5, 0);
                 }
 
-                Label ModGameVersion = ModManagerComponents.ModLabel("ModGameVersion", m.versions.First().gameVersion);
+                Label ModGameVersion;
+
+                if (m.type == "mod")
+                {
+                    ModGameVersion = ModManagerComponents.ModLabel("ModGameVersion", m.versions.First().gameVersion);
+                } else
+                {
+                    ModGameVersion = ModManagerComponents.ModLabel("ModGameVersion", "-");
+                    ModGameVersion.Visible = false;
+                }
+
                 ModPanel.Controls.Add(ModGameVersion, 4, 0);
 
                 LinkLabel ModAuthor = ModManagerComponents.ModLinkLabel("ModAuthor", m.author);
@@ -730,55 +740,81 @@ namespace ModManager6.Classes
                     ComboBox control = (ComboBox)sender;
                     string version = (string)control.SelectedItem;
                     ModVersion curVersion = m.versions.Find(v => v.version == version);
-                    ModGameVersion.Text = curVersion.gameVersion;
+                    if (m.type == "mod") ModGameVersion.Text = curVersion.gameVersion;
                     ConfigManager.setActiveVersion(m.id, curVersion.version);
                     addOptions(SubModPanel, m, curVersion, ModDownload, ModPlay, ModUnins);
                 });
 
-                List<string> versions = new List<string>() { };
-                int i = 0; int foundIndex = -1;
-                string savedVersion = ConfigManager.getActiveVersion(m.id);
-                foreach (ModVersion v in m.versions)
+                if (m.type == "mod")
                 {
-                    VersionCombobox.Items.Add(v.version);
-                    if (v.version == savedVersion)
+                    List<string> versions = new List<string>() { };
+                    int i = 0; int foundIndex = -1;
+                    string savedVersion = ConfigManager.getActiveVersion(m.id);
+                    foreach (ModVersion v in m.versions)
                     {
-                        foundIndex = i;
+                        VersionCombobox.Items.Add(v.version);
+                        if (v.version == savedVersion)
+                        {
+                            foundIndex = i;
+                        }
+                        i++;
                     }
-                    i++;
+                    VersionCombobox.SelectedIndex = foundIndex != -1 ? foundIndex : 0;
+                } else
+                {
+                    VersionCombobox.Items.Add("-");
+                    VersionCombobox.SelectedIndex = 0;
+                    VersionCombobox.Visible = false;
                 }
-                VersionCombobox.SelectedIndex = foundIndex != -1 ? foundIndex : 0;
                 ModPanel.Controls.Add(VersionCombobox, 3, 0);
 
                 ModDownload.Click += new EventHandler((object sender, EventArgs e) =>
                 {
-                    string selected = VersionCombobox.SelectedItem.ToString();
-                    List<ModOption> options = ConfigManager.getActiveOptions(m.id, selected);
-                    if (options == null) options = new List<ModOption>() { };
-                    List<string> modOptionStrings = options.Select(modOption => modOption.modOption).ToList();
-                    ModVersion v =  m.versions.Find(v => v.version == selected);
-                    ModWorker.installAnyMod(m, v, modOptionStrings);
+                    if (m.type == "mod")
+                    {
+                        string selected = VersionCombobox.SelectedItem.ToString();
+                        List<ModOption> options = ConfigManager.getActiveOptions(m.id, selected);
+                        if (options == null) options = new List<ModOption>() { };
+                        List<string> modOptionStrings = options.Select(modOption => modOption.modOption).ToList();
+                        ModVersion v = m.versions.Find(v => v.version == selected);
+                        ModWorker.installAnyMod(m, v, modOptionStrings);
+                    } else if (m.type == "allInOne")
+                    {
+                        ModWorker.installAnyMod(m, null, null);
+                    }
                 });
                 ModDownload.Visible = false;
                 ModPanel.Controls.Add(ModDownload, 6, 0);
 
                 ModPlay.Click += new EventHandler((object sender, EventArgs e) =>
                 {
-                    string selected = VersionCombobox.SelectedItem.ToString();
-                    List<ModOption> options = ConfigManager.getActiveOptions(m.id, selected);
-                    if (options == null) options = new List<ModOption>() { };
-                    List<string> modOptionStrings = options.Select(modOption => modOption.modOption).ToList();
-                    ModVersion v = m.versions.Find(v => v.version == selected);
-                    ModWorker.startMod(m, v, modOptionStrings);
+                    if (m.type == "mod")
+                    {
+                        string selected = VersionCombobox.SelectedItem.ToString();
+                        List<ModOption> options = ConfigManager.getActiveOptions(m.id, selected);
+                        if (options == null) options = new List<ModOption>() { };
+                        List<string> modOptionStrings = options.Select(modOption => modOption.modOption).ToList();
+                        ModVersion v = m.versions.Find(v => v.version == selected);
+                        ModWorker.startMod(m, v, modOptionStrings);
+                    } else if (m.type == "allInOne")
+                    {
+                        ModWorker.startMod(m, null, null);
+                    }
                 });
                 ModPlay.Visible = false;
                 ModPanel.Controls.Add(ModPlay, 6, 0);
 
                 ModUnins.Click += new EventHandler((object sender, EventArgs e) =>
                 {
-                    string selected = VersionCombobox.SelectedItem.ToString();
-                    ModVersion v = m.versions.Find(v => v.version == selected);
-                    ModWorker.uninsMod(m, v);
+                    if (m.type == "mod")
+                    {
+                        string selected = VersionCombobox.SelectedItem.ToString();
+                        ModVersion v = m.versions.Find(v => v.version == selected);
+                        ModWorker.uninsMod(m, v);
+                    } else if (m.type == "allInOne")
+                    {
+                        ModWorker.uninsMod(m, null);
+                    }
                 });
                 ModUnins.Visible = false;
                 ModPanel.Controls.Add(ModUnins, 7, 0);
@@ -792,6 +828,19 @@ namespace ModManager6.Classes
                     }
                     ModVersion activeVersionObj = m.versions.Find(v => v.version == activeVersion);
                     addOptions(SubModPanel, m, activeVersionObj, ModDownload, ModPlay, ModUnins);
+                } else if (m.type == "allInOne")
+                {
+                    if (ConfigManager.isAllInOneInstalled(m))
+                    {
+                        ModDownload.Visible = false;
+                        ModPlay.Visible = true;
+                        ModUnins.Visible = true;
+                    } else
+                    {
+                        ModDownload.Visible = true;
+                        ModPlay.Visible = false;
+                        ModUnins.Visible = false;
+                    }
                 }
             }
 
