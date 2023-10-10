@@ -18,10 +18,12 @@ namespace ModManager6.Classes
 
         private static long totalBytes;
         private static long bytesRead;
+        private static long bytesReadLastTime;
 
         private static HttpClient client;
         private static Timer timer;
         private static long elapsedTime;
+        private static List<Task> tasks; // TODO: cancel tasks
 
         private const long packetSize = 1024 * 1024; // 1 MB
 
@@ -101,11 +103,12 @@ namespace ModManager6.Classes
         private static void Timer_Tick(object sender, EventArgs e)
         {
             elapsedTime += 1;
+            long curRead = bytesRead - bytesReadLastTime;
+            bytesReadLastTime = bytesRead;
             var bytesReadFormatted = FormatByteSize(bytesRead);
             var totalBytesFormatted = FormatByteSize(totalBytes);
             double percentage = (double)bytesRead / totalBytes * 100;
-            var speed = bytesRead / elapsedTime;
-            var speedFormatted = FormatByteSize((long)speed);
+            var speedFormatted = FormatByteSize((long)curRead);
 
             ModManagerUI.StatusLabel.Invoke((Action)(() =>
             {
@@ -144,7 +147,7 @@ namespace ModManager6.Classes
                 }
 
 
-                List<Task> tasks = new List<Task>() { };
+                tasks = new List<Task>() { };
                 foreach (DownloadLine dl in downloadLines)
                 {
                     tasks.Add(DownloadFile(dl));
@@ -162,6 +165,7 @@ namespace ModManager6.Classes
         public static async Task DownloadFile(DownloadLine dl)
         {
             long currentBytesRead = 0;
+            bytesReadLastTime = 0;
             using (FileStream fileStream = new FileStream(dl.target, FileMode.OpenOrCreate, FileAccess.Write))
             {
                 bool moreToRead = true;
@@ -180,7 +184,7 @@ namespace ModManager6.Classes
 
                         HttpRequestMessage request = new HttpRequestMessage { RequestUri = new Uri(dl.source) };
                         request.Headers.Range = new RangeHeaderValue(currentBytesRead, currentBytesRead + bytesToRead - 1);
-
+                        
                         using (HttpResponseMessage response = await client.SendAsync(request))
                         {
                             response.EnsureSuccessStatusCode();

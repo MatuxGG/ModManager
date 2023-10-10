@@ -15,14 +15,14 @@ namespace ModManager6.Classes
         [JsonProperty(PropertyName = "modDependencies")]
         public List<ModDependency> dependencies { get; set; }
         [JsonProperty(PropertyName = "modOptions")]
-        public List<ModOption> options { get; set; }
         public Release release { get; set; }
+        public Boolean canBeCombined { get; set; }
 
-        public ModVersion(string version = "", string gameVersion = "", List<ModDependency> dependencies = null, List<ModOption> options = null) {
+        public ModVersion(string version = "", string gameVersion = "", List<ModDependency> dependencies = null, Boolean canBeCombined = false) {
             this.version = version;
             this.gameVersion = gameVersion;
             this.dependencies = dependencies != null ? dependencies : new List<ModDependency>() { };
-            this.options = options != null ? options : new List<ModOption>() { };
+            this.canBeCombined = canBeCombined;
         }
 
         public string getGithubVersion()

@@ -44,9 +44,25 @@ namespace ModManager6.Classes
                 Mod m = ModList.getModById(i.id);
                 if (m != null)
                 {
-                    notifyIcon.ContextMenuStrip.Items.Add(m.name, null, new EventHandler((object sender, EventArgs e) => {
-                        Process.Start("explorer", ModManager.appDataPath + @"\mods\" + m.id + @"\Among Us.exe");
-                    }));
+                    ModVersion mv = m.versions.Find(v => v.version == i.version);
+                    if (mv != null)
+                    {
+                        notifyIcon.ContextMenuStrip.Items.Add(m.name + " " + mv.version, null, new EventHandler((object sender, EventArgs e) => {
+                            ModWorker.startMod(m, mv, new List<string>() {});
+                        }));
+                        List<ModOption> possibleModOptions = ModList.getModOptions(m, mv);
+                        foreach (ModOption possibleModOption in possibleModOptions)
+                        {
+                            InstalledMod foundIm = ConfigManager.getInstalledMod(possibleModOption.modOption, possibleModOption.version);
+                            if (foundIm != null)
+                            {
+                                Mod foundImObj = ModList.getModById(foundIm.id);
+                                notifyIcon.ContextMenuStrip.Items.Add(m.name + " " + mv.version + " - " + foundImObj.name, null, new EventHandler((object sender, EventArgs e) => {
+                                    ModWorker.startMod(m, mv, new List<string>() { foundIm.id });
+                                }));
+                            }
+                        }
+                    }
                 }
 
             }
@@ -94,15 +110,15 @@ namespace ModManager6.Classes
 
         private static void startGame(object sender, EventArgs e)
         {
-            //ModWorker.startGame();
+            ModWorker.startGame();
         }
 
         private static void settings(object sender, EventArgs e)
         {
-            //ModManagerUI.openForm(ModManagerUI.SettingsForm);
-            //if (modManager.WindowState == FormWindowState.Minimized)
-            //    modManager.WindowState = FormWindowState.Normal;
-            //modManager.Activate();
+            ModManagerUI.openForm(ModManagerUI.SettingsForm);
+            if (modManager.WindowState == FormWindowState.Minimized)
+                modManager.WindowState = FormWindowState.Normal;
+            modManager.Activate();
         }
 
         private static void exit(object sender, EventArgs e)

@@ -1,9 +1,11 @@
-﻿using Octokit;
+﻿using Newtonsoft.Json;
+using Octokit;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
@@ -18,6 +20,22 @@ namespace ModManager6.Classes
         public static async Task load()
         {
             modSources = new List<ModSource>() { };
+
+            // Load local mods
+            string localSourcePath = ModManager.appDataPath + @"\localMods.conf";
+            string json;
+            if (!File.Exists(localSourcePath))
+            {
+                ModSource localSource = new ModSource("Local");
+
+                json = JsonConvert.SerializeObject(localSource);
+                File.WriteAllText(localSourcePath, json);
+            }
+            json = File.ReadAllText(localSourcePath);
+            ModSource modSource = Newtonsoft.Json.JsonConvert.DeserializeObject<ModSource>(json);
+            modSources.Add(modSource);
+
+            // Load external sources
             List<Task> tasks = new List<Task>() { };
             foreach (string source in ConfigManager.config.sources)
             {
@@ -83,6 +101,29 @@ namespace ModManager6.Classes
                     source.mods.Remove(mo);
                 }
             }
+
+            foreach (ModSource modSource1 in modSources)
+            {
+                foreach (Mod m in modSource1.mods)
+                {
+                    foreach (ModVersion mv in m.versions)
+                    {
+                        if (mv.version == "latest")
+                        {
+                            mv.version = mv.release.TagName;
+                        }
+                    }
+                }
+            }
+
+            // Sort mods by gameVersion
+            foreach (ModSource modSource in modSources)
+            {
+                foreach (Mod m in modSource.mods)
+                {
+                    m.versions.Sort((a, b) => b.gameVersion.CompareTo(a.gameVersion));
+                }
+            }
         }
 
         public static async Task loadRelease(Mod m)
@@ -92,18 +133,25 @@ namespace ModManager6.Classes
                 if (m.type == "mod")
                 {
                     IReadOnlyCollection<Release> releases = await ModManager.githubClient.Repository.Release.GetAll(m.author, m.github);
-                    
+
+                    int i = 0;
+
                     foreach (Release release in releases)
                     {
                         foreach (ModVersion v in m.versions)
                         {
-                            if (release.TagName == v.version)
+                            if (i == 0 && v.version == "latest")
+                            {
+                                v.release = release;
+                                break;
+                            }
+                            else if (release.TagName == v.version)
                             {
                                 v.release = release;
                                 break;
                             }
                         }
-
+                        i++;
                     }
                 }
             }
@@ -115,8 +163,14 @@ namespace ModManager6.Classes
 
         public static List<Mod> getAllMods()
         {
-            List<Mod> mods = new List<Mod>() { };
-            modSources.ForEach(s => mods.FindAll(m => m.type == "mod").ForEach(m => mods.Add(m)));
+            List<Mod> mods = new List<Mod>();
+
+            modSources.ForEach(s =>
+            {
+                List<Mod> modsFromSource = s.mods.FindAll(m => m.type == "mod");
+                mods.AddRange(modsFromSource);
+            });
+
             return mods;
         }
 
@@ -151,6 +205,7 @@ namespace ModManager6.Classes
         {
             List<Mod> mods = new List<Mod>() { };
             modSources.ForEach(s => s.mods.FindAll(m => (m.type == "mod" || m.type == "allInOne") && m.category.id == categoryId).ForEach(m => mods.Add(m)));
+            mods.Sort((x, y) => y.name.CompareTo(x.name));
             return mods;
         }
 
@@ -167,6 +222,29 @@ namespace ModManager6.Classes
                 }
             }
             return null;
+        }
+
+        public static List<ModOption> getModOptions(Mod m, ModVersion mv)
+        {
+            List<ModOption> modOptions = new List<ModOption>() { };
+            foreach (ModSource ms in modSources)
+            {
+                foreach (Mod mod in ms.mods)
+                {
+                    if (mod.id != m.id)
+                    {
+                        foreach (ModVersion v in mod.versions)
+                        {
+                            if (v.canBeCombined == true && mv.gameVersion == v.gameVersion)
+                            {
+                                modOptions.Add(new ModOption(mod.id, v.version));
+                            }
+                        }
+                    }
+                }
+            }
+
+            return modOptions;
         }
 
     }

@@ -92,31 +92,38 @@ namespace ModManager6
             ConfigManager.load();
             Log.logTime("Config load", "ModManager");
 
-            // If not silent, load theme
-            if (args.Count() <= 0)
+            Log.startTimer();
+            await Translator.load();
+            Log.logTime("Translations load", "ModManager");
+
+            Log.startTimer();
+            ThemeList.load();
+            Log.logTime("Themes load", "ModManager");
+
+            Log.startTimer();
+            int width = 500;
+            int height = 300;
+            if (silent)
             {
-                Log.startTimer();
-                await Translator.load();
-                Log.logTime("Translations load", "ModManager");
-
-                Log.startTimer();
-                ThemeList.load();
-                Log.logTime("Themes load", "ModManager");
-
-                Log.startTimer();
+                ModManagerUI.loadMini(this);
+                this.MinimumSize = new System.Drawing.Size(width, height);
+            } else
+            {
                 ModManagerUI.load(this);
-                Log.logTime("UI load (1/2)", "ModManager");
-
                 this.MinimumSize = new System.Drawing.Size(1200, 480);
-                int width = (int)((80 * Screen.PrimaryScreen.Bounds.Width) / 100);
+                width = (int)((80 * Screen.PrimaryScreen.Bounds.Width) / 100);
                 if (width < this.MinimumSize.Width)
                     width = this.MinimumSize.Width;
-                int height = (int)((80 * Screen.PrimaryScreen.Bounds.Height) / 100);
+                height = (int)((80 * Screen.PrimaryScreen.Bounds.Height) / 100);
                 if (height < this.MinimumSize.Height)
                     height = this.MinimumSize.Height;
-                this.Size = new Size(width, height);
-                this.CenterToScreen();
             }
+            Log.logTime("UI load (1/2)", "ModManager");
+
+
+            
+            this.Size = new Size(width, height);
+            this.CenterToScreen();
 
             Log.startTimer();
             // Load Github Client
@@ -143,14 +150,17 @@ namespace ModManager6
             await ModList.loadReleases();
             Log.logTime("Releases load", "ModManager");
 
-            Log.startTimer();
-            ModManagerUI.StatusLabel.Text = Translator.get("Loading Among Us Servers...");
-            ServerManager.load();
-            Log.logTime("Servers load", "ModManager");
+            if (!silent)
+            {
+                Log.startTimer();
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading Among Us Servers...");
+                ServerManager.load();
+                Log.logTime("Servers load", "ModManager");
+            }
 
             ModWorker.load();
 
-            if (args.Count() <= 0)
+            if (!silent)
             {
                 Log.startTimer();
                 ContextMenu.init(this);
@@ -160,20 +170,53 @@ namespace ModManager6
 
             VersionUpdater.applyUpdates(ConfigManager.config.ModManagerVersion, visibleVersion);
 
-            if (args.Count() > 0)
+            if (silent)
             {
                 // TODO : shortcuts
+
+
+                List<string> modOptions = new List<string>() { };
+
+                Mod m = new Mod();
+                ModVersion mv = new ModVersion();
+                int i = 0;
+                foreach (string arg in args)
+                {
+                    if (i == 0)
+                    {
+                        string[] modInfos = args[0].Split('-');
+                        if (modInfos.Length < 1) return;
+                        m = ModList.getModById(modInfos[0]);
+                        if (m == null) return;
+                        mv = m.versions.Find(v => v.version == modInfos[1]);
+                        if (mv == null) return;
+                    } else
+                    {
+                        ModOption mo = ModList.getModOptions(m, mv).Find(o => o.modOption == arg);
+                        if (mo == null) return;
+                        modOptions.Add(arg);
+                    }
+                    i++;
+                }
+
+                await ModWorker.installAnyMod(m, mv, modOptions);
+                await ModWorker.startMod(m, mv, modOptions);
+                System.Windows.Forms.Application.Exit();
+
+            } else
+            {
+                Log.startTimer();
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading UI...");
+                ModManagerUI.InitUI();
+                ModManagerUI.InitListeners();
+                ModManagerUI.hideMenuPanels();
+                ModManagerUI.InitForm();
+                Log.logTime("UI load (2/2)", "ModManager");
+
+                ModManagerUI.LoadingLabel.Visible = false;
             }
 
-            Log.startTimer();
-            ModManagerUI.StatusLabel.Text = Translator.get("Loading UI...");
-            ModManagerUI.InitUI();
-            ModManagerUI.InitListeners();
-            ModManagerUI.hideMenuPanels();
-            ModManagerUI.InitForm();
-            Log.logTime("UI load (2/2)", "ModManager");
-
-            ModManagerUI.LoadingLabel.Visible = false;
+            
             ModManagerUI.StatusLabel.Text = "";
 
             Log.log("Ready", "ModManager");

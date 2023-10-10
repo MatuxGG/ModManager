@@ -74,7 +74,7 @@ namespace ModManager6.Classes
 
                 foreach (string option in optionsToInstall)
                 {
-                    ModOption opt = versionToInstall.options.Find(o => o.modOption == option);
+                    ModOption opt = ModList.getModOptions(modToInstall, versionToInstall).Find(o => o.modOption == option);
 
                     if (opt == null)
                     {
@@ -227,7 +227,7 @@ namespace ModManager6.Classes
             // Add list of Download {option,version} to Temp
             foreach (string option in optionsToInstall)
             {
-                ModOption modOption = versionToInstall.options.Find(o => o.modOption == option);
+                ModOption modOption = ModList.getModOptions(modToInstall, versionToInstall).Find(o => o.modOption == option);
                 Mod foundMod = ModList.getModById(option);
                 ModVersion versionOption = foundMod.versions.Find(v => v.version == modOption.version);
                 if (ConfigManager.config.installedMods.Find(im => im.id == option && im.version == versionOption.version) == null)
@@ -247,45 +247,48 @@ namespace ModManager6.Classes
                 ModManagerUI.StatusLabel.Text = Translator.get("Extracting files...");
             });
 
-            string tempPath = ModManager.tempPath + @"\Modzip";
-            foreach (DownloadLine te in toExtract)
+            await Task.Run(() =>
             {
-                FileSystem.DirectoryDelete(tempPath);
-                FileSystem.DirectoryCreate(tempPath);
-                ZipFile.ExtractToDirectory(te.source, tempPath);
-                string newPath = getBepInExInsideRec(tempPath);
-                if (newPath == null)
+                string tempPath = ModManager.tempPath + @"\Modzip";
+                foreach (DownloadLine te in toExtract)
                 {
-                    newPath = tempPath;
+                    FileSystem.DirectoryDelete(tempPath);
+                    FileSystem.DirectoryCreate(tempPath);
+                    ZipFile.ExtractToDirectory(te.source, tempPath);
+                    string newPath = getBepInExInsideRec(tempPath);
+                    if (newPath == null)
+                    {
+                        newPath = tempPath;
+                    }
+                    FileSystem.DirectoryCopy(newPath, te.target);
                 }
-                FileSystem.DirectoryCopy(newPath, te.target);
-            }
 
-            if (needVanilla)
-            {
-                if (ConfigManager.getInstalledVanilla(versionToInstall.gameVersion) == null)
+                if (needVanilla)
                 {
-                    ConfigManager.config.installedVanilla.Add(new InstalledVanilla(versionToInstall.gameVersion));
+                    if (ConfigManager.getInstalledVanilla(versionToInstall.gameVersion) == null)
+                    {
+                        ConfigManager.config.installedVanilla.Add(new InstalledVanilla(versionToInstall.gameVersion));
+                    }
                 }
-            }
 
-            foreach (InstalledMod im in installedMods)
-            {
-                if (ConfigManager.getInstalledMod(im.id, im.version) == null)
+                foreach (InstalledMod im in installedMods)
                 {
-                    ConfigManager.config.installedMods.Add(im);
+                    if (ConfigManager.getInstalledMod(im.id, im.version) == null)
+                    {
+                        ConfigManager.config.installedMods.Add(im);
+                    }
                 }
-            }
 
-            ConfigManager.update();
+                ConfigManager.update();
 
-            ModManagerUI.StatusLabel.Invoke((MethodInvoker)delegate
-            {
-                ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", modToInstall.name);
-                Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
-                ModManagerUI.activeForm = currentForm;
-                ModManagerUI.reloadMods();
-                finished = true;
+                ModManagerUI.StatusLabel.Invoke((MethodInvoker)delegate
+                {
+                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", modToInstall.name);
+                    Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
+                    ModManagerUI.activeForm = currentForm;
+                    ModManagerUI.reloadMods();
+                    finished = true;
+                });
             });
         }
 
