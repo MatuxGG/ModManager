@@ -152,7 +152,7 @@ namespace ModManager6.Classes
             left.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             left.TabStop = false;
             left.Margin = new Padding(0, 25, 0, 25);
-            left.Visible = false;
+            left.Hide();
             HeaderPanel.Controls.Add(left, 2, 0);
 
             right.Image = global::ModManager6.Properties.Resources.left;
@@ -160,7 +160,7 @@ namespace ModManager6.Classes
             right.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             right.TabStop = false;
             right.Margin = new Padding(0, 25, 0, 25);
-            right.Visible = false;
+            right.Hide();
             HeaderPanel.Controls.Add(right, 0, 0);
 
             return HeaderPanel;

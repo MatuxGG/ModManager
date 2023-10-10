@@ -213,7 +213,7 @@ namespace ModManager6
                 ModManagerUI.InitForm();
                 Log.logTime("UI load (2/2)", "ModManager");
 
-                ModManagerUI.LoadingLabel.Visible = false;
+                ModManagerUI.LoadingLabel.Hide();
             }
 
             

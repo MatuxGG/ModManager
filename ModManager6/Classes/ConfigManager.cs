@@ -283,6 +283,38 @@ namespace ModManager6.Classes
             object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
             return o != null && System.IO.File.Exists(o.ToString() + @"\Better-CrewLink.exe");
         }
+
+        public static List<Mod> getFavoriteMods()
+        {
+            if (config.favoriteMods.Count() == 0)
+                return null;
+
+            List<Mod> mods = new List<Mod>();
+            foreach (string modId in config.favoriteMods)
+            {
+                Mod m = ModList.getModById(modId);
+                if (m != null)
+                {
+                    mods.Add(m);
+                }
+            }
+            return mods;
+        }
+        public static Boolean isFavoriteMod(string modId)
+        {
+            return config.favoriteMods.Contains(modId);
+        }
+
+        public static void removeFavoriteMod(string modId)
+        {
+            config.favoriteMods.Remove(modId);
+        }
+
+        public static void addFavoriteMod(string modId)
+        {
+            config.favoriteMods.Add(modId);
+            config.favoriteMods.Sort();
+        }
     }
 
 }

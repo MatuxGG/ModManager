@@ -1,4 +1,5 @@
 ﻿using Microsoft.Win32;
+using ModManager6.Forms;
 using Newtonsoft.Json;
 using Octokit;
 using System;
@@ -284,7 +285,7 @@ namespace ModManager6.Classes
                 ModManagerUI.StatusLabel.Invoke((MethodInvoker)delegate
                 {
                     ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", modToInstall.name);
-                    Form currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
+                    GenericPanel currentForm = ModManagerUI.getFormByCategoryId(modToInstall.category.id);
                     ModManagerUI.activeForm = currentForm;
                     ModManagerUI.reloadMods();
                     finished = true;

@@ -28,8 +28,8 @@ namespace ModManager6.Classes
 {
     public static class ModManagerUI
     {
-        public static Form activeForm = null;
-
+        public static GenericPanel activeForm = null;
+        
         public static Panel MenuPanel;
         public static PictureBox LogoPict;
         public static Panel BottomRightPanel;
@@ -53,17 +53,17 @@ namespace ModManager6.Classes
         public static MMButton StartButton;
         public static Panel StartPanel;
 
-        public static List<Form> CategoryForms;
-        public static Form ServersForm;
-        public static Form SettingsForm;
-        public static Form CreditsForm;
-        public static Form EmptyForm;
-        public static Form OptionsForm;
+        public static List<GenericPanel> CategoryForms;
+        public static GenericPanel ServersForm;
+        public static GenericPanel SettingsForm;
+        public static GenericPanel CreditsForm;
+        public static GenericPanel EmptyForm;
+        public static GenericPanel OptionsForm;
         public static string lastVersion;
+        public static ModManager thisModManager;
 
         public static void load(ModManager modManager)
         {
-
             Graphics graphics = modManager.CreateGraphics();
             float ratio = 4 / (4 + ((graphics.DpiX - 96) / 24));
 
@@ -85,7 +85,7 @@ namespace ModManager6.Classes
             StartButton = new MMButton("rounded");
             StartPanel = new Panel();
 
-            CategoryForms = new List<Form>() { };
+            CategoryForms = new List<GenericPanel>() { };
 
             modManager.BackColor = ThemeList.theme.AppBackgroundColor;
 
@@ -270,7 +270,7 @@ namespace ModManager6.Classes
 
             StatusLabel = new MMLabel();
 
-            CategoryForms = new List<Form>() { };
+            CategoryForms = new List<GenericPanel>() { };
 
             modManager.BackColor = ThemeList.theme.AppBackgroundColor;
 
@@ -303,10 +303,18 @@ namespace ModManager6.Classes
         {
             if (activeForm == null) return;
             string fName = activeForm.Name;
+            foreach (GenericPanel gp in CategoryForms)
+            {
+                gp.Dispose();
+            }
             CategoryForms.Clear();
+            foreach(Control c in ModsCategoriesPanel.Controls)
+            {
+                c.Dispose();
+            }
             ModsCategoriesPanel.Controls.Clear();
             loadMods();
-            Form f = CategoryForms.Find(f => f.Name == fName);
+            GenericPanel f = CategoryForms.Find(f => f.Name == fName);
             if (f != null)
             {
                 openForm(f);
@@ -403,7 +411,7 @@ namespace ModManager6.Classes
         public static void hideMenuPanels()
         {
             if (ModsCategoriesPanel.Visible == true)
-                ModsCategoriesPanel.Visible = false;
+                ModsCategoriesPanel.Hide();
         }
 
         public static void showMenuPanel(Panel subMenu = null)
@@ -413,17 +421,17 @@ namespace ModManager6.Classes
                 hideMenuPanels();
                 if (subMenu != null)
                 {
-                    subMenu.Visible = true;
+                    subMenu.Show();
                 }
             }
             else
             {
-                subMenu.Visible = false;
+                subMenu.Hide();
             }
         }
 
 
-        public static void openForm(Form form)
+        public static void openForm(GenericPanel form)
         {
             if (activeForm != null)
                 activeForm.Close();
@@ -477,7 +485,7 @@ namespace ModManager6.Classes
                     size++;
                     Button b = CreateSubMenuButton(c.name);
 
-                    Form f = new GenericPanel();
+                    GenericPanel f = new GenericPanel();
                     f.Name = c.id;
                     CategoryForms.Add(f);
 
@@ -489,24 +497,26 @@ namespace ModManager6.Classes
                 }
             }
 
-            //if (ConfigManager.getFavoriteMods() != null)
-            //{
-            //    size++;
-            //    Button b = CreateSubMenuButton(Translator.get("Favorites"));
-            //    Form f = new GenericPanel();
-            //    f.Name = "Favorites";
-            //    CategoryForms.Add(f);
-            //    b.Click += new EventHandler((object sender, EventArgs e) => {
-            //        openForm(f);
-            //    });
-            //    ModsCategoriesPanel.Controls.Add(b);
-            //} TODO
+            if (ConfigManager.getFavoriteMods() != null)
+            {
+                Log.debug("test");
+                size++;
+                Button b = CreateSubMenuButton(Translator.get("Favorites"));
+                GenericPanel f = new GenericPanel();
+                f.Name = "Favorites";
+                CategoryForms.Add(f);
+                b.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    openForm(f);
+                });
+                ModsCategoriesPanel.Controls.Add(b);
+            }
 
             ModsCategoriesPanel.Size = new Size(300, 40 * size);
 
             // Forms
 
-            foreach (Form f in CategoryForms)
+            foreach (GenericPanel f in CategoryForms)
             {
                 refreshModForm(f);
             }
@@ -519,15 +529,15 @@ namespace ModManager6.Classes
             // Refresh buttons if no option
             if (ConfigManager.isInstalled(m, v, ConfigManager.getActiveOptions(m.id, v.version)))
             {
-                download.Visible = false;
-                play.Visible = true;
-                unins.Visible = true;
+                download.Hide();
+                play.Show();
+                unins.Show();
             }
             else
             {
-                download.Visible = true;
-                play.Visible = false;
-                unins.Visible = false;
+                download.Show();
+                play.Hide();
+                unins.Hide();
             }
             List<ModOption> mos = ModList.getModOptions(m, v);
             int nbOptions = mos.Count();
@@ -617,15 +627,15 @@ namespace ModManager6.Classes
             // Refresh buttons if no option
             if (ConfigManager.isInstalled(m, v, ConfigManager.getActiveOptions(m.id, v.version)))
             {
-                download.Visible = false;
-                play.Visible = true;
-                unins.Visible = true;
+                download.Hide();
+                play.Show();
+                unins.Show();
             }
             else
             {
-                download.Visible = true;
-                play.Visible = false;
-                unins.Visible = false;
+                download.Show();
+                play.Hide();
+                unins.Hide();
             }
             List<ModOption> mos = ModList.getModOptions(m, v);
             int nbOptions = mos.Count();
@@ -686,19 +696,19 @@ namespace ModManager6.Classes
 
             if (ConfigManager.isInstalled(m, v, ConfigManager.getActiveOptions(m.id, v.version)))
             {
-                download.Visible = false;
-                play.Visible = true;
-                unins.Visible = true;
+                download.Hide();
+                play.Show();
+                unins.Show();
             }
             else
             {
-                download.Visible = true;
-                play.Visible = false;
-                unins.Visible = false;
+                download.Show();
+                play.Hide();
+                unins.Hide();
             }
         }
 
-        public static void refreshModForm(Form f)
+        public static void refreshModForm(GenericPanel f)
         {
             f.Controls.Clear();
 
@@ -708,7 +718,7 @@ namespace ModManager6.Classes
 
             if (cat.id == "Favorites")
             {
-                //mods = ConfigManager.getFavoriteMods();
+                mods = ConfigManager.getFavoriteMods();
             }
             else
             {
@@ -719,12 +729,14 @@ namespace ModManager6.Classes
             int maxOptions = 0;
 
             Panel ContainerPanel = new Panel();
+            f.SetDoubleBuffer(ContainerPanel, true);
             ContainerPanel.Name = "ContainerPanel";
             ContainerPanel.BackColor = Color.Transparent;
             ContainerPanel.Dock = DockStyle.Fill;
             ContainerPanel.AutoScroll = true;
             f.Controls.Add(ContainerPanel);
             FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
+            f.SetDoubleBuffer(flowLayoutPanel, true);
             
             if (!isInLineView)
             {
@@ -767,7 +779,7 @@ namespace ModManager6.Classes
                 else
                 {
                     ModGameVersion = ModManagerComponents.ModLabel("ModGameVersion", "-");
-                    ModGameVersion.Visible = false;
+                    ModGameVersion.Hide();
                 }
 
                 // Flag
@@ -838,7 +850,7 @@ namespace ModManager6.Classes
                 {
                     VersionCombobox.Items.Add("-");
                     VersionCombobox.SelectedIndex = 0;
-                    VersionCombobox.Visible = false;
+                    VersionCombobox.Hide();
                 }
 
                 ModDownload.Click += new EventHandler((object sender, EventArgs e) =>
@@ -857,7 +869,7 @@ namespace ModManager6.Classes
                         ModWorker.installAnyMod(m, null, null);
                     }
                 });
-                ModDownload.Visible = false;
+                ModDownload.Hide();
 
                 ModPlay.Click += new EventHandler((object sender, EventArgs e) =>
                 {
@@ -875,7 +887,7 @@ namespace ModManager6.Classes
                         ModWorker.startMod(m, null, null);
                     }
                 });
-                ModPlay.Visible = false;
+                ModPlay.Hide();
 
                 ModUnins.Click += new EventHandler((object sender, EventArgs e) =>
                 {
@@ -890,12 +902,33 @@ namespace ModManager6.Classes
                         ModWorker.uninsMod(m, null);
                     }
                 });
-                ModUnins.Visible = false;
+                ModUnins.Hide();
+
+
+                PictureBox ModFavorite = ModManagerComponents.ModPic("ModFavorite", global::ModManager6.Properties.Resources.favorite);
+                if (ConfigManager.isFavoriteMod(m.id))
+                {
+                    ModFavorite.Image = global::ModManager6.Properties.Resources.favoriteFilled;
+                    ModFavorite.Click += new EventHandler((object sender, EventArgs e) => {
+                        ConfigManager.removeFavoriteMod(m.id);
+                        ConfigManager.update();
+                        reloadMods();
+                    });
+                }
+                else
+                {
+                    ModFavorite.Click += new EventHandler((object sender, EventArgs e) => {
+                        ConfigManager.addFavoriteMod(m.id);
+                        ConfigManager.update();
+                        reloadMods();
+                    });
+                }
 
                 if (isInLineView)
                 {
 
                     TableLayoutPanel SubModPanel = new TableLayoutPanel();
+                    f.SetDoubleBuffer(SubModPanel, true);
                     SubModPanel.Name = "SubModPanel";
                     SubModPanel.BackColor = Color.Transparent;
                     SubModPanel.Dock = DockStyle.Top;
@@ -919,7 +952,8 @@ namespace ModManager6.Classes
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Name
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Author
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F)); // Version
-                    ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F)); // Game Version
+                    ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // Game Version
+                    ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Favorite
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Discord
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Download / Start
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Uninstall
@@ -929,7 +963,7 @@ namespace ModManager6.Classes
 
                     if (m.social != null && m.social != "")
                     {
-                        ModPanel.Controls.Add(ModDiscord, 5, 0);
+                        ModPanel.Controls.Add(ModDiscord, 6, 0);
                     }
 
                     ModPanel.Controls.Add(ModGameVersion, 4, 0);
@@ -939,6 +973,8 @@ namespace ModManager6.Classes
                     ModPanel.Controls.Add(ModTitle, 1, 0);
                     
                     ModPanel.Controls.Add(ModLg, 0, 0);
+
+                    ModPanel.Controls.Add(ModFavorite, 5, 0);
 
                     VersionCombobox.SelectionChangeCommitted += new EventHandler(async (object sender, EventArgs e) =>
                     {
@@ -952,11 +988,11 @@ namespace ModManager6.Classes
 
                     ModPanel.Controls.Add(VersionCombobox, 3, 0);
 
-                    ModPanel.Controls.Add(ModDownload, 6, 0);
+                    ModPanel.Controls.Add(ModDownload, 7, 0);
 
-                    ModPanel.Controls.Add(ModPlay, 6, 0);
+                    ModPanel.Controls.Add(ModPlay, 7, 0);
 
-                    ModPanel.Controls.Add(ModUnins, 7, 0);
+                    ModPanel.Controls.Add(ModUnins, 8, 0);
 
                     if (m.type == "mod")
                     {
@@ -972,17 +1008,18 @@ namespace ModManager6.Classes
                     {
                         if (ConfigManager.isAllInOneInstalled(m))
                         {
-                            ModDownload.Visible = false;
-                            ModPlay.Visible = true;
-                            ModUnins.Visible = true;
+                            ModDownload.Hide();
+                            ModPlay.Show();
+                            ModUnins.Show();
                         }
                         else
                         {
-                            ModDownload.Visible = true;
-                            ModPlay.Visible = false;
-                            ModUnins.Visible = false;
+                            ModDownload.Show();
+                            ModPlay.Hide();
+                            ModUnins.Hide();
                         }
                     }
+
                 } else
                 {
                     FlowLayoutPanel flowLayoutPanel2 = new FlowLayoutPanel();
@@ -1080,15 +1117,15 @@ namespace ModManager6.Classes
                     {
                         if (ConfigManager.isAllInOneInstalled(m))
                         {
-                            ModDownload.Visible = false;
-                            ModPlay.Visible = true;
-                            ModUnins.Visible = true;
+                            ModDownload.Hide();
+                            ModPlay.Show();
+                            ModUnins.Show();
                         }
                         else
                         {
-                            ModDownload.Visible = true;
-                            ModPlay.Visible = false;
-                            ModUnins.Visible = false;
+                            ModDownload.Show();
+                            ModPlay.Hide();
+                            ModUnins.Hide();
                         }
                     }
                 }
@@ -1174,12 +1211,12 @@ namespace ModManager6.Classes
                 {
                     ServerName.TextChanged += new EventHandler((object sender, EventArgs e) =>
                     {
-                        ServerValidPic.Visible = true;
+                        ServerValidPic.Show();
                     });
 
                     ServerIP.TextChanged += new EventHandler((object sender, EventArgs e) =>
                     {
-                        ServerValidPic.Visible = true;
+                        ServerValidPic.Show();
                     });
 
                     ServerPort.TextChanged += new EventHandler((object sender, EventArgs e) =>
@@ -1189,7 +1226,7 @@ namespace ModManager6.Classes
                         if (result.Count() == 0)
                             return;
 
-                        ServerValidPic.Visible = true;
+                        ServerValidPic.Show();
                     });
 
                     ServerValidPic.Click += new EventHandler((object sender, EventArgs e) =>
@@ -1409,7 +1446,7 @@ namespace ModManager6.Classes
             CreditsForm.Controls.Add(ModManagerComponents.LabelTitle(Translator.get("Credits")));
         }
 
-        public static Form getFormByCategoryId(string id)
+        public static GenericPanel getFormByCategoryId(string id)
         {
             return CategoryForms.Find(f => f.Name == id);
         }
@@ -1421,7 +1458,7 @@ namespace ModManager6.Classes
             EmptyForm.Name = "Empty";
         }
 
-        public static void bindWIP(Form f)
+        public static void bindWIP(GenericPanel f)
         {
             MMLabel PageWIPContent = new MMLabel();
             PageWIPContent.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
