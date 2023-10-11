@@ -18,7 +18,7 @@ namespace ModManager6.Classes
     public static class ConfigManager
     {
         public static Config config;
-        public static string path = ModManager.appDataPath + @"\config6.conf";
+        public static string path = ModManager.appDataPath + @"\config6.json";
 
         public static void load()
         {
@@ -159,20 +159,20 @@ namespace ModManager6.Classes
             return null;
         }
 
-        public static InstalledMod getInstalledMod(string modId, string version)
+        public static InstalledMod getInstalledMod(string modId, string gameVersion)
         {
-            return config.installedMods.Find(im => im.id == modId && im.version == version);
+            return config.installedMods.Find(im => im.id == modId && im.gameVersion == gameVersion);
         }
 
         public static bool isInstalled(Mod m, ModVersion v, List<ModOption> options = null)
         {
-            if (getInstalledMod(m.id, v.version) == null) return false;
+            if (getInstalledMod(m.id, v.gameVersion) == null) return false;
 
             if (options == null || options.Count() == 0) return true;
 
             foreach (ModOption option in options)
             {
-                if (getInstalledMod(option.modOption, option.version) == null) return false;
+                if (getInstalledMod(option.modOption, option.gameVersion) == null) return false;
             }
 
             return true;
@@ -183,11 +183,11 @@ namespace ModManager6.Classes
             return config.installedVanilla.Find(v => v.version == version);
         }
 
-        public static List<ModOption> getActiveOptions(string modId, string version)
+        public static List<ModOption> getActiveOptions(string modId, string gameVersion)
         {
             foreach (ModState ms in config.modStates)
             {
-                if (ms.modId == modId && ms.version == version)
+                if (ms.modId == modId && ms.gameVersion == gameVersion)
                 {
                     return ms.options;
                 }
@@ -195,15 +195,15 @@ namespace ModManager6.Classes
             return null;
         }
 
-        public static bool isActiveOption(string modId, string version, ModOption option)
+        public static bool isActiveOption(string modId, string gameVersion, ModOption option)
         {
             foreach (ModState ms in config.modStates)
             {
-                if (ms.modId == modId && ms.version == version)
+                if (ms.modId == modId && ms.gameVersion == gameVersion)
                 {
                     foreach (ModOption mo in ms.options)
                     {
-                        if (mo.modOption == option.modOption && mo.version == option.version)
+                        if (mo.modOption == option.modOption && mo.gameVersion == option.gameVersion)
                         {
                             return true;
                         }
@@ -213,27 +213,27 @@ namespace ModManager6.Classes
             return false;
         }
 
-        public static void addActiveOption(string modId, string modVersion, ModOption option)
+        public static void addActiveOption(string modId, string modGameVersion, ModOption option)
         {
-            if (!isActiveOption(modId, modVersion, option))
+            if (!isActiveOption(modId, modGameVersion, option))
             {
                 if (ConfigManager.config.modStates.Find(s => s.modId == modId) == null)
                 {
-                    ConfigManager.config.modStates.Add(new ModState(modId, modVersion, new List<ModOption>() { }));
+                    ConfigManager.config.modStates.Add(new ModState(modId, modGameVersion, new List<ModOption>() { }));
                 }
-                ConfigManager.config.modStates.Find(s => s.modId == modId && s.version == modVersion).options.Add(option);
+                ConfigManager.config.modStates.Find(s => s.modId == modId && s.gameVersion == modGameVersion).options.Add(option);
             }
             ConfigManager.update();
         }
 
-        public static void removeActiveOption(string modId, string modVersion, ModOption option)
+        public static void removeActiveOption(string modId, string modGameVersion, ModOption option)
         {
-            if (isActiveOption(modId, modVersion, option))
+            if (isActiveOption(modId, modGameVersion, option))
             {
-                List<ModOption> mos = ConfigManager.config.modStates.Find(s => s.modId == modId && s.version == modVersion).options;
+                List<ModOption> mos = ConfigManager.config.modStates.Find(s => s.modId == modId && s.gameVersion == modGameVersion).options;
                 foreach (ModOption mo in mos)
                 {
-                    if (mo.version == option.version && mo.modOption == option.modOption)
+                    if (mo.gameVersion == option.gameVersion && mo.modOption == option.modOption)
                     {
                         mos.Remove(mo);
                         break;
@@ -243,18 +243,27 @@ namespace ModManager6.Classes
             ConfigManager.update();
         }
 
-        public static string getActiveVersion(string modId)
+        public static string getActiveGameVersion(string modId)
         {
             ModState ms = ConfigManager.config.modStates.Find(s => s.modId == modId);
             if (ms == null) return null;
-            return ms.version;
+            return ms.gameVersion;
         }
 
-        public static void setActiveVersion(string modId, string modVersion)
+        public static string getActiveVersion(string modId)
+        {
+            string gameVersion = getActiveGameVersion(modId);
+            if (gameVersion == null) return null;
+            InstalledMod m = ConfigManager.getInstalledMod(modId, gameVersion);
+            if (m == null) return null;
+            return m.version;
+        }
+
+        public static void setActiveGameVersion(string modId, string modGameVersion)
         {
             ConfigManager.config.modStates.FindAll(s => s.modId == modId).ForEach(s => ConfigManager.config.modStates.Remove(s));
-            ConfigManager.config.modStates.Add(new ModState(modId, modVersion, new List<ModOption>() { }));
-            ConfigManager.config.modStates.Find(s => s.modId == modId).version = modVersion;
+            ConfigManager.config.modStates.Add(new ModState(modId, modGameVersion, new List<ModOption>() { }));
+            ConfigManager.config.modStates.Find(s => s.modId == modId).gameVersion = modGameVersion;
             ConfigManager.update();
         }
 
@@ -282,6 +291,26 @@ namespace ModManager6.Classes
         {
             object o = Registry.GetValue(@"HKEY_CURRENT_USER\SOFTWARE\03ceac78-9166-585d-b33a-90982f435933", "InstallLocation", null);
             return o != null && System.IO.File.Exists(o.ToString() + @"\Better-CrewLink.exe");
+        }
+
+        public static bool needUpdate(Mod m, string gameVersion, string version)
+        {
+            InstalledMod im = ConfigManager.getInstalledMod(m.id, gameVersion);
+            if (im == null) return false;
+            if (im.version != version) return true;
+            ModVersion versionObj = m.versions.FindAll(ver => ver.gameVersion == gameVersion).First();
+            List<ModOption> options = ConfigManager.getActiveOptions(m.id, versionObj.gameVersion);
+            if (options == null) return false;
+            foreach (ModOption option in options)
+            {
+                InstalledMod imOption = ConfigManager.getInstalledMod(option.modOption, option.gameVersion);
+                if (imOption == null) continue;
+                if (imOption.version != versionObj.version)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
 
         public static List<Mod> getFavoriteMods()

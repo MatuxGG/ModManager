@@ -404,15 +404,17 @@ namespace ModManager6.Classes
             panel.Dock = DockStyle.Top;
             panel.BackColor = Color.FromArgb(21, 23, 36);
 
-            panel.ColumnCount = 8;
+            panel.ColumnCount = 10;
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Flags
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Name
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Author
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F)); // Version
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 30F)); // Game Version
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Game Version
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Favorites
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Discord
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Download / Start
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Uninstall
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Arrows
 
             panel.RowCount = 1;
             panel.Size = new System.Drawing.Size(100, 50);

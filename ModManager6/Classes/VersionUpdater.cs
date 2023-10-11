@@ -16,8 +16,8 @@ namespace ModManager6.Classes
             {
                 FileSystem.DirectoryDelete(ModManager.appDataPath + @"\mods\");
                 FileSystem.DirectoryDelete(ModManager.appDataPath + @"\vanilla\");
-                FileSystem.FileDelete(ModManager.appDataPath + @"\config5.conf");
-                FileSystem.FileDelete(ModManager.appDataPath + @"\globalConfig5.conf");
+                FileSystem.FileDelete(ModManager.appDataPath + @"\config5.json");
+                FileSystem.FileDelete(ModManager.appDataPath + @"\globalConfig5.json");
             }
 
             if (oldVersion != newVersion)

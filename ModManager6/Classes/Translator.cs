@@ -53,7 +53,6 @@ namespace ModManager6.Classes
             curLg = languages.Find(l => l.code == curLg) != null ? curLg : "EN";
             ConfigManager.config.lg = curLg;
             ConfigManager.update();
-
         }
 
         public static string get(string toTranslate)

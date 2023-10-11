@@ -9,12 +9,12 @@ namespace ModManager6.Classes
     public class ModOption
     {
         public string modOption { get; set; }
-        public string version { get; set; }
+        public string gameVersion { get; set; }
 
-        public ModOption(string modOption = "", string version = "")
+        public ModOption(string modOption = "", string gameVersion = "")
         {
             this.modOption = modOption;
-            this.version = version;
+            this.gameVersion = gameVersion;
         }
     }
 }

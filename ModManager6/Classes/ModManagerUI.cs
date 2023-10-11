@@ -23,6 +23,8 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using static System.Windows.Forms.VisualStyles.VisualStyleElement.Button;
 using CheckBox = System.Windows.Forms.CheckBox;
+using Microsoft.VisualBasic;
+using static System.Windows.Forms.Design.AxImporter;
 
 namespace ModManager6.Classes
 {
@@ -499,7 +501,6 @@ namespace ModManager6.Classes
 
             if (ConfigManager.getFavoriteMods() != null)
             {
-                Log.debug("test");
                 size++;
                 Button b = CreateSubMenuButton(Translator.get("Favorites"));
                 GenericPanel f = new GenericPanel();
@@ -523,11 +524,24 @@ namespace ModManager6.Classes
 
         }
 
-        public static void addOptions(TableLayoutPanel SubModPanel, Mod m, ModVersion v, PictureBox download, PictureBox play, PictureBox unins)
+        public static void addOptions(TableLayoutPanel SubModPanel, Mod m, ModVersion v, PictureBox download, PictureBox play, PictureBox unins,
+            PictureBox arrowBot, PictureBox arrowTop)
         {
+            SubModPanel.Hide();
             SubModPanel.Controls.Clear();
+
+            bool needUpdate = ConfigManager.needUpdate(m, v.gameVersion, v.version);
+
+            if (needUpdate)
+            {
+                download.Image = global::ModManager6.Properties.Resources.update;
+            } else
+            {
+                download.Image = global::ModManager6.Properties.Resources.download;
+            }
+
             // Refresh buttons if no option
-            if (ConfigManager.isInstalled(m, v, ConfigManager.getActiveOptions(m.id, v.version)))
+            if (ConfigManager.isInstalled(m, v, ConfigManager.getActiveOptions(m.id, v.gameVersion)) && needUpdate == false)
             {
                 download.Hide();
                 play.Show();
@@ -541,12 +555,15 @@ namespace ModManager6.Classes
             }
             List<ModOption> mos = ModList.getModOptions(m, v);
             int nbOptions = mos.Count();
+
+            updateArrows(arrowBot, arrowTop, m, v, SubModPanel);
+
             SubModPanel.Size = new Size(100, nbOptions > 0 ? nbOptions * 50 + 10 : 0);
             // Refresh options panel
             foreach (ModOption option in mos)
             {
                 Mod modOption = ModList.getModById(option.modOption);
-                ModVersion versionOption = modOption.versions.Find(ver => ver.version == option.version);
+                ModVersion versionOption = modOption.versions.Find(ver => ver.gameVersion == option.gameVersion);
 
                 TableLayoutPanel SubModLinePanel = new TableLayoutPanel();
                 SubModLinePanel.Name = "SubModLinePanel";
@@ -604,7 +621,7 @@ namespace ModManager6.Classes
                 ModBox.AutoSize = true;
 
                 // Init boxes and add them to verification for isInstalled
-                if (ConfigManager.isActiveOption(m.id, v.version, option))
+                if (ConfigManager.isActiveOption(m.id, v.gameVersion, option))
                 {
                     ModBox.Checked = true;
                 } else
@@ -625,7 +642,7 @@ namespace ModManager6.Classes
         {
             SubModPanel.Controls.Clear();
             // Refresh buttons if no option
-            if (ConfigManager.isInstalled(m, v, ConfigManager.getActiveOptions(m.id, v.version)))
+            if (ConfigManager.isInstalled(m, v, ConfigManager.getActiveOptions(m.id, v.gameVersion)))
             {
                 download.Hide();
                 play.Show();
@@ -643,7 +660,7 @@ namespace ModManager6.Classes
             foreach (ModOption option in mos)
             {
                 Mod modOption = ModList.getModById(option.modOption);
-                ModVersion versionOption = modOption.versions.Find(ver => ver.version == option.version);
+                ModVersion versionOption = modOption.versions.Find(ver => ver.gameVersion == option.gameVersion);
 
                 FlowLayoutPanel flowLayoutPanel = new FlowLayoutPanel();
                 flowLayoutPanel.FlowDirection = FlowDirection.LeftToRight; // flex-row
@@ -666,7 +683,7 @@ namespace ModManager6.Classes
                 });
 
                 // Init boxes and add them to verification for isInstalled
-                if (ConfigManager.isActiveOption(m.id, v.version, option))
+                if (ConfigManager.isActiveOption(m.id, v.gameVersion, option))
                 {
                     ModBox.Checked = true;
                 }
@@ -688,13 +705,24 @@ namespace ModManager6.Classes
         {
             if (cb.Checked)
             {
-                ConfigManager.addActiveOption(m.id, v.version, option);
+                ConfigManager.addActiveOption(m.id, v.gameVersion, option);
             } else
             {
-                ConfigManager.removeActiveOption(m.id, v.version, option);
+                ConfigManager.removeActiveOption(m.id, v.gameVersion, option);
             }
 
-            if (ConfigManager.isInstalled(m, v, ConfigManager.getActiveOptions(m.id, v.version)))
+            bool needUpdate = ConfigManager.needUpdate(m, v.gameVersion, v.version);
+
+            if (needUpdate)
+            {
+                download.Image = global::ModManager6.Properties.Resources.update;
+            }
+            else
+            {
+                download.Image = global::ModManager6.Properties.Resources.download;
+            }
+
+            if (ConfigManager.isInstalled(m, v, ConfigManager.getActiveOptions(m.id, v.gameVersion)) && !needUpdate)
             {
                 download.Hide();
                 play.Show();
@@ -705,6 +733,40 @@ namespace ModManager6.Classes
                 download.Show();
                 play.Hide();
                 unins.Hide();
+            }
+        }
+
+        public static void updateArrows(PictureBox bot, PictureBox top, Mod m, ModVersion v, TableLayoutPanel panel)
+        {
+            List<ModOption> mos = ModList.getModOptions(m, v);
+            int nbOptions = mos.Count();
+
+            if (nbOptions > 0)
+            {
+                List<ModOption> activeOptions = ConfigManager.getActiveOptions(m.id, v.gameVersion);
+                bool hasActiveOptions = activeOptions != null && activeOptions.Count > 0;
+
+                if (hasActiveOptions)
+                {
+                    bot.Hide();
+                    top.Show();
+                    panel.Show();
+                    foreach (Control c in panel.Controls)
+                    {
+                        c.Show();
+                    }
+                } else
+                {
+                    top.Hide();
+                    bot.Show();
+                    panel.Hide();
+                }
+            }
+            else
+            {
+                top.Hide();
+                bot.Hide();
+                panel.Hide();
             }
         }
 
@@ -834,11 +896,11 @@ namespace ModManager6.Classes
                 {
                     List<string> versions = new List<string>() { };
                     int i = 0; int foundIndex = -1;
-                    string savedVersion = ConfigManager.getActiveVersion(m.id);
+                    string savedVersion = ConfigManager.getActiveGameVersion(m.id);
                     foreach (ModVersion v in m.versions)
                     {
                         VersionCombobox.Items.Add(v.version);
-                        if (v.version == savedVersion)
+                        if (v.gameVersion == savedVersion)
                         {
                             foundIndex = i;
                         }
@@ -858,10 +920,10 @@ namespace ModManager6.Classes
                     if (m.type == "mod")
                     {
                         string selected = VersionCombobox.SelectedItem.ToString();
-                        List<ModOption> options = ConfigManager.getActiveOptions(m.id, selected);
+                        ModVersion v = m.versions.Find(v => v.version == selected);
+                        List<ModOption> options = ConfigManager.getActiveOptions(m.id, v.gameVersion);
                         if (options == null) options = new List<ModOption>() { };
                         List<string> modOptionStrings = options.Select(modOption => modOption.modOption).ToList();
-                        ModVersion v = m.versions.Find(v => v.version == selected);
                         ModWorker.installAnyMod(m, v, modOptionStrings);
                     }
                     else if (m.type == "allInOne")
@@ -876,10 +938,10 @@ namespace ModManager6.Classes
                     if (m.type == "mod")
                     {
                         string selected = VersionCombobox.SelectedItem.ToString();
-                        List<ModOption> options = ConfigManager.getActiveOptions(m.id, selected);
+                        ModVersion v = m.versions.Find(v => v.version == selected);
+                        List<ModOption> options = ConfigManager.getActiveOptions(m.id, v.gameVersion);
                         if (options == null) options = new List<ModOption>() { };
                         List<string> modOptionStrings = options.Select(modOption => modOption.modOption).ToList();
-                        ModVersion v = m.versions.Find(v => v.version == selected);
                         ModWorker.startMod(m, v, modOptionStrings);
                     }
                     else if (m.type == "allInOne")
@@ -904,7 +966,6 @@ namespace ModManager6.Classes
                 });
                 ModUnins.Hide();
 
-
                 PictureBox ModFavorite = ModManagerComponents.ModPic("ModFavorite", global::ModManager6.Properties.Resources.favorite);
                 if (ConfigManager.isFavoriteMod(m.id))
                 {
@@ -924,9 +985,14 @@ namespace ModManager6.Classes
                     });
                 }
 
+                PictureBox ModArrowTop = ModManagerComponents.ModPic("ModArrowTop", global::ModManager6.Properties.Resources.top);
+                PictureBox ModArrowBottom = ModManagerComponents.ModPic("ModArrow", global::ModManager6.Properties.Resources.bottom);
+
+                ModArrowTop.Hide();
+                ModArrowBottom.Hide();
+
                 if (isInLineView)
                 {
-
                     TableLayoutPanel SubModPanel = new TableLayoutPanel();
                     f.SetDoubleBuffer(SubModPanel, true);
                     SubModPanel.Name = "SubModPanel";
@@ -947,16 +1013,17 @@ namespace ModManager6.Classes
                     ModPanel.Dock = DockStyle.Top;
                     ContainerPanel.Controls.Add(ModPanel);
 
-                    ModPanel.ColumnCount = 8;
+                    ModPanel.ColumnCount = 10;
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Flags
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Name
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Author
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F)); // Version
-                    ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F)); // Game Version
+                    ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Game Version
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Favorite
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Discord
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Download / Start
                     ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Uninstall
+                    ModPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Arrows
                     ModPanel.RowCount = 1;
                     ModPanel.Size = new System.Drawing.Size(100, 50);
                     ModPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 50));
@@ -976,14 +1043,19 @@ namespace ModManager6.Classes
 
                     ModPanel.Controls.Add(ModFavorite, 5, 0);
 
+                    ModPanel.Controls.Add(ModArrowBottom, 9, 0);
+
+                    ModPanel.Controls.Add(ModArrowTop, 9, 0);
+
                     VersionCombobox.SelectionChangeCommitted += new EventHandler(async (object sender, EventArgs e) =>
                     {
                         ComboBox control = (ComboBox)sender;
                         string version = (string)control.SelectedItem;
                         ModVersion curVersion = m.versions.Find(v => v.version == version);
                         if (m.type == "mod") ModGameVersion.Text = curVersion.gameVersion;
-                        ConfigManager.setActiveVersion(m.id, curVersion.version);
-                        addOptions(SubModPanel, m, curVersion, ModDownload, ModPlay, ModUnins);
+                        ConfigManager.setActiveGameVersion(m.id, curVersion.gameVersion);
+                        addOptions(SubModPanel, m, curVersion, ModDownload, ModPlay, ModUnins, ModArrowBottom, ModArrowTop);
+
                     });
 
                     ModPanel.Controls.Add(VersionCombobox, 3, 0);
@@ -996,13 +1068,33 @@ namespace ModManager6.Classes
 
                     if (m.type == "mod")
                     {
-                        string activeVersion = ConfigManager.getActiveVersion(m.id);
+                        string activeVersion = ConfigManager.getActiveGameVersion(m.id);
                         if (activeVersion == null)
                         {
-                            activeVersion = m.versions.First().version;
+                            activeVersion = m.versions.First().gameVersion;
                         }
-                        ModVersion activeVersionObj = m.versions.Find(v => v.version == activeVersion);
-                        addOptions(SubModPanel, m, activeVersionObj, ModDownload, ModPlay, ModUnins);
+                        ModVersion activeVersionObj = m.versions.Find(v => v.gameVersion == activeVersion);
+                        string version = (string)VersionCombobox.SelectedItem;
+
+                        addOptions(SubModPanel, m, activeVersionObj, ModDownload, ModPlay, ModUnins, ModArrowBottom, ModArrowTop);
+
+                        ModArrowTop.Click += new EventHandler((object sender, EventArgs e) =>
+                        {
+                            ModArrowTop.Hide();
+                            ModArrowBottom.Show();
+                            SubModPanel.Hide();
+                        });
+
+                        ModArrowBottom.Click += new EventHandler((object sender, EventArgs e) =>
+                        {
+                            ModArrowBottom.Hide();
+                            ModArrowTop.Show();
+                            SubModPanel.Show();
+                            foreach (Control c in SubModPanel.Controls)
+                            {
+                                c.Show();
+                            }
+                        });
                     }
                     else if (m.type == "allInOne")
                     {
@@ -1060,7 +1152,7 @@ namespace ModManager6.Classes
                         string version = (string)control.SelectedItem;
                         ModVersion curVersion = m.versions.Find(v => v.version == version);
                         if (m.type == "mod") ModGameVersion.Text = curVersion.gameVersion;
-                        ConfigManager.setActiveVersion(m.id, curVersion.version);
+                        ConfigManager.setActiveGameVersion(m.id, curVersion.gameVersion);
                         addOptionsBox(flowLayoutPanel7, m, curVersion, ModDownload, ModPlay, ModUnins);
                     });
                     flowLayoutPanel4.Controls.Add(VersionCombobox);
@@ -1105,12 +1197,12 @@ namespace ModManager6.Classes
                     
                     if (m.type == "mod")
                     {
-                        string activeVersion = ConfigManager.getActiveVersion(m.id);
+                        string activeVersion = ConfigManager.getActiveGameVersion(m.id);
                         if (activeVersion == null)
                         {
                             activeVersion = m.versions.First().version;
                         }
-                        ModVersion activeVersionObj = m.versions.Find(v => v.version == activeVersion);
+                        ModVersion activeVersionObj = m.versions.Find(v => v.gameVersion == activeVersion);
                         addOptionsBox(flowLayoutPanel7, m, activeVersionObj, ModDownload, ModPlay, ModUnins);
                     }
                     else if (m.type == "allInOne")

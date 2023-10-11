@@ -22,7 +22,7 @@ namespace ModManager6.Classes
             modSources = new List<ModSource>() { };
 
             // Load local mods
-            string localSourcePath = ModManager.appDataPath + @"\localMods.conf";
+            string localSourcePath = ModManager.appDataPath + @"\localMods.json";
             string json;
             if (!File.Exists(localSourcePath))
             {
@@ -143,7 +143,6 @@ namespace ModManager6.Classes
                             if (i == 0 && v.version == "latest")
                             {
                                 v.release = release;
-                                break;
                             }
                             else if (release.TagName == v.version)
                             {
@@ -211,6 +210,8 @@ namespace ModManager6.Classes
 
         public static Category getCategoryById(string categoryId)
         {
+            if (categoryId == "Favorites")
+                return new Category("Favorites", "Favorites");
             foreach (ModSource source in modSources)
             {
                 foreach (Mod mod in source.mods)
@@ -237,7 +238,7 @@ namespace ModManager6.Classes
                         {
                             if (v.canBeCombined == true && mv.gameVersion == v.gameVersion)
                             {
-                                modOptions.Add(new ModOption(mod.id, v.version));
+                                modOptions.Add(new ModOption(mod.id, v.gameVersion));
                             }
                         }
                     }

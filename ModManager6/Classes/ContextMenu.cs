@@ -53,7 +53,7 @@ namespace ModManager6.Classes
                         List<ModOption> possibleModOptions = ModList.getModOptions(m, mv);
                         foreach (ModOption possibleModOption in possibleModOptions)
                         {
-                            InstalledMod foundIm = ConfigManager.getInstalledMod(possibleModOption.modOption, possibleModOption.version);
+                            InstalledMod foundIm = ConfigManager.getInstalledMod(possibleModOption.modOption, possibleModOption.gameVersion);
                             if (foundIm != null)
                             {
                                 Mod foundImObj = ModList.getModById(foundIm.id);

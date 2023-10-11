@@ -50,7 +50,7 @@ namespace ModManager6.Classes
             {
                 if (isGameOpen()) return;
 
-                InstalledMod im = ConfigManager.getInstalledMod(m.id, v.version);
+                InstalledMod im = ConfigManager.getInstalledMod(m.id, v.gameVersion);
 
                 if (im == null)
                 {
@@ -87,15 +87,15 @@ namespace ModManager6.Classes
 
                     if (mOpt == null)
                     {
-                        Log.log("Option " + opt.modOption + ", version " + opt.version + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (2)", "ModWorker");
+                        Log.log("Option " + opt.modOption + ", version " + opt.gameVersion + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (2)", "ModWorker");
                         continue;
                     }
 
-                    ModVersion vOpt = mOpt.versions.Find(version => version.version == opt.version);
+                    ModVersion vOpt = mOpt.versions.Find(version => version.version == opt.gameVersion);
 
                     if (vOpt == null)
                     {
-                        Log.log("Option " + opt.modOption + ", version " + opt.version + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (3)", "ModWorker");
+                        Log.log("Option " + opt.modOption + ", version " + opt.gameVersion + " doesn't exist for mod " + modToInstall.id + ", version " + versionToInstall.version + " (3)", "ModWorker");
                         continue;
                     }
 
@@ -199,6 +199,7 @@ namespace ModManager6.Classes
 
         public static async Task installModWorker()
         {
+            
             List<DownloadLine> lines = new List<DownloadLine>() { };
             List<DownloadLine> toExtract = new List<DownloadLine>() { };
 
@@ -221,7 +222,7 @@ namespace ModManager6.Classes
             // Add Download {mod,version} to Temp
             if (ConfigManager.config.installedMods.Find(im => im.id == modToInstall.id && im.version == versionToInstall.version) == null)
             {
-                installedMods.Add(new InstalledMod(modToInstall.id, versionToInstall.version));
+                installedMods.Add(new InstalledMod(modToInstall.id, versionToInstall.version, versionToInstall.gameVersion));
                 addModToInstall(lines, toExtract, modToInstall, versionToInstall);
             }
 
@@ -230,10 +231,11 @@ namespace ModManager6.Classes
             {
                 ModOption modOption = ModList.getModOptions(modToInstall, versionToInstall).Find(o => o.modOption == option);
                 Mod foundMod = ModList.getModById(option);
-                ModVersion versionOption = foundMod.versions.Find(v => v.version == modOption.version);
+
+                ModVersion versionOption = foundMod.versions.Find(v => v.gameVersion == modOption.gameVersion);
                 if (ConfigManager.config.installedMods.Find(im => im.id == option && im.version == versionOption.version) == null)
                 {
-                    installedMods.Add(new InstalledMod(foundMod.id, versionOption.version));
+                    installedMods.Add(new InstalledMod(foundMod.id, versionOption.version, versionOption.gameVersion));
                     addModToInstall(lines, toExtract, foundMod, versionOption);
                 }
             }
@@ -272,9 +274,20 @@ namespace ModManager6.Classes
                     }
                 }
 
+                // Update
+                InstalledMod alreadyIm = ConfigManager.getInstalledMod(modToInstall.id, versionToInstall.gameVersion);
+                if (alreadyIm != null)
+                {
+                    ModVersion alreadyVersion = new ModVersion(alreadyIm.version, alreadyIm.gameVersion);
+                    string modPath = modToInstall.getPathForVersion(alreadyVersion);
+                    FileSystem.DirectoryDelete(modPath);
+
+                    ConfigManager.config.installedMods.Remove(alreadyIm);
+                }
+
                 foreach (InstalledMod im in installedMods)
                 {
-                    if (ConfigManager.getInstalledMod(im.id, im.version) == null)
+                    if (ConfigManager.getInstalledMod(im.id, im.gameVersion) == null)
                     {
                         ConfigManager.config.installedMods.Add(im);
                     }
@@ -352,7 +365,7 @@ namespace ModManager6.Classes
             {
                 if (isGameOpen()) return;
 
-                InstalledMod im = ConfigManager.getInstalledMod(m.id, v.version);
+                InstalledMod im = ConfigManager.getInstalledMod(m.id, v.gameVersion);
 
                 if (im == null)
                 {

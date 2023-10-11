@@ -10,11 +10,13 @@ namespace ModManager6.Classes
     {
         public string id;
         public string version;
+        public string gameVersion;
 
-        public InstalledMod(string id = "", string version = "")
+        public InstalledMod(string id = "", string version = "", string gameVersion = "")
         {
             this.id = id;
             this.version = version;
+            this.gameVersion = gameVersion;
         }
     }
 }
