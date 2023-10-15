@@ -13,8 +13,14 @@ namespace ModManager6.Classes
 
         public ModDependency(string dependency = "", string version = "")
         {
-            this.dependency = dependency;
-            this.version = version;
+            try
+            {
+                this.dependency = dependency;
+                this.version = version;
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
     }
 }

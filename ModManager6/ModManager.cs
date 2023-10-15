@@ -16,6 +16,7 @@ using Octokit;
 using System.Net;
 using Newtonsoft.Json;
 using System.Threading;
+using ModManager6.Forms;
 
 namespace ModManager6
 {
@@ -46,180 +47,282 @@ namespace ModManager6
 
         public async Task Start(string[] args)
         {
-            // Create folders if necessary
-
-            FileSystem.DirectoryCreate(appDataPath);
-            FileSystem.DirectoryCreate(appDataPath + @"\vanilla");
-            FileSystem.DirectoryCreate(appDataPath + @"\mods");
-            FileSystem.DirectoryCreate(appDataPath + @"\themes");
-            FileSystem.DirectoryCreate(tempPath);
-
-            Log.logNewLine();
-            Log.log("ModManager version " + ModManager.visibleVersion, "ModManager");
-
-            // Disable multiple MM run
-            if (System.Diagnostics.Process.GetProcessesByName("ModManager6").Length > 1 && (args.Count() == 0 || args[0] != "force"))
+            try
             {
-                if (args.Count() == 0)
+                // Update from Mod Manager 5
+
+                if (File.Exists(appDataPath + @"\config5.conf"))
                 {
-                    MessageBox.Show("Mod Manager is already running.", "Mod Manager already opened", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Environment.Exit(0);
+                    await Task.Run(() =>
+                    {
+                        string backupPath = appDataPath + @"\ModManager5Backup";
+                        Directory.CreateDirectory(backupPath);
+
+                        if (Directory.Exists(appDataPath + @"\mods"))
+                        {
+                            Directory.Move(appDataPath + @"\mods", backupPath + @"\mods");
+                        }
+                        if (Directory.Exists(appDataPath + @"\localMods"))
+                        {
+                            Directory.Move(appDataPath + @"\localMods", backupPath + @"\localMods");
+                        }
+                        if (Directory.Exists(appDataPath + @"\vanilla"))
+                        {
+                            Directory.Move(appDataPath + @"\vanilla", backupPath + @"\vanilla");
+                        }
+                        if (File.Exists(appDataPath + @"\config5.conf"))
+                        {
+                            Directory.Move(appDataPath + @"\config5.conf", backupPath + @"\config5.conf");
+                        }
+                        if (File.Exists(appDataPath + @"\globalConfig5.conf"))
+                        {
+                            Directory.Move(appDataPath + @"\globalConfig5.conf", backupPath + @"\globalConfig5.conf");
+                        }
+                    });
                 }
-            }
 
-            // Check if shortcut or force restart
-            if (args.Count() > 0)
-            {
-                if (args[0] == "force")
+                // Create folders if necessary
+
+                FileSystem.DirectoryCreate(appDataPath);
+                FileSystem.DirectoryCreate(appDataPath + @"\vanilla");
+                FileSystem.DirectoryCreate(appDataPath + @"\mods");
+                FileSystem.DirectoryCreate(appDataPath + @"\themes");
+                FileSystem.DirectoryCreate(tempPath);
+
+                Log.logNewLine();
+                Log.log("ModManager version " + ModManager.visibleVersion, "ModManager");
+
+                // Disable multiple MM run
+                if (System.Diagnostics.Process.GetProcessesByName("ModManager6").Length > 1 && (args.Count() == 0 || args[0] != "force"))
                 {
-                    args = new string[] { };
+                    if (args.Count() == 0)
+                    {
+                        MessageBox.Show("Mod Manager is already running.", "Mod Manager already opened", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        Environment.Exit(0);
+                    }
+                }
+
+                Downloader.load();
+
+                Log.startTimer();
+                token = await Downloader.downloadString(apiURL + "/github/token");
+                Log.logTime("Initialisation", "ModManager");
+
+                Log.startTimer();
+                ConfigManager.load();
+                Log.logTime("Config load", "ModManager");
+
+                // Check if shortcut or force restart
+                if (args.Count() > 0)
+                {
+                    if (args[0].StartsWith("modmanager://")) // Handle browser URL ModManager://args0&args1&arg2&...
+                    {
+                        args[0] = args[0].Trim();
+                        args[0] = args[0].Substring(13);
+                        args = args[0].Split("&");
+                    }
+                    if (args[0] == "force")
+                    {
+                        args = new string[] { };
+                    }
+                    else if (args[0] == "startmod")
+                    {
+                        silent = true;
+                        this.WindowState = FormWindowState.Minimized;
+                        this.ShowInTaskbar = false;
+                    }
+                    else if (args[0] == "addsource")
+                    {
+                        int i = 1;
+                        while (args.Count() > i)
+                        {
+                            ConfigManager.config.sources.Add(args[i]);
+                            i++;
+                        }
+                        ConfigManager.update();
+                    } else if (args[0] == "setsources")
+                    {
+                        ConfigManager.config.sources.Clear();
+                        int i = 1;
+                        while (args.Count() > i)
+                        {
+                            ConfigManager.config.sources.Add(args[i]);
+                            i++;
+                        }
+                        ConfigManager.update();
+                    }
+                    else
+                    {
+                        restartApp();
+                    }
+                }
+
+                Log.startTimer();
+                await Translator.load();
+                Log.logTime("Translations load", "ModManager");
+
+                Log.startTimer();
+                ThemeList.load();
+                Log.logTime("Themes load", "ModManager");
+
+                Log.startTimer();
+                int width = 500;
+                int height = 300;
+                if (silent)
+                {
+                    ModManagerUI.loadMini(this);
+                    this.MinimumSize = new System.Drawing.Size(width, height);
                 }
                 else
                 {
-                    silent = true;
-                    this.WindowState = FormWindowState.Minimized;
-                    this.ShowInTaskbar = false;
+                    ModManagerUI.load(this);
+                    this.MinimumSize = new System.Drawing.Size(1200, 480);
+                    width = (int)((80 * Screen.PrimaryScreen.Bounds.Width) / 100);
+                    if (width < this.MinimumSize.Width)
+                        width = this.MinimumSize.Width;
+                    height = (int)((80 * Screen.PrimaryScreen.Bounds.Height) / 100);
+                    if (height < this.MinimumSize.Height)
+                        height = this.MinimumSize.Height;
                 }
-            }
+                Log.logTime("UI load (1/2)", "ModManager");
 
-            Downloader.load();
+                this.Size = new Size(width, height);
+                this.CenterToScreen();
 
-            Log.startTimer();
-            token = await Downloader.downloadString(apiURL + "/github/token");
-            Log.logTime("Initialisation", "ModManager");
-
-            Log.startTimer();
-            ConfigManager.load();
-            Log.logTime("Config load", "ModManager");
-
-            Log.startTimer();
-            await Translator.load();
-            Log.logTime("Translations load", "ModManager");
-
-            Log.startTimer();
-            ThemeList.load();
-            Log.logTime("Themes load", "ModManager");
-
-            Log.startTimer();
-            int width = 500;
-            int height = 300;
-            if (silent)
-            {
-                ModManagerUI.loadMini(this);
-                this.MinimumSize = new System.Drawing.Size(width, height);
-            } else
-            {
-                ModManagerUI.load(this);
-                this.MinimumSize = new System.Drawing.Size(1200, 480);
-                width = (int)((80 * Screen.PrimaryScreen.Bounds.Width) / 100);
-                if (width < this.MinimumSize.Width)
-                    width = this.MinimumSize.Width;
-                height = (int)((80 * Screen.PrimaryScreen.Bounds.Height) / 100);
-                if (height < this.MinimumSize.Height)
-                    height = this.MinimumSize.Height;
-            }
-            Log.logTime("UI load (1/2)", "ModManager");
-
-
-            
-            this.Size = new Size(width, height);
-            this.CenterToScreen();
-
-            Log.startTimer();
-            // Load Github Client
-            githubClient = new GitHubClient(new ProductHeaderValue("ModManager"));
-            githubClient.Credentials = new Credentials(ModManager.token);
-            Log.logTime("Github client load", "ModManager");
-
-            Log.startTimer();
-            await Updater.CheckRunUpdateOnStart();
-            Log.logTime("Updater load", "ModManager");
-
-            Log.startTimer();
-            ModManagerUI.StatusLabel.Text = Translator.get("Loading Local Config...");
-            ConfigManager.updateAmongUs();
-            Log.logTime("AU folder load", "ModManager");
-
-            Log.startTimer();
-            ModManagerUI.StatusLabel.Text = Translator.get("Loading Mods...");
-            await ModList.load();
-            Log.logTime("Modlist load", "ModManager");
-
-            Log.startTimer();
-            ModManagerUI.StatusLabel.Text = Translator.get("Loading Releases...");
-            await ModList.loadReleases();
-            Log.logTime("Releases load", "ModManager");
-
-            if (!silent)
-            {
                 Log.startTimer();
-                ModManagerUI.StatusLabel.Text = Translator.get("Loading Among Us Servers...");
-                ServerManager.load();
-                Log.logTime("Servers load", "ModManager");
-            }
+                // Load Github Client
+                githubClient = new GitHubClient(new ProductHeaderValue("ModManager"));
+                githubClient.Credentials = new Credentials(ModManager.token);
+                Log.logTime("Github client load", "ModManager");
 
-            ModWorker.load();
-
-            if (!silent)
-            {
                 Log.startTimer();
-                ContextMenu.init(this);
-                ContextMenu.load();
-                Log.logTime("Context menu load", "ModManager");
-            }
+                await Updater.CheckRunUpdateOnStart();
+                Log.logTime("Updater load", "ModManager");
 
-            VersionUpdater.applyUpdates(ConfigManager.config.ModManagerVersion, visibleVersion);
+                Log.startTimer();
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading Local Config...");
+                ConfigManager.updateAmongUs();
+                Log.logTime("AU folder load", "ModManager");
 
-            if (silent)
-            {
-                // TODO : shortcuts
+                Log.startTimer();
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading Mods...");
+                await ModList.load();
+                Log.logTime("Modlist load", "ModManager");
 
+                Log.startTimer();
+                ModManagerUI.StatusLabel.Text = Translator.get("Loading Releases...");
+                await ModList.loadReleases();
+                Log.logTime("Releases load", "ModManager");
 
-                List<string> modOptions = new List<string>() { };
-
-                Mod m = new Mod();
-                ModVersion mv = new ModVersion();
-                int i = 0;
-                foreach (string arg in args)
+                if (!silent)
                 {
-                    if (i == 0)
-                    {
-                        string[] modInfos = args[0].Split('-');
-                        if (modInfos.Length < 1) return;
-                        m = ModList.getModById(modInfos[0]);
-                        if (m == null) return;
-                        mv = m.versions.Find(v => v.version == modInfos[1]);
-                        if (mv == null) return;
-                    } else
-                    {
-                        ModOption mo = ModList.getModOptions(m, mv).Find(o => o.modOption == arg);
-                        if (mo == null) return;
-                        modOptions.Add(arg);
-                    }
-                    i++;
+                    Log.startTimer();
+                    ModManagerUI.StatusLabel.Text = Translator.get("Loading Among Us Servers...");
+                    ServerManager.load();
+                    Log.logTime("Servers load", "ModManager");
                 }
 
-                await ModWorker.installAnyMod(m, mv, modOptions);
-                await ModWorker.startMod(m, mv, modOptions);
-                System.Windows.Forms.Application.Exit();
+                ModWorker.load();
 
-            } else
+                if (!silent)
+                {
+                    Log.startTimer();
+                    ContextMenu.init(this);
+                    ContextMenu.load();
+                    Log.logTime("Context menu load", "ModManager");
+                }
+
+                VersionUpdater.applyUpdates(ConfigManager.config.ModManagerVersion, visibleVersion);
+
+
+                string keyPath = @"Software\Classes\ModManager";
+                string appName = "ModManager";
+
+                // Setup Mod Manager registry actions if doesn't exist
+
+                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyPath))
+                {
+                    if (key == null)
+                    {
+                        using (RegistryKey newKey = Registry.CurrentUser.CreateSubKey(keyPath))
+                        {
+                            newKey.SetValue("", appName);
+                            newKey.SetValue("URL Protocol", "");
+
+                            using (RegistryKey commandKey = newKey.CreateSubKey(@"shell\open\command"))
+                            {
+                                commandKey.SetValue("", $"\"{appPath}ModManager6.exe\" \"%V\"");
+                            }
+                        }
+                    }
+                }
+
+                if (silent)
+                {
+                    // Shortcut
+
+                    if (args.Count() < 3) restartApp(); // If not enough args
+
+                    Mod m = ModList.getModById(args[1]);
+                    if (m == null) restartApp(); // If mod doesn't exist
+
+                    ModVersion mv = m.versions.FindAll(ver => ver.version == args[2]).First();
+
+                    if (mv == null) // If doesn't exist, take latest
+                    {
+                        mv = m.versions.First();
+                    }
+
+                    List<ModOption> modOptions = new List<ModOption>() { };
+                    List<string> modOptionsStr = new List<string>() { };
+                    int i = 3;
+                    while (args.Count() > i)
+                    {
+                        ModOption mo = ModList.getModOptions(m, mv).FindAll(o => o.modOption == args[i]).First();
+                        if (mo != null)
+                        {
+                            modOptions.Add(mo);
+                            modOptionsStr.Add(mo.modOption);
+                        }
+                        i++;
+                    }
+
+                    if (!ConfigManager.isInstalled(m, mv, modOptions))
+                    {
+                        await ModWorker.installAnyMod(m, mv, modOptionsStr);
+                    }
+                    await ModWorker.startMod(m, mv, modOptionsStr);
+                    System.Windows.Forms.Application.Exit();
+                }
+                else
+                {
+                    Log.startTimer();
+                    ModManagerUI.StatusLabel.Text = Translator.get("Loading UI...");
+                    ModManagerUI.InitUI();
+                    ModManagerUI.InitListeners();
+                    ModManagerUI.hideMenuPanels();
+                    ModManagerUI.InitForm();
+                    Log.logTime("UI load (2/2)", "ModManager");
+
+                    ModManagerUI.LoadingLabel.Hide();
+                }
+
+                ModManagerUI.Alert(Translator.get("Mod Manager Started"));
+
+                ModManagerUI.StatusLabel.Text = "";
+
+                Log.log("Ready", "ModManager");
+            } catch (Exception e)
             {
-                Log.startTimer();
-                ModManagerUI.StatusLabel.Text = Translator.get("Loading UI...");
-                ModManagerUI.InitUI();
-                ModManagerUI.InitListeners();
-                ModManagerUI.hideMenuPanels();
-                ModManagerUI.InitForm();
-                Log.logTime("UI load (2/2)", "ModManager");
-
-                ModManagerUI.LoadingLabel.Hide();
+                Log.logExceptionToServ(e);
             }
+        }
 
-            
-            ModManagerUI.StatusLabel.Text = "";
-
-            Log.log("Ready", "ModManager");
+        public static void restartApp()
+        {
+            string path = ModManager.appPath + "ModManager6.exe";
+            Process.Start(path);
+            Environment.Exit(0);
         }
     }
 }

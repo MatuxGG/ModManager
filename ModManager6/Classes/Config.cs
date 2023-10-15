@@ -25,24 +25,30 @@ namespace ModManager6.Classes
 
         public Config(string modManagerVersion = null, List<InstalledMod> installedMods = null, List<InstalledVanilla> installedVanilla = null, string amongUsPath = "", List<string> faroriteMods = null, bool miniEnabled = true, List<string> availableAmongUsPaths = null, string supportId = null, string lg = null, string theme = null , List<string> sources = null, List<ModState> modStates = null)
         {
-            this.ModManagerVersion = modManagerVersion != null ? modManagerVersion : ModManager.visibleVersion;
-            this.installedMods = installedMods != null ? installedMods : new List<InstalledMod>() { };
-            this.installedVanilla = installedVanilla != null ? installedVanilla : new List<InstalledVanilla>() { };
-            this.amongUsPath = amongUsPath;
-            this.favoriteMods = faroriteMods != null ? favoriteMods : new List<string>() { };
-            this.miniEnabled = miniEnabled;
-            this.availableAmongUsPaths = availableAmongUsPaths != null ? availableAmongUsPaths : new List<string>() { };
-            this.supportId = supportId;
-            if (this.supportId == null)
+            try
             {
-                Random random = new Random();
-                this.supportId = new string(Enumerable.Repeat(ModManager.supportIdChars, 10)
-                    .Select(s => s[random.Next(s.Length)]).ToArray());
+                this.ModManagerVersion = modManagerVersion != null ? modManagerVersion : ModManager.visibleVersion;
+                this.installedMods = installedMods != null ? installedMods : new List<InstalledMod>() { };
+                this.installedVanilla = installedVanilla != null ? installedVanilla : new List<InstalledVanilla>() { };
+                this.amongUsPath = amongUsPath;
+                this.favoriteMods = faroriteMods != null ? favoriteMods : new List<string>() { };
+                this.miniEnabled = miniEnabled;
+                this.availableAmongUsPaths = availableAmongUsPaths != null ? availableAmongUsPaths : new List<string>() { };
+                this.supportId = supportId;
+                if (this.supportId == null)
+                {
+                    Random random = new Random();
+                    this.supportId = new string(Enumerable.Repeat(ModManager.supportIdChars, 10)
+                        .Select(s => s[random.Next(s.Length)]).ToArray());
+                }
+                this.lg = lg;
+                this.theme = theme;
+                this.sources = sources != null ? sources : new List<string>() { ModManager.apiURL + "/mm" };
+                this.modStates = modStates != null ? modStates : new List<ModState>() { };
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
             }
-            this.lg = lg;
-            this.theme = theme;
-            this.sources = sources != null ? sources : new List<string>() { ModManager.apiURL + "/mm" };
-            this.modStates = modStates != null ? modStates : new List<ModState>() { };
         }
     }
 }

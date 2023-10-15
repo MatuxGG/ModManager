@@ -33,51 +33,89 @@ namespace ModManager6.Classes
             string countries = "EN", bool enabled = true,
             List<ModVersion> versions = null)
         {
-            this.id = id;
-            this.name = name;
-            this.category = category != null ? category : new Category();
-            this.type = type;
-            this.author = author;
-            this.github = github;
-            this.githubLink = githubLink;
-            this.social = social;
-            this.countries = countries;
-            this.enabled = enabled;
-            this.versions = versions != null ? versions : new List<ModVersion>() { };
+            try
+            {
+                this.id = id;
+                this.name = name;
+                this.category = category != null ? category : new Category();
+                this.type = type;
+                this.author = author;
+                this.github = github;
+                this.githubLink = githubLink;
+                this.social = social;
+                this.countries = countries;
+                this.enabled = enabled;
+                this.versions = versions != null ? versions : new List<ModVersion>() { };
+
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
         public string getPathForVersion(ModVersion v)
         {
-            return ModManager.appDataPath + @"\mods\" + this.id + @"_" + v.version;
+            try
+            {
+                return ModManager.appDataPath + @"\mods\" + this.id + @"_" + v.version;
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
 
         public string getLink()
         {
-            if (this.githubLink)
+            try
             {
-                return "https://github.com/" + this.author + "/" + this.github;
-            }
-            else
+                if (this.githubLink)
+                {
+                    return "https://github.com/" + this.author + "/" + this.github;
+                }
+                else
+                {
+                    return this.github.Replace("SERVERURL", ModManager.serverURL).Replace("APIURL", ModManager.serverURL).Replace("FILEURL", ModManager.fileURL);
+                }
+            } catch (Exception e)
             {
-                return this.github.Replace("SERVERURL", ModManager.serverURL).Replace("APIURL", ModManager.serverURL).Replace("FILEURL", ModManager.fileURL);
+                Log.logExceptionToServ(e);
+                return null;
             }
         }
 
         public string getAuthorLink()
         {
-            if (this.githubLink)
+            try
             {
-                return "https://github.com/" + this.author;
-            }
-            else
+                if (this.githubLink)
+                {
+                    return "https://github.com/" + this.author;
+                }
+                else
+                {
+                    return null;
+                }
+            } catch (Exception e)
             {
+                Log.logExceptionToServ(e);
                 return null;
             }
         }
 
         public string getReleaseLink(ModVersion v)
         {
-            return v.release.HtmlUrl;
+            try
+            {
+                return v.release.HtmlUrl;
+
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
     }
 }

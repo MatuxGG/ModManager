@@ -48,36 +48,67 @@ namespace ModManager6.Classes
 
         public static void setLg()
         {
-            CultureInfo ci = CultureInfo.InstalledUICulture;
-            string curLg = ci.TwoLetterISOLanguageName.ToUpper();
-            curLg = languages.Find(l => l.code == curLg) != null ? curLg : "EN";
-            ConfigManager.config.lg = curLg;
-            ConfigManager.update();
+            try
+            {
+                CultureInfo ci = CultureInfo.InstalledUICulture;
+                string curLg = ci.TwoLetterISOLanguageName.ToUpper();
+                curLg = languages.Find(l => l.code == curLg) != null ? curLg : "EN";
+                ConfigManager.config.lg = curLg;
+                ConfigManager.update();
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
         public static string get(string toTranslate)
         {
-            List<Translation> current = languages.Find(l => l.code == ConfigManager.config.lg).translations;
-            Translation tr = current.Find(t => t.original == toTranslate);
-            if (tr != null)
+            try
             {
-                return tr.translation;
+                List<Translation> current = languages.Find(l => l.code == ConfigManager.config.lg).translations;
+                Translation tr = current.Find(t => t.original == toTranslate);
+                if (tr != null)
+                {
+                    return tr.translation;
+                }
+                else
+                {
+                    return toTranslate;
+                }
             }
-            else
+            catch (Exception e)
             {
-                return toTranslate;
+                Log.logExceptionToServ(e);
+                return null;
             }
 
         }
 
         public static string getNameFromCode(string code)
         {
-            return languages.Find(l => l.code == code).name;
+            try
+            {
+                return languages.Find(l => l.code == code).name;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
 
         public static string getCodeFromName(string name)
         {
-            return languages.Find(l => l.name == name).code;
+            try
+            {
+                return languages.Find(l => l.name == name).code;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
     }
 }

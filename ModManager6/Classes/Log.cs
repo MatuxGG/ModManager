@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -83,8 +85,30 @@ namespace ModManager6.Classes
         public static void logTime(string line, string className)
         {
             log(line + " (" + endTimer() + ")", className);
-        } 
+        }
 
-        // TODO: Log to serv 
+        public static void logExceptionToServ(Exception e)
+        {
+            logToServ("Source: " + e.Source + " - Message: " + e.Message + " - Trace: " + e.StackTrace);
+            MessageBox.Show("An error occured. Please, contact the support on discord with your Support ID: " + ConfigManager.config.supportId, "Error occured", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Environment.Exit(0);
+        }
+
+        public static void logToServ(string text)
+        {
+            if (!String.IsNullOrEmpty(text))
+            {
+                using (var client = new WebClient())
+                {
+                    var values = new NameValueCollection();
+                    values["text"] = "Mod Manager " + ModManager.visibleVersion + " - Client id: " + ConfigManager.config.supportId + " - " + text;
+
+                    var response = client.UploadValues(ModManager.apiURL + "/log", values);
+
+                    var responseString = Encoding.Default.GetString(response);
+
+                }
+            }
+        }
     }
 }

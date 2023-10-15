@@ -17,31 +17,50 @@ namespace ModManager6.Classes
 
         public Language(string code, string name)
         {
-            this.code = code;
-            this.name = name;
-            this.translations = new List<Translation>() { };
+            try
+            {
+
+                this.code = code;
+                this.name = name;
+                this.translations = new List<Translation>() { };
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
         public Language()
         {
-            this.code = "";
-            this.name = "";
-            this.translations = new List<Translation>() { };
+            try
+            {
+                this.code = "";
+                this.name = "";
+                this.translations = new List<Translation>() { };
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
         public async Task load()
         {
-            string translationsURL = ModManager.apiURL + "/trans/" + this.code;
-            string tr = "";
             try
             {
-                tr = await Downloader.downloadString(translationsURL);
-            }
-            catch (Exception e)
+                string translationsURL = ModManager.apiURL + "/trans/" + this.code;
+                string tr = "";
+                try
+                {
+                    tr = await Downloader.downloadString(translationsURL);
+                }
+                catch (Exception e)
+                {
+                    Log.showError("Language", e.Source, e.Message);
+                }
+                translations = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Translation>>(tr);
+            } catch (Exception e)
             {
-                Log.showError("Language", e.Source, e.Message);
+                Log.logExceptionToServ(e);
             }
-            translations = Newtonsoft.Json.JsonConvert.DeserializeObject<List<Translation>>(tr);
         }
     }
 }

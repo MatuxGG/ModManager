@@ -13,8 +13,15 @@ namespace ModManager6.Classes
 
         public ModOption(string modOption = "", string gameVersion = "")
         {
-            this.modOption = modOption;
-            this.gameVersion = gameVersion;
+            try
+            {
+                this.modOption = modOption;
+                this.gameVersion = gameVersion;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
     }
 }

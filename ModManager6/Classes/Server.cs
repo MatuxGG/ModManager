@@ -25,22 +25,35 @@ namespace ModManager6.Classes
 
         public Server(string type, string Fqdn, string DefaultIp, int port, string name, int TranslateName)
         {
-            this.type = type;
-            this.Fqdn = Fqdn;
-            this.DefaultIp = DefaultIp;
-            this.port = port;
-            this.name = name;
-            this.TranslateName = TranslateName;
+            try
+            {
+                this.type = type;
+                this.Fqdn = Fqdn;
+                this.DefaultIp = DefaultIp;
+                this.port = port;
+                this.name = name;
+                this.TranslateName = TranslateName;
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
         public Server()
         {
-            this.type = "DnsRegionInfo, Assembly-CSharp";
-            this.Fqdn = "";
-            this.DefaultIp = "";
-            this.port = 22023;
-            this.name = "";
-            this.TranslateName = 1103;
+            try
+            {
+
+                this.type = "DnsRegionInfo, Assembly-CSharp";
+                this.Fqdn = "";
+                this.DefaultIp = "";
+                this.port = 22023;
+                this.name = "";
+                this.TranslateName = 1103;
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
     }
 }

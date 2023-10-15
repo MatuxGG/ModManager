@@ -13,9 +13,16 @@ namespace ModManager6.Classes
         public List<Mod> mods;
 
         public ModSource(string name = "", bool enabled = true, List<Mod> mods = null) {
-            this.name = name;
-            this.enabled = enabled;
-            this.mods = mods != null ? mods : new List<Mod>() { };
+            try
+            {
+                this.name = name;
+                this.enabled = enabled;
+                this.mods = mods != null ? mods : new List<Mod>() { };
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
     }
 }

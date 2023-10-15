@@ -362,6 +362,93 @@ namespace ModManager6.Classes
 
         }
 
+        public static void SourceLine(TableLayoutPanel panel, int y, ModSource source, TextBox SourceName, TextBox SourceURL, TextBox SourceMods, PictureBox SourceValidPic, PictureBox SourceRemovePic, bool official, bool last)
+        {
+            SourceName.Text = source.name;
+            SourceName.Dock = DockStyle.Bottom;
+            SourceName.Size = new Size(0, 100);
+            SourceName.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            SourceName.BackColor = ThemeList.theme.AppBackgroundColor;
+            SourceName.ForeColor = ThemeList.theme.TextColor;
+            SourceName.TextAlign = HorizontalAlignment.Left;
+            SourceName.Margin = new System.Windows.Forms.Padding(20, 10, 0, 0);
+            SourceName.BorderStyle = BorderStyle.None;
+            if (official)
+                SourceName.Enabled = false;
+            panel.Controls.Add(SourceName, 0, y);
+
+            ServerIP.Text = server.DefaultIp;
+            ServerIP.Dock = DockStyle.Bottom;
+            ServerIP.Size = new Size(0, 100);
+            ServerIP.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServerIP.BackColor = ThemeList.theme.AppBackgroundColor;
+            ServerIP.ForeColor = ThemeList.theme.TextColor;
+            ServerIP.TextAlign = HorizontalAlignment.Left;
+            ServerIP.Margin = new System.Windows.Forms.Padding(20, 10, 0, 0);
+            ServerIP.BorderStyle = BorderStyle.None;
+            if (official)
+                ServerIP.Enabled = false;
+            panel.Controls.Add(ServerIP, 1, y);
+
+            ServerPort.Dock = DockStyle.Bottom;
+            ServerPort.Size = new Size(0, 100);
+            ServerPort.Font = new Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            ServerPort.BackColor = ThemeList.theme.AppBackgroundColor;
+            ServerPort.ForeColor = ThemeList.theme.TextColor;
+            ServerPort.TextAlign = HorizontalAlignment.Left;
+            ServerPort.Margin = new System.Windows.Forms.Padding(20, 10, 0, 0);
+            ServerPort.Text = server.port.ToString();
+            ServerPort.BorderStyle = BorderStyle.None;
+            if (official)
+                ServerPort.Enabled = false;
+            panel.Controls.Add(ServerPort, 2, y);
+
+            ServerValidPic.Image = global::ModManager6.Properties.Resources.valid;
+            ServerValidPic.BackColor = ThemeList.theme.AppBackgroundColor;
+            ServerValidPic.ForeColor = ThemeList.theme.TextColor;
+            ServerValidPic.Dock = DockStyle.Top;
+            ServerValidPic.Size = new Size(0, 80);
+            ServerValidPic.Margin = new Padding(10, 10, 10, 10);
+            ServerValidPic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            ServerValidPic.TabStop = false;
+            ServerValidPic.Hide();
+            if (official)
+            {
+                ServerValidPic.Enabled = false;
+            }
+            else
+            {
+                ServerValidPic.Cursor = Cursors.Hand;
+            }
+            panel.Controls.Add(ServerValidPic, 3, y);
+
+            if (last)
+            {
+                ServerRemovePic.Image = global::ModManager6.Properties.Resources.add;
+            }
+            else
+            {
+                ServerRemovePic.Image = global::ModManager6.Properties.Resources.delete;
+            }
+            ServerRemovePic.BackColor = ThemeList.theme.AppBackgroundColor;
+            ServerRemovePic.ForeColor = ThemeList.theme.TextColor;
+            ServerRemovePic.Dock = DockStyle.Top;
+            ServerRemovePic.Size = new Size(0, 80);
+            ServerRemovePic.Margin = new Padding(10, 10, 10, 10);
+            ServerRemovePic.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            ServerRemovePic.TabStop = false;
+            if (official)
+            {
+                ServerRemovePic.Enabled = false;
+                ServerRemovePic.Hide();
+            }
+            else
+            {
+                ServerRemovePic.Cursor = Cursors.Hand;
+            }
+            panel.Controls.Add(ServerRemovePic, 4, y);
+
+        }
         public static void TranslationLine(TableLayoutPanel panel, int y, Translation t, Label ori, TextBox tr, PictureBox valid)
         {
             ori.Text = t.original;
@@ -404,13 +491,14 @@ namespace ModManager6.Classes
             panel.Dock = DockStyle.Top;
             panel.BackColor = Color.FromArgb(21, 23, 36);
 
-            panel.ColumnCount = 10;
+            panel.ColumnCount = 11;
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Flags
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Name
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Author
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F)); // Version
-            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F)); // Game Version
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 15F)); // Game Version
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Favorites
+            panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Shortcut
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Discord
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Download / Start
             panel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 5F)); // Uninstall

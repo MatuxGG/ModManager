@@ -17,9 +17,15 @@ namespace ModManager6.Classes
 
         public Category(string id = "", string name = "", int weight = 0)
         {
-            this.id = id;
-            this.name = name;
-            this.weight = weight;
+            try
+            {
+                this.id = id;
+                this.name = name;
+                this.weight = weight;
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
     }
 }

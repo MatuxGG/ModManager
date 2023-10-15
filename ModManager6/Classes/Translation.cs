@@ -11,16 +11,17 @@ namespace ModManager6.Classes
         public string original;
         public string translation;
 
-        public Translation(string original, string translation)
+        public Translation(string original = "", string translation = "")
         {
-            this.original = original;
-            this.translation = translation;
-        }
-
-        public Translation()
-        {
-            this.original = "";
-            this.translation = "";
+            try
+            {
+                this.original = original;
+                this.translation = translation;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
     }

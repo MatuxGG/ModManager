@@ -11,16 +11,17 @@ namespace ModManager6.Classes
         public int CurrentRegionIdx;
         public List<Server> Regions;
 
-        public ServerList()
+        public ServerList(int CurrentRegionIdx = 1, List<Server> Regions = null)
         {
-            this.CurrentRegionIdx = 1;
-            this.Regions = new List<Server>() { };
-        }
-
-        public ServerList(int CurrentRegionIdx, List<Server> Regions)
-        {
-            this.CurrentRegionIdx = CurrentRegionIdx;
-            this.Regions = Regions;
+            try
+            {
+                this.CurrentRegionIdx = CurrentRegionIdx;
+                this.Regions = Regions == null ? new List<Server>() { } : Regions;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
     }
 }

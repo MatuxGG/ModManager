@@ -19,15 +19,29 @@ namespace ModManager6.Classes
         public Boolean canBeCombined { get; set; }
 
         public ModVersion(string version = "", string gameVersion = "", List<ModDependency> dependencies = null, Boolean canBeCombined = false) {
-            this.version = version;
-            this.gameVersion = gameVersion;
-            this.dependencies = dependencies != null ? dependencies : new List<ModDependency>() { };
-            this.canBeCombined = canBeCombined;
+            try
+            {
+                this.version = version;
+                this.gameVersion = gameVersion;
+                this.dependencies = dependencies != null ? dependencies : new List<ModDependency>() { };
+                this.canBeCombined = canBeCombined;
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
         public string getGithubVersion()
         {
-            return this.release.TagName;
+            try
+            {
+                return this.release.TagName;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
     }
 }

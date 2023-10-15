@@ -1,4 +1,6 @@
-﻿using Newtonsoft.Json;
+﻿using IWshRuntimeLibrary;
+using ModManager6.Properties;
+using Newtonsoft.Json;
 using Octokit;
 using System;
 using System.Collections;
@@ -19,110 +21,131 @@ namespace ModManager6.Classes
 
         public static async Task load()
         {
-            modSources = new List<ModSource>() { };
-
-            // Load local mods
-            string localSourcePath = ModManager.appDataPath + @"\localMods.json";
-            string json;
-            if (!File.Exists(localSourcePath))
+            try
             {
-                ModSource localSource = new ModSource("Local");
+                modSources = new List<ModSource>() { };
 
-                json = JsonConvert.SerializeObject(localSource);
-                File.WriteAllText(localSourcePath, json);
+                // Load local mods
+                string localSourcePath = ModManager.appDataPath + @"\localMods.json";
+                string json;
+                if (!System.IO.File.Exists(localSourcePath))
+                {
+                    ModSource localSource = new ModSource("Local");
+
+                    json = JsonConvert.SerializeObject(localSource);
+                    System.IO.File.WriteAllText(localSourcePath, json);
+                }
+                json = System.IO.File.ReadAllText(localSourcePath);
+                ModSource modSource = Newtonsoft.Json.JsonConvert.DeserializeObject<ModSource>(json);
+                modSources.Add(modSource);
+
+                // Load external sources
+                List<Task> tasks = new List<Task>() { };
+                foreach (string source in ConfigManager.config.sources)
+                {
+                    tasks.Add(FetchSource(source));
+                }
+                await Task.WhenAll(tasks);
+
             }
-            json = File.ReadAllText(localSourcePath);
-            ModSource modSource = Newtonsoft.Json.JsonConvert.DeserializeObject<ModSource>(json);
-            modSources.Add(modSource);
-
-            // Load external sources
-            List<Task> tasks = new List<Task>() { };
-            foreach (string source in ConfigManager.config.sources)
+            catch (Exception e)
             {
-                tasks.Add(FetchSource(source));
+                Log.logExceptionToServ(e);
             }
-            await Task.WhenAll(tasks);
         }
 
         public static async Task FetchSource(string source)
         {
-            string result = await Downloader.downloadString(source);
-            ModSource modSource = Newtonsoft.Json.JsonConvert.DeserializeObject<ModSource>(result);
-            modSources.Add(modSource);
+            try
+            {
+                string result = await Downloader.downloadString(source);
+                ModSource modSource = Newtonsoft.Json.JsonConvert.DeserializeObject<ModSource>(result);
+                modSources.Add(modSource);
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
         public static async Task loadReleases()
         {
-            List<Task> tasks = new List<Task>() { };
-            foreach (ModSource source in modSources)
+            try
             {
-                foreach (Mod m in source.mods)
-                {
-                    tasks.Add(loadRelease(m));
-                }
-            }
-            await Task.WhenAll(tasks);
 
-            // Remove mods without releases / versions
-            foreach (ModSource source in modSources)
-            {
-                List<Mod> modsToRemove = new List<Mod>() { };
-                foreach (Mod m in source.mods)
+                List<Task> tasks = new List<Task>() { };
+                foreach (ModSource source in modSources)
                 {
-                    if (m.type == "mod")
+                    foreach (Mod m in source.mods)
                     {
-                        List<ModVersion> versionsToRemove = new List<ModVersion>() { };
+                        tasks.Add(loadRelease(m));
+                    }
+                }
+                await Task.WhenAll(tasks);
 
-                        // Find versions without release
-                        foreach (ModVersion v in m.versions)
+                // Remove mods without releases / versions
+                foreach (ModSource source in modSources)
+                {
+                    List<Mod> modsToRemove = new List<Mod>() { };
+                    foreach (Mod m in source.mods)
+                    {
+                        if (m.type == "mod")
                         {
-                            if (v.release == null)
+                            List<ModVersion> versionsToRemove = new List<ModVersion>() { };
+
+                            // Find versions without release
+                            foreach (ModVersion v in m.versions)
                             {
-                                versionsToRemove.Add(v);
+                                if (v.release == null)
+                                {
+                                    versionsToRemove.Add(v);
+                                }
+                            }
+
+                            // Remove versions without release
+                            foreach (ModVersion v in versionsToRemove)
+                            {
+                                m.versions.Remove(v);
+                            }
+
+                            // Find mods without version
+                            if (m.versions.Count() == 0)
+                            {
+                                modsToRemove.Add(m);
                             }
                         }
-
-                        // Remove versions without release
-                        foreach (ModVersion v in versionsToRemove)
-                        {
-                            m.versions.Remove(v);
-                        }
-
-                        // Find mods without version
-                        if (m.versions.Count() == 0)
-                        {
-                            modsToRemove.Add(m);
-                        }
                     }
-                }
-                // Remove mods without version
-                foreach (Mod mo in modsToRemove)
-                {
-                    source.mods.Remove(mo);
-                }
-            }
-
-            foreach (ModSource modSource1 in modSources)
-            {
-                foreach (Mod m in modSource1.mods)
-                {
-                    foreach (ModVersion mv in m.versions)
+                    // Remove mods without version
+                    foreach (Mod mo in modsToRemove)
                     {
-                        if (mv.version == "latest")
+                        source.mods.Remove(mo);
+                    }
+                }
+
+                foreach (ModSource modSource1 in modSources)
+                {
+                    foreach (Mod m in modSource1.mods)
+                    {
+                        foreach (ModVersion mv in m.versions)
                         {
-                            mv.version = mv.release.TagName;
+                            if (mv.version == "latest")
+                            {
+                                mv.version = mv.release.TagName;
+                            }
                         }
                     }
                 }
-            }
 
-            // Sort mods by gameVersion
-            foreach (ModSource modSource in modSources)
-            {
-                foreach (Mod m in modSource.mods)
+                // Sort mods by gameVersion
+                foreach (ModSource modSource in modSources)
                 {
-                    m.versions.Sort((a, b) => b.gameVersion.CompareTo(a.gameVersion));
+                    foreach (Mod m in modSource.mods)
+                    {
+                        m.versions.Sort((a, b) => b.gameVersion.CompareTo(a.gameVersion));
+                    }
                 }
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
             }
         }
 
@@ -154,98 +177,189 @@ namespace ModManager6.Classes
                     }
                 }
             }
-            catch (Exception e) 
+            catch (Exception e)
             {
                 Log.logError("ModList loadRelease", e.Source, e.Message);
             }
         }
 
+        public static async void createShortcut(Mod m, ModVersion mv, List<string> mos)
+        {
+            object shDesktop = (object)"Desktop";
+            WshShell shell = new WshShell();
+            string title = m.name + " " + mv.version;
+            string arguments = "startmod " + m.id + " " + mv.version;
+            foreach (string mo in mos)
+            {
+                title = title + " & " + mo;
+                arguments = arguments + " " + mo;
+            }
+            title = title + " (Mod Manager)";
+
+            string shortcutAddress = (string)shell.SpecialFolders.Item(ref shDesktop) + @"\" + title + ".lnk";
+
+            IWshShortcut shortcut = (IWshShortcut)shell.CreateShortcut(shortcutAddress);
+            shortcut.Description = "Mod Manager Mod";
+            shortcut.TargetPath = ModManager.appPath + @"\ModManager6.exe";
+            shortcut.Arguments = arguments;
+
+            string localPath = ModManager.appDataPath + @"\icons\" + m.id + ".ico";
+            FileSystem.FileDelete(localPath);
+            try
+            {
+                DownloadLine dl = new DownloadLine(ModManager.serverURL + @"/file/icons/" + m.id + ".ico", localPath);
+                await Downloader.DownloadFile(dl);
+            }
+            catch (Exception e)
+            {
+                Log.logError("ModList createShortcut", e.Source, e.Message);
+            }
+
+            if (System.IO.File.Exists(localPath))
+            {
+                shortcut.IconLocation = localPath;
+            }
+
+            shortcut.Save();
+            string statusText = Translator.get("A shortcut has been created on your desktop !");
+            ModManagerUI.StatusLabel.Text = statusText;
+            ModManagerUI.Alert(statusText);
+        }
+
         public static List<Mod> getAllMods()
         {
-            List<Mod> mods = new List<Mod>();
-
-            modSources.ForEach(s =>
+            try
             {
-                List<Mod> modsFromSource = s.mods.FindAll(m => m.type == "mod");
-                mods.AddRange(modsFromSource);
-            });
+                List<Mod> mods = new List<Mod>();
 
-            return mods;
+                modSources.ForEach(s =>
+                {
+                    List<Mod> modsFromSource = s.mods.FindAll(m => m.type == "mod");
+                    mods.AddRange(modsFromSource);
+                });
+
+                return mods;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
 
         public static Mod getModById(string modId)
         {
-            foreach (ModSource source in modSources)
+            try
             {
-                Mod m = source.mods.Find(m => m.id == modId);
-                if (m != null) return m;
+                foreach (ModSource source in modSources)
+                {
+                    Mod m = source.mods.Find(m => m.id == modId);
+                    if (m != null) return m;
+                }
+                return null;
             }
-            return null;
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
 
         public static List<Category> getAllCategories()
         {
-            List<Category> categories = new List<Category>() { };
-            foreach (ModSource source in modSources)
+            try
             {
-                foreach (Mod mod in source.mods)
+                List<Category> categories = new List<Category>() { };
+                foreach (ModSource source in modSources)
                 {
-                    if (mod.type == "mod" && categories.Find(c => c.id == mod.category.id) == null)
+                    foreach (Mod mod in source.mods)
                     {
-                        categories.Add(mod.category);
+                        if (mod.type == "mod" && categories.Find(c => c.id == mod.category.id) == null)
+                        {
+                            categories.Add(mod.category);
+                        }
                     }
                 }
+                categories.Sort((x, y) => x.weight.CompareTo(y.weight));
+                return categories;
             }
-            categories.Sort((x, y) => x.weight.CompareTo(y.weight));
-            return categories;
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
 
         public static List<Mod> getModsByCategoryId(string categoryId)
         {
-            List<Mod> mods = new List<Mod>() { };
-            modSources.ForEach(s => s.mods.FindAll(m => (m.type == "mod" || m.type == "allInOne") && m.category.id == categoryId).ForEach(m => mods.Add(m)));
-            mods.Sort((x, y) => y.name.CompareTo(x.name));
-            return mods;
+            try
+            {
+                List<Mod> mods = new List<Mod>() { };
+                modSources.ForEach(s => s.mods.FindAll(m => (m.type == "mod" || m.type == "allInOne") && m.category.id == categoryId).ForEach(m => mods.Add(m)));
+                mods.Sort((x, y) => y.name.CompareTo(x.name));
+                return mods;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
 
         public static Category getCategoryById(string categoryId)
         {
-            if (categoryId == "Favorites")
-                return new Category("Favorites", "Favorites");
-            foreach (ModSource source in modSources)
+            try
             {
-                foreach (Mod mod in source.mods)
+                if (categoryId == "Favorites")
+                    return new Category("Favorites", "Favorites");
+                foreach (ModSource source in modSources)
                 {
-                    if (mod.category.id == categoryId)
+                    foreach (Mod mod in source.mods)
                     {
-                        return mod.category;
+                        if (mod.category.id == categoryId)
+                        {
+                            return mod.category;
+                        }
                     }
                 }
+                return null;
             }
-            return null;
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
 
         public static List<ModOption> getModOptions(Mod m, ModVersion mv)
         {
-            List<ModOption> modOptions = new List<ModOption>() { };
-            foreach (ModSource ms in modSources)
+            try
             {
-                foreach (Mod mod in ms.mods)
+                List<ModOption> modOptions = new List<ModOption>() { };
+                foreach (ModSource ms in modSources)
                 {
-                    if (mod.id != m.id)
+                    foreach (Mod mod in ms.mods)
                     {
-                        foreach (ModVersion v in mod.versions)
+                        if (mod.id != m.id)
                         {
-                            if (v.canBeCombined == true && mv.gameVersion == v.gameVersion)
+                            foreach (ModVersion v in mod.versions)
                             {
-                                modOptions.Add(new ModOption(mod.id, v.gameVersion));
+                                if (v.canBeCombined == true && mv.gameVersion == v.gameVersion)
+                                {
+                                    modOptions.Add(new ModOption(mod.id, v.gameVersion));
+                                }
                             }
                         }
                     }
                 }
-            }
 
-            return modOptions;
+                return modOptions;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+                return null;
+            }
         }
 
     }

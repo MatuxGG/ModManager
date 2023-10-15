@@ -17,95 +17,129 @@ namespace ModManager6.Classes
 
         public static void init(ModManager modmanager)
         {
-            modManager = modmanager;
-            notifyIcon = new NotifyIcon();
-            notifyIcon.Icon = global::ModManager6.Properties.Resources.modmanager;
-            notifyIcon.Text = "Mod Manager";
-            notifyIcon.Visible = true;
-            notifyIcon.MouseClick += mouseEvent;
-            modManager.Resize += new EventHandler(onResize);
-            Application.ApplicationExit += new EventHandler(exit);
+            try
+            {
+                modManager = modmanager;
+                notifyIcon = new NotifyIcon();
+                notifyIcon.Icon = global::ModManager6.Properties.Resources.modmanager;
+                notifyIcon.Text = "Mod Manager";
+                notifyIcon.Visible = true;
+                notifyIcon.MouseClick += mouseEvent;
+                modManager.Resize += new EventHandler(onResize);
+                Application.ApplicationExit += new EventHandler(exit);
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
         public static void load()
         {
-            notifyIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
-            
-            notifyIcon.ContextMenuStrip.Items.Add("Mod Manager", null, open);
-
-            notifyIcon.ContextMenuStrip.Items.Add("-");
-
-            List<InstalledMod> im = ConfigManager.config.installedMods;
-
-            notifyIcon.ContextMenuStrip.Items.Add("Vanilla Among Us", null, startGame);
-
-            foreach (InstalledMod i in im)
+            try
             {
-                Mod m = ModList.getModById(i.id);
-                if (m != null)
+                notifyIcon.ContextMenuStrip = new System.Windows.Forms.ContextMenuStrip();
+
+                notifyIcon.ContextMenuStrip.Items.Add("Mod Manager", null, open);
+
+                notifyIcon.ContextMenuStrip.Items.Add("-");
+
+                List<InstalledMod> im = ConfigManager.config.installedMods;
+
+                notifyIcon.ContextMenuStrip.Items.Add("Vanilla Among Us", null, startGame);
+
+                foreach (InstalledMod i in im)
                 {
-                    ModVersion mv = m.versions.Find(v => v.version == i.version);
-                    if (mv != null)
+                    Mod m = ModList.getModById(i.id);
+                    if (m != null)
                     {
-                        notifyIcon.ContextMenuStrip.Items.Add(m.name + " " + mv.version, null, new EventHandler((object sender, EventArgs e) => {
-                            ModWorker.startMod(m, mv, new List<string>() {});
-                        }));
-                        List<ModOption> possibleModOptions = ModList.getModOptions(m, mv);
-                        foreach (ModOption possibleModOption in possibleModOptions)
+                        ModVersion mv = m.versions.Find(v => v.version == i.version);
+                        if (mv != null)
                         {
-                            InstalledMod foundIm = ConfigManager.getInstalledMod(possibleModOption.modOption, possibleModOption.gameVersion);
-                            if (foundIm != null)
+                            notifyIcon.ContextMenuStrip.Items.Add(m.name + " " + mv.version, null, new EventHandler((object sender, EventArgs e) => {
+                                ModWorker.startMod(m, mv, new List<string>() { });
+                            }));
+                            List<ModOption> possibleModOptions = ModList.getModOptions(m, mv);
+                            foreach (ModOption possibleModOption in possibleModOptions)
                             {
-                                Mod foundImObj = ModList.getModById(foundIm.id);
-                                notifyIcon.ContextMenuStrip.Items.Add(m.name + " " + mv.version + " - " + foundImObj.name, null, new EventHandler((object sender, EventArgs e) => {
-                                    ModWorker.startMod(m, mv, new List<string>() { foundIm.id });
-                                }));
+                                InstalledMod foundIm = ConfigManager.getInstalledMod(possibleModOption.modOption, possibleModOption.gameVersion);
+                                if (foundIm != null)
+                                {
+                                    Mod foundImObj = ModList.getModById(foundIm.id);
+                                    notifyIcon.ContextMenuStrip.Items.Add(m.name + " " + mv.version + " - " + foundImObj.name, null, new EventHandler((object sender, EventArgs e) => {
+                                        ModWorker.startMod(m, mv, new List<string>() { foundIm.id });
+                                    }));
+                                }
                             }
                         }
                     }
+
                 }
 
+                notifyIcon.ContextMenuStrip.Items.Add("-");
+
+                notifyIcon.ContextMenuStrip.Items.Add("Settings", null, settings);
+
+                notifyIcon.ContextMenuStrip.Items.Add("Exit", null, exit);
             }
-
-            notifyIcon.ContextMenuStrip.Items.Add("-");
-
-            notifyIcon.ContextMenuStrip.Items.Add("Settings", null, settings);
-
-            notifyIcon.ContextMenuStrip.Items.Add("Exit", null, exit);
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
         private static void mouseEvent(object Sender, MouseEventArgs e)
         {
-            if (e.Button != MouseButtons.Right)
+            try
             {
-                if (modManager.WindowState == FormWindowState.Minimized)
+                if (e.Button != MouseButtons.Right)
                 {
-                    modManager.WindowState = FormWindowState.Normal;
+                    if (modManager.WindowState == FormWindowState.Minimized)
+                    {
+                        modManager.WindowState = FormWindowState.Normal;
+                    }
                 }
+            }
+            catch (Exception ex)
+            {
+                Log.logExceptionToServ(ex);
             }
         }
 
         public static void onResize(object sender, EventArgs e)
         {
-            if (ConfigManager.config.miniEnabled)
+            try
             {
-                if (modManager.WindowState == FormWindowState.Minimized)
+                if (ConfigManager.config.miniEnabled)
                 {
-                    modManager.ShowInTaskbar = false;
+                    if (modManager.WindowState == FormWindowState.Minimized)
+                    {
+                        modManager.ShowInTaskbar = false;
+                    }
+                    else if (modManager.WindowState == FormWindowState.Normal)
+                    {
+                        modManager.ShowInTaskbar = true;
+                    }
                 }
-                else if (modManager.WindowState == FormWindowState.Normal)
-                {
-                    modManager.ShowInTaskbar = true;
-                }
+            }
+            catch (Exception ex)
+            {
+                Log.logExceptionToServ(ex);
             }
 
         }
 
         private static void open(object sender, EventArgs e)
         {
-            if (modManager.WindowState == FormWindowState.Minimized)
-                modManager.WindowState = FormWindowState.Normal;
+            try
+            {
+                if (modManager.WindowState == FormWindowState.Minimized)
+                    modManager.WindowState = FormWindowState.Normal;
 
-            modManager.Activate();
+                modManager.Activate();
+            }
+            catch (Exception ex)
+            {
+                Log.logExceptionToServ(ex);
+            }
         }
 
         private static void startGame(object sender, EventArgs e)
@@ -115,16 +149,30 @@ namespace ModManager6.Classes
 
         private static void settings(object sender, EventArgs e)
         {
-            ModManagerUI.openForm(ModManagerUI.SettingsForm);
-            if (modManager.WindowState == FormWindowState.Minimized)
-                modManager.WindowState = FormWindowState.Normal;
-            modManager.Activate();
+            try
+            {
+                ModManagerUI.openForm(ModManagerUI.SettingsForm);
+                if (modManager.WindowState == FormWindowState.Minimized)
+                    modManager.WindowState = FormWindowState.Normal;
+                modManager.Activate();
+            }
+            catch (Exception ex)
+            {
+                Log.logExceptionToServ(ex);
+            }
         }
 
         private static void exit(object sender, EventArgs e)
         {
-            notifyIcon.Dispose();
-            Application.Exit();
+            try
+            {
+                notifyIcon.Dispose();
+                Application.Exit();
+            }
+            catch (Exception ex)
+            {
+                Log.logExceptionToServ(ex);
+            }
         }
     }
 }

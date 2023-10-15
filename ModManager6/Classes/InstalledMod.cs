@@ -14,9 +14,15 @@ namespace ModManager6.Classes
 
         public InstalledMod(string id = "", string version = "", string gameVersion = "")
         {
-            this.id = id;
-            this.version = version;
-            this.gameVersion = gameVersion;
+            try
+            {
+                this.id = id;
+                this.version = version;
+                this.gameVersion = gameVersion;
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
     }
 }

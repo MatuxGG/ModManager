@@ -12,7 +12,13 @@ namespace ModManager6.Classes
 
         public InstalledVanilla(string version = "")
         {
-            this.version = version;
+            try
+            {
+                this.version = version;
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
     }
 }

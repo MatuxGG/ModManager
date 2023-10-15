@@ -14,8 +14,14 @@ namespace ModManager6.Classes
         public long size { get; set; }
         public DownloadLine(string source, string target)
         {
-            this.source = source;
-            this.target = target;
+            try
+            {
+                this.source = source;
+                this.target = target;
+            } catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
     }

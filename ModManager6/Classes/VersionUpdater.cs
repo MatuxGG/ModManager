@@ -12,18 +12,25 @@ namespace ModManager6.Classes
     {
         public static void applyUpdates(string oldVersion, string newVersion)
         {
-            if (Version.Parse(oldVersion) < Version.Parse("6.0.0"))
+            try
             {
-                FileSystem.DirectoryDelete(ModManager.appDataPath + @"\mods\");
-                FileSystem.DirectoryDelete(ModManager.appDataPath + @"\vanilla\");
-                FileSystem.FileDelete(ModManager.appDataPath + @"\config5.json");
-                FileSystem.FileDelete(ModManager.appDataPath + @"\globalConfig5.json");
-            }
+                //if (Version.Parse(oldVersion) < Version.Parse("6.0.0"))
+                //{
+                //    FileSystem.DirectoryDelete(ModManager.appDataPath + @"\mods\");
+                //    FileSystem.DirectoryDelete(ModManager.appDataPath + @"\vanilla\");
+                //    FileSystem.FileDelete(ModManager.appDataPath + @"\config5.json");
+                //    FileSystem.FileDelete(ModManager.appDataPath + @"\globalConfig5.json");
+                //}
 
-            if (oldVersion != newVersion)
+                //if (oldVersion != newVersion)
+                //{
+                //    ConfigManager.config.ModManagerVersion = newVersion;
+                //    ConfigManager.update();
+                //}
+            }
+            catch (Exception e)
             {
-                ConfigManager.config.ModManagerVersion = newVersion;
-                ConfigManager.update();
+                Log.logExceptionToServ(e);
             }
         }
     }

@@ -14,9 +14,16 @@ namespace ModManager6.Classes
 
         public ModState(string modId, string gameVersion, List<ModOption> options)
         {
-            this.modId = modId;
-            this.gameVersion = gameVersion;
-            this.options = options;
+            try
+            {
+                this.modId = modId;
+                this.gameVersion = gameVersion;
+                this.options = options;
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
     }
 }
