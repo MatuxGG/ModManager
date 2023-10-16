@@ -963,6 +963,12 @@ namespace ModManager6.Classes
                         string link = m.social;
                         Process.Start("explorer", link);
                     });
+                    ModDiscord.MouseEnter += new EventHandler((object sender, EventArgs e) => {
+                        ModDiscord.Image = global::ModManager6.Properties.Resources.discordHover;
+                    });
+                    ModDiscord.MouseLeave += new EventHandler((object sender, EventArgs e) => {
+                        ModDiscord.Image = global::ModManager6.Properties.Resources.discord;
+                    });
 
                     Label ModGameVersion;
 
@@ -1063,13 +1069,32 @@ namespace ModManager6.Classes
                             ModWorker.installAnyMod(m, null, null);
                         }
                     });
+
                     ModDownload.MouseEnter += new EventHandler((object sender, EventArgs e) =>
                     {
-                        ModDownload.Image = global::ModManager6.Properties.Resources.downloadHover;
+                        string selected = VersionCombobox.SelectedItem.ToString();
+                        ModVersion v = m.versions.Find(v => v.version == selected);
+                        bool isDownload = v == null || !ConfigManager.needUpdate(m, v.gameVersion, v.version);
+                        if (isDownload)
+                        {
+                            ModDownload.Image = global::ModManager6.Properties.Resources.downloadHover;
+                        } else
+                        {
+                            ModDownload.Image = global::ModManager6.Properties.Resources.updateHover;
+                        }
                     });
                     ModDownload.MouseLeave += new EventHandler((object sender, EventArgs e) =>
                     {
-                        ModDownload.Image = global::ModManager6.Properties.Resources.download;
+                        string selected = VersionCombobox.SelectedItem.ToString();
+                        ModVersion v = m.versions.Find(v => v.version == selected);
+                        bool isDownload = v == null || !ConfigManager.needUpdate(m, v.gameVersion, v.version);
+                        if (isDownload)
+                        {
+                            ModDownload.Image = global::ModManager6.Properties.Resources.download;
+                        } else
+                        {
+                            ModDownload.Image = global::ModManager6.Properties.Resources.update;
+                        }
                     });
                     ModDownload.Hide();
 
@@ -1443,110 +1468,110 @@ namespace ModManager6.Classes
                 SourcesForm = new GenericPanel();
                 SourcesForm.Name = "Sources";
 
-                List<ModSource> sources = new List<ModSource>();
-                sources.AddRange(ModList.modSources);
-                sources.Add(new ModSource("https://newsource.com"));
+                //    List<ModSource> sources = new List<ModSource>();
+                //    sources.AddRange(ModList.modSources);
+                //    sources.Add(new ModSource("https://newsource.com"));
 
-                int max = sources.Count();
-                int i = 0;
+                //    int max = sources.Count();
+                //    int i = 0;
 
-                Panel SourcesContainerPanel = ModManagerComponents.createPanel();
-                SourcesForm.Controls.Add(SourcesContainerPanel);
+                //    Panel SourcesContainerPanel = ModManagerComponents.createPanel();
+                //    SourcesForm.Controls.Add(SourcesContainerPanel);
 
-                TableLayoutPanel SourcesPanel = new TableLayoutPanel();
-                SourcesPanel.Size = new Size(0, 50 * max);
-                SourcesPanel.Dock = DockStyle.Top;
+                //    TableLayoutPanel SourcesPanel = new TableLayoutPanel();
+                //    SourcesPanel.Size = new Size(0, 50 * max);
+                //    SourcesPanel.Dock = DockStyle.Top;
 
-                SourcesPanel.ColumnCount = 5;
-                SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-                SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
-                SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
-                SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
-                SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+                //    SourcesPanel.ColumnCount = 5;
+                //    SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+                //    SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 35F));
+                //    SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20F));
+                //    SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
+                //    SourcesPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 10F));
 
-                SourcesPanel.RowCount = max;
-                int row = 0;
-                while (row < max)
-                {
-                    SourcesPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100 / max));
-                    row++;
-                }
+                //    SourcesPanel.RowCount = max;
+                //    int row = 0;
+                //    while (row < max)
+                //    {
+                //        SourcesPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100 / max));
+                //        row++;
+                //    }
 
-                foreach (ModSource s in ModList.modSources)
-                {
-                    TextBox SourceName = new TextBox();
-                    TextBox SourceURL = new TextBox();
-                    TextBox SourceMods = new TextBox();
-                    PictureBox SourceValidPic = new PictureBox();
-                    SourceValidPic.Name = "SourceValidPic=" + i;
-                    PictureBox SourceRemovePic = new PictureBox();
-                    SourceRemovePic.Name = "SourceRemovePic=" + i;
-                    ModManagerComponents.SourceLine(SourcesPanel, i, s, SourceName, SourceURL, SourceMods, SourceValidPic, SourceRemovePic, (i < 1), (i + 1 == max));
+                //    foreach (ModSource s in ModList.modSources)
+                //    {
+                //        TextBox SourceName = new TextBox();
+                //        TextBox SourceURL = new TextBox();
+                //        TextBox SourceMods = new TextBox();
+                //        PictureBox SourceValidPic = new PictureBox();
+                //        SourceValidPic.Name = "SourceValidPic=" + i;
+                //        PictureBox SourceRemovePic = new PictureBox();
+                //        SourceRemovePic.Name = "SourceRemovePic=" + i;
+                //        ModManagerComponents.SourceLine(SourcesPanel, i, s, SourceName, SourceURL, SourceMods, SourceValidPic, SourceRemovePic, (i < 1), (i + 1 == max));
 
-                    if (i + 1 != max)
-                    {
-                        SourceName.TextChanged += new EventHandler((object sender, EventArgs e) =>
-                        {
-                            SourceValidPic.Show();
-                        });
+                //        if (i + 1 != max)
+                //        {
+                //            SourceName.TextChanged += new EventHandler((object sender, EventArgs e) =>
+                //            {
+                //                SourceValidPic.Show();
+                //            });
 
-                        SourceMods.TextChanged += new EventHandler((object sender, EventArgs e) =>
-                        {
-                            SourceValidPic.Show();
-                        });
+                //            SourceMods.TextChanged += new EventHandler((object sender, EventArgs e) =>
+                //            {
+                //                SourceValidPic.Show();
+                //            });
 
-                        SourceValidPic.Click += new EventHandler((object sender, EventArgs e) =>
-                        {
-                            ModWorker.startTransaction();
+                //            SourceValidPic.Click += new EventHandler((object sender, EventArgs e) =>
+                //            {
+                //                ModWorker.startTransaction();
 
-                            //string picName = ServerValidPic.Name;
-                            //int serverId = int.Parse(picName.Substring(picName.IndexOf("=") + 1));
+                //                //string picName = ServerValidPic.Name;
+                //                //int serverId = int.Parse(picName.Substring(picName.IndexOf("=") + 1));
 
-                            //ServerManager.serverList.Regions[serverId].name = ServerName.Text;
-                            //ServerManager.serverList.Regions[serverId].DefaultIp = result[0].Value;
-                            //ServerManager.serverList.Regions[serverId].Fqdn = result[0].Value;
-                            //ServerManager.serverList.Regions[serverId].port = int.Parse(ServerPort.Text);
-                            //ServerManager.update();
-                            //ModManagerUI.loadServers();
-                            //openForm(ServersForm);
-                            //ModWorker.endTransaction();
-                        });
+                //                //ServerManager.serverList.Regions[serverId].name = ServerName.Text;
+                //                //ServerManager.serverList.Regions[serverId].DefaultIp = result[0].Value;
+                //                //ServerManager.serverList.Regions[serverId].Fqdn = result[0].Value;
+                //                //ServerManager.serverList.Regions[serverId].port = int.Parse(ServerPort.Text);
+                //                //ServerManager.update();
+                //                //ModManagerUI.loadServers();
+                //                //openForm(ServersForm);
+                //                //ModWorker.endTransaction();
+                //            });
 
-                        SourceRemovePic.Click += new EventHandler((object sender, EventArgs e) =>
-                        {
-                            //ModWorker.startTransaction();
-                            //string picName = ServerRemovePic.Name;
-                            //int serverId = int.Parse(picName.Substring(picName.IndexOf("=") + 1));
+                //            SourceRemovePic.Click += new EventHandler((object sender, EventArgs e) =>
+                //            {
+                //                //ModWorker.startTransaction();
+                //                //string picName = ServerRemovePic.Name;
+                //                //int serverId = int.Parse(picName.Substring(picName.IndexOf("=") + 1));
 
-                            //ServerManager.serverList.Regions.RemoveAt(serverId);
-                            //ServerManager.update();
-                            //ModManagerUI.loadServers();
-                            //openForm(ServersForm);
-                            //ModWorker.endTransaction();
-                        });
+                //                //ServerManager.serverList.Regions.RemoveAt(serverId);
+                //                //ServerManager.update();
+                //                //ModManagerUI.loadServers();
+                //                //openForm(ServersForm);
+                //                //ModWorker.endTransaction();
+                //            });
 
-                    }
-                    else
-                    {
-                        SourceRemovePic.Click += new EventHandler((object sender, EventArgs e) =>
-                        {
-                            //ModWorker.startTransaction();
-                            //// Check if Ip valid
+                //        }
+                //        else
+                //        {
+                //            SourceRemovePic.Click += new EventHandler((object sender, EventArgs e) =>
+                //            {
+                //                //ModWorker.startTransaction();
+                //                //// Check if Ip valid
 
-                            //Server newServ = new Server("DnsRegionInfo, Assembly - CSharp", result[0].Value, result[0].Value, int.Parse(ServerPort.Text), ServerName.Text, 1003);
-                            //ServerManager.serverList.Regions.Add(newServ);
-                            //ServerManager.update();
-                            //ModManagerUI.loadServers();
-                            //openForm(ServersForm);
-                            //ModWorker.endTransaction();
-                        });
-                    }
-                    i++;
-                }
+                //                //Server newServ = new Server("DnsRegionInfo, Assembly - CSharp", result[0].Value, result[0].Value, int.Parse(ServerPort.Text), ServerName.Text, 1003);
+                //                //ServerManager.serverList.Regions.Add(newServ);
+                //                //ServerManager.update();
+                //                //ModManagerUI.loadServers();
+                //                //openForm(ServersForm);
+                //                //ModWorker.endTransaction();
+                //            });
+                //        }
+                //        i++;
+                //    }
 
-                SourcesForm.Controls.Add(ModManagerComponents.ServersOverlay());
+                //    SourcesForm.Controls.Add(ModManagerComponents.ServersOverlay());
 
-                SourcesForm.Controls.Add(ModManagerComponents.LabelTitle(Translator.get("Sources")));
+                //    SourcesForm.Controls.Add(ModManagerComponents.LabelTitle(Translator.get("Sources")));
             }
             catch (Exception e)
             {
@@ -1761,6 +1786,58 @@ namespace ModManager6.Classes
                 });
 
                 SettingsForm.Controls.Add(ModManagerComponents.SettingsButton(LogButton, Translator.get("Log File")));
+
+                // Change appData Location
+
+                MMButton PathButton = new MMButton("trans");
+                PathButton.Click += new EventHandler((object sender, EventArgs e) =>
+                {
+                    if (ModWorker.isGameOpen()) return;
+
+                    try
+                    {
+                        FolderBrowserDialog folderBrowser = new FolderBrowserDialog();
+                        folderBrowser.SelectedPath = ConfigManager.config.dataPath;
+
+                        if (folderBrowser.ShowDialog() == DialogResult.OK)
+                        {
+                            ModWorker.startTransaction();
+                            string folderPath = Path.GetFullPath(folderBrowser.SelectedPath);
+                            Task.Run(() =>
+                            {
+                                FileSystem.DirectoryCreate(folderPath + @"\mod");
+                                FileSystem.DirectoryCreate(folderPath + @"\mods");
+                                FileSystem.DirectoryCreate(folderPath + @"\vanilla");
+                                if (Directory.Exists(ConfigManager.config.dataPath + @"\mod"))
+                                {
+                                    FileSystem.DirectoryDelete(folderPath + @"\mod");
+                                    Directory.Move(ConfigManager.config.dataPath + @"\mod", folderPath + @"\mod");
+                                }
+                                if (Directory.Exists(ConfigManager.config.dataPath + @"\mods"))
+                                {
+                                    FileSystem.DirectoryDelete(folderPath + @"\mods");
+                                    Directory.Move(ConfigManager.config.dataPath + @"\mods", folderPath + @"\mods");
+                                }
+                                if (Directory.Exists(ConfigManager.config.dataPath + @"\vanilla"))
+                                {
+                                    FileSystem.DirectoryDelete(folderPath + @"\vanilla");
+                                    Directory.Move(ConfigManager.config.dataPath + @"\vanilla", folderPath + @"\vanilla");
+                                }
+                                ConfigManager.config.dataPath = folderPath;
+                                ConfigManager.update();
+                            });
+                            ModWorker.endTransaction();
+                        }
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.logExceptionToServ(ex);
+                    }
+                    
+                });
+
+                SettingsForm.Controls.Add(ModManagerComponents.SettingsButton(PathButton, Translator.get("Move Data")));
 
                 // Minimise in taskbar
                 MMButton MinimisationButton = new MMButton("trans");

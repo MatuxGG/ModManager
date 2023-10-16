@@ -34,6 +34,9 @@ namespace ModManager6.Classes
             {
                 Log.logExceptionToServ(e);
             }
+
+            FileSystem.DirectoryCreate(config.dataPath + @"\vanilla");
+            FileSystem.DirectoryCreate(config.dataPath + @"\mods");
         }
 
         public static void updateAmongUs()
@@ -458,7 +461,11 @@ namespace ModManager6.Classes
                 {
                     InstalledMod imOption = ConfigManager.getInstalledMod(option.modOption, option.gameVersion);
                     if (imOption == null) continue;
-                    if (imOption.version != versionObj.version)
+                    Mod mOption = ModList.getModById(option.modOption);
+                    if (mOption == null) continue;
+                    ModVersion oVersion = mOption.versions.FindAll(ver => ver.gameVersion == option.gameVersion).First();
+                    if (oVersion == null) continue;
+                    if (imOption.version != oVersion.version)
                     {
                         return true;
                     }

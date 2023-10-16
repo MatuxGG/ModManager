@@ -135,8 +135,8 @@ namespace ModManager6.Forms
             //        break;
             //}
 
-
             this.AlertBoxLabel.Text = msg;
+            this.AlertBoxLabel.Font = new System.Drawing.Font(ThemeList.theme.XLFont, ThemeList.theme.XLSize, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
 
             this.Show();
             this.action = enmAction.start;

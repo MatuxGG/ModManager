@@ -97,7 +97,7 @@ namespace ModManager6.Classes
                             continue;
                         }
 
-                        ModVersion vOpt = mOpt.versions.Find(version => version.version == opt.gameVersion);
+                        ModVersion vOpt = mOpt.versions.Find(version => version.gameVersion == opt.gameVersion);
 
                         if (vOpt == null)
                         {
@@ -105,12 +105,12 @@ namespace ModManager6.Classes
                             continue;
                         }
 
-                        tasks.Add(enableMod(m, v));
+                        tasks.Add(enableMod(mOpt, vOpt));
                     }
 
                     await Task.WhenAll(tasks);
 
-                    Process.Start("explorer", ModManager.appDataPath + @"\mod\Among Us.exe");
+                    Process.Start("explorer", ConfigManager.config.dataPath + @"\mod\Among Us.exe");
                     statusText = Translator.get("MODNAME started.").Replace("MODNAME", modToInstall.name);
 
                     finished = true;
@@ -162,8 +162,8 @@ namespace ModManager6.Classes
 
         public static async Task enableVanilla(string version)
         {
-            string modPath = ModManager.appDataPath + @"\mod";
-            string toInstallPath = ModManager.appDataPath + @"\vanilla\" + version;
+            string modPath = ConfigManager.config.dataPath + @"\mod";
+            string toInstallPath = ConfigManager.config.dataPath + @"\vanilla\" + version;
             try
             {
                 FileSystem.DirectoryDelete(modPath);
@@ -186,7 +186,7 @@ namespace ModManager6.Classes
         public static async Task enableMod(Mod m, ModVersion v, bool replacement = false)
         {
             string modPath = m.getPathForVersion(v);
-            string toInstallPath = ModManager.appDataPath + @"\mod";
+            string toInstallPath = ConfigManager.config.dataPath + @"\mod";
 
             try
             {
@@ -231,13 +231,17 @@ namespace ModManager6.Classes
                     versionToInstall = v;
                     optionsToInstall = options;
 
-                    ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name);
+                    string statusText = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name);
+                    ModManagerUI.StatusLabel.Text = statusText;
+                    ModManagerUI.Alert(statusText);
 
                     await installModWorker();
                 }
                 else if (m.type == "allInOne")
                 {
-                    ModManagerUI.StatusLabel.Text = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name);
+                    string statusText = Translator.get("Installing MODNAME, please wait...").Replace("MODNAME", m.name);
+                    ModManagerUI.StatusLabel.Text = statusText;
+                    ModManagerUI.Alert(statusText);
                     if (m.id == "Challenger")
                     {
                         await installOrUpdateChall();
@@ -246,7 +250,9 @@ namespace ModManager6.Classes
                     {
                         await installOrUpdateBcl();
                     }
-                    ModManagerUI.StatusLabel.Text = Translator.get("MODNAME installed successfully.").Replace("MODNAME", m.name);
+                    statusText = Translator.get("MODNAME installed successfully.").Replace("MODNAME", m.name);
+                    ModManagerUI.StatusLabel.Text = statusText;
+                    ModManagerUI.Alert(statusText);
                     ModManagerUI.reloadMods();
                 }
             } catch (Exception e)
@@ -270,7 +276,7 @@ namespace ModManager6.Classes
                 if (ConfigManager.config.installedVanilla.Find(iv => iv.version == versionToInstall.gameVersion) == null)
                 {
                     needVanilla = true;
-                    string vanillaPath = ModManager.appDataPath + @"\vanilla\" + versionToInstall.gameVersion;
+                    string vanillaPath = ConfigManager.config.dataPath + @"\vanilla\" + versionToInstall.gameVersion;
                     string vanillaUrl = ModManager.fileURL + "/client/" + versionToInstall.gameVersion + ".zip";
                     string vanillaTempPath = ModManager.tempPath + @"\client.zip";
                     FileSystem.DirectoryCreate(vanillaPath);
@@ -307,7 +313,9 @@ namespace ModManager6.Classes
 
                 ModManagerUI.StatusLabel.Invoke((MethodInvoker)delegate
                 {
-                    ModManagerUI.StatusLabel.Text = Translator.get("Extracting files...");
+                    string statusText = Translator.get("Extracting files...");
+                    ModManagerUI.StatusLabel.Text = statusText;
+                    ModManagerUI.Alert(statusText);
                 });
 
                 await Task.Run(() =>
@@ -334,19 +342,17 @@ namespace ModManager6.Classes
                         }
                     }
 
-                    // Update
-                    InstalledMod alreadyIm = ConfigManager.getInstalledMod(modToInstall.id, versionToInstall.gameVersion);
-                    if (alreadyIm != null)
-                    {
-                        ModVersion alreadyVersion = new ModVersion(alreadyIm.version, alreadyIm.gameVersion);
-                        string modPath = modToInstall.getPathForVersion(alreadyVersion);
-                        FileSystem.DirectoryDelete(modPath);
-
-                        ConfigManager.config.installedMods.Remove(alreadyIm);
-                    }
-
                     foreach (InstalledMod im in installedMods)
                     {
+                        InstalledMod alreadyIm = ConfigManager.getInstalledMod(im.id, im.gameVersion);
+                        if (alreadyIm != null)
+                        {
+                            ModVersion alreadyVersion = new ModVersion(alreadyIm.version, alreadyIm.gameVersion);
+                            string modPath = modToInstall.getPathForVersion(alreadyVersion);
+                            FileSystem.DirectoryDelete(modPath);
+
+                            ConfigManager.config.installedMods.Remove(alreadyIm);
+                        }
                         if (ConfigManager.getInstalledMod(im.id, im.gameVersion) == null)
                         {
                             ConfigManager.config.installedMods.Add(im);
@@ -482,9 +488,13 @@ namespace ModManager6.Classes
                     ModManagerUI.StatusLabel.Text = labelText;
                     ModManagerUI.Alert(labelText);
                     ModManagerUI.reloadMods();
+
+                    finished = true;
                 }
                 else if (m.type == "allInOne")
                 {
+                    finished = false;
+
                     string labelText = Translator.get("Uninstalling MODNAME, please wait...").Replace("MODNAME", m.name);
                     ModManagerUI.StatusLabel.Text = labelText;
                     ModManagerUI.Alert(labelText);
@@ -500,6 +510,8 @@ namespace ModManager6.Classes
                     labelText = Translator.get("MODNAME uninstalled successfully.").Replace("MODNAME", m.name);
                     ModManagerUI.StatusLabel.Text = labelText;
                     ModManagerUI.Alert(labelText);
+                    finished = true;
+
                 }
             } catch (Exception e)
             {

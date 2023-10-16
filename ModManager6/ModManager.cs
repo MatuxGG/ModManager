@@ -49,6 +49,7 @@ namespace ModManager6
         {
             try
             {
+
                 // Update from Mod Manager 5
 
                 if (File.Exists(appDataPath + @"\config5.conf"))
@@ -84,8 +85,6 @@ namespace ModManager6
                 // Create folders if necessary
 
                 FileSystem.DirectoryCreate(appDataPath);
-                FileSystem.DirectoryCreate(appDataPath + @"\vanilla");
-                FileSystem.DirectoryCreate(appDataPath + @"\mods");
                 FileSystem.DirectoryCreate(appDataPath + @"\themes");
                 FileSystem.DirectoryCreate(tempPath);
 
@@ -113,6 +112,8 @@ namespace ModManager6
                 Log.logTime("Config load", "ModManager");
 
                 // Check if shortcut or force restart
+
+                List<string> customMod = new List<string>() { };
                 if (args.Count() > 0)
                 {
                     if (args[0].StartsWith("modmanager://")) // Handle browser URL ModManager://args0&args1&arg2&...
@@ -125,7 +126,7 @@ namespace ModManager6
                     {
                         args = new string[] { };
                     }
-                    else if (args[0] == "startmod")
+                    else if (args[0] == "startmod") // startmod modId versionId option1 option2 ...
                     {
                         silent = true;
                         this.WindowState = FormWindowState.Minimized;
@@ -206,7 +207,15 @@ namespace ModManager6
 
                 Log.startTimer();
                 ModManagerUI.StatusLabel.Text = Translator.get("Loading Mods...");
-                await ModList.load();
+                ModSource customSource = null;
+                if (customMod.Count() > 0) // Loading custom mod
+                {
+                    List<Mod> customMods = new List<Mod>() { };
+                    List<ModVersion> customVersions = new List<ModVersion>() { new ModVersion(args[2], args[3]) };
+                    customMods.Add(new Mod("CustomMod", "CustomMod", new Category("CustomMods", "CustomMods"), "mod", customMod[0], customMod[1], true, "", "", true, customVersions));
+                    customSource = new ModSource("CustomMod", true, customMods);
+                }
+                await ModList.load(customSource);
                 Log.logTime("Modlist load", "ModManager");
 
                 Log.startTimer();
@@ -259,12 +268,21 @@ namespace ModManager6
 
                 if (silent)
                 {
+                    Log.debug("short");
                     // Shortcut
 
                     if (args.Count() < 3) restartApp(); // If not enough args
 
                     Mod m = ModList.getModById(args[1]);
                     if (m == null) restartApp(); // If mod doesn't exist
+
+                    bool forceVersion = false;
+                    if (args[2].EndsWith("^"))
+                    {
+                        forceVersion = true;
+                        args[2] = args[2].Substring(0, -1);
+                        Log.debug(args[2]);
+                    }
 
                     ModVersion mv = m.versions.FindAll(ver => ver.version == args[2]).First();
 

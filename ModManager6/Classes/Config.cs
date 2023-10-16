@@ -11,6 +11,7 @@ namespace ModManager6.Classes
     public class Config
     {
         public string ModManagerVersion;
+        public string dataPath;
         public List<InstalledMod> installedMods;
         public List<InstalledVanilla> installedVanilla;
         public string amongUsPath;
@@ -23,11 +24,12 @@ namespace ModManager6.Classes
         public List<string> sources;
         public List<ModState> modStates;
 
-        public Config(string modManagerVersion = null, List<InstalledMod> installedMods = null, List<InstalledVanilla> installedVanilla = null, string amongUsPath = "", List<string> faroriteMods = null, bool miniEnabled = true, List<string> availableAmongUsPaths = null, string supportId = null, string lg = null, string theme = null , List<string> sources = null, List<ModState> modStates = null)
+        public Config(string modManagerVersion = null, string dataPath = null, List<InstalledMod> installedMods = null, List<InstalledVanilla> installedVanilla = null, string amongUsPath = "", List<string> faroriteMods = null, bool miniEnabled = true, List<string> availableAmongUsPaths = null, string supportId = null, string lg = null, string theme = null , List<string> sources = null, List<ModState> modStates = null)
         {
             try
             {
                 this.ModManagerVersion = modManagerVersion != null ? modManagerVersion : ModManager.visibleVersion;
+                this.dataPath = dataPath != null ? dataPath : ModManager.appDataPath;
                 this.installedMods = installedMods != null ? installedMods : new List<InstalledMod>() { };
                 this.installedVanilla = installedVanilla != null ? installedVanilla : new List<InstalledVanilla>() { };
                 this.amongUsPath = amongUsPath;

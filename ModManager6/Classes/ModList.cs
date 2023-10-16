@@ -19,11 +19,16 @@ namespace ModManager6.Classes
     {
         public static List<ModSource> modSources;
 
-        public static async Task load()
+        public static async Task load(ModSource customerSource = null)
         {
             try
             {
                 modSources = new List<ModSource>() { };
+
+                if (customerSource != null)
+                {
+                    modSources.Add(customerSource);
+                }
 
                 // Load local mods
                 string localSourcePath = ModManager.appDataPath + @"\localMods.json";

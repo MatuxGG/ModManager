@@ -58,7 +58,7 @@ namespace ModManager6.Classes
         {
             try
             {
-                return ModManager.appDataPath + @"\mods\" + this.id + @"_" + v.version;
+                return ConfigManager.config.dataPath + @"\mods\" + this.id + @"_" + v.version;
             } catch (Exception e)
             {
                 Log.logExceptionToServ(e);
