@@ -90,7 +90,8 @@ namespace ModManager6.Classes
         public static void logExceptionToServ(Exception e)
         {
             logToServ("Source: " + e.Source + " - Message: " + e.Message + " - Trace: " + e.StackTrace);
-            MessageBox.Show("An error occured. Please, contact the support on discord with your Support ID: " + ConfigManager.config.supportId, "Error occured", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show("An error occured. Please, contact the support on discord with your Support ID: " + ConfigManager.config.supportId + " (copied to clipboard)", "Error occured", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            Clipboard.SetText(ConfigManager.config.supportId);
             Environment.Exit(0);
         }
 

@@ -639,6 +639,73 @@ namespace ModManager6.Classes
             }
         }
 
+        public static async Task<bool> StartShortcut(string[] parameters)
+        {
+
+            Mod m = ModList.getModById(parameters[1]);
+            if (m == null) return false; // If mod doesn't exist
+
+            ModVersion mv = m.versions.FindAll(ver => ver.version == parameters[2]).First();
+
+            if (mv == null) // If doesn't exist, take latest
+            {
+                mv = m.versions.First();
+            }
+
+            List<ModOption> modOptions = new List<ModOption>() { };
+            List<string> modOptionsStr = new List<string>() { };
+            int i = 3;
+            while (parameters.Count() > i)
+            {
+                ModOption mo = ModList.getModOptions(m, mv).FindAll(o => o.modOption == parameters[i]).First();
+                if (mo != null)
+                {
+                    modOptions.Add(mo);
+                    modOptionsStr.Add(mo.modOption);
+                }
+                i++;
+            }
+
+            if (!ConfigManager.isInstalled(m, mv, modOptions))
+            {
+                await ModWorker.installAnyMod(m, mv, modOptionsStr);
+            }
+            await ModWorker.startMod(m, mv, modOptionsStr);
+            System.Windows.Forms.Application.Exit();
+            return true;
+        }
+
+        public static async void installAndStartLocalMod(string modId, string modName, string githubAuthor, string githubRepo, string version, string gameVersion)
+        {
+            Mod m = ModList.getLocalMod(modId);
+            if (m == null)
+            {
+                await installLocalMod(modId, modName, githubAuthor, githubRepo, version, gameVersion);
+                return;
+            }
+
+            ModVersion mv = m.versions.FindAll(ver => ver.version == version).First();
+
+            if (mv == null) // If doesn't exist
+            {
+                await installLocalMod(modId, modName, githubAuthor, githubRepo, version, gameVersion);
+                return;
+            }
+
+            // When exist
+
+            await startMod(m, mv, new List<string>() { });
+        }
+
+        public static async Task installLocalMod(string modId, string modName, string githubAuthor, string githubRepo, string version, string gameVersion)
+        {
+            Mod resutMod = await ModList.addLocalMod(modId, modName, githubAuthor, githubRepo, gameVersion, version);
+            ModVersion resultVersion = resutMod.versions.FindAll(v => v.version == version).First();
+            await installAnyMod(resutMod, resultVersion, new List<string>() { });
+            installAndStartLocalMod(modId, modName, githubAuthor, githubRepo, version, gameVersion);
+        }
+
+
         // Various
 
         public static bool isGameOpen(bool silent = false)

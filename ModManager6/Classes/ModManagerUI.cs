@@ -903,7 +903,6 @@ namespace ModManager6.Classes
         {
             try
             {
-
                 f.Controls.Clear();
 
                 Category cat = ModList.getCategoryById(f.Name);

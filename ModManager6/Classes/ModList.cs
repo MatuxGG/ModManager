@@ -19,16 +19,11 @@ namespace ModManager6.Classes
     {
         public static List<ModSource> modSources;
 
-        public static async Task load(ModSource customerSource = null)
+        public static async Task load()
         {
             try
             {
                 modSources = new List<ModSource>() { };
-
-                if (customerSource != null)
-                {
-                    modSources.Add(customerSource);
-                }
 
                 // Load local mods
                 string localSourcePath = ModManager.appDataPath + @"\localMods.json";
@@ -57,6 +52,24 @@ namespace ModManager6.Classes
             {
                 Log.logExceptionToServ(e);
             }
+        }
+
+        public static async Task<Mod> addLocalMod(string modId, string modName, string githubAuthor, string githubRepo, string gameVersion, string version)
+        {
+            ModSource localSource = modSources.FindAll(s => s.name == "Local").First();
+            ModVersion newVersion = new ModVersion(version, gameVersion);
+            Mod newLocal = new Mod(modId, modName, new Category("Local", "Local"), "mod", githubAuthor, githubRepo);
+            newLocal.versions = new List<ModVersion>() { newVersion };
+            localSource.mods.Add(newLocal);
+            await loadRelease(newLocal);
+            return newLocal;
+        }
+
+        public static Mod getLocalMod(string modId)
+        {
+            ModSource localSource = modSources.FindAll(s => s.name == "Local").First();
+            if (localSource.mods.Count == 0) return null;
+            return localSource.mods.FindAll(m => m.id == modId).First();
         }
 
         public static async Task FetchSource(string source)
