@@ -294,6 +294,7 @@ namespace ModManager6.Classes
                 CategoryForms = new List<GenericPanel>() { };
 
                 modManager.BackColor = ThemeList.theme.AppBackgroundColor;
+                FeedbackForm = new Feedback();
 
                 // 
                 // StatusLabel
