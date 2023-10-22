@@ -1,8 +1,7 @@
 {
   "profiles": {
     "ModManager6": {
-      "commandName": "Project",
-      "commandLineArgs": "startmod TownOfUsR v5.0.2"
+      "commandName": "Project"
     }
   }
 }

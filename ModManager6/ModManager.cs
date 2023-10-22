@@ -126,14 +126,12 @@ namespace ModManager6
                 else if (args[0] == "startmod" && args.Count() >= 3) // startmod modId versionId [option1 option2] ...
                 {
                     silent = true;
-                    this.WindowState = FormWindowState.Minimized;
-                    this.ShowInTaskbar = false;
                 }
-                else if (args[0] == "startlocalmod" && args.Count() >= 7) // startlocalmod modId modName githubAuthor githubRepo version gameVersion
+                else if (args[0] == "startlocalmod" && args.Count() >= 7)
+                    // startlocalmod modId modName githubAuthor githubRepo version gameVersion
+                    // optionId optionName optionAuthor optionRepo optionVersion
                 {
                     silent = true;
-                    this.WindowState = FormWindowState.Minimized;
-                    this.ShowInTaskbar = false;
                 }
                 else if (args[0] == "addsource")
                 {
@@ -171,7 +169,7 @@ namespace ModManager6
 
             Log.startTimer();
             int width = 500;
-            int height = 300;
+            int height = 200;
             if (silent)
             {
                 ModManagerUI.loadMini(this);
@@ -238,7 +236,6 @@ namespace ModManager6
 
             VersionUpdater.applyUpdates(ConfigManager.config.ModManagerVersion, visibleVersion);
 
-
             string keyPath = @"Software\Classes\ModManager";
             string appName = "ModManager";
 
@@ -267,7 +264,7 @@ namespace ModManager6
                 {
                     // Local mod
 
-                    ModWorker.installAndStartLocalMod(args[1], args[2], args[3], args[4], args[5], args[6]);
+                    ModWorker.installAndStartLocalMod(args);
 
                 } else
                 {

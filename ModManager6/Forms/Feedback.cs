@@ -40,6 +40,10 @@ namespace ModManager6.Forms
         public void hideFeedBack()
         {
             this.Hide();
+            if (ModManager.silent)
+            {
+                Environment.Exit(0);
+            }
         }
 
         private void Star1_Hover(object sender, EventArgs e)

@@ -451,10 +451,11 @@ namespace ModManager6.Classes
         {
             try
             {
+                if (ModList.getLocalMod(m.id) != null) return false;
                 InstalledMod im = ConfigManager.getInstalledMod(m.id, gameVersion);
                 if (im == null) return false;
                 if (im.version != version) return true;
-                ModVersion versionObj = m.versions.FindAll(ver => ver.gameVersion == gameVersion).First();
+                ModVersion versionObj = m.versions.FindAll(ver => ver.gameVersion == gameVersion).FirstOrDefault();
                 List<ModOption> options = ConfigManager.getActiveOptions(m.id, versionObj.gameVersion);
                 if (options == null) return false;
                 foreach (ModOption option in options)
@@ -463,7 +464,7 @@ namespace ModManager6.Classes
                     if (imOption == null) continue;
                     Mod mOption = ModList.getModById(option.modOption);
                     if (mOption == null) continue;
-                    ModVersion oVersion = mOption.versions.FindAll(ver => ver.gameVersion == option.gameVersion).First();
+                    ModVersion oVersion = mOption.versions.FindAll(ver => ver.gameVersion == option.gameVersion).FirstOrDefault();
                     if (oVersion == null) continue;
                     if (imOption.version != oVersion.version)
                     {

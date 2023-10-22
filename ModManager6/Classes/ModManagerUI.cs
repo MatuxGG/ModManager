@@ -77,6 +77,8 @@ namespace ModManager6.Classes
                 Graphics graphics = modManager.CreateGraphics();
                 float ratio = 4 / (4 + ((graphics.DpiX - 96) / 24));
 
+                thisModManager = modManager;
+
                 ThemeList.theme.TitleSize = (int)(ratio * ThemeList.theme.TitleSize);
                 ThemeList.theme.SubTitleSize = (int)(ratio * ThemeList.theme.SubTitleSize);
                 ThemeList.theme.XLSize = (int)(ratio * ThemeList.theme.XLSize);
@@ -283,6 +285,8 @@ namespace ModManager6.Classes
             {
                 Graphics graphics = modManager.CreateGraphics();
                 float ratio = 4 / (4 + ((graphics.DpiX - 96) / 24));
+
+                thisModManager = modManager;
 
                 ThemeList.theme.TitleSize = (int)(ratio * ThemeList.theme.TitleSize);
                 ThemeList.theme.SubTitleSize = (int)(ratio * ThemeList.theme.SubTitleSize);
@@ -974,7 +978,7 @@ namespace ModManager6.Classes
 
                     if (m.type == "mod")
                     {
-                        ModGameVersion = ModManagerComponents.ModLabel("ModGameVersion", m.versions.First().gameVersion);
+                        ModGameVersion = ModManagerComponents.ModLabel("ModGameVersion", m.versions.FirstOrDefault().gameVersion);
                     }
                     else
                     {
@@ -1055,7 +1059,7 @@ namespace ModManager6.Classes
 
                     ModDownload.Click += new EventHandler((object sender, EventArgs e) =>
                     {
-                        if (m.type == "mod")
+                        if (m.type == "mod" || m.type == "")
                         {
                             string selected = VersionCombobox.SelectedItem.ToString();
                             ModVersion v = m.versions.Find(v => v.version == selected);
@@ -1281,7 +1285,7 @@ namespace ModManager6.Classes
                             string activeVersion = ConfigManager.getActiveGameVersion(m.id);
                             if (activeVersion == null)
                             {
-                                activeVersion = m.versions.First().gameVersion;
+                                activeVersion = m.versions.FirstOrDefault().gameVersion;
                             }
                             ModVersion activeVersionObj = m.versions.Find(v => v.gameVersion == activeVersion);
                             string version = (string)VersionCombobox.SelectedItem;
@@ -1411,7 +1415,7 @@ namespace ModManager6.Classes
                             string activeVersion = ConfigManager.getActiveGameVersion(m.id);
                             if (activeVersion == null)
                             {
-                                activeVersion = m.versions.First().version;
+                                activeVersion = m.versions.FirstOrDefault().version;
                             }
                             ModVersion activeVersionObj = m.versions.Find(v => v.gameVersion == activeVersion);
                             //addOptionsBox(flowLayoutPanel7, m, activeVersionObj, ModDownload, ModPlay, ModUnins);

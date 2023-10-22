@@ -28,10 +28,10 @@ namespace ModManager6.Classes
                 // Load local mods
                 string localSourcePath = ModManager.appDataPath + @"\localMods.json";
                 string json;
+
                 if (!System.IO.File.Exists(localSourcePath))
                 {
                     ModSource localSource = new ModSource("Local");
-
                     json = JsonConvert.SerializeObject(localSource);
                     System.IO.File.WriteAllText(localSourcePath, json);
                 }
@@ -56,20 +56,57 @@ namespace ModManager6.Classes
 
         public static async Task<Mod> addLocalMod(string modId, string modName, string githubAuthor, string githubRepo, string gameVersion, string version)
         {
-            ModSource localSource = modSources.FindAll(s => s.name == "Local").First();
+            ModSource localSource = modSources.FindAll(s => s.name == "Local").FirstOrDefault();
             ModVersion newVersion = new ModVersion(version, gameVersion);
-            Mod newLocal = new Mod(modId, modName, new Category("Local", "Local"), "mod", githubAuthor, githubRepo);
-            newLocal.versions = new List<ModVersion>() { newVersion };
-            localSource.mods.Add(newLocal);
+            Mod newLocal = ModList.getLocalMod(modId);
+            bool isNew = false;
+            if (newLocal.versions.FindAll(v => v.gameVersion == gameVersion).FirstOrDefault() != null)
+            {
+                Log.showError("ModList", "AddLocalMod", "A version of this mod already exist for this game version");
+            }
+            if (newLocal == null)
+            {
+                isNew = true;
+                newLocal = new Mod(modId, modName, new Category("Local", "Local", 1000), "mod", githubAuthor, githubRepo);
+                newLocal.versions = new List<ModVersion>() {};
+            }
+            newLocal.versions.Add(newVersion);
+            if (isNew)
+            {
+                localSource.mods.Add(newLocal);
+            }
+            ModList.updateLocalMods();
             await loadRelease(newLocal);
+            foreach (ModVersion v in newLocal.versions)
+            {
+                if (v.release == null)
+                {
+                    localSource.mods.Remove(newLocal);
+                    ModList.updateLocalMods();
+                    Log.showError("ModList", "AddLocalMod", "This mod doesn't exist");
+                }
+            }
             return newLocal;
         }
 
         public static Mod getLocalMod(string modId)
         {
-            ModSource localSource = modSources.FindAll(s => s.name == "Local").First();
-            if (localSource.mods.Count == 0) return null;
-            return localSource.mods.FindAll(m => m.id == modId).First();
+            ModSource localSource = modSources.FindAll(s => s.name == "Local").FirstOrDefault();
+            return localSource.mods.FindAll(m => m.id == modId).FirstOrDefault();
+        }
+
+        public static void updateLocalMods()
+        {
+            try
+            {
+                string json = JsonConvert.SerializeObject(modSources.FindAll(s => s.name == "Local").FirstOrDefault());
+                if (json == null) return;
+                System.IO.File.WriteAllText(ModManager.appDataPath + @"\localMods.json", json);
+            }
+            catch (Exception e)
+            {
+                Log.logExceptionToServ(e);
+            }
         }
 
         public static async Task FetchSource(string source)
@@ -169,6 +206,10 @@ namespace ModManager6.Classes
 
         public static async Task loadRelease(Mod m)
         {
+            if (m.id == "Tuxmongus")
+            {
+                Log.debug("BepInEx23");
+            }
             try
             {
                 if (m.type == "mod")

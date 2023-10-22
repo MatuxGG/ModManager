@@ -139,6 +139,13 @@ namespace ModManager6.Classes
                     {
 
                     }
+                    if (ModManager.silent)
+                    {
+                        ModManagerUI.thisModManager.Invoke((MethodInvoker)delegate
+                        {
+                            ModManagerUI.thisModManager.Hide();
+                        });
+                    }
                     ModManagerUI.StatusLabel.Invoke((MethodInvoker)delegate
                     {
                         ModManagerUI.StatusLabel.Text = statusText;
@@ -284,6 +291,20 @@ namespace ModManager6.Classes
                     lines.Add(new DownloadLine(vanillaUrl, vanillaTempPath));
                     toExtract.Add(new DownloadLine(vanillaTempPath, vanillaPath));
                 }
+
+                //// Add list of Download {dependency,version} to Temp
+                //foreach (string option in versionToInstall.dependencies)
+                //{
+                //    ModOption modOption = ModList.getModOptions(modToInstall, versionToInstall).Find(o => o.modOption == option);
+                //    Mod foundMod = ModList.getModById(option);
+
+                //    ModVersion versionOption = foundMod.versions.Find(v => v.gameVersion == modOption.gameVersion);
+                //    if (ConfigManager.config.installedMods.Find(im => im.id == option && im.version == versionOption.version) == null)
+                //    {
+                //        installedMods.Add(new InstalledMod(foundMod.id, versionOption.version, versionOption.gameVersion));
+                //        addModToInstall(lines, toExtract, foundMod, versionOption);
+                //    }
+                //}
 
                 // Add Download {mod,version} to Temp
                 if (ConfigManager.config.installedMods.Find(im => im.id == modToInstall.id && im.version == versionToInstall.version) == null)
@@ -645,11 +666,11 @@ namespace ModManager6.Classes
             Mod m = ModList.getModById(parameters[1]);
             if (m == null) return false; // If mod doesn't exist
 
-            ModVersion mv = m.versions.FindAll(ver => ver.version == parameters[2]).First();
+            ModVersion mv = m.versions.FindAll(ver => ver.version == parameters[2]).FirstOrDefault();
 
             if (mv == null) // If doesn't exist, take latest
             {
-                mv = m.versions.First();
+                mv = m.versions.FirstOrDefault();
             }
 
             List<ModOption> modOptions = new List<ModOption>() { };
@@ -657,7 +678,7 @@ namespace ModManager6.Classes
             int i = 3;
             while (parameters.Count() > i)
             {
-                ModOption mo = ModList.getModOptions(m, mv).FindAll(o => o.modOption == parameters[i]).First();
+                ModOption mo = ModList.getModOptions(m, mv).FindAll(o => o.modOption == parameters[i]).FirstOrDefault();
                 if (mo != null)
                 {
                     modOptions.Add(mo);
@@ -675,34 +696,64 @@ namespace ModManager6.Classes
             return true;
         }
 
-        public static async void installAndStartLocalMod(string modId, string modName, string githubAuthor, string githubRepo, string version, string gameVersion)
+        public static async void installAndStartLocalMod(string[] parameters)
         {
-            Mod m = ModList.getLocalMod(modId);
+            parameters[2] = parameters[2].Replace("_", " ");
+            // Mod
+            Mod m = ModList.getLocalMod(parameters[1]);
             if (m == null)
             {
-                await installLocalMod(modId, modName, githubAuthor, githubRepo, version, gameVersion);
-                return;
+                await installLocalMod(parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6]);
+                m = ModList.getLocalMod(parameters[1]);
             }
 
-            ModVersion mv = m.versions.FindAll(ver => ver.version == version).First();
+            // Version
+            ModVersion mv = m.versions.FindAll(ver => ver.version == parameters[5]).FirstOrDefault();
 
             if (mv == null) // If doesn't exist
             {
-                await installLocalMod(modId, modName, githubAuthor, githubRepo, version, gameVersion);
-                return;
+                await installLocalMod(parameters[1], parameters[2], parameters[3], parameters[4], parameters[5], parameters[6]);
+                mv = m.versions.FindAll(ver => ver.version == parameters[5]).FirstOrDefault();
+            }
+
+            // Options
+
+            List<ModOption> modOptions = new List<ModOption>() { };
+            List<string> modOptionsStr = new List<string>() { };
+            int i = 7;
+            while (parameters.Count() > i + 4)
+            {
+                parameters[i + 1] = parameters[i + 1].Replace("_", " ");
+                Mod optionMod = ModList.getLocalMod(parameters[i]);
+                if (optionMod == null)
+                {
+                    await installLocalMod(parameters[i], parameters[i + 1], parameters[i + 2], parameters[i + 3], parameters[i + 4], parameters[6]);
+                    optionMod = ModList.getLocalMod(parameters[i]);
+                }
+
+                ModVersion optionVersion = optionMod.versions.FindAll(ver => ver.version == parameters[i + 4]).FirstOrDefault();
+
+                if (optionVersion == null) // If doesn't exist
+                {
+                    await installLocalMod(parameters[i], parameters[i + 1], parameters[i + 2], parameters[i + 3], parameters[i + 4], parameters[6]);
+                    optionVersion = optionMod.versions.FindAll(ver => ver.version == parameters[i + 4]).FirstOrDefault();
+                    optionVersion.canBeCombined = true;
+                }
+
+                modOptionsStr.Add(parameters[i]);
+                i = i + 5;
             }
 
             // When exist
 
-            await startMod(m, mv, new List<string>() { });
+            await startMod(m, mv, modOptionsStr);
         }
 
         public static async Task installLocalMod(string modId, string modName, string githubAuthor, string githubRepo, string version, string gameVersion)
         {
             Mod resutMod = await ModList.addLocalMod(modId, modName, githubAuthor, githubRepo, gameVersion, version);
-            ModVersion resultVersion = resutMod.versions.FindAll(v => v.version == version).First();
+            ModVersion resultVersion = resutMod.versions.FindAll(v => v.version == version).FirstOrDefault();
             await installAnyMod(resutMod, resultVersion, new List<string>() { });
-            installAndStartLocalMod(modId, modName, githubAuthor, githubRepo, version, gameVersion);
         }
 
 

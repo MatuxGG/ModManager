@@ -29,13 +29,21 @@ namespace ModManager6.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(GenericPanel));
+            this.SuspendLayout();
+            // 
+            // GenericPanel
+            // 
+            this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(33)))), ((int)(((byte)(31)))), ((int)(((byte)(46)))));
-            this.ClientSize = new System.Drawing.Size(1564, 901);
+            this.ClientSize = new System.Drawing.Size(1825, 1040);
             this.ForeColor = System.Drawing.SystemColors.Control;
-            this.Name = "X";
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            this.Name = "GenericPanel";
             this.ResumeLayout(false);
+
         }
 
         #endregion

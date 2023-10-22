@@ -30,6 +30,7 @@ namespace ModManager6.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Feedback));
             this.FeedbackPanel = new System.Windows.Forms.Panel();
             this.FeedbackBottomPanel = new System.Windows.Forms.Panel();
             this.Star4 = new System.Windows.Forms.PictureBox();
@@ -188,6 +189,7 @@ namespace ModManager6.Forms
             this.Font = new System.Drawing.Font("Arial Rounded MT Bold", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.ForeColor = System.Drawing.SystemColors.Control;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(5, 4, 5, 4);
             this.Name = "Feedback";
             this.Text = "Feedback";

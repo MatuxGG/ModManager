@@ -17,9 +17,6 @@ namespace ModManager6.Forms
         {
             InitializeComponent();
             this.DoubleBuffered = true;
-            this.SetStyle(ControlStyles.AllPaintingInWmPaint |
-                ControlStyles.UserPaint |
-                ControlStyles.DoubleBuffer, true);
         }
 
         #region Function : Prevent Control Flick
