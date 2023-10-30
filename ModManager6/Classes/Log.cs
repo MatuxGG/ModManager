@@ -65,7 +65,7 @@ namespace ModManager6.Classes
         public static void showError(string classname, string source, string message)
         {
             logError(classname, source, message);
-            MessageBox.Show("An error has occured.\nPlease restart Mod Manager and try again.\nIf this happen again, please create a ticket on Mod Manager's support discord server.", "", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Translator.get("An error has occured.\nPlease restart Mod Manager and try again.\nIf this happen again, please create a ticket on Mod Manager's support discord server."), "", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Environment.Exit(0);
         }
 
@@ -90,7 +90,7 @@ namespace ModManager6.Classes
         public static void logExceptionToServ(Exception e)
         {
             logToServ("Source: " + e.Source + " - Message: " + e.Message + " - Trace: " + e.StackTrace);
-            MessageBox.Show("An error occured. Please, contact the support on discord with your Support ID: " + ConfigManager.config.supportId + " (copied to clipboard)", "Error occured", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(Translator.get("An error occured. Please, contact the support on discord with your Support ID=").Replace("=", ":") + " " + ConfigManager.config.supportId + " " + Translator.get("(copied to clipboard)"), "Error occured", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Clipboard.SetText(ConfigManager.config.supportId);
             Environment.Exit(0);
         }

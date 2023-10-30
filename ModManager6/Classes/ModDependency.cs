@@ -1,4 +1,6 @@
-﻿using System;
+﻿using ExCSS;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,7 +10,9 @@ namespace ModManager6.Classes
 {
     public class ModDependency
     {
+        [JsonProperty(PropertyName = "modDependency")]
         public string dependency { get; set; }
+        [JsonProperty(PropertyName = "modVersion")]
         public string version { get; set; }
 
         public ModDependency(string dependency = "", string version = "")

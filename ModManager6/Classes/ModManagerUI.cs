@@ -103,7 +103,7 @@ namespace ModManager6.Classes
                 modManager.BackColor = ThemeList.theme.AppBackgroundColor;
 
                 AddModPanel = ModManagerComponents.MenuPanel("AddModPanel", "Add Mod", global::ModManager6.Properties.Resources.add);
-                SourcesPanel = ModManagerComponents.MenuPanel("SourcesPanel", "Sources", global::ModManager6.Properties.Resources.list);
+                //SourcesPanel = ModManagerComponents.MenuPanel("SourcesPanel", "Sources", global::ModManager6.Properties.Resources.list); // TODO : Add Source
                 ServersPanel = ModManagerComponents.MenuPanel("ServersPanel", "Servers", global::ModManager6.Properties.Resources.servers);
                 SettingsPanel = ModManagerComponents.MenuPanel("SettingsPanel", "Settings", global::ModManager6.Properties.Resources.settings);
                 CreditsPanel = ModManagerComponents.MenuPanel("CreditsPanel", "Credits", global::ModManager6.Properties.Resources.credits);
@@ -417,14 +417,15 @@ namespace ModManager6.Classes
                     });
                 }
 
-                foreach (Control c in SourcesPanel.Controls)
-                {
-                    c.Click += new EventHandler((object sender, EventArgs e) =>
-                    {
-                        showMenuPanel();
-                        openForm(SourcesForm);
-                    });
-                }
+                // TODO : Add Source
+                //foreach (Control c in SourcesPanel.Controls)
+                //{
+                //    c.Click += new EventHandler((object sender, EventArgs e) =>
+                //    {
+                //        showMenuPanel();
+                //        openForm(SourcesForm);
+                //    });
+                //}
 
                 foreach (Control c in CreditsPanel.Controls)
                 {

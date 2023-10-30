@@ -206,13 +206,9 @@ namespace ModManager6.Classes
 
         public static async Task loadRelease(Mod m)
         {
-            if (m.id == "Tuxmongus")
-            {
-                Log.debug("BepInEx23");
-            }
             try
             {
-                if (m.type == "mod")
+                if (m.type == "mod" || m.type == "dependency")
                 {
                     IReadOnlyCollection<Release> releases = await ModManager.githubClient.Repository.Release.GetAll(m.author, m.github);
 

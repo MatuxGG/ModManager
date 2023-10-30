@@ -10,6 +10,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -73,9 +74,22 @@ namespace ModManager6.Classes
                     ModManagerUI.StatusLabel.Text = statusText;
                     ModManagerUI.Alert(statusText);
 
+                    await Task.Run(() => saveData());
+
                     await Task.Run(() => enableVanilla(versionToInstall.gameVersion));
 
                     await Task.Run(() => enableMod(modToInstall, versionToInstall, true));
+
+                    foreach (ModDependency dependency in versionToInstall.dependencies)
+                    {
+                        Mod DependencyMod = ModList.getModById(dependency.dependency);
+                        if (DependencyMod == null) continue;
+
+                        ModVersion DependencyVersion = DependencyMod.versions.FindAll(v => v.version == dependency.version).FirstOrDefault();
+                        if (DependencyVersion == null) continue;
+
+                        await Task.Run(() => enableMod(DependencyMod, DependencyVersion));
+                    }
 
                     List<Task> tasks = new List<Task>() { };
 
@@ -109,6 +123,15 @@ namespace ModManager6.Classes
                     }
 
                     await Task.WhenAll(tasks);
+
+                    await Task.Run(() => removeLoggingConsole());
+
+                    await Task.Run(() =>
+                    {
+                        string filePath = ConfigManager.config.dataPath + @"\mod\mm.cfg";
+                        string[] lines = { m.id, v.version };
+                        File.WriteAllLines(filePath, lines);
+                    });
 
                     Process.Start("explorer", ConfigManager.config.dataPath + @"\mod\Among Us.exe");
                     statusText = Translator.get("MODNAME started.").Replace("MODNAME", modToInstall.name);
@@ -165,6 +188,68 @@ namespace ModManager6.Classes
                 Log.logExceptionToServ(e);
             }
 
+        }
+
+        public static async Task saveData()
+        {
+            string filePath = ConfigManager.config.dataPath + @"\mod\mm.cfg";
+            string currentConfigPath = ConfigManager.config.dataPath + @"\mod\BepInEx\config";
+
+            if (!File.Exists(filePath)) return;
+
+            string[] fileLines = File.ReadAllLines(filePath);
+            if (fileLines.Length < 2) return;
+
+            Mod m = ModList.getModById(fileLines[0]);
+            if (m == null) return;
+
+            ModVersion mv = m.versions.FindAll(v => v.version == fileLines[1]).FirstOrDefault();
+            if (mv == null) return;
+
+            string modPath = m.getPathForVersion(mv);
+            string configPath = modPath + @"\BepInEx\config";
+
+            FileSystem.DirectoryCreate(configPath);
+            FileSystem.DirectoryCopy(currentConfigPath, configPath);
+        }
+
+        public static async Task removeLoggingConsole()
+        {
+            string filePath = ConfigManager.config.dataPath + @"\mod\BepInEx\config\BepInEx.cfg";
+
+            if (File.Exists(filePath))
+            {
+                string[] fileLines = File.ReadAllLines(filePath);
+
+                bool hasSeenLogging = false;
+                int i = 0;
+                foreach (string fileLine in fileLines)
+                {
+                    if (fileLine.Contains("[Logging.Console]"))
+                    {
+                        hasSeenLogging = true;
+                    }
+                    if (hasSeenLogging)
+                    {
+                        if (fileLine.StartsWith("["))
+                        {
+                            break;
+                        }
+                        if (fileLine.Trim().StartsWith("Enabled"))
+                        {
+                            fileLines[i] = "Enabled = false";
+                            break;
+                        }
+                    }
+                    i++;
+                }
+                File.WriteAllLines(filePath, fileLines);
+            }
+            else
+            {
+                string defaultText = "[IL2CPP]\r\n\r\n## Whether to run Il2CppInterop automatically to generate Il2Cpp support assemblies when they are outdated.\r\n## If disabled assemblies in `BepInEx/interop` won't be updated between game or BepInEx updates!\r\n## \r\n# Setting type: Boolean\r\n# Default value: true\r\nUpdateInteropAssemblies = true\r\n\r\n## URL to the ZIP of managed Unity base libraries.\r\n## The base libraries are used by Il2CppInterop to generate interop assemblies.\r\n## The URL can include {VERSION} template which will be replaced with the game's Unity engine version.\r\n## \r\n# Setting type: String\r\n# Default value: https://unity.bepinex.dev/libraries/{VERSION}.zip\r\nUnityBaseLibrariesSource = https://unity.bepinex.dev/libraries/{VERSION}.zip\r\n\r\n## The RegEx string to pass to Il2CppAssemblyUnhollower for renaming obfuscated names.\r\n## All types and members matching this RegEx will get a name based on their signature,\r\n## resulting in names that persist after game updates.\r\n## \r\n# Setting type: String\r\n# Default value: \r\nUnhollowerDeobfuscationRegex = \r\n\r\n## If enabled, Il2CppInterop will use xref to find dead methods and generate CallerCount attributes.\r\n# Setting type: Boolean\r\n# Default value: false\r\nScanMethodRefs = false\r\n\r\n## If enabled, BepInEx will save dummy assemblies generated by an Cpp2IL dumper into BepInEx/dummy.\r\n# Setting type: Boolean\r\n# Default value: false\r\nDumpDummyAssemblies = false\r\n\r\n[Logging.Console]\r\n\r\n## Enables showing a console for log output.\r\n# Setting type: Boolean\r\n# Default value: true\r\nEnabled = false\r\n\r\n## If enabled, will prevent closing the console (either by deleting the close button or in other platform-specific way).\r\n# Setting type: Boolean\r\n# Default value: false\r\nPreventClose = false\r\n\r\n## If true, console is set to the Shift-JIS encoding, otherwise UTF-8 encoding.\r\n# Setting type: Boolean\r\n# Default value: false\r\nShiftJisEncoding = false\r\n\r\n## Hints console manager on what handle to assign as StandardOut. Possible values:\r\n## Auto - lets BepInEx decide how to redirect console output\r\n## ConsoleOut - prefer redirecting to console output; if possible, closes original standard output\r\n## StandardOut - prefer redirecting to standard output; if possible, closes console out\r\n## \r\n# Setting type: ConsoleOutRedirectType\r\n# Default value: Auto\r\n# Acceptable values: Auto, ConsoleOut, StandardOut\r\nStandardOutType = Auto\r\n\r\n## Which log levels to show in the console output.\r\n# Setting type: LogLevel\r\n# Default value: Fatal, Error, Warning, Message, Info\r\n# Acceptable values: None, Fatal, Error, Warning, Message, Info, Debug, All\r\n# Multiple values can be set at the same time by separating them with , (e.g. Debug, Warning)\r\nLogLevels = Fatal, Error, Warning, Message, Info\r\n\r\n[Preloader]\r\n\r\n## Specifies which MonoMod backend to use for Harmony patches. Auto uses the best available backend.\r\n## This setting should only be used for development purposes (e.g. debugging in dnSpy). Other code might override this setting.\r\n# Setting type: MonoModBackend\r\n# Default value: auto\r\n# Acceptable values: auto, dynamicmethod, methodbuilder, cecil\r\nHarmonyBackend = auto\r\n";
+                File.WriteAllText(filePath, defaultText);
+            }
         }
 
         public static async Task enableVanilla(string version)
@@ -292,19 +377,21 @@ namespace ModManager6.Classes
                     toExtract.Add(new DownloadLine(vanillaTempPath, vanillaPath));
                 }
 
-                //// Add list of Download {dependency,version} to Temp
-                //foreach (string option in versionToInstall.dependencies)
-                //{
-                //    ModOption modOption = ModList.getModOptions(modToInstall, versionToInstall).Find(o => o.modOption == option);
-                //    Mod foundMod = ModList.getModById(option);
+                // Add list of Download {dependency,version} to Temp
+                foreach (ModDependency dependency in versionToInstall.dependencies)
+                {
+                    Mod DependencyMod = ModList.getModById(dependency.dependency);
+                    if (DependencyMod == null) continue;
 
-                //    ModVersion versionOption = foundMod.versions.Find(v => v.gameVersion == modOption.gameVersion);
-                //    if (ConfigManager.config.installedMods.Find(im => im.id == option && im.version == versionOption.version) == null)
-                //    {
-                //        installedMods.Add(new InstalledMod(foundMod.id, versionOption.version, versionOption.gameVersion));
-                //        addModToInstall(lines, toExtract, foundMod, versionOption);
-                //    }
-                //}
+                    ModVersion DependencyVersion = DependencyMod.versions.FindAll(v => v.version == dependency.version).FirstOrDefault();
+                    if (DependencyVersion == null) continue;
+
+                    if (ConfigManager.config.installedMods.Find(im => im.id == dependency.dependency && im.version == dependency.version) == null)
+                    {
+                        installedMods.Add(new InstalledMod(dependency.dependency, dependency.version, DependencyVersion.gameVersion));
+                        addModToInstall(lines, toExtract, DependencyMod, DependencyVersion);
+                    }
+                }
 
                 // Add Download {mod,version} to Temp
                 if (ConfigManager.config.installedMods.Find(im => im.id == modToInstall.id && im.version == versionToInstall.version) == null)
