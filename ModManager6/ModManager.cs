@@ -22,7 +22,7 @@ namespace ModManager6
 {
     public partial class ModManager : Form
     {
-        public static string serverURL = "https://dev.goodloss.fr"; // TODO : Change to live
+        public static string serverURL = "https://goodloss.fr";
         public static string apiURL = "https://dev.goodloss.fr/api";
         public static string fileURL = "https://dev.goodloss.fr/files";
         public static string appPath = System.AppDomain.CurrentDomain.BaseDirectory;
@@ -132,6 +132,7 @@ namespace ModManager6
                     // optionId optionName optionAuthor optionRepo optionVersion
                 {
                     silent = true;
+                    args[1] = "Local_" + args[1];
                 }
                 else if (args[0] == "addsource")
                 {
@@ -235,28 +236,6 @@ namespace ModManager6
             }
 
             VersionUpdater.applyUpdates(ConfigManager.config.ModManagerVersion, visibleVersion);
-
-            string keyPath = @"Software\Classes\ModManager";
-            string appName = "ModManager";
-
-            // Setup Mod Manager registry actions if doesn't exist
-
-            using (RegistryKey key = Registry.CurrentUser.OpenSubKey(keyPath))
-            {
-                if (key == null)
-                {
-                    using (RegistryKey newKey = Registry.CurrentUser.CreateSubKey(keyPath))
-                    {
-                        newKey.SetValue("", appName);
-                        newKey.SetValue("URL Protocol", "");
-
-                        using (RegistryKey commandKey = newKey.CreateSubKey(@"shell\open\command"))
-                        {
-                            commandKey.SetValue("", $"\"{appPath}ModManager6.exe\" \"%V\"");
-                        }
-                    }
-                }
-            }
 
             if (silent)
             {

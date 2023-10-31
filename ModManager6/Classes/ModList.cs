@@ -59,17 +59,19 @@ namespace ModManager6.Classes
             ModSource localSource = modSources.FindAll(s => s.name == "Local").FirstOrDefault();
             ModVersion newVersion = new ModVersion(version, gameVersion);
             Mod newLocal = ModList.getLocalMod(modId);
+            
             bool isNew = false;
-            if (newLocal.versions.FindAll(v => v.gameVersion == gameVersion).FirstOrDefault() != null)
-            {
-                Log.showError("ModList", "AddLocalMod", "A version of this mod already exist for this game version");
-            }
+            
             if (newLocal == null)
             {
                 isNew = true;
                 newLocal = new Mod(modId, modName, new Category("Local", "Local", 1000), "mod", githubAuthor, githubRepo);
                 newLocal.versions = new List<ModVersion>() {};
+            } else if (newLocal.versions.FindAll(v => v.gameVersion == gameVersion).FirstOrDefault() != null)
+            {
+                Log.showError("ModList", "AddLocalMod", "A version of this mod already exist for this game version");
             }
+
             newLocal.versions.Add(newVersion);
             if (isNew)
             {

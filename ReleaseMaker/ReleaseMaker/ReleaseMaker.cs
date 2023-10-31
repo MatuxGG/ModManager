@@ -13,7 +13,7 @@ namespace ReleaseMaker
             {
                 File.Delete(dest);
             }
-            ZipFile.CreateFromDirectory(@"../../../../../ModManager5/bin/Debug/net6.0-windows", dest);
+            ZipFile.CreateFromDirectory(@"../../../../../ModManager6/bin/Debug/net6.0-windows", dest);
         }
     }
 }

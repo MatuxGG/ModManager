@@ -5,14 +5,14 @@
 #include "Installer\CodeDependencies.iss"
 
 #define MyAppName "ModManager"
-#define MyAppVersion "5.3.7"
+#define MyAppVersion "6.0.0"
 #define MyAppPublisher "Matux"
 #define MyAppURL "https://goodloss.fr"
-#define MyAppExeName "ModManager5.exe"
+#define MyAppExeName "ModManager6.exe"
 #define MyAppAssocName MyAppName + " File"
 #define MyAppAssocExt ".myp"
 #define MyAppAssocKey StringChange(MyAppAssocName, " ", "") + MyAppAssocExt
-#define devDir "D:\visualstudio\ModManager5"
+#define devDir "C:\Users\martaud-ext\Smile\ModManager"
 #define style "TabletDark.vsf"
 
 [Setup]
@@ -33,13 +33,20 @@ DisableProgramGroupPage=yes
 ;PrivilegesRequired=lowest
 OutputDir={#devDir}\Output
 OutputBaseFilename=ModManagerInstaller
-SetupIconFile={#devDir}\ModManager5\modmanager.ico
+SetupIconFile={#devDir}\ModManager6\modmanager.ico
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern  
 ArchitecturesInstallIn64BitMode=x64
-WizardSmallImageFile={#devDir}\ModManager5\Assets\installer_mini.bmp
-WizardImageFile={#devDir}\ModManager5\Assets\installer_large.bmp
+WizardSmallImageFile={#devDir}\ModManager6\Assets\installer_mini.bmp
+WizardImageFile={#devDir}\ModManager6\Assets\installer_large.bmp
+
+[Registry]
+Root: HKCU; Subkey: "Software\Classes\ModManager"; ValueType: string; ValueName: ""; ValueData: "ModManager"; Flags: createvalueifdoesntexist
+
+Root: HKCU; Subkey: "Software\Classes\ModManager"; ValueType: string; ValueName: "URL Protocol"; ValueData: ""; Flags: createvalueifdoesntexist
+
+Root: HKCU; Subkey: "Software\Classes\ModManager\shell\open\command"; ValueType: string; ValueName: ""; ValueData: """{app}\ModManager6.exe"" ""%1"""; Flags: createvalueifdoesntexist
 
 [Code]
   
@@ -102,8 +109,8 @@ Name: "desktopicon"; Description: "{cm:CreateDesktopIcon}"; GroupDescription: "{
 Source: Installer\VclStylesinno.dll; DestDir: {app}; Flags: dontcopy
 Source: Installer\Styles\{#style}; DestDir: {app}; Flags: dontcopy
  
-Source: "{#devDir}\ModManager5\bin\Debug\net6.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
-Source: "{#devDir}\ModManager5\bin\Debug\net6.0-windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "{#devDir}\ModManager6\bin\Debug\net6.0-windows\{#MyAppExeName}"; DestDir: "{app}"; Flags: ignoreversion
+Source: "{#devDir}\ModManager6\bin\Debug\net6.0-windows\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 
 Source: "Installer\src\netcorecheck.exe"; Flags: dontcopy noencryption

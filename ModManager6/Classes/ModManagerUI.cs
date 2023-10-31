@@ -1457,6 +1457,8 @@ namespace ModManager6.Classes
                 AddModForm = new GenericPanel();
                 AddModForm.Name = "AddMod";
 
+                bindWIP(AddModForm);
+
                 AddModForm.Controls.Add(ModManagerComponents.LabelTitle(Translator.get("Add Mod")));
 
             }
