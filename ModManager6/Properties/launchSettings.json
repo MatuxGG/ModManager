@@ -1,7 +1,8 @@
 {
   "profiles": {
     "ModManager6": {
-      "commandName": "Project"
+      "commandName": "Project",
+      "commandLineArgs": "startlocalmod Bor1.4.8909363 Bor1.4.8 EnoPM BetterOtherRoles v1.4.8 2023.7.12"
     }
   }
 }
