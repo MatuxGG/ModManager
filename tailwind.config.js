@@ -4,7 +4,11 @@ module.exports = {
     "./src/**/*.{vue,js,ts}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      minWidth: {
+        '64': '256px',
+      }
+    },
   },
   plugins: [],
 }

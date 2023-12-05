@@ -1,14 +1,36 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
+const path = require('path');
+const AppData = require('./class/appData');
+let appData = new AppData();
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
+
+ipcMain.on('loadDataServer', async (event) => {
+  console.log("Loading data server...");
+  if (!appData || !appData.isLoaded) {
+    await appData.load();
+  }
+  let sentData = JSON.stringify(appData);
+  console.log("Data server loaded");
+  event.reply('loadDataClient', sentData);
+});
+
+let preloadPath;
+if (process.env.WEBPACK_DEV_SERVER_URL) {
+  // En mode développement
+  preloadPath = path.join(__dirname, '../public/preload.js');
+} else {
+  // En mode production
+  preloadPath = path.join(__dirname, 'preload.js');
+}
 
 async function createWindow() {
   // Create the browser window.
@@ -20,7 +42,8 @@ async function createWindow() {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
+      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+      preload: preloadPath,
     },
     autoHideMenuBar: true,
   })

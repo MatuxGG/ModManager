@@ -1,8 +1,10 @@
 <template>
   <div class="bg-gray-500 text-white text-sm flex items-center justify-center h-full w-full min-h-screen">
     <MenuLeft :version="version" :miniIcons="miniIcons" :menus="menus" />
-    <div class="min-h-screen h-full flex grow p-2">
-      
+    <div class="min-h-screen max-h-screen h-full flex grow p-2 overflow-auto">
+      <div class="w-full">
+        <router-view></router-view>
+      </div>
     </div>
   </div>
 </template>
@@ -20,19 +22,35 @@ export default {
     return {
       version: 'Mod Manager Version 7 Beta',
       menus: [
-        { img: require('@/assets/mods.png'), title: 'Mods', active: true},
-        { img: require('@/assets/servers.png'), title: 'Servers', active: false},
-        { img: require('@/assets/add.png'), title: 'Add Local', active: false},
-        { img: require('@/assets/settings.png'), title: 'Settings', active: false},
-        { img: require('@/assets/credits.png'), title: 'Credits', active: false},
+        { href: '/store', img: require('@/assets/mods.png'), title: 'Mods Store'},
+        { href: '/', img: require('@/assets/mods.png'), title: 'Library'},
+        { href: '/servers', img: require('@/assets/servers.png'), title: 'Servers'},
+        { href: '/addlocal', img: require('@/assets/add.png'), title: 'Add Local'},
+        { href: '/settings', img: require('@/assets/settings.png'), title: 'Settings'},
+        { href: '/credits', img: require('@/assets/credits.png'), title: 'Credits'},
       ],
       miniIcons: [
-        { id: 'goodloss', src: require('@/assets/account.png') },
-        { id: 'discord', src: require('@/assets/discord.png') },
-        { id: 'github', src: require('@/assets/github.png') },
-        { id: 'trello', src: require('@/assets/roadmap.png') },
-      ],
+        { id: 'goodloss', src: require('@/assets/account.png'), href: 'https://goodloss.fr/login' },
+        { id: 'discord', src: require('@/assets/discord.png'), href: 'https://goodloss.fr/discord' },
+        { id: 'github', src: require('@/assets/github.png'), href: 'https://goodloss.fr/github' },
+        { id: 'trello', src: require('@/assets/roadmap.png'), href: 'https://goodloss.fr/roadmap' },
+      ]
     }
+  },
+  computed: {
+    menusWithActiveState() {
+      return this.menus.map(menu => ({
+        ...menu,
+        active: this.$route.path === menu.href
+      }));
+    }
+  },
+  watch: {
+    '$route' () {
+    }
+  },
+  mounted() {
+    this.$store.dispatch('loadAppData');
   }
 }
 </script>

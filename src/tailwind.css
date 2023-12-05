@@ -1,3 +1,7 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.menu-left-shadow {
+    box-shadow: -5px 0 0 0 orange;
+}
