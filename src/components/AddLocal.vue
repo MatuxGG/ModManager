@@ -1,6 +1,13 @@
 <template>
-  <div class="page">
-    <h1>Add Local</h1>
+  <div class="page p-4">
+    <div class="flex flex-col gap-4">
+      <div class="flex items-center gap-4">
+        <img class="w-12 h-12" src="../assets/add.png" />
+        <h1 class="title">Add a local mod</h1>         
+      </div>
+      <div class="flex items-center flex-wrap">
+      </div>
+    </div>
   </div>
 </template>
 

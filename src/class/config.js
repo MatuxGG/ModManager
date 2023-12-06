@@ -9,7 +9,8 @@ const regKey = new Winreg({
 
 class Config {
     constructor(version = "", sources = ["https://goodloss.fr/api/mm"], installedMods = [], installedVanilla = [],
-        amongUsPath = "", dataPath = "", lg = "EN", supportId = "", favoriteMods = []) {
+        amongUsPath = "", dataPath = "", lg = "EN", supportId = "", favoriteMods = [], minimizeToTray = true,
+        launchOnStartup = true, theme = "dark" ) {
         this.version = version;
         if (this.version == "") {
             this.version = packageJson.version;
@@ -28,6 +29,9 @@ class Config {
         if (this.supportId == "") {
             this.supportId = this.generateRandomTenDigitNumber();
         }
+        this.minimizeToTray = minimizeToTray;
+        this.launchOnStartup = launchOnStartup;
+        this.theme = theme;
     }
 
     async loadAmongUsPath() {

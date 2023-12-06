@@ -5,3 +5,19 @@
 .menu-left-shadow {
     box-shadow: -5px 0 0 0 orange;
 }
+
+.mm-selectbox {
+    @apply bg-gray-700 p-2 rounded text-xl;
+}
+
+.mm-button {
+    @apply bg-gray-700 p-2 rounded text-xl;
+}
+
+.title {
+    @apply text-4xl font-bold tracking-widest;
+}
+
+.title2 {
+    @apply text-2xl font-bold tracking-wider underline underline-offset-8 py-4;
+}

@@ -1,58 +1,173 @@
 <template>
   <div class="page p-4">
-    <div class="flex flex-col gap-4">
-      <div class="flex items-center gap-4">
-        <img class="w-12 h-12" src="../assets/mods.png" />
-        <h1 class="text-4xl font-bold tracking-widest">Mods Store</h1>         
-      </div>
-      <div>
-    <!-- Filtre pour l'auteur -->
-    <select v-model="selectedAuthor">
-      <option value="">Tous les auteurs</option>
-      <option v-for="author in authorOptions" :key="author" :value="author">{{ author }}</option>
-    </select>
-
-    <!-- Filtre pour la version du jeu -->
-    <select v-model="selectedGameVersion">
-      <option value="">Toutes les versions</option>
-      <option v-for="version in gameVersionOptions" :key="version" :value="version">{{ version }}</option>
-    </select>
-
-    <!-- Contenu filtré -->
-    <div v-for="mod in filteredMods" :key="mod.sid">
-      <!-- Affichage des détails du mod -->
-    </div>
-  </div>
-      <div v-if="$store.state.appData && $store.state.appData.modSources" class="flex flex-col gap-4">
-        <div class="border rounded flex flex-col gap-1 p-4 bg-gray-700" v-for="mod in filteredMods" :key="mod.sid">
-          <p class="uppercase text-lg">{{ mod.name }}</p>
-          <p>{{ mod.author }}</p>
-          <p>{{ mod.gameVersion }}</p>
-          <div class="flex items-center gap-1">
-            <a href=""><img class="h-6 w-6" src="../assets/download.png" /></a>
-          <a href=""><img class="h-6 w-6" src="../assets/play.png" /></a>
+      <div class="flex flex-col gap-4">
+          <div class="flex items-center gap-4">
+              <img class="w-12 h-12" src="../assets/download.png"/>
+              <h1 class="title">Mods Store</h1>
           </div>
-        </div>
+          <div class="flex items-center gap-4">
+            <select v-model="selectedCategory" class="mm-selectbox">
+              <option value="">All categories</option>
+              <option v-for="category in categoriesOptions" :key="category.sid" :value="category.sid">{{ category.name }}</option>
+            </select>
+            <select v-model="selectedGameVersion" class="mm-selectbox">
+              <option value="">All versions</option>
+              <option v-for="version in gameVersionOptions" :key="version" :value="version">{{ version }}</option>
+            </select>
+          </div>
+          <div v-if="$store.state.appData && $store.state.appData.modSources" class="flex flex-wrap gap-4">
+            <template v-for="mod in filteredMods"
+                  :key="mod.sid">
+              <!-- All In One -->
+              <template v-if="mod.type == 'allInOne'">
+                <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-700 min-w-[300px]" >
+                  <!-- Div haut-->
+                  <div class="flex flex-col gap-1">
+                    <!-- Ligne titre + flag-->
+                    <div class="flex items-center gap-4 justify-between">
+                      <p class="uppercase text-lg cursor-pointer">{{ mod.name }}</p>
+                      <template v-if="mod.countries == 'fr'">
+                        <img class="h-6 border border-white" src="../assets/fr.png" />
+                      </template>
+                      <template v-else-if="mod.countries == 'es'">
+                        <img v-if="mod.countries" class="h-6 border border-white" src="../assets/es.png" />
+                      </template>
+                      <template v-else-if="mod.countries == 'jp'">
+                        <img v-if="mod.countries" class="h-6 border border-white" src="../assets/jp.png" />
+                      </template>
+                      <template v-else-if="mod.countries == 'cn'">
+                        <img v-if="mod.countries" class="h-6 border border-white" src="../assets/cn.png" />
+                      </template>
+                      <template v-else>
+                        <img v-if="mod.countries" class="h-6 border border-white" src="../assets/en.png" />
+                      </template>
+                    </div>
+                    <a v-if="mod.author" @click.prevent="openLink(`https://github.com/${mod.author}`)" class="cursor-pointer">
+                      {{ mod.author }}
+                    </a>
+                  </div>
+                  <!-- Div bas -->
+                  <div class="flex flex-col justify-between gap-1">
+                    <!-- Buttons-->
+                    <div class="flex justify-between items-center gap-4">
+                      <div class="flex items-center gap-2">
+                        <template v-if="1">
+                          <a href=""><img class="h-6 w-6" src="../assets/download.png"/></a>
+                        </template>
+                        <template v-if="0">
+                          <a href=""><img class="h-6 w-6" src="../assets/play.png"/></a>
+                        </template>
+                        <template v-if="0">
+                          <a href=""><img class="h-6 w-6" src="../assets/delete.png"/></a>
+                        </template>
+                      </div>
+                      <div class="flex items-center gap-2">
+                        <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.githubLink}`)" class="cursor-pointer">
+                          <img class="w-6 h-6" src="../assets/github.png" />
+                        </a>
+                        <a v-if="mod.social" @click.prevent="openLink(`${mod.social}`)" class="cursor-pointer">
+                          <img class="w-6 h-6" src="../assets/discord.png" />
+                        </a>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </template>
+              <!-- Mod -->
+              <template v-for="version in mod.versions" :key="version.version">
+                <template v-if="selectedGameVersion == '' || selectedGameVersion == version.gameVersion">
+                  <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-700 min-w-[300px]" >
+                    <!-- Div haut -->
+                    <div class="flex flex-col gap-1">
+                      <!-- Ligne titre + flag -->
+                      <div class="flex items-center gap-4 justify-between">
+                        <p class="uppercase text-lg cursor-pointer">{{ mod.name }}</p>
+                        <template v-if="mod.countries == 'fr'">
+                          <img class="h-6 border border-white" src="../assets/fr.png" />
+                        </template>
+                        <template v-else-if="mod.countries == 'es'">
+                          <img v-if="mod.countries" class="h-6 border border-white" src="../assets/es.png" />
+                        </template>
+                        <template v-else-if="mod.countries == 'jp'">
+                          <img v-if="mod.countries" class="h-6 border border-white" src="../assets/jp.png" />
+                        </template>
+                        <template v-else-if="mod.countries == 'cn'">
+                          <img v-if="mod.countries" class="h-6 border border-white" src="../assets/cn.png" />
+                        </template>
+                        <template v-else>
+                          <img v-if="mod.countries" class="h-6 border border-white" src="../assets/en.png" />
+                        </template>
+                      </div>
+                      <a v-if="mod.author" @click.prevent="openLink(`https://github.com/${mod.author}`)" class="cursor-pointer">
+                        {{ mod.author }}
+                      </a>
+                      <a v-if="mod.author && mod.githubLink && version.version" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}/releases/tag/${version.version}`)" class="cursor-pointer">
+                        Version: {{ version.version }}
+                      </a>
+                    </div>
+                    <!-- Div bas -->
+                    <div class="flex flex-col gap-1">
+                      <!-- Buttons -->
+                      <div class="flex justify-between items-center gap-4">
+                        <div class="flex items-center gap-2">
+                          <template v-if="1">
+                            <a href=""><img class="h-6 w-6" src="../assets/download.png"/></a>
+                          </template>
+                          <template v-if="0">
+                            <a href=""><img class="h-6 w-6" src="../assets/play.png"/></a>
+                          </template>
+                          <template v-if="0">
+                            <a href=""><img class="h-6 w-6" src="../assets/delete.png"/></a>
+                          </template>
+                        </div>
+                        <div class="flex items-center gap-2">
+                          <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.githubLink}`)" class="cursor-pointer">
+                            <img class="w-6 h-6" src="../assets/github.png" />
+                          </a>
+                          <a v-if="mod.social" @click.prevent="openLink(`${mod.social}`)" class="cursor-pointer">
+                            <img class="w-6 h-6" src="../assets/discord.png" />
+                          </a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </template>
+              </template>
+            </template>
+          </div>
       </div>
-    </div>
   </div>
 </template>
 
 <script>
-export default {
-  data() {
-    return {
-      // ...autres données
-      selectedAuthor: '',
-      selectedGameVersion: '',
-      authorOptions: ['Auteur 1', 'Auteur 2', 'Auteur 3'], // Exemple d'options d'auteurs
-      gameVersionOptions: ['Version 1', 'Version 2', 'Version 3'] // Exemple d'options de versions de jeu
-    };
-  },
-  computed: {
-    filteredMods() {
-      return this.$store.getters.filteredMods(this.filterName, this.filterAuthor, this.filterGameVersion);
-    }
-  }
-};
+  export default {
+    data() {
+      return {
+        selectedGameVersion: '',
+        selectedCategory: '',
+      };
+    },
+    computed: {
+      categoriesOptions() {
+        return this.$store.getters.categoriesOptions;
+      },
+      gameVersionOptions() {
+        return this.$store.getters.gameVersionOptions;
+      },
+      filteredMods() {
+        return this.$store.getters.filteredMods(this.selectedCategory, this.selectedGameVersion);
+      }
+    },
+    mounted() {
+      if (this.categoriesOptions.length > 1) {
+        this.selectedCategory = this.categoriesOptions[0].sid;
+      }
+    },
+    methods: {
+      openLink(url) {
+        console.log(window.electronAPI)
+        window.electronAPI.openExternal(url);
+      },
+    },
+  };
 </script>

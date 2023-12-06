@@ -15,6 +15,7 @@
   "main": "background.js",
   "dependencies": {
     "core-js": "^3.8.3",
+    "octokit": "^3.1.2",
     "vue": "^3.2.13",
     "vue-router": "^4.2.5",
     "vuex": "^4.0.2",
