@@ -9,6 +9,12 @@ export default createStore({
   mutations: {
     setAppData(state, data) {
       state.appData = data;
+      if (state.appData.config.theme == "dark") {
+        document.getElementById("themeDiv").classList.remove("dark");
+        document.getElementById("themeDiv").classList.add("dark");
+      } else {
+        document.getElementById("themeDiv").classList.remove("dark");
+      }
     }
   },
   actions: {

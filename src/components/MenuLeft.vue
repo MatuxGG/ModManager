@@ -1,5 +1,5 @@
 <template>
-    <div class="h-full min-h-screen w-64 min-w-64 flex flex-col justify-between text-lg bg-gray-800 p-2">
+    <div class="h-full min-h-screen w-64 min-w-64 flex flex-col justify-between text-lg text-white bg-gray-500 dark:bg-gray-900 p-2">
         <div class="flex flex-col">
             <img class="w-full" src="../assets/modmanager_logo.png">
             <router-link v-for="menu in menus"
@@ -14,8 +14,8 @@
         </div>
         <div class="flex flex-col items-center gap-4">
             <div class="flex items-center justify-between gap-4">
-               <a v-for="miniIcon in miniIcons" :key="miniIcon.id" @click.prevent="openLink(miniIcon.href)"> 
-                  <img class="h-6 w-6 cursor-pointer" :src="miniIcon.src" />
+               <a v-for="miniIcon in miniIcons" :key="miniIcon.id" @click.prevent="openLink(miniIcon.href)">
+                  <img class="image-icon cursor-pointer" :src="miniIcon.src" />
                 </a>
               </div>
             <p>{{ version }}</p>

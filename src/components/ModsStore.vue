@@ -2,15 +2,15 @@
   <div class="page p-4">
       <div class="flex flex-col gap-4">
           <div class="flex items-center gap-4">
-              <img class="w-12 h-12" src="../assets/download.png"/>
+              <img class="image-title" src="../assets/download.png"/>
               <h1 class="title">Mods Store</h1>
           </div>
           <div class="flex items-center gap-4">
-            <select v-model="selectedCategory" class="mm-selectbox">
+            <select v-model="selectedCategory" class="selectbox">
               <option value="">All categories</option>
               <option v-for="category in categoriesOptions" :key="category.sid" :value="category.sid">{{ category.name }}</option>
             </select>
-            <select v-model="selectedGameVersion" class="mm-selectbox">
+            <select v-model="selectedGameVersion" class="selectbox">
               <option value="">All versions</option>
               <option v-for="version in gameVersionOptions" :key="version" :value="version">{{ version }}</option>
             </select>
@@ -20,7 +20,7 @@
                   :key="mod.sid">
               <!-- All In One -->
               <template v-if="mod.type == 'allInOne'">
-                <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-700 min-w-[300px]" >
+                <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-300 dark:bg-gray-700 min-w-[300px]" >
                   <!-- Div haut-->
                   <div class="flex flex-col gap-1">
                     <!-- Ligne titre + flag-->
@@ -52,21 +52,21 @@
                     <div class="flex justify-between items-center gap-4">
                       <div class="flex items-center gap-2">
                         <template v-if="1">
-                          <a href=""><img class="h-6 w-6" src="../assets/download.png"/></a>
+                          <a href=""><img class="image-icon" src="../assets/download.png"/></a>
                         </template>
                         <template v-if="0">
-                          <a href=""><img class="h-6 w-6" src="../assets/play.png"/></a>
+                          <a href=""><img class="image-icon" src="../assets/play.png"/></a>
                         </template>
                         <template v-if="0">
-                          <a href=""><img class="h-6 w-6" src="../assets/delete.png"/></a>
+                          <a href=""><img class="image-icon" src="../assets/delete.png"/></a>
                         </template>
                       </div>
                       <div class="flex items-center gap-2">
                         <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.githubLink}`)" class="cursor-pointer">
-                          <img class="w-6 h-6" src="../assets/github.png" />
+                          <img class="image-icon" src="../assets/github.png" />
                         </a>
                         <a v-if="mod.social" @click.prevent="openLink(`${mod.social}`)" class="cursor-pointer">
-                          <img class="w-6 h-6" src="../assets/discord.png" />
+                          <img class="image-icon" src="../assets/discord.png" />
                         </a>
                       </div>
                     </div>
@@ -76,26 +76,26 @@
               <!-- Mod -->
               <template v-for="version in mod.versions" :key="version.version">
                 <template v-if="selectedGameVersion == '' || selectedGameVersion == version.gameVersion">
-                  <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-700 min-w-[300px]" >
+                  <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-300 dark:bg-gray-700 min-w-[300px]" >
                     <!-- Div haut -->
                     <div class="flex flex-col gap-1">
                       <!-- Ligne titre + flag -->
                       <div class="flex items-center gap-4 justify-between">
                         <p class="uppercase text-lg cursor-pointer">{{ mod.name }}</p>
                         <template v-if="mod.countries == 'fr'">
-                          <img class="h-6 border border-white" src="../assets/fr.png" />
+                          <img class="h-6 border border-black dark:border-white" src="../assets/fr.png" />
                         </template>
                         <template v-else-if="mod.countries == 'es'">
-                          <img v-if="mod.countries" class="h-6 border border-white" src="../assets/es.png" />
+                          <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/es.png" />
                         </template>
                         <template v-else-if="mod.countries == 'jp'">
-                          <img v-if="mod.countries" class="h-6 border border-white" src="../assets/jp.png" />
+                          <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/jp.png" />
                         </template>
                         <template v-else-if="mod.countries == 'cn'">
-                          <img v-if="mod.countries" class="h-6 border border-white" src="../assets/cn.png" />
+                          <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/cn.png" />
                         </template>
                         <template v-else>
-                          <img v-if="mod.countries" class="h-6 border border-white" src="../assets/en.png" />
+                          <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/en.png" />
                         </template>
                       </div>
                       <a v-if="mod.author" @click.prevent="openLink(`https://github.com/${mod.author}`)" class="cursor-pointer">
@@ -111,21 +111,21 @@
                       <div class="flex justify-between items-center gap-4">
                         <div class="flex items-center gap-2">
                           <template v-if="1">
-                            <a href=""><img class="h-6 w-6" src="../assets/download.png"/></a>
+                            <a href=""><img class="image-icon" src="../assets/download.png"/></a>
                           </template>
                           <template v-if="0">
-                            <a href=""><img class="h-6 w-6" src="../assets/play.png"/></a>
+                            <a href=""><img class="image-icon" src="../assets/play.png"/></a>
                           </template>
                           <template v-if="0">
-                            <a href=""><img class="h-6 w-6" src="../assets/delete.png"/></a>
+                            <a href=""><img class="image-icon" src="../assets/delete.png"/></a>
                           </template>
                         </div>
                         <div class="flex items-center gap-2">
                           <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.githubLink}`)" class="cursor-pointer">
-                            <img class="w-6 h-6" src="../assets/github.png" />
+                            <img class="image-icon" src="../assets/github.png" />
                           </a>
                           <a v-if="mod.social" @click.prevent="openLink(`${mod.social}`)" class="cursor-pointer">
-                            <img class="w-6 h-6" src="../assets/discord.png" />
+                            <img class="image-icon" src="../assets/discord.png" />
                           </a>
                         </div>
                       </div>

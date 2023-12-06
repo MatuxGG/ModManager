@@ -1,5 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
+  darkMode: 'class',
   content: [
     "./src/**/*.{vue,js,ts}"
   ],
@@ -8,8 +9,7 @@ module.exports = {
       minWidth: {
         '64': '256px',
       }
-    },
+    }
   },
   plugins: [],
 }
-

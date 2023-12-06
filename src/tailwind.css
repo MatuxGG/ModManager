@@ -6,12 +6,20 @@
     box-shadow: -5px 0 0 0 orange;
 }
 
-.mm-selectbox {
-    @apply bg-gray-700 p-2 rounded text-xl;
+.selectbox {
+    @apply bg-gray-300 dark:bg-gray-700 p-2 rounded text-xl;
 }
 
-.mm-button {
-    @apply bg-gray-700 p-2 rounded text-xl;
+.button {
+    @apply bg-gray-300 dark:bg-gray-700 p-2 rounded text-xl;
+}
+
+.image-title {
+    @apply brightness-0 dark:brightness-100 w-12 h-12;
+}
+
+.image-icon {
+    @apply brightness-0 dark:brightness-100 h-6 w-6;
 }
 
 .title {
@@ -20,4 +28,8 @@
 
 .title2 {
     @apply text-2xl font-bold tracking-wider underline underline-offset-8 py-4;
+}
+
+.link {
+    @apply text-blue-400 hover:underline;
 }

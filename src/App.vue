@@ -1,12 +1,15 @@
 <template>
-  <div class="bg-gray-500 text-white text-sm flex items-center justify-center h-full w-full min-h-screen">
-    <MenuLeft :version="version" :miniIcons="miniIcons" :menus="menus" />
-    <div class="min-h-screen max-h-screen h-full flex grow p-2 overflow-auto">
-      <div class="w-full">
-        <router-view></router-view>
+  <div id="themeDiv">
+    <div class="bg-white dark:bg-gray-800 text-black dark:text-white text-sm flex items-center justify-center h-full w-full min-h-screen">
+      <MenuLeft :version="version" :miniIcons="miniIcons" :menus="menus" />
+      <div class="min-h-screen max-h-screen h-full flex grow p-2 overflow-auto">
+        <div class="w-full">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
   </div>
+  
 </template>
 
 <script>
