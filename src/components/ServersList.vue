@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div class="page p-4">
     <div class="flex flex-col gap-4">
       <div class="flex items-center gap-4">
@@ -34,4 +34,4 @@ export default {
       
   },
 };
-</script>
+</script> -->

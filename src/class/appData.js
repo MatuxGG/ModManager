@@ -16,8 +16,8 @@ class AppData {
         this.config = new Config();
         await this.config.loadAmongUsPath();
         Files.loadOrCreate(configPath, this.config);
-        this.regionInfo = new RegionInfo();
-        Files.loadOrCreate(regionInfoPath, this.regionInfo);
+        // this.regionInfo = new RegionInfo();
+        // Files.loadOrCreate(regionInfoPath, this.regionInfo);
         this.modSources = [];
         for (let i = 0; i < this.config.sources.length; i++) {
             const source = this.config.sources[i];
@@ -40,11 +40,11 @@ class AppData {
         fs.writeFileSync(configPath, configData);
     }
 
-    updateRegionInfo(newRegionInfo) {
-        Object.assign(this.regionInfo, JSON.parse(newRegionInfo));
-        const configData = JSON.stringify(this.regionInfo, null, 2);
-        fs.writeFileSync(regionInfoPath, configData);
-    }
+    // updateRegionInfo(newRegionInfo) {
+    //     Object.assign(this.regionInfo, JSON.parse(newRegionInfo));
+    //     const configData = JSON.stringify(this.regionInfo, null, 2);
+    //     fs.writeFileSync(regionInfoPath, configData);
+    // }
 }
 
 module.exports = AppData;

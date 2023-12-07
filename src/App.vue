@@ -26,9 +26,9 @@ export default {
       version: 'Mod Manager Version 7 Beta',
       menus: [
         { href: '/store', img: require('@/assets/download.png'), title: 'Mods Store'},
-        { href: '/', img: require('@/assets/mods.png'), title: 'Library'},
-        { href: '/servers', img: require('@/assets/servers.png'), title: 'Servers'},
-        { href: '/addlocal', img: require('@/assets/add.png'), title: 'Add Local'},
+        { href: '/', img: require('@/assets/mods.png'), title: 'Mods Library'},
+        // { href: '/servers', img: require('@/assets/servers.png'), title: 'Servers'},
+        { href: '/addlocal', img: require('@/assets/add.png'), title: 'Add Mod'},
         { href: '/settings', img: require('@/assets/settings.png'), title: 'Settings'},
         { href: '/credits', img: require('@/assets/credits.png'), title: 'Credits'},
       ],

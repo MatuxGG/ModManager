@@ -31,13 +31,13 @@ ipcMain.on('updateConfigServer', async (event, newConfig) => {
   event.reply('loadDataClient', sentData);
 });
 
-ipcMain.on('updateRegionInfoServer', async (event, newRegionInfo) => {
-  console.log("Save regionInfo on server...");
-  appData.updateConfig(newRegionInfo);
-  console.log("regionInfo saved on server");
-  let sentData = JSON.stringify(appData);
-  event.reply('loadDataClient', sentData);
-});
+// ipcMain.on('updateRegionInfoServer', async (event, newRegionInfo) => {
+//   console.log("Save regionInfo on server...");
+//   appData.updateConfig(newRegionInfo);
+//   console.log("regionInfo saved on server");
+//   let sentData = JSON.stringify(appData);
+//   event.reply('loadDataClient', sentData);
+// });
 
 let preloadPath;
 if (process.env.WEBPACK_DEV_SERVER_URL) {
