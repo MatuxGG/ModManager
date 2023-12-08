@@ -62,7 +62,7 @@
                         </template>
                       </div>
                       <div class="flex items-center gap-2">
-                        <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.githubLink}`)" class="cursor-pointer">
+                        <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}`)" class="cursor-pointer">
                           <img class="image-icon" src="../assets/github.png" />
                         </a>
                         <a v-if="mod.social" @click.prevent="openLink(`${mod.social}`)" class="cursor-pointer">
@@ -111,7 +111,7 @@
                       <div class="flex justify-between items-center gap-4">
                         <div class="flex items-center gap-2">
                           <template v-if="1">
-                            <a href=""><img class="image-icon" src="../assets/download.png"/></a>
+                            <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/download.png"/></div>
                           </template>
                           <template v-if="0">
                             <a href=""><img class="image-icon" src="../assets/play.png"/></a>
@@ -121,7 +121,7 @@
                           </template>
                         </div>
                         <div class="flex items-center gap-2">
-                          <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.githubLink}`)" class="cursor-pointer">
+                          <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}`)" class="cursor-pointer">
                             <img class="image-icon" src="../assets/github.png" />
                           </a>
                           <a v-if="mod.social" @click.prevent="openLink(`${mod.social}`)" class="cursor-pointer">
@@ -165,9 +165,11 @@
     },
     methods: {
       openLink(url) {
-        console.log(window.electronAPI)
         window.electronAPI.openExternal(url);
       },
+      downloadMod(mod, version) {
+        window.electronAPI.sendData('downloadMod', JSON.stringify(mod), JSON.stringify(version));
+      }
     },
   };
 </script>

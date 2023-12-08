@@ -9,6 +9,7 @@ export default createStore({
   mutations: {
     setAppData(state, data) {
       state.appData = data;
+      document.getElementById("versionDiv").innerText = "Mod Manager Version " + state.appData.config.version;
       if (state.appData.config.theme == "dark") {
         document.getElementById("themeDiv").classList.remove("dark");
         document.getElementById("themeDiv").classList.add("dark");
@@ -58,7 +59,6 @@ export default createStore({
         return Object.values(uniqueCategories).sort((a, b) => a.weight - b.weight);
     },
     filteredMods: (state) => (filterCategory, filterGameVersion) => {
-      console.log(state.appData.modSources)
       return state.appData.modSources.flatMap(source =>
         source.mods.filter(mod => {
           if (mod.type == "allInOne") return true;

@@ -1,4 +1,3 @@
-const packageJson = require('../../package.json');
 const Winreg = require('winreg');
 const path = require('path');
 
@@ -12,9 +11,6 @@ class Config {
         amongUsPath = "", dataPath = "", lg = "EN", supportId = "", favoriteMods = [], minimizeToTray = true,
         launchOnStartup = true, theme = "dark" ) {
         this.version = version;
-        if (this.version == "") {
-            this.version = packageJson.version;
-        }
         this.sources = sources;
         this.installedMods = this.installedMods;
         this.installedVanilla = this.installedVanilla;

@@ -6,6 +6,7 @@ const configPath = path.join(appDataPath, 'ModManager7', 'config7.json');
 const regionInfoPath = path.join(appDataPath, '..', 'LocalLow', 'Innersloth', 'Among Us', 'regionInfo.json');
 const fs = require('fs');
 const RegionInfo = require("./regionInfo");
+const packageJson = require('../../package.json');
 
 class AppData {
     constructor() {
@@ -13,7 +14,7 @@ class AppData {
     }
     async load() {
         console.log("Appdata load...")
-        this.config = new Config();
+        this.config = new Config(packageJson.version);
         await this.config.loadAmongUsPath();
         Files.loadOrCreate(configPath, this.config);
         // this.regionInfo = new RegionInfo();

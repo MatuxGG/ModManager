@@ -7,11 +7,18 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require('path');
 const AppData = require('./class/appData');
 let appData = new AppData();
+import {shell} from 'electron';
+import ModWorker from './class/modWorker'
+let currentDownloads = [];
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
+
+ipcMain.on('openExternal', async (event, url) => {
+  shell.openExternal(url)
+});
 
 ipcMain.on('loadDataServer', async (event) => {
   console.log("Loading data server...");
@@ -38,6 +45,24 @@ ipcMain.on('updateConfigServer', async (event, newConfig) => {
 //   let sentData = JSON.stringify(appData);
 //   event.reply('loadDataClient', sentData);
 // });
+
+function isDownloadInProgress(mod, version) {
+  return currentDownloads.some(([existingMod, existingVersion]) => 
+      existingMod.sid === mod.sid && existingVersion.version === version.version);
+}
+
+ipcMain.on('downloadMod', async (event, mod, version) => {
+  console.log("Downloading mod on server...");
+  if (isDownloadInProgress(mod, version)) return;
+  currentDownloads.push([mod, version]);
+  await ModWorker.downloadMod(event, mod, version, appData);
+  const index = currentDownloads.findIndex(([existingMod, existingVersion]) => 
+        existingMod.sid === mod.sid && existingVersion.version === version.version);
+  if (index !== -1) {
+      currentDownloads.splice(index, 1);
+  }
+  console.log("Mod downloaded on server");
+});
 
 let preloadPath;
 if (process.env.WEBPACK_DEV_SERVER_URL) {

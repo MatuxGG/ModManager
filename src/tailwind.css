@@ -33,3 +33,7 @@
 .link {
     @apply text-blue-400 hover:underline;
 }
+
+.downloader-line {
+    @apply p-2 border-white border bg-gray-800 rounded;
+}

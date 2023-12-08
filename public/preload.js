@@ -1,10 +1,10 @@
-const { contextBridge, ipcRenderer, shell } = require('electron');
+const { contextBridge, ipcRenderer } = require('electron');
 
 contextBridge.exposeInMainWorld('electronAPI', {
   openExternal: (url) => {
-    shell.openExternal(url);
+    ipcRenderer.send("openExternal", url);
   },
-  sendData: (channel, data) => ipcRenderer.send(channel, data),
+  sendData: (channel, ...data) => ipcRenderer.send(channel, ...data),
   receiveData: (channel, func) => {
       ipcRenderer.on(channel, (event, ...args) => func(...args));
   },

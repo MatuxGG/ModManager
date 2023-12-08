@@ -18,7 +18,7 @@
                   <img class="image-icon cursor-pointer" :src="miniIcon.src" />
                 </a>
               </div>
-            <p>{{ version }}</p>
+            <p class="text-center text-lg" id="versionDiv"></p>
         </div>
     </div>
 </template>
@@ -26,7 +26,6 @@
 <script>
   export default {
     props: {
-      version: String,
       miniIcons: Array,
       menus: Array
     },
