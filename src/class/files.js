@@ -58,6 +58,48 @@ class Files {
             req.end();
         });
     }
+
+    static async getGithubReleases(author, repo) {
+        return new Promise((resolve, reject) => {
+            var options = {
+                host: 'api.github.com',
+                path: `/repos/${author}/${repo}/releases`,
+                method: 'GET',
+                headers: {
+                    'user-agent': 'ModManager',
+                    'Authorization': 'token ghp...'
+                }
+            };
+    
+            const req = https.request(options, (res) => {
+                let data = '';
+    
+                res.on('data', (chunk) => {
+                    data += chunk;
+                });
+    
+                res.on('end', () => {
+                    if (res.statusCode === 200 || res.statusCode == 301) {
+                        try {
+                            let parsedData = JSON.parse(data);
+                            resolve(parsedData);
+                            console.log("Loaded releases for mod: "+author+"/"+repo);
+                        } catch (e) {
+                            reject(`Error parsing response: ${e}`);
+                        }
+                    } else {
+                        reject(`Request failed with status code ${res.statusCode}`);
+                    }
+                });
+            });
+    
+            req.on('error', (e) => {
+                reject(`Request error: ${e}`);
+            });
+    
+            req.end();
+        });
+    }
 }
 
 module.exports = Files;
