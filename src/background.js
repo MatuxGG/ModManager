@@ -1,15 +1,21 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, ipcMain } from 'electron'
+import { app, protocol, BrowserWindow, ipcMain, Tray, Menu } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 const path = require('path');
 const AppData = require('./class/appData');
+const AutoLaunch = require('auto-launch');
+
 let appData = new AppData();
 import {shell} from 'electron';
 import ModWorker from './class/modWorker'
 let currentDownloads = [];
+let win = null;
+let tray = null;
+let autoLaunch = null;
+
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -24,6 +30,7 @@ ipcMain.on('loadDataServer', async (event) => {
   console.log("Loading data server...");
   if (!appData || !appData.isLoaded) {
     await appData.load();
+    updateLaunchOnStart();
   }
   let sentData = JSON.stringify(appData);
   console.log("Data server loaded");
@@ -33,6 +40,7 @@ ipcMain.on('loadDataServer', async (event) => {
 ipcMain.on('updateConfigServer', async (event, newConfig) => {
   console.log("Save config on server...");
   appData.updateConfig(newConfig);
+  updateLaunchOnStart();
   console.log("Config saved on server");
   let sentData = JSON.stringify(appData);
   event.reply('loadDataClient', sentData);
@@ -73,11 +81,74 @@ if (process.env.WEBPACK_DEV_SERVER_URL) {
   preloadPath = path.join(__dirname, 'preload.js');
 }
 
+function createTray() {
+  tray = new Tray(path.join(__dirname, '../public/modmanager.ico'));
+  const contextMenu = Menu.buildFromTemplate([
+    {
+      label: 'Mod Manager',
+      click: function () {
+        win.show();
+      }
+    },
+    {
+      label: 'Exit',
+      click: function () {
+        app.isQuiting = true;
+        app.quit();
+      }
+    }
+  ]);
+
+  tray.setToolTip('Mon application Electron');
+  tray.setContextMenu(contextMenu);
+
+  tray.on('double-click', () => {
+    if (!appData || !appData.isLoaded) return;
+    if (appData.config.minimizeToTray) {
+      win.isVisible() ? win.hide() : win.show();
+    } else {
+      tray.destroy();
+      app.quit();
+    }
+  });
+}
+
+function enableAutoLaunch() {
+  autoLaunch.isEnabled().then((isEnabled) => {
+    if (!isEnabled) autoLaunch.enable();
+  }).catch((err) => {
+    console.error(err);
+  });
+}
+
+function disableAutoLaunch() {
+  autoLaunch.isEnabled().then((isEnabled) => {
+    if (isEnabled) autoLaunch.disable();
+  }).catch((err) => {
+    console.error(err);
+  });
+}
+
+function updateLaunchOnStart() {
+  autoLaunch = new AutoLaunch({
+    name: 'ModManager',
+    icon: path.join(__dirname, '../public/modmanager.ico'),
+    path: app.getPath('exe'),
+  });
+
+  if (appData.config.launchOnStartup) {
+    enableAutoLaunch()
+  } else {
+    disableAutoLaunch()
+  }
+}
+
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  win = new BrowserWindow({
     width: 1920,
     height: 1080,
+    icon: path.join(__dirname, '../public/modmanager.ico'),
     webPreferences: {
       
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -88,6 +159,17 @@ async function createWindow() {
     },
     autoHideMenuBar: true,
   })
+  win.webContents.openDevTools();
+
+  createTray()
+
+  win.on('close', function (event) {
+    if (!app.isQuiting) {
+      event.preventDefault();
+      win.hide();
+    }
+    return false;
+  });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
@@ -128,6 +210,7 @@ app.on('ready', async () => {
     }
   }
   createWindow()
+
 })
 
 // Exit cleanly on request from parent process in development mode.

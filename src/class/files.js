@@ -59,7 +59,7 @@ class Files {
         });
     }
 
-    static async getGithubReleases(author, repo) {
+    static async getGithubReleases(author, repo, token) {
         return new Promise((resolve, reject) => {
             var options = {
                 host: 'api.github.com',
@@ -67,7 +67,7 @@ class Files {
                 method: 'GET',
                 headers: {
                     'user-agent': 'ModManager',
-                    'Authorization': 'token ghp...'
+                    'Authorization': 'token '+token
                 }
             };
     

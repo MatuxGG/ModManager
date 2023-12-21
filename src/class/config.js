@@ -12,17 +12,17 @@ class Config {
         launchOnStartup = true, theme = "dark" ) {
         this.version = version;
         this.sources = sources;
-        this.installedMods = this.installedMods;
-        this.installedVanilla = this.installedVanilla;
+        this.installedMods = installedMods;
+        this.installedVanilla = installedVanilla;
         this.amongUsPath = amongUsPath;
         this.dataPath = dataPath;
-        if (dataPath == "") {
+        if (dataPath === "") {
             this.dataPath = path.join(process.env.APPDATA, 'ModManager7');
         }
         this.lg = lg;
         this.favoriteMods = favoriteMods;
         this.supportId = supportId;
-        if (this.supportId == "") {
+        if (this.supportId === "") {
             this.supportId = this.generateRandomTenDigitNumber();
         }
         this.minimizeToTray = minimizeToTray;
@@ -32,8 +32,7 @@ class Config {
 
     async loadAmongUsPath() {
         try {
-            const location = await this.getSteamLocation();
-            this.amongUsPath = location;
+            this.amongUsPath = await this.getSteamLocation();
         } catch (err) {
             console.error(err);
         }

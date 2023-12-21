@@ -20,6 +20,7 @@ class AppData {
         Files.loadOrCreate(configPath, this.config);
         // this.regionInfo = new RegionInfo();
         // Files.loadOrCreate(regionInfoPath, this.regionInfo);
+        this.githubToken = await Files.downloadString("https://goodloss.fr/api/github/token")
         this.modSources = [];
         let downloadPromises = this.config.sources.map(source => this.downloadSource(source));
         try {
@@ -50,15 +51,16 @@ class AppData {
     }
 
     async downloadRelease(mod) {
-        mod.releases = await Files.getGithubReleases(mod.author, mod.github);
+        mod.releases = await Files.getGithubReleases(mod.author, mod.github, this.githubToken);
         if (!mod.releases) return;
         mod.versions.forEach(version => {
-            if (version.version == 'latest') {
+            if (version.version === 'latest') {
                 version.release = mod.releases[0];
-                version.version = release.tag_name;
+                version.version = version.release.tag_name;
             } else {
                 version.release = mod.releases.find(release => release.tag_name === version.version);
             }
+            console.log(mod.name, version.version);
             console.log(mod.name, version.version, version.release.tag_name);
         });
     }

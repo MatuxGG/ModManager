@@ -6,9 +6,9 @@
         <h1 class="title">Mods Installed</h1>
       </div>
       <div class="flex items-center flex-wrap">
-        <div v-if="!$store.state.appData || !$store.state.appData.config.installedMods || $store.state.appData.config.installedMods.length == 0" class="pt-8 flex flex-col gap-4">
+        <div v-if="!$store.state.appData || !$store.state.appData.config.installedMods || $store.state.appData.config.installedMods.length === 0" class="pt-8 flex flex-col gap-4">
           <p class="text-lg">You don't have any mod yet.</p>
-          <a class="text-lg link" href="/store">Download one here !</a>
+          <router-link class="text-lg link" to="/store">Download one here !</router-link>
         </div>
         <div v-else class="">
             Mods installés...

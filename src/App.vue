@@ -1,6 +1,6 @@
 <template>
   <div id="themeDiv" class="dark">
-    <div class="bg-white dark:bg-gray-800 text-black dark:text-white text-sm flex items-center justify-center h-full w-full min-h-screen">
+    <div v-if="isNotLoadingPage" class="bg-white dark:bg-gray-800 text-black dark:text-white text-sm flex items-center justify-center h-full w-full min-h-screen">
       <MenuLeft :version="version" :miniIcons="miniIcons" :menus="menus" />
       <div class="min-h-screen max-h-screen h-full flex grow p-2 overflow-auto">
         <div class="w-full">
@@ -11,8 +11,10 @@
           
       </div>
     </div>
+    <div v-else class="bg-white dark:bg-gray-800 text-black dark:text-white text-sm flex justify-center items-center justify-center h-full w-full min-h-screen">
+      <router-view></router-view>
+    </div>
   </div>
-  
 </template>
 
 <script>
@@ -29,7 +31,7 @@ export default {
     return {
       menus: [
         { href: '/store', img: require('@/assets/download.png'), title: 'Mods Store'},
-        { href: '/', img: require('@/assets/mods.png'), title: 'Mods Library'},
+        { href: '/library', img: require('@/assets/mods.png'), title: 'Mods Library'},
         // { href: '/servers', img: require('@/assets/servers.png'), title: 'Servers'},
         { href: '/addlocal', img: require('@/assets/add.png'), title: 'Add Mod'},
         { href: '/settings', img: require('@/assets/settings.png'), title: 'Settings'},
@@ -49,22 +51,45 @@ export default {
         ...menu,
         active: this.$route.path === menu.href
       }));
+    },
+    isNotLoadingPage() {
+      return this.$route.path !== '/';
     }
   },
   watch: {
     '$route' () {
     }
   },
+  methods: {
+    updateAfterLoad() {
+      const appData = this.$store.state.appData;
+      document.getElementById("versionDiv").innerText = "Mod Manager Version " + appData.config.version;
+      if (appData.config.theme === "dark") {
+        document.getElementById("themeDiv").classList.remove("dark");
+        document.getElementById("themeDiv").classList.add("dark");
+      } else {
+        document.getElementById("themeDiv").classList.remove("dark");
+      }
+    }
+  },
   mounted() {
-    this.$store.dispatch('loadAppData');
-    window.electronAPI.receiveData('showPopin', (text, id) => {
+    this.$store.dispatch('loadAppData').then(() => {
+      this.$router.push('/library').then(() => {
+        // Attendre que Vue mette à jour le DOM après le changement de route
+        this.$nextTick(() => {
+          this.updateAfterLoad();
+        });
+      });
+    });
+    window.electronAPI.receiveData('showPopin', (text, id, classes) => {
       let popinId = "popin-"+id;
       let parentDiv = document.getElementById("popinDiv");
       let popinDiv = document.getElementById(popinId);
       if (!popinDiv) {
         popinDiv = document.createElement('div');
         popinDiv.id = popinId;
-        popinDiv.classList.add('downloader-line');
+        popinDiv.classList.add('downloader-line', classes);
+        // popinDiv.classList.add(classes);
         popinDiv.style.opacity = '0'
         parentDiv.appendChild(popinDiv);
         $(popinDiv).animate({ opacity: 1 }, 500);
@@ -73,15 +98,23 @@ export default {
       popinDiv.innerHTML = text;
     });
 
-    window.electronAPI.receiveData('hidePopin', (id) => {
+    window.electronAPI.receiveData('hidePopin', (text, id, classes) => {
       let popinId = "popin-"+id;
       let parentDiv = document.getElementById("popinDiv");
       let popinDiv = document.getElementById(popinId);
+      popinDiv.classList.remove(classes);
+      popinDiv.classList.add('bg-green-700');
+      popinDiv.innerHTML = text;
+      popinDiv.addEventListener('click', function () {
+        parentDiv.removeChild(popinDiv);
+      })
       setTimeout(() => {
         if (popinDiv && parentDiv.contains(popinDiv)) {
           $(popinDiv).animate({ opacity: 0 }, 500);
           setTimeout(() => {
-            parentDiv.removeChild(popinDiv);
+            if (parentDiv && popinDiv) {
+              parentDiv.removeChild(popinDiv);
+            }
           }, 500);
         }
       }, 5000);

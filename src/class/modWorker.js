@@ -1,4 +1,3 @@
-const { ipcMain } = require('electron');
 const axios = require('axios').default;
 const fs = require('fs');
 const path = require('path');
@@ -8,11 +7,11 @@ class ModWorker {
         try {
             mod = JSON.parse(mod);
             version = JSON.parse(version);
+            console.log(version.release);
             let finished = false;
             let downloadId = Date.now().toString();
             const response = await axios({
                 method: 'get',
-                // url: mod.downloadUrl,
                 url: "https://github.com/MatuxGG/ModManager/releases/download/5.3.7/ModManagerInstaller.exe",
                 responseType: 'stream'
             });
@@ -34,24 +33,22 @@ class ModWorker {
                 lastProgress = progress;
                 lastTime = currentTime;
 
-                let downloadData = {
-                    downloadedSize: this.formatByteSize(progress),
-                    totalSize: this.formatByteSize(totalLength),
-                    percentCompleted: percentCompleted,
-                    downloadSpeed: this.formatByteSize(speed) + "/s"
-                };
-
-                let downloadText = "<p>Downloading "+ mod.name + "</p>"
+                let downloadText = "<div class='w-64'><p>Downloading "+ mod.name + "</p>"
                     + "<p>Progress: " + percentCompleted + "%<p>"
                     +"<p>Speed: " + this.formatByteSize(speed) + "/s<p>"
-                    +"<p>" + this.formatByteSize(progress) + " / " + this.formatByteSize(totalLength) + "<p>";
+                    +"<p>" + this.formatByteSize(progress) + " / " + this.formatByteSize(totalLength) + "<p></div>";
                 
-                event.sender.send('showPopin', downloadText, downloadId);
 
-                if (!finished && percentCompleted == 100) {
-                    event.sender.send('hidePopin', downloadId);
-                    finished = true;
+                if (!finished) {
+                    if (percentCompleted === 100) {
+                        event.sender.send('hidePopin', downloadText, downloadId, "bg-blue-700");
+                        finished = true;
+                    } else {
+                        event.sender.send('showPopin', downloadText, downloadId, "bg-blue-700");
+                    }
                 }
+
+
             });
             const modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version);
             const writer = fs.createWriteStream(modPath);

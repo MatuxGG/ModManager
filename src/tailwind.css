@@ -35,5 +35,5 @@
 }
 
 .downloader-line {
-    @apply p-2 border-white border bg-gray-800 rounded;
+    @apply p-2 border-white border rounded cursor-pointer;
 }

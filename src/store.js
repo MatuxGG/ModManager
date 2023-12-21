@@ -9,20 +9,16 @@ export default createStore({
   mutations: {
     setAppData(state, data) {
       state.appData = data;
-      document.getElementById("versionDiv").innerText = "Mod Manager Version " + state.appData.config.version;
-      if (state.appData.config.theme == "dark") {
-        document.getElementById("themeDiv").classList.remove("dark");
-        document.getElementById("themeDiv").classList.add("dark");
-      } else {
-        document.getElementById("themeDiv").classList.remove("dark");
-      }
     }
   },
   actions: {
     loadAppData(context) {
-        window.electronAPI.sendData('loadDataServer');
-        window.electronAPI.receiveData('loadDataClient', (data) => {
-            context.commit('setAppData', JSON.parse(data));
+        return new Promise((resolve) => {
+            window.electronAPI.sendData('loadDataServer');
+            window.electronAPI.receiveData('loadDataClient', (data) => {
+                context.commit('setAppData', JSON.parse(data));
+                resolve(context.rootState);
+            });
         });
     }
   },
@@ -61,8 +57,8 @@ export default createStore({
     filteredMods: (state) => (filterCategory, filterGameVersion) => {
       return state.appData.modSources.flatMap(source =>
         source.mods.filter(mod => {
-          if (mod.type == "allInOne") return true;
-          let hasVersion = filterGameVersion ? false : true;
+          if (mod.type === "allInOne") return true;
+          let hasVersion = !filterGameVersion;
           if (filterGameVersion) {
             mod.versions.forEach(version => {
               if (version.gameVersion && version.gameVersion.toLowerCase().includes(filterGameVersion.toLowerCase())) {
@@ -71,7 +67,7 @@ export default createStore({
             });
           }
     
-          let hasCategory = filterCategory ? false : true;
+          let hasCategory = !filterCategory;
           if (filterCategory) {
             if (mod.category && mod.category.sid.toLowerCase().includes(filterCategory.toLowerCase())) {
               hasCategory = true;
