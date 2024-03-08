@@ -1,7 +1,7 @@
 <template>
   <div id="themeDiv" class="dark">
     <div v-if="isNotLoadingPage" class="bg-white dark:bg-gray-800 text-black dark:text-white text-sm flex items-center justify-center h-full w-full min-h-screen">
-      <MenuLeft :version="version" :miniIcons="miniIcons" :menus="menus" />
+      <MenuLeft :miniIcons="miniIcons" :menus="menus" />
       <div class="min-h-screen max-h-screen h-full flex grow p-2 overflow-auto">
         <div class="w-full">
           <router-view></router-view>
@@ -70,7 +70,21 @@ export default {
       } else {
         document.getElementById("themeDiv").classList.remove("dark");
       }
-    }
+    },
+    openLink(url) {
+      if (window.electronAPI && window.electronAPI.openExternal) {
+        // Environnement Electron
+        window.electronAPI.openExternal(url);
+      } else {
+        // Environnement web, ouvrir le lien dans un nouvel onglet
+        window.open(url, '_blank').focus();
+      }
+    },
+  },
+  provide() {
+    return {
+      openLink: this.openLink,
+    };
   },
   mounted() {
     this.$store.dispatch('loadAppData').then(() => {

@@ -6,8 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "electron:build": "vue-cli-service electron:build",
-    "electron:serve": "vue-cli-service electron:serve",
+    "electron:build": "set NODE_OPTIONS=--openssl-legacy-provider&&vue-cli-service electron:build",
+    "electron:serve": "set NODE_OPTIONS=&&vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
     "postuninstall": "electron-builder install-app-deps",
     "watch": "npx tailwindcss -i ./src/tailwind.css -o ./src/compiled.css --watch"

@@ -35,6 +35,7 @@ ipcMain.on('loadDataServer', async (event) => {
   let sentData = JSON.stringify(appData);
   console.log("Data server loaded");
   event.reply('loadDataClient', sentData);
+  console.log("Mod Manager started");
 });
 
 ipcMain.on('updateConfigServer', async (event, newConfig) => {

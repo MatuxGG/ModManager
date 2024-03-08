@@ -29,11 +29,9 @@
       miniIcons: Array,
       menus: Array
     },
-    methods: {
-      openLink(url) {
-        window.electronAPI.openExternal(url);
-      },
-    },
+    inject: [
+        'openLink'
+    ],
   }
 </script>
   

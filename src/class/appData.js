@@ -61,7 +61,10 @@ class AppData {
                 version.release = mod.releases.find(release => release.tag_name === version.version);
             }
             console.log(mod.name, version.version);
-            console.log(mod.name, version.version, version.release.tag_name);
+            if (version.release)
+                console.log(mod.name, version.version, version.release.tag_name);
+            else
+                console.log(mod.name, version.version, "release missing");
         });
     }
 
