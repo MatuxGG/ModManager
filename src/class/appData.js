@@ -18,6 +18,8 @@ class AppData {
         this.config = new Config(packageJson.version);
         await this.config.loadAmongUsPath();
         Files.loadOrCreate(configPath, this.config);
+        Files.createDirectoryIfNotExist(path.join(this.config.dataPath, 'mods'));
+        Files.createDirectoryIfNotExist(path.join(this.config.dataPath, 'temp'));
         // this.regionInfo = new RegionInfo();
         // Files.loadOrCreate(regionInfoPath, this.regionInfo);
         this.githubToken = await Files.downloadString("https://goodloss.fr/api/github/token")

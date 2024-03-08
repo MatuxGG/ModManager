@@ -19,23 +19,23 @@
             <template v-for="mod in filteredMods"
                   :key="mod.sid">
               <!-- All In One -->
-              <template v-if="mod.type == 'allInOne'">
+              <template v-if="mod.type === 'allInOne'">
                 <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-300 dark:bg-gray-700 min-w-[300px]" >
                   <!-- Div haut-->
                   <div class="flex flex-col gap-1">
                     <!-- Ligne titre + flag-->
                     <div class="flex items-center gap-4 justify-between">
                       <p class="uppercase text-lg cursor-pointer">{{ mod.name }}</p>
-                      <template v-if="mod.countries == 'fr'">
+                      <template v-if="mod.countries === 'fr'">
                         <img class="h-6 border border-white" src="../assets/fr.png" />
                       </template>
-                      <template v-else-if="mod.countries == 'es'">
+                      <template v-else-if="mod.countries === 'es'">
                         <img v-if="mod.countries" class="h-6 border border-white" src="../assets/es.png" />
                       </template>
-                      <template v-else-if="mod.countries == 'jp'">
+                      <template v-else-if="mod.countries === 'jp'">
                         <img v-if="mod.countries" class="h-6 border border-white" src="../assets/jp.png" />
                       </template>
-                      <template v-else-if="mod.countries == 'cn'">
+                      <template v-else-if="mod.countries === 'cn'">
                         <img v-if="mod.countries" class="h-6 border border-white" src="../assets/cn.png" />
                       </template>
                       <template v-else>
@@ -75,23 +75,23 @@
               </template>
               <!-- Mod -->
               <template v-for="version in mod.versions" :key="version.version">
-                <template v-if="selectedGameVersion == '' || selectedGameVersion == version.gameVersion">
+                <template v-if="selectedGameVersion === '' || selectedGameVersion === version.gameVersion">
                   <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-300 dark:bg-gray-700 min-w-[300px]" >
                     <!-- Div haut -->
                     <div class="flex flex-col gap-1">
                       <!-- Ligne titre + flag -->
                       <div class="flex items-center gap-4 justify-between">
                         <p class="uppercase text-lg cursor-pointer">{{ mod.name }}</p>
-                        <template v-if="mod.countries == 'fr'">
+                        <template v-if="mod.countries === 'fr'">
                           <img class="h-6 border border-black dark:border-white" src="../assets/fr.png" />
                         </template>
-                        <template v-else-if="mod.countries == 'es'">
+                        <template v-else-if="mod.countries === 'es'">
                           <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/es.png" />
                         </template>
-                        <template v-else-if="mod.countries == 'jp'">
+                        <template v-else-if="mod.countries === 'jp'">
                           <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/jp.png" />
                         </template>
-                        <template v-else-if="mod.countries == 'cn'">
+                        <template v-else-if="mod.countries === 'cn'">
                           <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/cn.png" />
                         </template>
                         <template v-else>

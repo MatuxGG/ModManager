@@ -36,6 +36,10 @@ class Files {
         }
     }
 
+    static createDirectoryIfNotExist(dir) {
+        fs.mkdirSync(dir, { recursive: true });
+    }
+
     static async downloadString(url) {
         return new Promise((resolve, reject) => {
             const req = https.get(url, { rejectUnauthorized: false }, (res) => {

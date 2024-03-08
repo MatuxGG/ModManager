@@ -71,6 +71,7 @@ function isDownloadInProgress(mod, version) {
 ipcMain.on('downloadMod', async (event, mod, version) => {
   console.log("Downloading mod on server...");
   if (isDownloadInProgress(mod, version)) return;
+  // TODO: Install client
   currentDownloads.push([mod, version]);
   await ModWorker.downloadMod(event, mod, version, appData);
   const index = currentDownloads.findIndex(([existingMod, existingVersion]) => 
