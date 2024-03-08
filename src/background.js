@@ -8,11 +8,19 @@ const path = require('path');
 const AppData = require('./class/appData');
 const AutoLaunch = require('auto-launch');
 
+let publicPath = '';
+if (process.env.WEBPACK_DEV_SERVER_URL) {
+  // En mode développement
+  publicPath = path.join(__dirname, '../public');
+} else {
+  // En mode production
+  publicPath = __dirname;
+}
+
 let appData = new AppData();
 import {shell} from 'electron';
 import ModWorker from './class/modWorker'
 let currentDownloads = [];
-let win = null;
 let tray = null;
 let autoLaunch = null;
 
@@ -73,17 +81,10 @@ ipcMain.on('downloadMod', async (event, mod, version) => {
   console.log("Mod downloaded on server");
 });
 
-let preloadPath;
-if (process.env.WEBPACK_DEV_SERVER_URL) {
-  // En mode développement
-  preloadPath = path.join(__dirname, '../public/preload.js');
-} else {
-  // En mode production
-  preloadPath = path.join(__dirname, 'preload.js');
-}
+let preloadPath = path.join(publicPath, 'preload.js');
 
-function createTray() {
-  tray = new Tray(path.join(__dirname, '../public/modmanager.ico'));
+function createTray(win) {
+  tray = new Tray(path.join(publicPath, 'modmanager.ico'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Mod Manager',
@@ -100,7 +101,7 @@ function createTray() {
     }
   ]);
 
-  tray.setToolTip('Mon application Electron');
+  tray.setToolTip('Mod Manager');
   tray.setContextMenu(contextMenu);
 
   tray.on('double-click', () => {
@@ -133,7 +134,7 @@ function disableAutoLaunch() {
 function updateLaunchOnStart() {
   autoLaunch = new AutoLaunch({
     name: 'ModManager',
-    icon: path.join(__dirname, '../public/modmanager.ico'),
+    icon: path.join(publicPath, 'modmanager.ico'),
     path: app.getPath('exe'),
   });
 
@@ -146,10 +147,10 @@ function updateLaunchOnStart() {
 
 async function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({
+  const win = new BrowserWindow({
     width: 1920,
     height: 1080,
-    icon: path.join(__dirname, '../public/modmanager.ico'),
+    icon: path.join(publicPath, 'modmanager.ico'),
     webPreferences: {
       
       // Use pluginOptions.nodeIntegration, leave this alone
@@ -162,7 +163,7 @@ async function createWindow() {
   })
   win.webContents.openDevTools();
 
-  createTray()
+  createTray(win)
 
   win.on('close', function (event) {
     if (!app.isQuiting) {
@@ -185,8 +186,6 @@ async function createWindow() {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') {
     app.quit()
   }
