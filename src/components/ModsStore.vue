@@ -110,14 +110,11 @@
                       <!-- Buttons -->
                       <div class="flex justify-between items-center gap-4">
                         <div class="flex items-center gap-2">
-                          <template v-if="1">
+                          <template v-if="!isInstalledMod(mod.sid, version.version)">
                             <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/download.png"/></div>
                           </template>
-                          <template v-if="0">
-                            <a href=""><img class="image-icon" src="../assets/play.png"/></a>
-                          </template>
-                          <template v-if="0">
-                            <a href=""><img class="image-icon" src="../assets/delete.png"/></a>
+                          <template v-else>
+                            <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
                           </template>
                         </div>
                         <div class="flex items-center gap-2">
@@ -156,7 +153,7 @@
       },
       filteredMods() {
         return this.$store.getters.filteredMods(this.selectedCategory, this.selectedGameVersion);
-      }
+      },
     },
     mounted() {
       if (this.categoriesOptions.length > 1) {
@@ -169,6 +166,12 @@
       },
       downloadMod(mod, version) {
         window.electronAPI.sendData('downloadMod', JSON.stringify(mod), JSON.stringify(version));
+      },
+      uninstallMod(mod, version) {
+        window.electronAPI.sendData('uninstallMod', JSON.stringify(mod), JSON.stringify(version));
+      },
+      isInstalledMod(modId, version) {
+        return this.$store.state.appData.config.installedMods.some(mod => mod.modId === modId && mod.version === version);
       }
     },
   };

@@ -67,6 +67,23 @@ class Config {
     loadData(data) {
         Object.assign(this, data);
     }
+
+    addInstalledVanilla(gameVersion) {
+        if (this.installedVanilla.includes(gameVersion)) return;
+        this.installedVanilla.push(gameVersion);
+    }
+
+    addInstalledMod(mod, version) {
+        if (this.installedMods.some(m => m.modId === mod.sid && m.version === version.version)) return;
+        this.installedMods.push({'modId': mod.sid, 'version': version.version });
+    }
+
+    removeInstalledMod(mod, version) {
+        const index = this.installedMods.findIndex((installedMod) =>
+            installedMod.modId === mod.sid && installedMod.version === version.version);
+        if (index === -1) return;
+        this.installedMods.splice(index, 1);
+    }
 }
 
 module.exports = Config;

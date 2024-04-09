@@ -40,6 +40,15 @@ class Files {
         fs.mkdirSync(dir, { recursive: true });
     }
 
+    static deleteDirectoryIfExist(dir) {
+        if (!fs.existsSync(dir)) return;
+        fs.rm(dir, { recursive: true }, (err) => {
+            if (err) {
+                console.error(err);
+            }
+        });
+    }
+
     static async downloadString(url) {
         return new Promise((resolve, reject) => {
             const req = https.get(url, { rejectUnauthorized: false }, (res) => {

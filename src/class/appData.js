@@ -70,9 +70,14 @@ class AppData {
         });
     }
 
-    updateConfig(newConfig) {
-        Object.assign(this.config, JSON.parse(newConfig));
-        const configData = JSON.stringify(this.config, null, 2);
+    updateConfig(newConfig = null) {
+        let configData;
+        if (newConfig) {
+            Object.assign(this.config, JSON.parse(newConfig));
+            configData = JSON.stringify(this.config, null, 2);
+        } else {
+            configData = JSON.stringify(this.config);
+        }
         fs.writeFileSync(configPath, configData);
     }
 

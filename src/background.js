@@ -68,18 +68,57 @@ function isDownloadInProgress(mod, version) {
       existingMod.sid === mod.sid && existingVersion.version === version.version);
 }
 
-ipcMain.on('downloadMod', async (event, mod, version) => {
+ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
   console.log("Downloading mod on server...");
+  let mod = JSON.parse(modStr);
+  let version = JSON.parse(versionStr);
   if (isDownloadInProgress(mod, version)) return;
-  // TODO: Install client
   currentDownloads.push([mod, version]);
-  await ModWorker.downloadMod(event, mod, version, appData);
+
+  let downloadLines = [];
+
+  if (appData.config.installedVanilla.includes(version.gameVersion)) {
+    console.log("client already installed");
+  } else {
+    downloadLines.push(ModWorker.downloadClient(event, version, appData));
+  }
+
+  if (appData.config.installedMods.includes(mod.id)) {
+    console.log("mod already installed");
+  } else {
+    downloadLines.push(ModWorker.downloadMod(event, mod, version, appData));
+  }
+
+  await Promise.all(downloadLines);
+
   const index = currentDownloads.findIndex(([existingMod, existingVersion]) => 
         existingMod.sid === mod.sid && existingVersion.version === version.version);
   if (index !== -1) {
       currentDownloads.splice(index, 1);
   }
+
+  appData.config.addInstalledVanilla(version.gameVersion);
+  appData.config.addInstalledMod(mod, version);
+  appData.updateConfig();
+  event.reply('updateConfig', JSON.stringify(appData.config));
+
   console.log("Mod downloaded on server");
+});
+
+ipcMain.on('uninstallMod', async (event, modStr, versionStr) => {
+  console.log("Uninstalling mod on server...");
+  let mod = JSON.parse(modStr);
+  let version = JSON.parse(versionStr);
+
+  if (!appData.config.installedMods.some(m => m.modId === mod.sid && m.version === version.version)) return;
+
+  await ModWorker.uninstallMod(event, mod, version, appData);
+
+  appData.config.removeInstalledMod(mod, version);
+  appData.updateConfig();
+  event.reply('updateConfig', JSON.stringify(appData.config));
+
+  console.log("Mod uninstalled on server");
 });
 
 let preloadPath = path.join(publicPath, 'preload.js');
@@ -137,6 +176,7 @@ function updateLaunchOnStart() {
     name: 'ModManager',
     icon: path.join(publicPath, 'modmanager.ico'),
     path: app.getPath('exe'),
+
   });
 
   if (appData.config.launchOnStartup) {

@@ -23,11 +23,11 @@
 }
 
 .title {
-    @apply text-4xl font-bold tracking-widest;
+    @apply text-2xl font-bold tracking-widest;
 }
 
 .title2 {
-    @apply text-2xl font-bold tracking-wider underline underline-offset-8 py-4;
+    @apply text-lg font-bold tracking-wider underline underline-offset-8 py-4;
 }
 
 .link {

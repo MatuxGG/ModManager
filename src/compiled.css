@@ -633,10 +633,6 @@ video {
   min-width: 256px;
 }
 
-.min-w-\[200px\] {
-  min-width: 200px;
-}
-
 .min-w-\[300px\] {
   min-width: 300px;
 }
@@ -865,8 +861,8 @@ video {
 }
 
 .title {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
+  font-size: 1.5rem;
+  line-height: 2rem;
   font-weight: 700;
   letter-spacing: 0.1em;
 }
@@ -874,8 +870,8 @@ video {
 .title2 {
   padding-top: 1rem;
   padding-bottom: 1rem;
-  font-size: 1.5rem;
-  line-height: 2rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
   font-weight: 700;
   letter-spacing: 0.05em;
   text-decoration-line: underline;

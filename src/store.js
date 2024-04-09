@@ -9,6 +9,9 @@ export default createStore({
   mutations: {
     setAppData(state, data) {
       state.appData = data;
+    },
+    setConfig(state, config) {
+      state.appData.config = config;
     }
   },
   actions: {
@@ -19,6 +22,9 @@ export default createStore({
                 context.commit('setAppData', JSON.parse(data));
                 resolve(context.rootState);
             });
+            window.electronAPI.receiveData('updateConfig', (config) => {
+                context.commit('setConfig', JSON.parse(config));
+            })
         });
     }
   },

@@ -1,47 +1,47 @@
 <template>
   <div class="page p-4">
-    <div class="flex flex-col gap-4">
+    <div class="flex flex-col gap-2">
       <!-- En-tête des paramètres -->
-      <div class="flex items-center gap-4">
+      <div class="flex items-center gap-2">
         <img class="image-title" src="../assets/settings.png" />
-        <h1 class="title">Settings</h1>         
+        <h1 class="title">{{ $t('settings.title') }}</h1>
       </div>
 
-      <h2 class="title2">General</h2>
+      <h2 class="title2">{{ $t('settings.general') }}</h2>
 
       <div class="flex items-center text-xl">
-        <label class="min-w-[200px]" for="language-selector">Select Language:</label>
+        <label class="min-w-[300px]" for="language-selector">{{ $t('settings.select_language') }}</label>
         <select class="selectbox" id="language-selector" v-model="selectedLanguage">
-          <option value="EN">English</option>
-          <option value="FR">Français</option>
+          <option value="en">English</option>
+          <option value="fr">Français</option>
         </select>
       </div>
 
       <div class="flex items-center text-xl">
-        <label for="minimize-to-tray" class="min-w-[200px] cursor-pointer">Minimize to tray</label>
+        <label for="minimize-to-tray" class="min-w-[300px] cursor-pointer">{{ $t('settings.minimize') }}</label>
         <input type="checkbox" id="minimize-to-tray" v-model="minimizeToTray">
       </div>
 
       <div class="flex items-center text-xl">
-        <label for="launch-on-startup" class="min-w-[200px] cursor-pointer">Launch on startup</label>
+        <label for="launch-on-startup" class="min-w-[300px] cursor-pointer">{{ $t('settings.startup') }}</label>
           <input type="checkbox" id="launch-on-startup" v-model="launchOnStartup">
       </div>
 
-      <h2 class="title2">Appearance</h2>
+      <h2 class="title2">{{ $t('settings.appearance') }}</h2>
 
       <div class="flex items-center text-xl">
-        <label class="min-w-[200px]" for="theme-selector">Theme:</label>
+        <label class="min-w-[300px]" for="theme-selector">{{ $t('settings.theme') }}</label>
         <select class="selectbox" id="theme-selector" v-model="selectedTheme">
-          <option value="dark">Dark</option>
-          <option value="light">Light</option>
+          <option value="dark">{{ $t('settings.dark') }}</option>
+          <option value="light">{{ $t('settings.light') }}</option>
         </select>
       </div>
 
-      <h2 class="title2">Support</h2>
+      <h2 class="title2">{{ $t('settings.support') }}</h2>
 
       <div class="flex items-center text-xl">
-        <p class="min-w-[200px]">Copy Support ID:</p>
-        <button class="button" @click="copySupportId">Copy Support ID</button>
+        <p class="min-w-[300px]">{{ $t('settings.copy_support_id_title') }}</p>
+        <button class="button" @click="copySupportId">{{ $t('settings.copy_support_id') }}</button>
       </div>
     </div>
   </div>
@@ -93,6 +93,7 @@ export default {
     selectedLanguage(newValue) {
       this.$store.state.appData.config.lg = newValue;
       window.electronAPI.sendData('updateConfigServer', JSON.stringify(this.$store.state.appData.config));
+      this.$i18n.locale = this.$store.state.appData.config.lg;
     },
     selectedTheme(newValue) {
       this.$store.state.appData.config.theme = newValue;
