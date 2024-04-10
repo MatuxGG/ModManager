@@ -3,6 +3,7 @@ const fs = require('fs');
 const path = require('path');
 const Files = require("@/class/files");
 const decompress = require("decompress");
+const { spawn } = require('child_process');
 
 class ModWorker {
 
@@ -192,7 +193,36 @@ class ModWorker {
         event.sender.send('showPopin', "<div class='w-64'><p>Uninstalling "+mod.name+"</p></div>", downloadId, "bg-blue-700");
         const modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version);
         Files.deleteDirectoryIfExist(modPath);
-        event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" installed</p></div>", downloadId, "bg-blue-700");
+        event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" uninstalled</p></div>", downloadId, "bg-blue-700");
+    }
+
+    static async startMod(event, mod, version, appData) {
+        let downloadId = Date.now().toString();
+        event.sender.send('showPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
+        const gamePath = path.join(appData.config.dataPath, 'game');
+        const clientPath = path.join(appData.config.dataPath, 'clients', version.gameVersion);
+        const modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version);
+        Files.deleteDirectoryIfExist(gamePath);
+        Files.createDirectoryIfNotExist(gamePath);
+        fs.cpSync(clientPath, gamePath, {recursive: true});
+        fs.cpSync(modPath, gamePath, {recursive: true});
+        const amongUsPath = path.join(gamePath, 'Among Us.exe');
+
+        const child = spawn(amongUsPath, {
+
+        });
+
+        if (child.pid) {
+            console.log(`Le processus a démarré avec le PID ${child.pid}`);
+        } else {
+            console.error('Le processus n\'a pas pu démarrer.');
+        }
+
+        child.on('close', (code) => {
+            console.log(`Le processus s'est terminé avec le code ${code}`);
+        });
+
+        event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" started</p></div>", downloadId, "bg-blue-700");
     }
 
     static formatByteSize(bytes) {

@@ -14,13 +14,18 @@
               <option value="">All versions</option>
               <option v-for="version in gameVersionOptions" :key="version" :value="version">{{ version }}</option>
             </select>
+            <select v-model="installedType" class="selectbox">
+              <option value="ALL" selected="selected">All mods</option>
+              <option value="ONLY_INSTALLED">Only installed mods</option>
+              <option value="ONLY_NOT_INSTALLED">All not installed mods</option>
+            </select>
           </div>
           <div v-if="$store.state.appData && $store.state.appData.modSources" class="flex flex-wrap gap-4">
             <template v-for="mod in filteredMods"
                   :key="mod.sid">
               <!-- All In One -->
               <template v-if="mod.type === 'allInOne'">
-                <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-300 dark:bg-gray-700 min-w-[300px]" >
+                <div v-if="(this.installedType !== 'ONLY_INSTALLED' || this.isInstalledMod(mod.sid)) && (this.installedType !== 'ONLY_NOT_INSTALLED' || !this.isInstalledMod(mod.sid))" class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-300 dark:bg-gray-700 min-w-[300px]" >
                   <!-- Div haut-->
                   <div class="flex flex-col gap-1">
                     <!-- Ligne titre + flag-->
@@ -51,13 +56,10 @@
                     <!-- Buttons-->
                     <div class="flex justify-between items-center gap-4">
                       <div class="flex items-center gap-2">
-                        <template v-if="1">
+                        <template v-if="!isInstalledMod(mod.sid)">
                           <a href=""><img class="image-icon" src="../assets/download.png"/></a>
                         </template>
-                        <template v-if="0">
-                          <a href=""><img class="image-icon" src="../assets/play.png"/></a>
-                        </template>
-                        <template v-if="0">
+                        <template v-else>
                           <a href=""><img class="image-icon" src="../assets/delete.png"/></a>
                         </template>
                       </div>
@@ -75,7 +77,7 @@
               </template>
               <!-- Mod -->
               <template v-for="version in mod.versions" :key="version.version">
-                <template v-if="selectedGameVersion === '' || selectedGameVersion === version.gameVersion">
+                <template v-if="(selectedGameVersion === '' || selectedGameVersion === version.gameVersion) && (this.installedType !== 'ONLY_INSTALLED' || this.isInstalledMod(mod.sid, version.version)) && (this.installedType !== 'ONLY_NOT_INSTALLED' || !this.isInstalledMod(mod.sid, version.version))">
                   <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-300 dark:bg-gray-700 min-w-[300px]" >
                     <!-- Div haut -->
                     <div class="flex flex-col gap-1">
@@ -142,6 +144,7 @@
       return {
         selectedGameVersion: '',
         selectedCategory: '',
+        installedType : "ALL",
       };
     },
     computed: {
@@ -170,8 +173,8 @@
       uninstallMod(mod, version) {
         window.electronAPI.sendData('uninstallMod', JSON.stringify(mod), JSON.stringify(version));
       },
-      isInstalledMod(modId, version) {
-        return this.$store.state.appData.config.installedMods.some(mod => mod.modId === modId && mod.version === version);
+      isInstalledMod(modId, version = null) {
+        return this.$store.getters.isInstalledMod(modId, version);
       }
     },
   };

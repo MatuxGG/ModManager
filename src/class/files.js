@@ -42,11 +42,7 @@ class Files {
 
     static deleteDirectoryIfExist(dir) {
         if (!fs.existsSync(dir)) return;
-        fs.rm(dir, { recursive: true }, (err) => {
-            if (err) {
-                console.error(err);
-            }
-        });
+        fs.rmSync(dir, { recursive: true });
     }
 
     static async downloadString(url) {

@@ -46,6 +46,25 @@ export default createStore({
         return dateB - dateA;
       });
     },
+      gameVersionInstalledOptions: (state, getters) => {
+          const versions = new Set();
+          if (state.appData && state.appData.modSources) {
+              state.appData.modSources.forEach(source => {
+                  source.mods.forEach(mod => {
+                      mod.versions.forEach(version => {
+                          if (getters.isInstalledMod(mod.sid, version.version)) {
+                              versions.add(version.gameVersion);
+                          }
+                      })
+                  });
+              });
+          }
+          return Array.from(versions).sort((a, b) => {
+              let dateA = new Date(a.split('.').join('-'));
+              let dateB = new Date(b.split('.').join('-'));
+              return dateB - dateA;
+          });
+      },
     categoriesOptions: (state) => {
         const uniqueCategories = {};
         if (state.appData && state.appData.modSources) {
@@ -60,15 +79,31 @@ export default createStore({
         }
         return Object.values(uniqueCategories).sort((a, b) => a.weight - b.weight);
     },
+      categoriesInstalledOptions: (state, getters) => {
+          const uniqueCategories = {};
+          if (state.appData && state.appData.modSources) {
+              state.appData.modSources.forEach(source => {
+                  source.mods.forEach(mod => {
+                      const cat = mod.category;
+                      if (cat && !uniqueCategories[cat.sid] && getters.isInstalledMod(mod.sid, null)) {
+                          uniqueCategories[cat.sid] = cat;
+                      }
+                  });
+              });
+          }
+          return Object.values(uniqueCategories).sort((a, b) => a.weight - b.weight);
+      },
     filteredMods: (state) => (filterCategory, filterGameVersion) => {
       return state.appData.modSources.flatMap(source =>
         source.mods.filter(mod => {
-          if (mod.type === "allInOne") return true;
+          if (mod.type === "allInOne") {
+              return true;
+          }
           let hasVersion = !filterGameVersion;
           if (filterGameVersion) {
             mod.versions.forEach(version => {
               if (version.gameVersion && version.gameVersion.toLowerCase().includes(filterGameVersion.toLowerCase())) {
-                hasVersion = true;
+                  hasVersion = true;
               }
             });
           }
@@ -79,10 +114,14 @@ export default createStore({
               hasCategory = true;
             }
           }
+
     
           return hasVersion && hasCategory;
         })
       );
-    }
+    },
+      isInstalledMod: (state) => (modId, version) => {
+          return state.appData.config.installedMods.some(mod => mod.modId === modId && (version === null || mod.version === version));
+      },
   }
 });

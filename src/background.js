@@ -121,6 +121,18 @@ ipcMain.on('uninstallMod', async (event, modStr, versionStr) => {
   console.log("Mod uninstalled on server");
 });
 
+ipcMain.on('startMod', async (event, modStr, versionStr) => {
+  console.log("Starting mod on server...");
+  let mod = JSON.parse(modStr);
+  let version = JSON.parse(versionStr);
+
+  if (!appData.config.installedMods.some(m => m.modId === mod.sid && m.version === version.version)) return;
+
+  await ModWorker.startMod(event, mod, version, appData);
+
+  console.log("Mod started on server");
+});
+
 let preloadPath = path.join(publicPath, 'preload.js');
 
 function createTray(win) {
