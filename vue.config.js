@@ -16,7 +16,8 @@ module.exports = defineConfig({
           "installerIcon": "public/modmanager.ico",
           "uninstallerIcon": "public/modmanager.ico",
           "oneClick": false,
-          "allowToChangeInstallationDirectory": true
+          "allowToChangeInstallationDirectory": true,
+          include: "build/installer.nsh"
         }
       },
     },
