@@ -79,6 +79,8 @@ ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
 
   if (mod.sid === "BetterCrewlink") {
     downloadLines.push(ModWorker.downloadBcl(event, mod, appData))
+  } else if (mod.sid === "Challenger") {
+    downloadLines.push(ModWorker.downloadChall(event, mod, appData))
   } else {
     if (appData.config.installedVanilla.includes(version.gameVersion)) {
       console.log("client already installed");
@@ -119,6 +121,8 @@ ipcMain.on('uninstallMod', async (event, modStr, versionStr) => {
 
   if (mod.sid === "BetterCrewlink") {
     await ModWorker.uninstallBcl(event, mod, appData);
+  } else if (mod.sid === "Challenger") {
+    await ModWorker.uninstallChall(event, mod, appData);
   } else {
     await ModWorker.uninstallMod(event, mod, version, appData);
   }
@@ -139,6 +143,8 @@ ipcMain.on('startMod', async (event, modStr, versionStr) => {
 
   if (mod.sid === "BetterCrewlink") {
     await ModWorker.startBcl(event, mod, appData);
+  } else if (mod.sid === "Challenger") {
+    await ModWorker.startChall(event, mod, appData);
   } else {
     await ModWorker.startMod(event, mod, version, appData);
   }

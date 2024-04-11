@@ -234,7 +234,6 @@ class ModWorker {
         });
     }
 
-
     static async downloadBcl(event, mod, appData){
         try {
             let finished = false;
@@ -347,6 +346,81 @@ class ModWorker {
         });
 
         regKey.get('QuietUninstallString', function(err, item) {
+            if (err) {
+                console.log('Erreur lors de la lecture de la clé du registre:', err);
+            } else {
+                exec(`cmd /c ${item.value}`, { windowsHide: true }, async (error, stdout, stderr) => {
+                    if (error) {
+                        console.error(`Erreur d'exécution : ${error}`);
+                        console.log(`Code de sortie : ${error.code}`);
+                        return;
+                    }
+                    if (stderr) {
+                        console.error(`Erreur : ${stderr}`);
+                    } else {
+                        event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" uninstalled !</p></div>", downloadId, "bg-blue-700");
+                        resolve();
+                    }
+                });
+            }
+        });
+
+        event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" uninstalled</p></div>", downloadId, "bg-blue-700");
+    }
+
+    static async downloadChall(event, mod, appData){
+        try {
+            let downloadId = Date.now().toString();
+            event.sender.send('showPopin', "<div class='w-64'><p>Installing "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
+            exec(`start steam://run/2160150`, (error, stdout, stderr) => {
+                if (error) {
+                    console.error(`Erreur d'exécution : ${error}`);
+                    console.log(`Code de sortie : ${error.code}`);
+                    return;
+                }
+                if (stderr) {
+                    console.error(`Erreur : ${stderr}`);
+                } else {
+                    event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" installed !</p></div>", downloadId, "bg-blue-700");
+                    return;
+                }
+            });
+        } catch (error) {
+            console.error('Error downloading the mod:', error);
+            return false;
+        }
+
+    }
+
+
+    static async startChall(event, mod, appData) {
+        let downloadId = Date.now().toString();
+        event.sender.send('showPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
+        exec(`start steam://rungameid/2160150`, (error, stdout, stderr) => {
+            if (error) {
+                console.error(`Erreur d'exécution : ${error}`);
+                console.log(`Code de sortie : ${error.code}`);
+                return;
+            }
+            if (stderr) {
+                console.error(`Erreur : ${stderr}`);
+            } else {
+                event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-blue-700");
+                return;
+            }
+        });
+    }
+
+    static async uninstallChall(event, mod, appData) {
+        let downloadId = Date.now().toString();
+        event.sender.send('showPopin', "<div class='w-64'><p>Uninstalling "+mod.name+"</p></div>", downloadId, "bg-blue-700");
+
+        const regKey = new Winreg({
+            hive: Winreg.HKLM,
+            key:  '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 2160150'
+        });
+
+        regKey.get('UninstallString', function(err, item) {
             if (err) {
                 console.log('Erreur lors de la lecture de la clé du registre:', err);
             } else {
