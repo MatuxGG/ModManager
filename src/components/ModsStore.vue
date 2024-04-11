@@ -19,117 +19,21 @@
               <option value="ONLY_INSTALLED">Only installed mods</option>
               <option value="ONLY_NOT_INSTALLED">All not installed mods</option>
             </select>
+            <input type="text" v-model="searchOption" class="searchbox" placeholder="Search...">
           </div>
           <div v-if="$store.state.appData && $store.state.appData.modSources" class="flex flex-wrap gap-4">
             <template v-for="mod in filteredMods"
                   :key="mod.sid">
-              <!-- All In One -->
               <template v-if="mod.type === 'allInOne'">
-                <div v-if="(this.installedType !== 'ONLY_INSTALLED' || this.isInstalledMod(mod.sid)) && (this.installedType !== 'ONLY_NOT_INSTALLED' || !this.isInstalledMod(mod.sid))" class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-300 dark:bg-gray-700 min-w-[300px]" >
-                  <!-- Div haut-->
-                  <div class="flex flex-col gap-1">
-                    <!-- Ligne titre + flag-->
-                    <div class="flex items-center gap-4 justify-between">
-                      <p class="uppercase text-lg cursor-pointer">{{ mod.name }}</p>
-                      <template v-if="mod.countries === 'fr'">
-                        <img class="h-6 border border-white" src="../assets/fr.png" />
-                      </template>
-                      <template v-else-if="mod.countries === 'es'">
-                        <img v-if="mod.countries" class="h-6 border border-white" src="../assets/es.png" />
-                      </template>
-                      <template v-else-if="mod.countries === 'jp'">
-                        <img v-if="mod.countries" class="h-6 border border-white" src="../assets/jp.png" />
-                      </template>
-                      <template v-else-if="mod.countries === 'cn'">
-                        <img v-if="mod.countries" class="h-6 border border-white" src="../assets/cn.png" />
-                      </template>
-                      <template v-else>
-                        <img v-if="mod.countries" class="h-6 border border-white" src="../assets/en.png" />
-                      </template>
-                    </div>
-                    <a v-if="mod.author" @click.prevent="openLink(`https://github.com/${mod.author}`)" class="cursor-pointer">
-                      {{ mod.author }}
-                    </a>
-                  </div>
-                  <!-- Div bas -->
-                  <div class="flex flex-col justify-between gap-1">
-                    <!-- Buttons-->
-                    <div class="flex justify-between items-center gap-4">
-                      <div class="flex items-center gap-2">
-                        <template v-if="!isInstalledMod(mod.sid)">
-                          <a href=""><img class="image-icon" src="../assets/download.png"/></a>
-                        </template>
-                        <template v-else>
-                          <a href=""><img class="image-icon" src="../assets/delete.png"/></a>
-                        </template>
-                      </div>
-                      <div class="flex items-center gap-2">
-                        <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}`)" class="cursor-pointer">
-                          <img class="image-icon" src="../assets/github.png" />
-                        </a>
-                        <a v-if="mod.social" @click.prevent="openLink(`${mod.social}`)" class="cursor-pointer">
-                          <img class="image-icon" src="../assets/discord.png" />
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                <template v-if="(this.installedType !== 'ONLY_INSTALLED' || this.isInstalledMod(mod.sid)) && (this.installedType !== 'ONLY_NOT_INSTALLED' || !this.isInstalledMod(mod.sid))">
+                  <ModCard :mod="mod" />
+                </template>
               </template>
-              <!-- Mod -->
-              <template v-for="version in mod.versions" :key="version.version">
-                <template v-if="(selectedGameVersion === '' || selectedGameVersion === version.gameVersion) && (this.installedType !== 'ONLY_INSTALLED' || this.isInstalledMod(mod.sid, version.version)) && (this.installedType !== 'ONLY_NOT_INSTALLED' || !this.isInstalledMod(mod.sid, version.version))">
-                  <div class="border rounded flex flex-col justify-between gap-4 p-4 bg-gray-300 dark:bg-gray-700 min-w-[300px]" >
-                    <!-- Div haut -->
-                    <div class="flex flex-col gap-1">
-                      <!-- Ligne titre + flag -->
-                      <div class="flex items-center gap-4 justify-between">
-                        <p class="uppercase text-lg cursor-pointer">{{ mod.name }}</p>
-                        <template v-if="mod.countries === 'fr'">
-                          <img class="h-6 border border-black dark:border-white" src="../assets/fr.png" />
-                        </template>
-                        <template v-else-if="mod.countries === 'es'">
-                          <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/es.png" />
-                        </template>
-                        <template v-else-if="mod.countries === 'jp'">
-                          <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/jp.png" />
-                        </template>
-                        <template v-else-if="mod.countries === 'cn'">
-                          <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/cn.png" />
-                        </template>
-                        <template v-else>
-                          <img v-if="mod.countries" class="h-6 border border-black dark:border-white" src="../assets/en.png" />
-                        </template>
-                      </div>
-                      <a v-if="mod.author" @click.prevent="openLink(`https://github.com/${mod.author}`)" class="cursor-pointer">
-                        {{ mod.author }}
-                      </a>
-                      <a v-if="mod.author && mod.githubLink && version.version" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}/releases/tag/${version.version}`)" class="cursor-pointer">
-                        Version: {{ version.version }}
-                      </a>
-                    </div>
-                    <!-- Div bas -->
-                    <div class="flex flex-col gap-1">
-                      <!-- Buttons -->
-                      <div class="flex justify-between items-center gap-4">
-                        <div class="flex items-center gap-2">
-                          <template v-if="!isInstalledMod(mod.sid, version.version)">
-                            <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/download.png"/></div>
-                          </template>
-                          <template v-else>
-                            <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
-                          </template>
-                        </div>
-                        <div class="flex items-center gap-2">
-                          <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}`)" class="cursor-pointer">
-                            <img class="image-icon" src="../assets/github.png" />
-                          </a>
-                          <a v-if="mod.social" @click.prevent="openLink(`${mod.social}`)" class="cursor-pointer">
-                            <img class="image-icon" src="../assets/discord.png" />
-                          </a>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
+              <template v-else>
+                <template v-for="version in mod.versions" :key="version.version">
+                  <template v-if="(selectedGameVersion === '' || selectedGameVersion === version.gameVersion) && (this.installedType !== 'ONLY_INSTALLED' || this.isInstalledMod(mod.sid, version.version)) && (this.installedType !== 'ONLY_NOT_INSTALLED' || !this.isInstalledMod(mod.sid, version.version))">
+                    <ModCard :mod="mod" :version="version" />
+                  </template>
                 </template>
               </template>
             </template>
@@ -139,12 +43,18 @@
 </template>
 
 <script>
+  import ModCard from './ModCard.vue';
+
   export default {
+    components: {
+      ModCard
+    },
     data() {
       return {
         selectedGameVersion: '',
         selectedCategory: '',
         installedType : "ALL",
+        searchOption: '',
       };
     },
     computed: {
@@ -155,7 +65,7 @@
         return this.$store.getters.gameVersionOptions;
       },
       filteredMods() {
-        return this.$store.getters.filteredMods(this.selectedCategory, this.selectedGameVersion);
+        return this.$store.getters.filteredMods(this.selectedCategory, this.selectedGameVersion, this.searchOption);
       },
     },
     mounted() {
@@ -164,15 +74,6 @@
       }
     },
     methods: {
-      openLink(url) {
-        window.electronAPI.openExternal(url);
-      },
-      downloadMod(mod, version) {
-        window.electronAPI.sendData('downloadMod', JSON.stringify(mod), JSON.stringify(version));
-      },
-      uninstallMod(mod, version) {
-        window.electronAPI.sendData('uninstallMod', JSON.stringify(mod), JSON.stringify(version));
-      },
       isInstalledMod(modId, version = null) {
         return this.$store.getters.isInstalledMod(modId, version);
       }

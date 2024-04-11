@@ -74,15 +74,27 @@ class Config {
     }
 
     addInstalledMod(mod, version) {
-        if (this.installedMods.some(m => m.modId === mod.sid && m.version === version.version)) return;
-        this.installedMods.push({'modId': mod.sid, 'version': version.version });
+        if (this.installedMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) return;
+        this.installedMods.push({'modId': mod.sid, 'version': version === null ? null : version.version });
     }
 
     removeInstalledMod(mod, version) {
         const index = this.installedMods.findIndex((installedMod) =>
-            installedMod.modId === mod.sid && installedMod.version === version.version);
+            installedMod.modId === mod.sid && (version === null || installedMod.version === version.version));
         if (index === -1) return;
         this.installedMods.splice(index, 1);
+    }
+
+    addFavoriteMod(mod, version) {
+        if (this.favoriteMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) return;
+        this.favoriteMods.push({'modId': mod.sid, 'version': version === null ? null : version.version });
+    }
+
+    removeFavoriteMod(mod, version) {
+        const index = this.favoriteMods.findIndex((favoriteMod) =>
+            favoriteMod.modId === mod.sid && (version === null || favoriteMod.version === version.version));
+        if (index === -1) return;
+        this.favoriteMods.splice(index, 1);
     }
 }
 

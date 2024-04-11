@@ -65,7 +65,7 @@ ipcMain.on('updateConfigServer', async (event, newConfig) => {
 
 function isDownloadInProgress(mod, version) {
   return currentDownloads.some(([existingMod, existingVersion]) => 
-      existingMod.sid === mod.sid && existingVersion.version === version.version);
+      existingMod.sid === mod.sid && (version === null || existingVersion.version === version.version));
 }
 
 ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
@@ -77,27 +77,32 @@ ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
 
   let downloadLines = [];
 
-  if (appData.config.installedVanilla.includes(version.gameVersion)) {
-    console.log("client already installed");
+  if (mod.sid === "BetterCrewlink") {
+    downloadLines.push(ModWorker.downloadBcl(event, mod, appData))
   } else {
-    downloadLines.push(ModWorker.downloadClient(event, version, appData));
-  }
+    if (appData.config.installedVanilla.includes(version.gameVersion)) {
+      console.log("client already installed");
+    } else {
+      downloadLines.push(ModWorker.downloadClient(event, version, appData));
+    }
 
-  if (appData.config.installedMods.includes(mod.id)) {
-    console.log("mod already installed");
-  } else {
-    downloadLines.push(ModWorker.downloadMod(event, mod, version, appData));
+    if (appData.config.installedMods.includes(mod.id)) {
+      console.log("mod already installed");
+    } else {
+      downloadLines.push(ModWorker.downloadMod(event, mod, version, appData));
+    }
   }
 
   await Promise.all(downloadLines);
 
   const index = currentDownloads.findIndex(([existingMod, existingVersion]) => 
-        existingMod.sid === mod.sid && existingVersion.version === version.version);
+        existingMod.sid === mod.sid && (version === null || existingVersion.version === version.version));
   if (index !== -1) {
       currentDownloads.splice(index, 1);
   }
 
-  appData.config.addInstalledVanilla(version.gameVersion);
+  if (mod.type !== "allInOne")
+    appData.config.addInstalledVanilla(version.gameVersion);
   appData.config.addInstalledMod(mod, version);
   appData.updateConfig();
   event.reply('updateConfig', JSON.stringify(appData.config));
@@ -110,9 +115,13 @@ ipcMain.on('uninstallMod', async (event, modStr, versionStr) => {
   let mod = JSON.parse(modStr);
   let version = JSON.parse(versionStr);
 
-  if (!appData.config.installedMods.some(m => m.modId === mod.sid && m.version === version.version)) return;
+  if (!appData.config.installedMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) return;
 
-  await ModWorker.uninstallMod(event, mod, version, appData);
+  if (mod.sid === "BetterCrewlink") {
+    await ModWorker.uninstallBcl(event, mod, appData);
+  } else {
+    await ModWorker.uninstallMod(event, mod, version, appData);
+  }
 
   appData.config.removeInstalledMod(mod, version);
   appData.updateConfig();
@@ -126,11 +135,35 @@ ipcMain.on('startMod', async (event, modStr, versionStr) => {
   let mod = JSON.parse(modStr);
   let version = JSON.parse(versionStr);
 
-  if (!appData.config.installedMods.some(m => m.modId === mod.sid && m.version === version.version)) return;
+  if (!appData.config.installedMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) return;
 
-  await ModWorker.startMod(event, mod, version, appData);
+  if (mod.sid === "BetterCrewlink") {
+    await ModWorker.startBcl(event, mod, appData);
+  } else {
+    await ModWorker.startMod(event, mod, version, appData);
+  }
 
   console.log("Mod started on server");
+});
+
+
+ipcMain.on('addFavoriteMod', async (event, modStr, versionStr) => {
+  let mod = JSON.parse(modStr);
+  let version = JSON.parse(versionStr);
+
+  appData.config.addFavoriteMod(mod, version);
+  appData.updateConfig();
+  event.reply('updateConfig', JSON.stringify(appData.config));
+});
+
+
+ipcMain.on('removeFavoriteMod', async (event, modStr, versionStr) => {
+  let mod = JSON.parse(modStr);
+  let version = JSON.parse(versionStr);
+
+  appData.config.removeFavoriteMod(mod, version);
+  appData.updateConfig();
+  event.reply('updateConfig', JSON.stringify(appData.config));
 });
 
 let preloadPath = path.join(publicPath, 'preload.js');

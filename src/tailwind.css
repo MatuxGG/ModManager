@@ -7,11 +7,15 @@
 }
 
 .selectbox {
-    @apply bg-gray-300 dark:bg-gray-700 p-2 rounded text-xl;
+    @apply bg-gray-300 dark:bg-gray-700 p-2 rounded text-sm;
 }
 
 .button {
-    @apply bg-gray-300 dark:bg-gray-700 p-2 rounded text-xl;
+    @apply bg-gray-300 dark:bg-gray-700 p-2 rounded text-sm;
+}
+
+.searchbox {
+    @apply bg-gray-300 dark:bg-gray-700 p-2 rounded text-sm;
 }
 
 .image-title {
@@ -19,15 +23,15 @@
 }
 
 .image-icon {
-    @apply brightness-0 dark:brightness-100 h-6 w-6;
+    @apply brightness-0 dark:brightness-100 h-5 w-5;
 }
 
 .title {
-    @apply text-2xl font-bold tracking-widest;
+    @apply text-xl font-bold tracking-widest;
 }
 
 .title2 {
-    @apply text-lg font-bold tracking-wider underline underline-offset-8 py-4;
+    @apply text-sm font-bold tracking-wider underline underline-offset-8 py-4 cursor-default;
 }
 
 .link {

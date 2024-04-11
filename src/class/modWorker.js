@@ -3,7 +3,9 @@ const fs = require('fs');
 const path = require('path');
 const Files = require("@/class/files");
 const decompress = require("decompress");
-const { spawn } = require('child_process');
+const { spawn, exec  } = require('child_process');
+const os = require('os');
+const Winreg = require("winreg");
 
 class ModWorker {
 
@@ -82,8 +84,8 @@ class ModWorker {
         try {
             let finished = false;
             let downloadId = Date.now().toString();
-            const tempPath = path.join(appData.config.dataPath, 'temp', 'mod-'+mod.sid+'-'+version.version+'.zip');
-            const modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version);
+            let tempPath = path.join(appData.config.dataPath, 'temp', 'mod-'+mod.sid+'-'+version.version+'.zip');
+            let modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version);
 
             let installType = null;
             // eslint-disable-next-line no-unused-vars
@@ -96,12 +98,14 @@ class ModWorker {
                     fileUrl = asset['browser_download_url'];
                 }
             })
-            if (!installType) {
+            if (installType === null) {
                 version.release['assets'].forEach((asset) => {
                     if (asset['name'].endsWith('.dll')) {
                         installType = 'dll';
                         filename = asset['name'];
                         fileUrl = asset['browser_download_url'];
+                        modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version, 'BepInEx', 'plugins');
+                        tempPath = path.join(appData.config.dataPath, 'temp', filename);
                     }
                 })
             }
@@ -152,13 +156,21 @@ class ModWorker {
                 writer.on('finish', () => {
                     let downloadText = "<div class='w-64'><p>Extracting " + mod.name + "...</p></div>";
                     let downloadTextEnd = "<div class='w-64'><p>" + mod.name + " installed !</p></div>";
-                    this.extractZipFile(tempPath, modPath, event, downloadText, downloadTextEnd, downloadId, "bg-blue-700")
-                        .then(() => {
-                            resolve();
-                        })
-                        .catch((error) => {
-                            reject(error);
-                        });
+                    if (installType === 'zip') {
+                        this.extractZipFile(tempPath, modPath, event, downloadText, downloadTextEnd, downloadId, "bg-blue-700")
+                            .then(() => {
+                                resolve();
+                            })
+                            .catch((error) => {
+                                reject(error);
+                            });
+                    } else if (installType === 'dll') {
+                        Files.createDirectoryIfNotExist(modPath);
+                        fs.cpSync(tempPath, path.join(modPath, filename));
+                        event.sender.send('hidePopin', downloadTextEnd, downloadId, "bg-blue-700");
+                        resolve();
+                    }
+
                 });
                 writer.on('error', reject);
             });
@@ -197,6 +209,9 @@ class ModWorker {
     }
 
     static async startMod(event, mod, version, appData) {
+        const isRunning = await this.isProcessRunning('Among Us');
+        if (isRunning) return;
+
         let downloadId = Date.now().toString();
         event.sender.send('showPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
         const gamePath = path.join(appData.config.dataPath, 'game');
@@ -208,21 +223,150 @@ class ModWorker {
         fs.cpSync(modPath, gamePath, {recursive: true});
         const amongUsPath = path.join(gamePath, 'Among Us.exe');
 
-        const child = spawn(amongUsPath, {
-
-        });
+        const child = spawn(amongUsPath, {});
 
         if (child.pid) {
-            console.log(`Le processus a démarré avec le PID ${child.pid}`);
-        } else {
-            console.error('Le processus n\'a pas pu démarrer.');
+            event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-blue-700");
         }
 
         child.on('close', (code) => {
-            console.log(`Le processus s'est terminé avec le code ${code}`);
+            // TODO
+        });
+    }
+
+
+    static async downloadBcl(event, mod, appData){
+        try {
+            let finished = false;
+            let downloadId = Date.now().toString();
+            let tempPath = path.join(appData.config.dataPath, 'temp', 'Better-CrewLink-Setup.exe');
+            Files.deleteDirectoryIfExist(tempPath);
+
+            const response = await axios({
+                method: 'get',
+                url: 'https://goodloss.fr/bcl',
+                responseType: 'stream'
+            });
+
+            const totalLength = response.headers['content-length'];
+
+            let progress = 0;
+            let lastProgress = 0;
+            let lastTime = Date.now();
+            response.data.on('data', (chunk) => {
+                progress += chunk.length;
+                let currentTime = Date.now();
+                let elapsedTime = currentTime - lastTime;
+                let bytesDownloaded = progress - lastProgress;
+
+                let percentCompleted = Math.round((progress / totalLength) * 100);
+
+                let speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
+
+                if (currentTime - lastTime > 100) {
+                    let downloadText = "<div class='w-64'><p>Downloading " + mod.name + "</p>"
+                        + "<p>Progress: " + percentCompleted + "%<p>"
+                        + "<p>Speed: " + this.formatByteSize(speed) + "/s<p>"
+                        + "<p>" + this.formatByteSize(progress) + " / " + this.formatByteSize(totalLength) + "<p></div>";
+
+                    if (!finished) {
+                        if (percentCompleted === 100) {
+                            finished = true;
+                        } else {
+                            event.sender.send('showPopin', downloadText, downloadId, "bg-blue-700");
+                        }
+                    }
+
+                    lastProgress = progress;
+                    lastTime = currentTime;
+                }
+
+            });
+            const writer = fs.createWriteStream(tempPath);
+            response.data.pipe(writer);
+
+            return new Promise((resolve, reject) => {
+                writer.on('finish', () => {
+                    exec(tempPath, (error, stdout, stderr) => {
+                        if (error) {
+                            console.error(`Erreur d'exécution : ${error}`);
+                            console.log(`Code de sortie : ${error.code}`);
+                            return;
+                        }
+                        if (stderr) {
+                            console.error(`Erreur : ${stderr}`);
+                        } else {
+                            event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" installed !</p></div>", downloadId, "bg-blue-700");
+                            resolve();
+                        }
+                    });
+                });
+                writer.on('error', reject);
+            });
+        } catch (error) {
+            console.error('Error downloading the mod:', error);
+            return false;
+        }
+
+    }
+
+
+    static async startBcl(event, mod, appData) {
+        let downloadId = Date.now().toString();
+        event.sender.send('showPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
+        const regKey = new Winreg({
+            hive: Winreg.HKCU, // Hive du registre
+            key:  '\\SOFTWARE\\03ceac78-9166-585d-b33a-90982f435933' // Chemin de la clé
+        });
+        regKey.get('InstallLocation', (err, item) => {
+            if (err) {
+                console.error("Erreur lors de la lecture de la clé de registre:", err);
+            } else if (item) {
+                const child = spawn(path.join(item.value, "Better-CrewLink.exe"), {});
+
+                if (child.pid) {
+                    event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-blue-700");
+                }
+
+                child.on('close', (code) => {
+                    // TODO
+                });
+            } else {
+                console.log(null);
+            }
+        });
+    }
+
+    static async uninstallBcl(event, mod, appData) {
+        let downloadId = Date.now().toString();
+        event.sender.send('showPopin', "<div class='w-64'><p>Uninstalling "+mod.name+"</p></div>", downloadId, "bg-blue-700");
+
+        const regKey = new Winreg({
+            hive: Winreg.HKCU,
+            key:  '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\03ceac78-9166-585d-b33a-90982f435933'
         });
 
-        event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" started</p></div>", downloadId, "bg-blue-700");
+        regKey.get('QuietUninstallString', function(err, item) {
+            if (err) {
+                console.log('Erreur lors de la lecture de la clé du registre:', err);
+            } else {
+                exec(`cmd /c ${item.value}`, { windowsHide: true }, async (error, stdout, stderr) => {
+                    if (error) {
+                        console.error(`Erreur d'exécution : ${error}`);
+                        console.log(`Code de sortie : ${error.code}`);
+                        return;
+                    }
+                    if (stderr) {
+                        console.error(`Erreur : ${stderr}`);
+                    } else {
+                        event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" uninstalled !</p></div>", downloadId, "bg-blue-700");
+                        resolve();
+                    }
+                });
+            }
+        });
+
+        event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" uninstalled</p></div>", downloadId, "bg-blue-700");
     }
 
     static formatByteSize(bytes) {
@@ -231,6 +375,37 @@ class ModWorker {
         let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
         if (i === 0) return `${bytes} ${sizes[i]}`;
         return `${(bytes / (1024 ** i)).toFixed(2)} ${sizes[i]}`;
+    }
+
+    static isProcessRunning(processName) {
+        return new Promise((resolve, reject) => {
+            // Obtenez le système d'exploitation
+            const platform = os.platform();
+
+            // Construisez la commande en fonction du système d'exploitation
+            let command;
+            if (platform === "win32") { // Pour Windows
+                command = `tasklist`;
+            } else if (platform === "darwin" || platform === "linux") { // Pour macOS et Linux
+                command = `ps aux`;
+            } else {
+                return reject(new Error(`Plateforme non supportée : ${platform}`));
+            }
+
+            // Exécutez la commande
+            exec(command, (err, stdout, stderr) => {
+                if (err) {
+                    return reject(err);
+                }
+                if (stderr) {
+                    return reject(new Error(stderr));
+                }
+
+                // Vérifiez si le nom du processus est dans la sortie
+                const isRunning = stdout.toLowerCase().includes(processName.toLowerCase());
+                resolve(isRunning);
+            });
+        });
     }
 }
 

@@ -1,6 +1,6 @@
 <template>
   <div id="themeDiv" class="dark">
-    <div v-if="isNotLoadingPage" class="bg-white dark:bg-gray-800 text-black dark:text-white text-sm flex items-center justify-center h-full w-full min-h-screen">
+    <div v-if="isNotLoadingPage" class="bg-white dark:bg-gray-800 text-black dark:text-white text-xs flex items-center justify-center h-full w-full min-h-screen">
       <MenuLeft :miniIcons="miniIcons" :menus="menus" />
       <div class="min-h-screen max-h-screen h-full flex grow p-2 overflow-auto">
         <div class="w-full">
@@ -11,7 +11,7 @@
           
       </div>
     </div>
-    <div v-else class="bg-white dark:bg-gray-800 text-black dark:text-white text-sm flex justify-center items-center justify-center h-full w-full min-h-screen">
+    <div v-else class="bg-white dark:bg-gray-800 text-black dark:text-white text-xs flex justify-center items-center justify-center h-full w-full min-h-screen">
       <router-view></router-view>
     </div>
   </div>
@@ -119,9 +119,9 @@ export default {
       popinDiv.classList.remove(classes);
       popinDiv.classList.add('bg-green-700');
       popinDiv.innerHTML = text;
-      popinDiv.addEventListener('click', function () {
-        parentDiv.removeChild(popinDiv);
-      })
+      // popinDiv.addEventListener('click', function () {
+      //   parentDiv.removeChild(popinDiv);
+      // })
       setTimeout(() => {
         if (popinDiv && parentDiv.contains(popinDiv)) {
           $(popinDiv).animate({ opacity: 0 }, 500);

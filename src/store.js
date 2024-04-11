@@ -81,47 +81,85 @@ export default createStore({
     },
       categoriesInstalledOptions: (state, getters) => {
           const uniqueCategories = {};
+          const favoriteCat = {
+              'sid': 'Favorites',
+              'name': 'Favorites',
+              'weight': '0',
+          }
           if (state.appData && state.appData.modSources) {
               state.appData.modSources.forEach(source => {
                   source.mods.forEach(mod => {
                       const cat = mod.category;
                       if (cat && !uniqueCategories[cat.sid] && getters.isInstalledMod(mod.sid, null)) {
                           uniqueCategories[cat.sid] = cat;
+                          if (!uniqueCategories["Favorites"]) {
+                              if (state.appData.config.favoriteMods.some(m => m.modId === mod.sid)) {
+                                  uniqueCategories["Favorites"] = favoriteCat;
+                              }
+                          }
                       }
                   });
               });
           }
           return Object.values(uniqueCategories).sort((a, b) => a.weight - b.weight);
       },
-    filteredMods: (state) => (filterCategory, filterGameVersion) => {
+    filteredMods: (state, getters) => (filterCategory, filterGameVersion, searchOption) => {
       return state.appData.modSources.flatMap(source =>
         source.mods.filter(mod => {
-          if (mod.type === "allInOne") {
-              return true;
-          }
-          let hasVersion = !filterGameVersion;
-          if (filterGameVersion) {
-            mod.versions.forEach(version => {
-              if (version.gameVersion && version.gameVersion.toLowerCase().includes(filterGameVersion.toLowerCase())) {
-                  hasVersion = true;
+          let hasCategory = false;
+          let hasVersion = false;
+          let matchSearch = false;
+          if (mod.name && mod.name.toLowerCase().includes(searchOption.toLowerCase())) matchSearch = true;
+          if (mod.author && mod.author.toLowerCase().includes(searchOption.toLowerCase())) matchSearch = true;
+          mod.versions.forEach(version => {
+              if (version.version && version.version.toLowerCase().includes(searchOption.toLowerCase())) matchSearch = true;
+              if (version.gameVersion && version.gameVersion.toLowerCase().includes(searchOption.toLowerCase())) matchSearch = true;
+          });
+
+          if (filterCategory && filterCategory === "Favorites") {
+              hasVersion = true;
+              hasCategory = false;
+              if (mod.type === "allInOne" && getters.isFavoriteMod(mod.sid, null)) {
+                  hasCategory = true;
+              } else {
+                  mod.versions.forEach(version => {
+                      if (getters.isFavoriteMod(mod.sid, version.version)) {
+                          hasCategory = true;
+                      }
+                  })
               }
-            });
-          }
-    
-          let hasCategory = !filterCategory;
-          if (filterCategory) {
-            if (mod.category && mod.category.sid.toLowerCase().includes(filterCategory.toLowerCase())) {
-              hasCategory = true;
-            }
+          } else if (mod.type === "allInOne") {
+              hasVersion = true;
+              if (mod.category && mod.category.sid.toLowerCase().includes(filterCategory.toLowerCase())) {
+                  hasCategory = true;
+              }
+          } else {
+              hasVersion = !filterGameVersion;
+              if (filterGameVersion) {
+                  mod.versions.forEach(version => {
+                      if (version.gameVersion && version.gameVersion.toLowerCase().includes(filterGameVersion.toLowerCase())) {
+                          hasVersion = true;
+                      }
+                  });
+              }
+
+              hasCategory = !filterCategory;
+              if (filterCategory) {
+                  if (mod.category && mod.category.sid.toLowerCase().includes(filterCategory.toLowerCase())) {
+                      hasCategory = true;
+                  }
+              }
           }
 
-    
-          return hasVersion && hasCategory;
+          return hasVersion && hasCategory && matchSearch;
         })
       );
     },
       isInstalledMod: (state) => (modId, version) => {
           return state.appData.config.installedMods.some(mod => mod.modId === modId && (version === null || mod.version === version));
+      },
+      isFavoriteMod: (state) => (modId, version) => {
+          return state.appData.config.favoriteMods.some(mod => mod.modId === modId && (version === null || mod.version === version));
       },
   }
 });

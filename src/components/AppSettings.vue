@@ -9,7 +9,7 @@
 
       <h2 class="title2">{{ $t('settings.general') }}</h2>
 
-      <div class="flex items-center text-xl">
+      <div class="flex items-center text-sm">
         <label class="min-w-[300px]" for="language-selector">{{ $t('settings.select_language') }}</label>
         <select class="selectbox" id="language-selector" v-model="selectedLanguage">
           <option value="en">English</option>
@@ -17,19 +17,19 @@
         </select>
       </div>
 
-      <div class="flex items-center text-xl">
+      <div class="flex items-center text-sm">
         <label for="minimize-to-tray" class="min-w-[300px] cursor-pointer">{{ $t('settings.minimize') }}</label>
         <input type="checkbox" id="minimize-to-tray" v-model="minimizeToTray">
       </div>
 
-      <div class="flex items-center text-xl">
+      <div class="flex items-center text-sm">
         <label for="launch-on-startup" class="min-w-[300px] cursor-pointer">{{ $t('settings.startup') }}</label>
           <input type="checkbox" id="launch-on-startup" v-model="launchOnStartup">
       </div>
 
       <h2 class="title2">{{ $t('settings.appearance') }}</h2>
 
-      <div class="flex items-center text-xl">
+      <div class="flex items-center text-sm">
         <label class="min-w-[300px]" for="theme-selector">{{ $t('settings.theme') }}</label>
         <select class="selectbox" id="theme-selector" v-model="selectedTheme">
           <option value="dark">{{ $t('settings.dark') }}</option>
@@ -39,7 +39,7 @@
 
       <h2 class="title2">{{ $t('settings.support') }}</h2>
 
-      <div class="flex items-center text-xl">
+      <div class="flex items-center text-sm">
         <p class="min-w-[300px]">{{ $t('settings.copy_support_id_title') }}</p>
         <button class="button" @click="copySupportId">{{ $t('settings.copy_support_id') }}</button>
       </div>

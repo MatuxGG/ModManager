@@ -6,7 +6,7 @@
         <h1 class="title">Credits</h1>
       </div>
       <div class="flex items-center flex-wrap py-4">
-        <p class="text-lg">{{ $store.state.appData.modSources[0].credits }}</p>
+        <p class="text-sm">{{ $store.state.appData.modSources[0].credits }}</p>
       </div>
     </div>
   </div>
