@@ -71,7 +71,10 @@
       },
     },
     mounted() {
-      if (this.categoriesOptions.length > 1) {
+      let favCat = this.categoriesOptions.find(category => category.sid === "Favorites");
+      if (favCat) {
+        this.selectedCategory = favCat.sid;
+      } else if (this.categoriesOptions.length > 1) {
         this.selectedCategory = this.categoriesOptions[0].sid;
       }
     },

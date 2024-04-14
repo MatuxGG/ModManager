@@ -130,7 +130,7 @@ export default createStore({
               }
           } else if (mod.type === "allInOne") {
               hasVersion = true;
-              if (mod.category && mod.category.sid.toLowerCase().includes(filterCategory.toLowerCase())) {
+              if (mod.category && filterCategory && mod.category.sid.toLowerCase().includes(filterCategory.toLowerCase())) {
                   hasCategory = true;
               }
           } else {

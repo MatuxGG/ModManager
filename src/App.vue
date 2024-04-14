@@ -133,6 +133,16 @@ export default {
         }
       }, 5000);
     });
+
+    window.electronAPI.receiveData('handleArgs', (action, args) => {
+      switch (action) {
+        case "startmod":
+          window.electronAPI.sendData('startMod', args[0], args[1]);
+          break;
+        default:
+          break;
+      }
+    });
   },
 }
 </script>

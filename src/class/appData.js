@@ -83,6 +83,19 @@ class AppData {
         fs.writeFileSync(configPath, configData);
     }
 
+    getModFromIdAndVersion(modId, modVersion = null) {
+        for (const modSource of this.modSources) {
+            const mod = modSource.mods.find(mod => mod.sid === modId);
+            if (mod) {
+                const version = mod.versions.find(v => v.version === modVersion);
+                if (version) {
+                    return [mod, version];
+                }
+            }
+        }
+        return [null, null];
+    }
+
     // updateRegionInfo(newRegionInfo) {
     //     Object.assign(this.regionInfo, JSON.parse(newRegionInfo));
     //     const configData = JSON.stringify(this.regionInfo, null, 2);

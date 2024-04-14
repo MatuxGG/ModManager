@@ -51,15 +51,20 @@ ipcMain.on('loadDataServer', async (event) => {
 });
 
 function handleArgs() {
-  console.log("Handle args: ", args);
   if (args.length > 0) {
+    console.log("Handle args: ", args);
     switch (args[0]) {
       case "startmod":
-
+        {
+          const [mod, version] = appData.getModFromIdAndVersion(args[1], args[2]);
+          if (mod !== null && version !== null) {
+            mainWindow.webContents.send('handleArgs', 'startmod', [JSON.stringify(mod), JSON.stringify(version)]);
+          }
+        }
         break;
-      case "startlocalmod":
-        console.log("start local mod" + args[1]);
-        break;
+      // case "startlocalmod":
+      //   console.log("start local mod" + args[1]);
+      //   break;
         // case "addsource":
         //   break;
       default:
@@ -91,15 +96,9 @@ function isDownloadInProgress(mod, version) {
       existingMod.sid === mod.sid && (version === null || existingVersion.version === version.version));
 }
 
-ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
-  console.log("Downloading mod on server...");
-  let mod = JSON.parse(modStr);
-  let version = JSON.parse(versionStr);
-  if (isDownloadInProgress(mod, version)) return;
-  currentDownloads.push([mod, version]);
+async function downloadMod(event, mod, version, appData) {
 
   let downloadLines = [];
-
   if (mod.sid === "BetterCrewlink") {
     downloadLines.push(ModWorker.downloadBcl(event, mod, appData))
   } else if (mod.sid === "Challenger") {
@@ -120,10 +119,10 @@ ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
 
   await Promise.all(downloadLines);
 
-  const index = currentDownloads.findIndex(([existingMod, existingVersion]) => 
-        existingMod.sid === mod.sid && (version === null || existingVersion.version === version.version));
+  const index = currentDownloads.findIndex(([existingMod, existingVersion]) =>
+      existingMod.sid === mod.sid && (version === null || existingVersion.version === version.version));
   if (index !== -1) {
-      currentDownloads.splice(index, 1);
+    currentDownloads.splice(index, 1);
   }
 
   if (mod.type !== "allInOne")
@@ -131,6 +130,21 @@ ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
   appData.config.addInstalledMod(mod, version);
   appData.updateConfig();
   event.reply('updateConfig', JSON.stringify(appData.config));
+
+}
+
+ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
+  console.log("Downloading mod on server...");
+  let mod = JSON.parse(modStr);
+  let version = JSON.parse(versionStr);
+  if (isDownloadInProgress(mod, version)) return;
+  currentDownloads.push([mod, version]);
+
+  if (appData.config.installedMods.includes(mod.id)) {
+    return;
+  }
+
+  await downloadMod(event, mod, version, appData);
 
   console.log("Mod downloaded on server");
 });
@@ -162,7 +176,9 @@ ipcMain.on('startMod', async (event, modStr, versionStr) => {
   let mod = JSON.parse(modStr);
   let version = JSON.parse(versionStr);
 
-  if (!appData.config.installedMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) return;
+  if (!appData.config.installedMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) {
+      await downloadMod(event, mod, version, appData);
+  }
 
   if (mod.sid === "BetterCrewlink") {
     await ModWorker.startBcl(event, mod, appData);
@@ -266,7 +282,6 @@ async function createWindow() {
     width: 1920,
     height: 1080,
     icon: path.join(publicPath, 'modmanager.ico'),
-    show: args.length === 0,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
