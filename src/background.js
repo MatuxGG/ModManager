@@ -17,6 +17,7 @@ if (process.env.WEBPACK_DEV_SERVER_URL) {
   publicPath = __dirname;
 }
 
+let mainWindow = null;
 let appData = new AppData();
 import {shell} from 'electron';
 import ModWorker from './class/modWorker'
@@ -46,6 +47,11 @@ ipcMain.on('loadDataServer', async (event) => {
   event.reply('loadDataClient', sentData);
   console.log("Mod Manager started");
 
+  handleArgs();
+});
+
+function handleArgs() {
+  console.log("Handle args: ", args);
   if (args.length > 0) {
     switch (args[0]) {
       case "startmod":
@@ -54,14 +60,14 @@ ipcMain.on('loadDataServer', async (event) => {
       case "startlocalmod":
         console.log("start local mod" + args[1]);
         break;
-      // case "addsource":
-      //   break;
+        // case "addsource":
+        //   break;
       default:
         console.log('default;')
         break;
     }
   }
-});
+}
 
 ipcMain.on('updateConfigServer', async (event, newConfig) => {
   console.log("Save config on server...");
@@ -191,13 +197,13 @@ ipcMain.on('removeFavoriteMod', async (event, modStr, versionStr) => {
 
 let preloadPath = path.join(publicPath, 'preload.js');
 
-function createTray(win) {
+function createTray() {
   tray = new Tray(path.join(publicPath, 'modmanager.ico'));
   const contextMenu = Menu.buildFromTemplate([
     {
       label: 'Mod Manager',
       click: function () {
-        win.show();
+        mainWindow.show();
       }
     },
     {
@@ -215,7 +221,7 @@ function createTray(win) {
   tray.on('double-click', () => {
     if (!appData || !appData.isLoaded) return;
     if (appData.config.minimizeToTray) {
-      win.isVisible() ? win.hide() : win.show();
+      mainWindow.isVisible() ? mainWindow.hide() : mainWindow.show();
     } else {
       tray.destroy();
       app.quit();
@@ -256,7 +262,7 @@ function updateLaunchOnStart() {
 
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1920,
     height: 1080,
     icon: path.join(publicPath, 'modmanager.ico'),
@@ -270,27 +276,44 @@ async function createWindow() {
     },
     autoHideMenuBar: true,
   })
-  win.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
-  createTray(win)
+  createTray()
 
-  win.on('close', function (event) {
+  mainWindow.on('close', function (event) {
     if (!app.isQuiting) {
       event.preventDefault();
-      win.hide();
+      mainWindow.hide();
     }
     return false;
   });
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
-    await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
+    await mainWindow.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
   } else {
     createProtocol('app')
     // Load the index.html when not in development
-    win.loadURL('app://./index.html')
+    await mainWindow.loadURL('app://./index.html')
   }
 }
+
+const gotTheLock = app.requestSingleInstanceLock();
+
+if (!gotTheLock) {
+  app.quit();
+}
+
+app.on('second-instance', (event, commandLine) => {
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore();
+    mainWindow.focus();
+  }
+
+  args = commandLine.slice(5);
+
+  handleArgs();
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
