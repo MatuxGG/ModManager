@@ -156,7 +156,7 @@ export default createStore({
       );
     },
       isInstalledMod: (state) => (modId, version) => {
-          return state.appData.config.installedMods.some(mod => mod.modId === modId && (version === null || mod.version === version));
+        return state.appData.config.installedMods.some(mod => mod.modId === modId && (version === null || mod.version === version));
       },
       isFavoriteMod: (state) => (modId, version) => {
           return state.appData.config.favoriteMods.some(mod => mod.modId === modId && (version === null || mod.version === version));

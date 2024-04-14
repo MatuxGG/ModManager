@@ -23,6 +23,7 @@ import ModWorker from './class/modWorker'
 let currentDownloads = [];
 let tray = null;
 let autoLaunch = null;
+let args = [];
 
 
 // Scheme must be registered before the app is ready
@@ -44,6 +45,22 @@ ipcMain.on('loadDataServer', async (event) => {
   console.log("Data server loaded");
   event.reply('loadDataClient', sentData);
   console.log("Mod Manager started");
+
+  if (args.length > 0) {
+    switch (args[0]) {
+      case "startmod":
+
+        break;
+      case "startlocalmod":
+        console.log("start local mod" + args[1]);
+        break;
+      // case "addsource":
+      //   break;
+      default:
+        console.log('default;')
+        break;
+    }
+  }
 });
 
 ipcMain.on('updateConfigServer', async (event, newConfig) => {
@@ -243,8 +260,8 @@ async function createWindow() {
     width: 1920,
     height: 1080,
     icon: path.join(publicPath, 'modmanager.ico'),
+    show: args.length === 0,
     webPreferences: {
-      
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -268,7 +285,6 @@ async function createWindow() {
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
@@ -293,6 +309,7 @@ app.on('activate', () => {
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
 app.on('ready', async () => {
+  args = process.argv.slice(2);
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
     try {
