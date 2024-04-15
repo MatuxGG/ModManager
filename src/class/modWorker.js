@@ -221,6 +221,13 @@ class ModWorker {
         Files.createDirectoryIfNotExist(gamePath);
         fs.cpSync(clientPath, gamePath, {recursive: true});
         fs.cpSync(modPath, gamePath, {recursive: true});
+        version.modDependencies.forEach( dep => {
+            let [depMod, depVersion] = appData.getModFromIdAndVersion(dep.modDependency, dep.modVersion);
+            if (depMod && depVersion) {
+                const depPath = path.join(appData.config.dataPath, 'mods', depMod.sid+'-'+depVersion.version);
+                fs.cpSync(depPath, gamePath, {recursive: true});
+            }
+        })
         const amongUsPath = path.join(gamePath, 'Among Us.exe');
 
         const child = spawn(amongUsPath, {});

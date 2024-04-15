@@ -8,7 +8,7 @@ const regKey = new Winreg({
 
 class Config {
     constructor(version = "", sources = ["https://goodloss.fr/api/mm"], installedMods = [], installedVanilla = [],
-        amongUsPath = "", dataPath = "", lg = "EN", supportId = "", favoriteMods = [], minimizeToTray = true,
+        amongUsPath = "", dataPath = "", lg = "en", supportId = "", favoriteMods = [], minimizeToTray = true,
         launchOnStartup = true, theme = "dark" ) {
         this.version = version;
         this.sources = sources;

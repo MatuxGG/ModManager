@@ -109,6 +109,7 @@ export default createStore({
           let hasCategory = false;
           let hasVersion = false;
           let matchSearch = false;
+          if (mod.type === "dependency") return false;
           if (mod.name && mod.name.toLowerCase().includes(searchOption.toLowerCase())) matchSearch = true;
           if (mod.author && mod.author.toLowerCase().includes(searchOption.toLowerCase())) matchSearch = true;
           mod.versions.forEach(version => {

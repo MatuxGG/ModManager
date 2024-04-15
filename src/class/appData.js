@@ -96,6 +96,17 @@ class AppData {
         return [null, null];
     }
 
+
+
+    isInstalledModFromIdAndVersion(modId, modVersion = null) {
+        return this.config.installedMods.some(m => m.modId === modId && m.version === modVersion);
+    }
+
+
+    hasInstalledVanilla(gameVersion) {
+        return this.config.installedVanilla.includes(gameVersion);
+    }
+
     // updateRegionInfo(newRegionInfo) {
     //     Object.assign(this.regionInfo, JSON.parse(newRegionInfo));
     //     const configData = JSON.stringify(this.regionInfo, null, 2);

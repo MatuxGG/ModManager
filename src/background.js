@@ -40,14 +40,15 @@ ipcMain.on('loadDataServer', async (event) => {
   console.log("Loading data server...");
   if (!appData || !appData.isLoaded) {
     await appData.load();
+    updateTray();
     updateLaunchOnStart();
+    handleArgs();
   }
   let sentData = JSON.stringify(appData);
   console.log("Data server loaded");
   event.reply('loadDataClient', sentData);
   console.log("Mod Manager started");
 
-  handleArgs();
 });
 
 function handleArgs() {
@@ -91,62 +92,90 @@ ipcMain.on('updateConfigServer', async (event, newConfig) => {
 //   event.reply('loadDataClient', sentData);
 // });
 
-function isDownloadInProgress(mod, version) {
-  return currentDownloads.some(([existingMod, existingVersion]) => 
-      existingMod.sid === mod.sid && (version === null || existingVersion.version === version.version));
+function isDownloadInProgress(type, mod, version) {
+  return currentDownloads.some(([existingType, existingMod, existingVersion]) =>
+      type === existingType && (mod === null || existingMod.sid === mod.sid) && (version === null || existingVersion.version === version.version));
 }
 
 async function downloadMod(event, mod, version, appData) {
-
-  let downloadLines = [];
-  if (mod.sid === "BetterCrewlink") {
-    downloadLines.push(ModWorker.downloadBcl(event, mod, appData))
-  } else if (mod.sid === "Challenger") {
-    downloadLines.push(ModWorker.downloadChall(event, mod, appData))
-  } else {
-    if (appData.config.installedVanilla.includes(version.gameVersion)) {
-      console.log("client already installed");
-    } else {
-      downloadLines.push(ModWorker.downloadClient(event, version, appData));
-    }
-
-    if (appData.config.installedMods.includes(mod.id)) {
-      console.log("mod already installed");
-    } else {
-      downloadLines.push(ModWorker.downloadMod(event, mod, version, appData));
-    }
-  }
-
-  await Promise.all(downloadLines);
-
-  const index = currentDownloads.findIndex(([existingMod, existingVersion]) =>
-      existingMod.sid === mod.sid && (version === null || existingVersion.version === version.version));
-  if (index !== -1) {
-    currentDownloads.splice(index, 1);
-  }
-
-  if (mod.type !== "allInOne")
-    appData.config.addInstalledVanilla(version.gameVersion);
-  appData.config.addInstalledMod(mod, version);
-  appData.updateConfig();
-  event.reply('updateConfig', JSON.stringify(appData.config));
-
-}
-
-ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
   console.log("Downloading mod on server...");
-  let mod = JSON.parse(modStr);
-  let version = JSON.parse(versionStr);
-  if (isDownloadInProgress(mod, version)) return;
-  currentDownloads.push([mod, version]);
+  let downloadLines = [];
+  if (mod.type === "mod") {
+    if (!isDownloadInProgress("mod", mod, version) && !appData.isInstalledModFromIdAndVersion(mod.sid, version.version)) {
+      downloadLines.push(["mod", mod, version]);
+    }
 
-  if (appData.config.installedMods.includes(mod.id)) {
+    for (const dep of version.modDependencies) {
+      let [depMod, depVersion] = appData.getModFromIdAndVersion(dep.modDependency, dep.modVersion);
+      if (depMod && depVersion && !isDownloadInProgress("mod", depMod, depVersion) && !appData.isInstalledModFromIdAndVersion(depMod.sid, depVersion.version)) {
+          downloadLines.push(["mod", depMod, depVersion]);
+      }
+    }
+
+    if (!isDownloadInProgress("vanilla", version.gameVersion, null) && !appData.hasInstalledVanilla(version.gameVersion)) {
+      downloadLines.push(["vanilla", null, version]);
+    }
+  } else {
+    if (!isDownloadInProgress("mod", mod, version) && !appData.isInstalledModFromIdAndVersion(mod.sid, version.version)) {
+      downloadLines.push(["allInOne", mod, version]);
+    }
+  }
+
+  if (downloadLines.length === 0) {
     return;
   }
 
-  await downloadMod(event, mod, version, appData);
+  let promises = [];
+  for (const dl of downloadLines) {
+    currentDownloads.push(dl);
+    switch (dl[0]) {
+      case "vanilla":
+        promises.push(ModWorker.downloadClient(event, dl[2], appData));
+        break;
+      case "mod":
+        promises.push(ModWorker.downloadMod(event, dl[1], dl[2], appData));
+        break;
+      case "allInOne":
+        if (dl[1].sid === "BetterCrewlink") {
+          promises.push(ModWorker.downloadBcl(event, dl[1], appData));
+        } else if (dl[1].sid === "Challenger") {
+          promises.push(ModWorker.downloadChall(event, dl[1], appData));
+        }
+        break;
+    }
+    promises.push(dl[3]);
+  }
+
+  await Promise.all(promises);
+
+  for (const dl of downloadLines) {
+    const index = currentDownloads.findIndex(([existingType, existingMod, existingVersion]) =>
+        existingType === dl[0] && (dl[1] === null || existingMod.sid === dl[1].sid) && (dl[2] === null || existingVersion.version === dl[2].version));
+    if (index !== -1) {
+      currentDownloads.splice(index, 1);
+    }
+    if (dl[0] === "mod") {
+      appData.config.addInstalledMod(dl[1], dl[2]);
+    } else if (dl[0] === "vanilla") {
+      appData.config.addInstalledVanilla(dl[2].gameVersion);
+    }
+  }
+
+  appData.updateConfig();
+  event.reply('updateConfig', JSON.stringify(appData.config));
+
+  updateTray();
 
   console.log("Mod downloaded on server");
+}
+
+ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
+
+  let mod = JSON.parse(modStr);
+  let version = JSON.parse(versionStr);
+
+  await downloadMod(event, mod, version, appData);
+
 });
 
 ipcMain.on('uninstallMod', async (event, modStr, versionStr) => {
@@ -166,6 +195,9 @@ ipcMain.on('uninstallMod', async (event, modStr, versionStr) => {
 
   appData.config.removeInstalledMod(mod, version);
   appData.updateConfig();
+
+  updateTray();
+
   event.reply('updateConfig', JSON.stringify(appData.config));
 
   console.log("Mod uninstalled on server");
@@ -176,8 +208,9 @@ ipcMain.on('startMod', async (event, modStr, versionStr) => {
   let mod = JSON.parse(modStr);
   let version = JSON.parse(versionStr);
 
-  if (!appData.config.installedMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) {
-      await downloadMod(event, mod, version, appData);
+  const result = await downloadMod(event, mod, version, appData);
+  if (result === false) {
+    return;
   }
 
   if (mod.sid === "BetterCrewlink") {
@@ -213,23 +246,64 @@ ipcMain.on('removeFavoriteMod', async (event, modStr, versionStr) => {
 
 let preloadPath = path.join(publicPath, 'preload.js');
 
-function createTray() {
-  tray = new Tray(path.join(publicPath, 'modmanager.ico'));
-  const contextMenu = Menu.buildFromTemplate([
+function updateTray() {
+
+  let modsLines = [
     {
       label: 'Mod Manager',
       click: function () {
         mainWindow.show();
       }
     },
+    { type: 'separator' },
     {
-      label: 'Exit',
+      label: 'Library',
       click: function () {
-        app.isQuiting = true;
-        app.quit();
+        mainWindow.webContents.send('navigate', '/library');
+        mainWindow.show();
       }
+    },
+    {
+      label: 'Store',
+      click: function () {
+        mainWindow.webContents.send('navigate', '/store');
+        mainWindow.show();
+      }
+    },
+    {
+      label: 'Settings',
+      click: function () {
+        mainWindow.webContents.send('navigate', '/settings');
+        mainWindow.show();
+      }
+    },
+  ];
+
+  if (appData.isLoaded) {
+    modsLines.push({ type: 'separator' });
+    appData.config.installedMods.forEach(im => {
+      let [mod, version] = appData.getModFromIdAndVersion(im.modId, im.version);
+      if (mod && version && mod.type !== "dependency") {
+        modsLines.push({
+          label: mod.name + " " + version.version,
+          click: function () {
+            mainWindow.webContents.send('handleArgs', 'startmod', [JSON.stringify(mod), JSON.stringify(version)]);
+          }
+        })
+      }
+    });
+  }
+
+  modsLines.push({ type: 'separator' });
+  modsLines.push({
+    label: 'Exit',
+    click: function () {
+      app.isQuiting = true;
+      app.quit();
     }
-  ]);
+  });
+
+  const contextMenu = Menu.buildFromTemplate(modsLines);
 
   tray.setToolTip('Mod Manager');
   tray.setContextMenu(contextMenu);
@@ -293,7 +367,7 @@ async function createWindow() {
   })
   mainWindow.webContents.openDevTools();
 
-  createTray()
+  tray = new Tray(path.join(publicPath, 'modmanager.ico'));
 
   mainWindow.on('close', function (event) {
     if (!app.isQuiting) {
@@ -350,11 +424,11 @@ app.on('ready', async () => {
   args = process.argv.slice(2);
   if (isDevelopment && !process.env.IS_TEST) {
     // Install Vue Devtools
-    try {
-      await installExtension(VUEJS3_DEVTOOLS)
-    } catch (e) {
-      console.error('Vue Devtools failed to install:', e.toString())
-    }
+    // try {
+    //   await installExtension(VUEJS3_DEVTOOLS)
+    // } catch (e) {
+    //   console.error('Vue Devtools failed to install:', e.toString())
+    // }
   }
   createWindow()
 

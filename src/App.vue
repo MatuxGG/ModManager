@@ -143,6 +143,11 @@ export default {
           break;
       }
     });
+
+
+    window.electronAPI.receiveData('navigate', (route) => {
+      this.$router.push(route);
+    });
   },
 }
 </script>
