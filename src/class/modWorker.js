@@ -6,17 +6,24 @@ const decompress = require("decompress");
 const { spawn, exec  } = require('child_process');
 const os = require('os');
 const Winreg = require("winreg");
+import {
+    getAppData, getStartedMod,
+    GL_FILES_URL,
+    GL_WEBSITE_URL,
+    setStartedMod,
+    unsetStartedMod
+} from "@/class/appGlobals";
 
 class ModWorker {
 
-    static async downloadClient(event, version, appData) {
+    static async downloadClient(event, version) {
         try {
             let gameVersion = version.gameVersion;
             let finished = false;
             let downloadId = Date.now().toString();
-            const url = 'https://goodloss.fr/files/client/'+gameVersion+'.zip';
-            const tempPath = path.join(appData.config.dataPath, 'temp', 'client-'+gameVersion+'.zip');
-            const clientPath = path.join(appData.config.dataPath, 'clients', gameVersion);
+            const url = GL_FILES_URL+'/client/'+gameVersion+'.zip';
+            const tempPath = path.join(getAppData().config.dataPath, 'temp', 'client-'+gameVersion+'.zip');
+            const clientPath = path.join(getAppData().config.dataPath, 'clients', gameVersion);
 
             const response = await axios({
                 method: 'get',
@@ -80,12 +87,13 @@ class ModWorker {
         }
     }
 
-    static async downloadMod(event, mod, version, appData) {
+    static async downloadMod(event, mod, version) {
         try {
             let finished = false;
             let downloadId = Date.now().toString();
-            let tempPath = path.join(appData.config.dataPath, 'temp', 'mod-'+mod.sid+'-'+version.version+'.zip');
-            let modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version);
+            let tempPath = path.join(getAppData().config.dataPath, 'temp', 'mod-'+mod.sid+'-'+version.version+'.zip');
+            let tempWorker = path.join(getAppData().config.dataPath, 'temp', 'modWorker');
+            let modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version);
 
             let installType = null;
             // eslint-disable-next-line no-unused-vars
@@ -104,8 +112,8 @@ class ModWorker {
                         installType = 'dll';
                         filename = asset['name'];
                         fileUrl = asset['browser_download_url'];
-                        modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version, 'BepInEx', 'plugins');
-                        tempPath = path.join(appData.config.dataPath, 'temp', filename);
+                        modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version, 'BepInEx', 'plugins');
+                        tempPath = path.join(getAppData().config.dataPath, 'temp', filename);
                     }
                 })
             }
@@ -157,8 +165,11 @@ class ModWorker {
                     let downloadText = "<div class='w-64'><p>Extracting " + mod.name + "...</p></div>";
                     let downloadTextEnd = "<div class='w-64'><p>" + mod.name + " installed !</p></div>";
                     if (installType === 'zip') {
-                        this.extractZipFile(tempPath, modPath, event, downloadText, downloadTextEnd, downloadId, "bg-blue-700")
+                        Files.deleteDirectoryIfExist(tempWorker);
+                        this.extractZipFile(tempPath, tempWorker, event, downloadText, downloadTextEnd, downloadId, "bg-blue-700")
                             .then(() => {
+                                let rootPath = Files.getBepInExInsideDir(tempWorker);
+                                Files.moveDirectory(rootPath, modPath);
                                 resolve();
                             })
                             .catch((error) => {
@@ -200,57 +211,74 @@ class ModWorker {
         }
     }
 
-    static async uninstallMod(event, mod, version, appData) {
+    static async uninstallMod(event, mod, version) {
         let downloadId = Date.now().toString();
         event.sender.send('showPopin', "<div class='w-64'><p>Uninstalling "+mod.name+"</p></div>", downloadId, "bg-blue-700");
-        const modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version);
+        const modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version);
         Files.deleteDirectoryIfExist(modPath);
         event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" uninstalled</p></div>", downloadId, "bg-blue-700");
     }
 
-    static async startMod(event, mod, version, appData) {
-        const isRunning = await this.isProcessRunning('Among Us');
+    static async startMod(event, mod, version) {
+        const savePath = path.join(getAppData().config.dataPath, 'data', mod.sid+'-'+version.version);
+        // let foldersToSave = ["BepInEx/config"]; // TODO
+        const isRunning = await this.isProcessRunning('Among Us') || getStartedMod() !== false;
         if (isRunning) return;
 
         let downloadId = Date.now().toString();
         event.sender.send('showPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
-        const gamePath = path.join(appData.config.dataPath, 'game');
-        const clientPath = path.join(appData.config.dataPath, 'clients', version.gameVersion);
-        const modPath = path.join(appData.config.dataPath, 'mods', mod.sid+'-'+version.version);
+        const gamePath = path.join(getAppData().config.dataPath, 'game');
+        const clientPath = path.join(getAppData().config.dataPath, 'clients', version.gameVersion);
+        const modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version);
         Files.deleteDirectoryIfExist(gamePath);
         Files.createDirectoryIfNotExist(gamePath);
         fs.cpSync(clientPath, gamePath, {recursive: true});
         fs.cpSync(modPath, gamePath, {recursive: true});
         version.modDependencies.forEach( dep => {
-            let [depMod, depVersion] = appData.getModFromIdAndVersion(dep.modDependency, dep.modVersion);
+            let [depMod, depVersion] = getAppData().getModFromIdAndVersion(dep.modDependency, dep.modVersion);
             if (depMod && depVersion) {
-                const depPath = path.join(appData.config.dataPath, 'mods', depMod.sid+'-'+depVersion.version);
+                const depPath = path.join(getAppData().config.dataPath, 'mods', depMod.sid+'-'+depVersion.version);
                 fs.cpSync(depPath, gamePath, {recursive: true});
             }
         })
-        const amongUsPath = path.join(gamePath, 'Among Us.exe');
 
+        const amongUsPath = path.join(gamePath, 'Among Us.exe');
         const child = spawn(amongUsPath, {});
 
         if (child.pid) {
+            setStartedMod(mod, version);
             event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-blue-700");
         }
 
-        child.on('close', (code) => {
-            // TODO
+        child.on('close', async () => {
+            Files.createDirectoryIfNotExist(savePath);
+            // await this.saveData(savePath, gamePath, foldersToSave); // TODO
+            unsetStartedMod();
+            console.log("Mod stopped");
         });
     }
 
-    static async downloadBcl(event, mod, appData){
+    // static async saveData(savePath, rootPath, foldersToSave) {
+    //     let promises = foldersToSave.map(folderToSave => {
+    //         let sourcePath = path.join(rootPath, folderToSave);
+    //         let targetPath = path.join(savePath, folderToSave);
+    //         Files.createDirectoryIfNotExist(targetPath);
+    //         return fs.renameSync(sourcePath, targetPath);
+    //     });
+    //
+    //     await Promise.all(promises);
+    // }
+
+    static async downloadBcl(event, mod){
         try {
             let finished = false;
             let downloadId = Date.now().toString();
-            let tempPath = path.join(appData.config.dataPath, 'temp', 'Better-CrewLink-Setup.exe');
+            let tempPath = path.join(getAppData().config.dataPath, 'temp', 'Better-CrewLink-Setup.exe');
             Files.deleteDirectoryIfExist(tempPath);
 
             const response = await axios({
                 method: 'get',
-                url: 'https://goodloss.fr/bcl',
+                url: GL_WEBSITE_URL+'/bcl',
                 responseType: 'stream'
             });
 
@@ -331,11 +359,12 @@ class ModWorker {
                 const child = spawn(path.join(item.value, "Better-CrewLink.exe"), {});
 
                 if (child.pid) {
+                    setStartedMod(mod, null);
                     event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-blue-700");
                 }
 
-                child.on('close', (code) => {
-                    // TODO
+                child.on('close', () => {
+                    unsetStartedMod();
                 });
             } else {
                 console.log(null);
@@ -402,18 +431,20 @@ class ModWorker {
     static async startChall(event, mod) {
         let downloadId = Date.now().toString();
         event.sender.send('showPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
-        exec(`start steam://rungameid/2160150`, (error, stdout, stderr) => {
-            if (error) {
-                console.error(`Erreur d'exécution : ${error}`);
-                console.log(`Code de sortie : ${error.code}`);
-                return;
-            }
-            if (stderr) {
-                console.error(`Erreur : ${stderr}`);
-            } else {
-                event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-blue-700");
-                return;
-            }
+
+        const child = spawn('start steam://rungameid/2160150', { shell: true });
+
+        child.on('error', (error) => {
+            console.error(`Error: ${error.message}`);
+        });
+
+        if (child.pid) {
+            setStartedMod(mod, null);
+            event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-blue-700");
+        }
+
+        child.on('close', () => {
+            unsetStartedMod();
         });
     }
 
@@ -488,4 +519,4 @@ class ModWorker {
     }
 }
 
-module.exports = ModWorker;
+export default ModWorker;

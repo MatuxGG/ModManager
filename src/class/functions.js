@@ -1,25 +1,24 @@
 import {app, Menu} from "electron";
 import AutoLaunch from "auto-launch";
-import path from "path";
 import ModWorker from "@/class/modWorker";
 import {
     getAppData,
     getArgs,
     getAutoLaunch,
     getCurrentDownloads,
-    getMainWindow, getPublicPath,
-    getTray,
+    getMainWindow,
+    getTray, isDownloadInProgress, MM_ICON_PATH, removeFinishedDownload,
     setAutoLaunch
 } from "@/class/appGlobals";
 
-
 export const handleArgs = () => {
-    if (getArgs().length > 0) {
-        console.log("Handle args: ", getArgs());
-        switch (getArgs()[0]) {
+    let args = getArgs();
+    if (args.length > 0) {
+        console.log("Handle args: ", args);
+        switch (args[0]) {
             case "startmod":
             {
-                const [mod, version] = getAppData().getModFromIdAndVersion(getArgs()[1], getArgs()[2]);
+                const [mod, version] = getAppData().getModFromIdAndVersion(args[1], args[2]);
                 if (mod !== null && version !== null) {
                     getMainWindow().webContents.send('handleArgs', 'startmod', [JSON.stringify(mod), JSON.stringify(version)]);
                 }
@@ -37,31 +36,26 @@ export const handleArgs = () => {
     }
 }
 
-export const isDownloadInProgress = (type, mod, version) => {
-    return getCurrentDownloads().some(([existingType, existingMod, existingVersion]) =>
-        type === existingType && (mod === null || existingMod.sid === mod.sid) && (version === null || existingVersion.version === version.version));
-}
-
-export const downloadMod = async (event, mod, version, appData) => {
+export const downloadMod = async (event, mod, version) => {
     console.log("Downloading mod on server...");
     let downloadLines = [];
-    if (mod.type === "mod") {
-        if (!isDownloadInProgress("mod", mod, version) && !appData.isInstalledModFromIdAndVersion(mod.sid, version.version)) {
+    if (mod.type !== "allInOne") {
+        if (!isDownloadInProgress("mod", mod, version) && !getAppData().isInstalledModFromIdAndVersion(mod.sid, version.version)) {
             downloadLines.push(["mod", mod, version]);
         }
 
         for (const dep of version.modDependencies) {
-            let [depMod, depVersion] = appData.getModFromIdAndVersion(dep.modDependency, dep.modVersion);
-            if (depMod && depVersion && !isDownloadInProgress("mod", depMod, depVersion) && !appData.isInstalledModFromIdAndVersion(depMod.sid, depVersion.version)) {
+            let [depMod, depVersion] = getAppData().getModFromIdAndVersion(dep.modDependency, dep.modVersion);
+            if (depMod && depVersion && !isDownloadInProgress("mod", depMod, depVersion) && !getAppData().isInstalledModFromIdAndVersion(depMod.sid, depVersion.version)) {
                 downloadLines.push(["mod", depMod, depVersion]);
             }
         }
 
-        if (!isDownloadInProgress("vanilla", version.gameVersion, null) && !appData.hasInstalledVanilla(version.gameVersion)) {
+        if (!isDownloadInProgress("vanilla", version.gameVersion, null) && !getAppData().hasInstalledVanilla(version.gameVersion)) {
             downloadLines.push(["vanilla", null, version]);
         }
     } else {
-        if (!isDownloadInProgress("mod", mod, version) && !appData.isInstalledModFromIdAndVersion(mod.sid, version.version)) {
+        if (!isDownloadInProgress("mod", mod, version) && !getAppData().isInstalledModFromIdAndVersion(mod.sid, version.version)) {
             downloadLines.push(["allInOne", mod, version]);
         }
     }
@@ -75,10 +69,10 @@ export const downloadMod = async (event, mod, version, appData) => {
         getCurrentDownloads().push(dl);
         switch (dl[0]) {
             case "vanilla":
-                promises.push(ModWorker.downloadClient(event, dl[2], appData));
+                promises.push(ModWorker.downloadClient(event, dl[2]));
                 break;
             case "mod":
-                promises.push(ModWorker.downloadMod(event, dl[1], dl[2], appData));
+                promises.push(ModWorker.downloadMod(event, dl[1], dl[2]));
                 break;
             case "allInOne":
                 if (dl[1].sid === "BetterCrewlink") {
@@ -94,24 +88,60 @@ export const downloadMod = async (event, mod, version, appData) => {
     await Promise.all(promises);
 
     for (const dl of downloadLines) {
-        const index = getCurrentDownloads().findIndex(([existingType, existingMod, existingVersion]) =>
-            existingType === dl[0] && (dl[1] === null || existingMod.sid === dl[1].sid) && (dl[2] === null || existingVersion.version === dl[2].version));
-        if (index !== -1) {
-            getCurrentDownloads().splice(index, 1);
-        }
+        removeFinishedDownload(dl[0], dl[1], dl[2]);
         if (dl[0] === "mod") {
-            appData.config.addInstalledMod(dl[1], dl[2]);
+            getAppData().config.addInstalledMod(dl[1], dl[2]);
         } else if (dl[0] === "vanilla") {
-            appData.config.addInstalledVanilla(dl[2].gameVersion);
+            getAppData().config.addInstalledVanilla(dl[2].gameVersion);
         }
     }
 
-    appData.updateConfig();
-    event.reply('updateConfig', JSON.stringify(appData.config));
+    getAppData().updateConfig();
+    event.reply('updateConfig', JSON.stringify(getAppData().config));
 
     updateTray();
 
     console.log("Mod downloaded on server");
+}
+
+export const uninstallMod = async (event, mod, version) => {
+    console.log("Uninstalling mod on server...");
+    if (!getAppData().isInstalledModFromIdAndVersion(mod.sid, version.version)) return;
+
+    if (mod.sid === "BetterCrewlink") {
+        await ModWorker.uninstallBcl(event, mod);
+    } else if (mod.sid === "Challenger") {
+        await ModWorker.uninstallChall(event, mod);
+    } else {
+        await ModWorker.uninstallMod(event, mod, version);
+    }
+
+    getAppData().config.removeInstalledMod(mod, version);
+    getAppData().updateConfig();
+
+    updateTray();
+
+    event.reply('updateConfig', JSON.stringify(getAppData().config));
+
+    console.log("Mod uninstalled on server");
+}
+
+export const startMod = async (event, mod, version) => {
+    console.log("Starting mod on server...");
+    const result = await downloadMod(event, mod, version);
+    if (result === false) {
+        return;
+    }
+
+    if (mod.sid === "BetterCrewlink") {
+        await ModWorker.startBcl(event, mod);
+    } else if (mod.sid === "Challenger") {
+        await ModWorker.startChall(event, mod);
+    } else {
+        await ModWorker.startMod(event, mod, version);
+    }
+
+    console.log("Mod started on server");
 }
 
 export const updateTray = () => {
@@ -206,7 +236,7 @@ export const disableAutoLaunch = () => {
 export const updateLaunchOnStart = () => {
     setAutoLaunch(new AutoLaunch({
         name: 'ModManager',
-        icon: path.join(getPublicPath(), 'modmanager.ico'),
+        icon: MM_ICON_PATH,
         path: app.getPath('exe'),
     }));
 

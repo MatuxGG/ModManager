@@ -1,5 +1,7 @@
 const Winreg = require('winreg');
 const path = require('path');
+const {GL_API_URL, getAppData} = require("@/class/appGlobals");
+const Files = require("@/class/files");
 
 const regKey = new Winreg({
     hive: Winreg.HKLM, // Hive du registre
@@ -7,7 +9,7 @@ const regKey = new Winreg({
 });
 
 class Config {
-    constructor(version = "", sources = ["https://goodloss.fr/api/mm"], installedMods = [], installedVanilla = [],
+    constructor(version = "", sources = [GL_API_URL+"/mm"], installedMods = [], installedVanilla = [],
         amongUsPath = "", dataPath = "", lg = "en", supportId = "", favoriteMods = [], minimizeToTray = false,
         launchOnStartup = true, theme = "dark" ) {
         this.version = version;
@@ -54,13 +56,8 @@ class Config {
     }
 
     generateRandomTenDigitNumber() {
-        // Générer un nombre aléatoire entre 0 (inclus) et 1 (exclus)
         let randomNum = Math.random();
-        
-        // Transformer en un nombre à 10 chiffres
         let tenDigitNum = Math.floor(randomNum * 1e10);
-    
-        // Si le nombre généré a moins de 10 chiffres, ajouter des zéros au début
         return String(tenDigitNum).padStart(10, '0');
     }
 

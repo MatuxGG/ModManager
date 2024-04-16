@@ -1,11 +1,22 @@
+import path from "path";
+
 let mainWindow = null;
 let tray = null;
 let appData = null;
 let autoLaunch = null;
-let publicPath = null;
 let currentDownloads = [];
 let args = [];
 let devEnv = false;
+let startedMod = false;
+
+export const APP_PATH = process.env.WEBPACK_DEV_SERVER_URL ? path.join(__dirname, '../public') : __dirname;
+
+export const GL_WEBSITE_URL = "https://goodloss.fr";
+export const GL_FILES_URL = "https://goodloss.fr/files";
+export const GL_API_URL = "https://goodloss.fr/api";
+export const MM_CONFIG_PATH = path.join(process.env.APPDATA, 'ModManager7', 'config7.json');
+export const MM_ICON_PATH = path.join(APP_PATH, 'modmanager.ico');
+export const AMONGUS_REGIONINFO_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'regionInfo.json');
 
 export const setMainWindow = (win) => {
     mainWindow = win;
@@ -39,14 +50,6 @@ export const getAutoLaunch = () => {
     return autoLaunch;
 }
 
-export const setPublicPath = (path) => {
-    publicPath = path;
-}
-
-export const getPublicPath = () => {
-    return publicPath;
-}
-
 export const setArgs = (arg) => {
     args = arg;
 }
@@ -66,4 +69,29 @@ export const isDev = () => {
 // Only get because you can only add or splice
 export const getCurrentDownloads = () => {
     return currentDownloads;
+}
+
+export const isDownloadInProgress = (type, mod, version) => {
+    return currentDownloads.some(([existingType, existingMod, existingVersion]) =>
+        type === existingType && (mod === null || existingMod.sid === mod.sid) && (version === null || existingVersion.version === version.version));
+}
+
+export const removeFinishedDownload = (type, mod, version) => {
+    const index = currentDownloads.findIndex(([existingType, existingMod, existingVersion]) =>
+        existingType === type && (mod === null || existingMod.sid === mod.sid) && (version === null || existingVersion.version === version.version));
+    if (index !== -1) {
+        currentDownloads.splice(index, 1);
+    }
+}
+
+export const getStartedMod = () => {
+    return startedMod;
+}
+
+export const unsetStartedMod = () => {
+    startedMod = false;
+}
+
+export const setStartedMod = (mod, version) => {
+    startedMod = [mod, version];
 }

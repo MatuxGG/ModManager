@@ -4,12 +4,12 @@ import { app, protocol, BrowserWindow, Tray } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 const path = require('path');
 import {
+  APP_PATH,
   getMainWindow,
-  getPublicPath, isDev,
+  isDev, MM_ICON_PATH,
   setAppData,
   setArgs, setIsDev,
   setMainWindow,
-  setPublicPath,
   setTray
 } from "@/class/appGlobals";
 import { handleArgs } from "@/class/functions";
@@ -18,21 +18,20 @@ import AppData from "@/class/appData";
 
 // Setup globals
 setIsDev(process.env.NODE_ENV !== 'production');
-setPublicPath(process.env.WEBPACK_DEV_SERVER_URL ? path.join(__dirname, '../public') : __dirname);
 setAppData(new AppData());
 
 protocol.registerSchemesAsPrivileged([
   { scheme: 'app', privileges: { secure: true, standard: true } }
 ])
 
-let preloadPath = path.join(getPublicPath(), 'preload.js');
+let preloadPath = path.join(APP_PATH, 'preload.js');
 
 async function createWindow() {
   // Create the browser window.
   setMainWindow(new BrowserWindow({
     width: 1920,
     height: 1080,
-    icon: path.join(getPublicPath(), 'modmanager.ico'),
+    icon: MM_ICON_PATH,
     show: false,
     webPreferences: {
       nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
@@ -92,7 +91,7 @@ app.on('activate', () => {
 
 app.on('ready', async () => {
   setArgs(process.argv.slice(2));
-  setTray(new Tray(path.join(getPublicPath(), 'modmanager.ico')));
+  setTray(new Tray(MM_ICON_PATH));
   createWindow()
   setupIPCMainHandlers();
 })

@@ -1,13 +1,11 @@
 const Config = require("./config");
 const path = require('path');
-const appDataPath = process.env.APPDATA;
 const Files = require("./files");
-const configPath = path.join(appDataPath, 'ModManager7', 'config7.json');
-const regionInfoPath = path.join(appDataPath, '..', 'LocalLow', 'Innersloth', 'Among Us', 'regionInfo.json');
-const fs = require('fs');
-const RegionInfo = require("./regionInfo");
+const fs= require('fs');
 const packageJson = require('../../package.json');
-const { version } = require("os");
+const {GL_API_URL, MM_CONFIG_PATH} = require("@/class/appGlobals");
+// const RegionInfo = require("./regionInfo");
+// const { version } = require("os");
 
 class AppData {
     constructor() {
@@ -17,7 +15,7 @@ class AppData {
     async loadLocalConfig() {
         console.log("Appdata load...")
         this.config = new Config(packageJson.version);
-        Files.loadOrCreate(configPath, this.config);
+        Files.loadOrCreate(MM_CONFIG_PATH, this.config);
     }
 
     async load() {
@@ -26,9 +24,10 @@ class AppData {
         Files.createDirectoryIfNotExist(path.join(this.config.dataPath, 'clients'));
         Files.createDirectoryIfNotExist(path.join(this.config.dataPath, 'mods'));
         Files.createDirectoryIfNotExist(path.join(this.config.dataPath, 'temp'));
+        Files.createDirectoryIfNotExist(path.join(this.config.dataPath, 'data'));
         // this.regionInfo = new RegionInfo();
         // Files.loadOrCreate(regionInfoPath, this.regionInfo);
-        this.githubToken = await Files.downloadString("https://goodloss.fr/api/github/token")
+        this.githubToken = await Files.downloadString(GL_API_URL+"/github/token")
         this.modSources = [];
         let downloadPromises = this.config.sources.map(source => this.downloadSource(source));
         try {
@@ -84,7 +83,7 @@ class AppData {
         } else {
             configData = JSON.stringify(this.config);
         }
-        fs.writeFileSync(configPath, configData);
+        fs.writeFileSync(MM_CONFIG_PATH, configData);
     }
 
     getModFromIdAndVersion(modId, modVersion = null) {

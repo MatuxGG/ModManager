@@ -29,6 +29,89 @@ class Files {
         fs.rmSync(dir, { recursive: true });
     }
 
+    static moveDirectory(dirSource, dirDest) {
+        if (!fs.existsSync(dirSource)) return;
+        fs.renameSync(dirSource, dirDest);
+    }
+
+    static getAllFiles(dir) {
+        return this.getAllFilesWorker(dir, dir);
+    }
+
+    static getAllFilesWorker(dir, rootDir) {
+        let returnedFiles = [];
+        let files = fs.readdirSync(dir);
+        for (const file of files) {
+            let fullFilePath = path.join(dir, file);
+            let fileStats = fs.statSync(fullFilePath);
+            if (!fileStats.isDirectory()) {
+                let relativePath = path.relative(rootDir, fullFilePath);
+                returnedFiles.push(relativePath);
+            } else {
+                const result = this.getAllFilesWorker(fullFilePath, rootDir);
+                for (const f of result) {
+                    returnedFiles.push(f);
+                }
+            }
+        }
+        return returnedFiles;
+    }
+
+    static getAllDifferentFiles(dir, files) {
+        return this.getAllDifferentFilesWorker(dir, dir, files);
+    }
+
+    static getAllDifferentFilesWorker(dir, rootDir, differentFiles) {
+        let returnedFiles = [];
+        let files = fs.readdirSync(dir);
+        for (const file of files) {
+            let fullFilePath = path.join(dir, file);
+            let fileStats = fs.statSync(fullFilePath);
+            if (!fileStats.isDirectory()) {
+                let relativePath = path.relative(rootDir, fullFilePath);
+                if (!differentFiles.includes(relativePath))
+                    returnedFiles.push(relativePath);
+            } else {
+                const result = this.getAllFilesWorker(fullFilePath, rootDir);
+                for (const f of result) {
+                    returnedFiles.push(f);
+                }
+            }
+        }
+        return returnedFiles;
+    }
+
+    static moveFilesIntoDirectory(rootDir, files, targetDir) {
+        files.forEach(file => {
+            const oldPath = path.join(rootDir, file);
+            const newPath = path.join(targetDir, file);
+
+            fs.rename(oldPath, newPath, function(err) {
+                if (err) throw err;
+            });
+        });
+    }
+
+    static getBepInExInsideDir(nodePath) {
+        const fullPath = path.resolve(nodePath, 'BepInEx');
+        if (fs.existsSync(fullPath)) {
+            return nodePath;
+        }
+
+        const dirs = fs.readdirSync(nodePath, { withFileTypes: true })
+            .filter(dirent => dirent.isDirectory())
+            .map(dirent => path.resolve(nodePath, dirent.name));
+
+        for (let dir of dirs) {
+            const result = this.getBepInExInsideDir(dir);
+            if (result !== null) {
+                return result;
+            }
+        }
+
+        return null;
+    }
+
     static async downloadString(url) {
         return new Promise((resolve, reject) => {
             const req = https.get(url, { rejectUnauthorized: false }, (res) => {

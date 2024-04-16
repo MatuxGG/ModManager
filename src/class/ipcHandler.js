@@ -1,7 +1,6 @@
 import {ipcMain, shell} from "electron";
-import ModWorker from "@/class/modWorker";
 import {getAppData, getMainWindow} from "@/class/appGlobals";
-import {downloadMod, handleArgs, updateLaunchOnStart, updateTray} from "@/class/functions";
+import {downloadMod, handleArgs, startMod, uninstallMod, updateLaunchOnStart, updateTray} from "@/class/functions";
 
 const setupIPCMainHandlers = () => {
 
@@ -45,54 +44,22 @@ const setupIPCMainHandlers = () => {
         let mod = JSON.parse(modStr);
         let version = JSON.parse(versionStr);
 
-        await downloadMod(event, mod, version, getAppData());
+        await downloadMod(event, mod, version);
 
     });
 
     ipcMain.on('uninstallMod', async (event, modStr, versionStr) => {
-        console.log("Uninstalling mod on server...");
         let mod = JSON.parse(modStr);
         let version = JSON.parse(versionStr);
 
-        if (!getAppData().config.installedMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) return;
-
-        if (mod.sid === "BetterCrewlink") {
-            await ModWorker.uninstallBcl(event, mod);
-        } else if (mod.sid === "Challenger") {
-            await ModWorker.uninstallChall(event, mod);
-        } else {
-            await ModWorker.uninstallMod(event, mod, version, getAppData());
-        }
-
-        getAppData().config.removeInstalledMod(mod, version);
-        getAppData().updateConfig();
-
-        updateTray();
-
-        event.reply('updateConfig', JSON.stringify(getAppData().config));
-
-        console.log("Mod uninstalled on server");
+        await uninstallMod(event, mod, version);
     });
 
     ipcMain.on('startMod', async (event, modStr, versionStr) => {
-        console.log("Starting mod on server...");
         let mod = JSON.parse(modStr);
         let version = JSON.parse(versionStr);
 
-        const result = await downloadMod(event, mod, version, getAppData());
-        if (result === false) {
-            return;
-        }
-
-        if (mod.sid === "BetterCrewlink") {
-            await ModWorker.startBcl(event, mod);
-        } else if (mod.sid === "Challenger") {
-            await ModWorker.startChall(event, mod);
-        } else {
-            await ModWorker.startMod(event, mod, version, getAppData());
-        }
-
-        console.log("Mod started on server");
+        await startMod(event, mod, version);
     });
 
 
