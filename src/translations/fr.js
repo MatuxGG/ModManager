@@ -7,7 +7,7 @@ export default {
         'title': 'Paramètres',
         'general': 'Général',
         'select_language': 'Sélectionne une langue :',
-        'minimize': 'Réduire l\'application :',
+        'minimize': 'Réduire au démarrage :',
         'startup': 'Lancer au démarrage :',
         'appearance': 'Apparence',
         'theme': 'Thème :',

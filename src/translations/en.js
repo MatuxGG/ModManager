@@ -7,7 +7,7 @@ export default {
         'title': 'Settings',
         'general': 'General',
         'select_language': 'Select Language:',
-        'minimize': 'Minimize to tray:',
+        'minimize': 'Minimize on startup:',
         'startup': 'Launch on startup:',
         'appearance': 'Appearance',
         'theme': 'Theme:',

@@ -39,6 +39,11 @@ ipcMain.on('openExternal', async (event, url) => {
 ipcMain.on('loadDataServer', async (event) => {
   console.log("Loading data server...");
   if (!appData || !appData.isLoaded) {
+    await appData.loadLocalConfig();
+    if (appData.config.minimizeToTray === false) {
+      mainWindow.show();
+      mainWindow.focus();
+    }
     await appData.load();
     updateTray();
     updateLaunchOnStart();
@@ -340,7 +345,6 @@ function updateLaunchOnStart() {
     name: 'ModManager',
     icon: path.join(publicPath, 'modmanager.ico'),
     path: app.getPath('exe'),
-
   });
 
   if (appData.config.launchOnStartup) {
@@ -356,6 +360,7 @@ async function createWindow() {
     width: 1920,
     height: 1080,
     icon: path.join(publicPath, 'modmanager.ico'),
+    show: false,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info

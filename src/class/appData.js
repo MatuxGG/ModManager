@@ -13,11 +13,15 @@ class AppData {
     constructor() {
         this.isLoaded = false;
     }
-    async load() {
+
+    async loadLocalConfig() {
         console.log("Appdata load...")
         this.config = new Config(packageJson.version);
-        await this.config.loadAmongUsPath();
         Files.loadOrCreate(configPath, this.config);
+    }
+
+    async load() {
+        await this.config.loadAmongUsPath();
         Files.createDirectoryIfNotExist(path.join(this.config.dataPath, 'game'));
         Files.createDirectoryIfNotExist(path.join(this.config.dataPath, 'clients'));
         Files.createDirectoryIfNotExist(path.join(this.config.dataPath, 'mods'));
