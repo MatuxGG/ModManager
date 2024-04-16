@@ -317,7 +317,7 @@ class ModWorker {
     }
 
 
-    static async startBcl(event, mod, appData) {
+    static async startBcl(event, mod) {
         let downloadId = Date.now().toString();
         event.sender.send('showPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
         const regKey = new Winreg({
@@ -343,7 +343,7 @@ class ModWorker {
         });
     }
 
-    static async uninstallBcl(event, mod, appData) {
+    static async uninstallBcl(event, mod) {
         let downloadId = Date.now().toString();
         event.sender.send('showPopin', "<div class='w-64'><p>Uninstalling "+mod.name+"</p></div>", downloadId, "bg-blue-700");
 
@@ -366,7 +366,6 @@ class ModWorker {
                         console.error(`Erreur : ${stderr}`);
                     } else {
                         event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" uninstalled !</p></div>", downloadId, "bg-blue-700");
-                        resolve();
                     }
                 });
             }
@@ -375,7 +374,7 @@ class ModWorker {
         event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" uninstalled</p></div>", downloadId, "bg-blue-700");
     }
 
-    static async downloadChall(event, mod, appData){
+    static async downloadChall(event, mod){
         try {
             let downloadId = Date.now().toString();
             event.sender.send('showPopin', "<div class='w-64'><p>Installing "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
@@ -400,7 +399,7 @@ class ModWorker {
     }
 
 
-    static async startChall(event, mod, appData) {
+    static async startChall(event, mod) {
         let downloadId = Date.now().toString();
         event.sender.send('showPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
         exec(`start steam://rungameid/2160150`, (error, stdout, stderr) => {
@@ -418,7 +417,7 @@ class ModWorker {
         });
     }
 
-    static async uninstallChall(event, mod, appData) {
+    static async uninstallChall(event, mod) {
         let downloadId = Date.now().toString();
         event.sender.send('showPopin', "<div class='w-64'><p>Uninstalling "+mod.name+"</p></div>", downloadId, "bg-blue-700");
 
@@ -441,7 +440,6 @@ class ModWorker {
                         console.error(`Erreur : ${stderr}`);
                     } else {
                         event.sender.send('hidePopin', "<div class='w-64'><p>"+mod.name+" uninstalled !</p></div>", downloadId, "bg-blue-700");
-                        resolve();
                     }
                 });
             }
