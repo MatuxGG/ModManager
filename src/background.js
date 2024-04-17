@@ -12,7 +12,7 @@ import {
   setMainWindow,
   setTray
 } from "@/class/appGlobals";
-import { handleArgs } from "@/class/functions";
+import {handleArgs} from "@/class/functions";
 import setupIPCMainHandlers from "@/class/ipcHandler";
 import AppData from "@/class/appData";
 

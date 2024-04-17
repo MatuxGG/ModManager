@@ -12,8 +12,19 @@
                 <p class="col-span-2">{{ menu.title }}</p>
             </router-link>
         </div>
-        <div class="flex flex-col items-center gap-4">
-            <div class="flex items-center justify-between gap-4">
+
+        <div class="text-xs flex flex-col items-center gap-2">
+          <div v-if="startedMod !== false" class="p-1 flex flex-col justify-center items-center dark:bg-green-800 w-full rounded">
+              <span>Started mod</span>
+              <div class="flex flex-wrap gap-1">
+                <span>{{ startedMod[0].name }}</span>
+                <span>{{ startedMod[1].version }}</span>
+              </div>
+          </div>
+          <div v-else class="flex justify-center p-2 dark:bg-red-800 w-full rounded">
+            <span>No mod started yet</span>
+          </div>
+            <div class="flex items-center justify-between gap-2">
                <a v-for="miniIcon in miniIcons" :key="miniIcon.id" @click.prevent="openLink(miniIcon.href)">
                   <img class="image-icon cursor-pointer" :src="miniIcon.src" />
                 </a>
@@ -24,6 +35,7 @@
 </template>
   
 <script>
+
   export default {
     props: {
       miniIcons: Array,
@@ -32,6 +44,11 @@
     inject: [
         'openLink'
     ],
+    computed: {
+      startedMod() {
+        return this.$store.getters.startedMod();
+      },
+    },
   }
 </script>
   

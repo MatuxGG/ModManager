@@ -1,6 +1,14 @@
 import {ipcMain, shell} from "electron";
 import {getAppData, getMainWindow} from "@/class/appGlobals";
-import {downloadMod, handleArgs, startMod, uninstallMod, updateLaunchOnStart, updateTray} from "@/class/functions";
+import {
+    createShortcut,
+    downloadMod,
+    handleArgs,
+    startMod,
+    uninstallMod,
+    updateLaunchOnStart,
+    updateTray
+} from "@/class/functions";
 
 const setupIPCMainHandlers = () => {
 
@@ -80,6 +88,15 @@ const setupIPCMainHandlers = () => {
         getAppData().config.removeFavoriteMod(mod, version);
         getAppData().updateConfig();
         event.reply('updateConfig', JSON.stringify(getAppData().config));
+    });
+
+    ipcMain.on('addShortcut', async (event, modStr, versionStr) => {
+        let mod = JSON.parse(modStr);
+        let version = JSON.parse(versionStr);
+        createShortcut(mod, version);
+        let downloadId = Date.now().toString();
+        event.sender.send('createPopin', "<div class='w-64'><p>Shortcut created for "+mod.name+(version !== null ? (" " + version.version) : "")+"</p></div>", downloadId, "bg-green-700");
+        event.sender.send('removePopin', downloadId);
     });
 
     // ipcMain.on('updateRegionInfoServer', async (event, newRegionInfo) => {

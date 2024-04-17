@@ -33,18 +33,21 @@
       </div>
 
       <!-- Author -->
-      <a v-if="mod.author" @click.prevent="openLink(`https://github.com/${mod.author}`)" class="cursor-pointer">
+      <a v-if="mod.author" @click.prevent="openLink(`https://github.com/${mod.author}`)"
+         class="cursor-pointer w-fit">
         {{ mod.author }}
       </a>
 
       <template v-if="version">
         <!-- Version -->
-        <a v-if="mod.author && mod.githubLink && version.version" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}/releases/tag/${version.version}`)" class="cursor-pointer">
+        <a v-if="mod.author && mod.githubLink && version.version"
+           @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}/releases/tag/${version.version}`)"
+           class="cursor-pointer w-fit">
           Version: <span class="text-blue-400">{{ version.version }}</span>
         </a>
 
         <!-- Game Version -->
-        <p v-if="version.gameVersion">
+        <p v-if="version.gameVersion" class="w-fit">
           Game Version: <span class="text-blue-400">{{ version.gameVersion }}</span>
         </p>
       </template>
@@ -57,7 +60,13 @@
         <div class="flex items-center gap-2">
           <template v-if="version">
             <template v-if="!isInstalledMod(mod.sid, version.version)">
-              <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/download.png"/></div>
+              <template v-if="canBeUpdated(mod.sid, version.version) === true">
+                <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/update.png"/></div>
+                <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
+              </template>
+              <template v-else>
+                <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/download.png"/></div>
+              </template>
             </template>
             <template v-else>
               <div @click="() => startMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/play.png"/></div>
@@ -70,6 +79,7 @@
             <template v-else>
               <div @click="() => addFavoriteMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/favorite.png"/></div>
             </template>
+            <div @click="() => addShortcut(mod, version)"><img class="image-icon cursor-pointer" src="../assets/shortcut.png"/></div>
           </template>
           <template v-else>
             <template v-if="!isInstalledMod(mod.sid)">
@@ -87,7 +97,6 @@
               <div @click="() => addFavoriteMod(mod)"><img class="image-icon cursor-pointer" src="../assets/favorite.png"/></div>
             </template>
           </template>
-
         </div>
         <div class="flex items-center gap-2">
           <a v-if="mod.githubLink" @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}`)" class="cursor-pointer">
@@ -138,6 +147,12 @@ export default {
     },
     isFavoriteMod(modId, version = null) {
       return this.$store.getters.isFavoriteMod(modId, version);
+    },
+    canBeUpdated(modId, version = null) {
+      return this.$store.getters.canBeUpdated(modId, version);
+    },
+    addShortcut(mod, version = null) {
+      window.electronAPI.sendData('addShortcut', JSON.stringify(mod), JSON.stringify(version));
     }
   },
 };

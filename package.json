@@ -12,7 +12,7 @@
     "postuninstall": "electron-builder install-app-deps",
     "watch": "npx tailwindcss -i ./src/tailwind.css -o ./src/compiled.css --watch"
   },
-  "main": "index.js",
+  "main": "background.js",
   "dependencies": {
     "auto-launch": "^5.0.6",
     "axios": "^1.6.2",

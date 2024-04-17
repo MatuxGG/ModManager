@@ -35,6 +35,7 @@ class AppData {
         } catch (error) {
             console.error("Erreur lors du téléchargement des sources", error);
         }
+        this.startedMod = false;
         this.isLoaded = true;
         console.log("Appdata loaded")
     }
@@ -99,12 +100,33 @@ class AppData {
         return [null, null];
     }
 
-
-
     isInstalledModFromIdAndVersion(modId, modVersion = null) {
         return this.config.installedMods.some(m => m.modId === modId && m.version === modVersion);
     }
 
+    getInstalledModVersions(modId) {
+        return this.config.installedMods.filter(m => m.modId === modId);
+    }
+
+    getModVersions(modId) {
+        for (const modSource of this.modSources) {
+            const mod = modSource.mods.find(mod => mod.sid === modId);
+            if (mod) {
+                return mod.versions;
+            }
+        }
+        return null;
+    }
+
+    getMod(modId) {
+        for (const modSource of this.modSources) {
+            const mod = modSource.mods.find(mod => mod.sid === modId);
+            if (mod) {
+                return mod;
+            }
+        }
+        return null;
+    }
 
     hasInstalledVanilla(gameVersion) {
         return this.config.installedVanilla.includes(gameVersion);

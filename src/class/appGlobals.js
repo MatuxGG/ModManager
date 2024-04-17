@@ -7,7 +7,6 @@ let autoLaunch = null;
 let currentDownloads = [];
 let args = [];
 let devEnv = false;
-let startedMod = false;
 
 export const APP_PATH = process.env.WEBPACK_DEV_SERVER_URL ? path.join(__dirname, '../public') : __dirname;
 
@@ -82,16 +81,4 @@ export const removeFinishedDownload = (type, mod, version) => {
     if (index !== -1) {
         currentDownloads.splice(index, 1);
     }
-}
-
-export const getStartedMod = () => {
-    return startedMod;
-}
-
-export const unsetStartedMod = () => {
-    startedMod = false;
-}
-
-export const setStartedMod = (mod, version) => {
-    startedMod = [mod, version];
 }

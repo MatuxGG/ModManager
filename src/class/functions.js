@@ -1,4 +1,4 @@
-import {app, Menu} from "electron";
+import {app, Menu, shell} from "electron";
 import AutoLaunch from "auto-launch";
 import ModWorker from "@/class/modWorker";
 import {
@@ -10,6 +10,7 @@ import {
     getTray, isDownloadInProgress, MM_ICON_PATH, removeFinishedDownload,
     setAutoLaunch
 } from "@/class/appGlobals";
+import path from "path";
 
 export const handleArgs = () => {
     let args = getArgs();
@@ -21,6 +22,12 @@ export const handleArgs = () => {
                 const [mod, version] = getAppData().getModFromIdAndVersion(args[1], args[2]);
                 if (mod !== null && version !== null) {
                     getMainWindow().webContents.send('handleArgs', 'startmod', [JSON.stringify(mod), JSON.stringify(version)]);
+                } else {
+                    let mod = getAppData().getMod(args[1]);
+                    let modVersions = getAppData().getModVersions(args[1]);
+                    if (mod && modVersions) {
+                        getMainWindow().webContents.send('handleArgs', 'startmod', [JSON.stringify(mod), JSON.stringify(modVersions[0])]);
+                    }
                 }
             }
                 break;
@@ -40,6 +47,17 @@ export const downloadMod = async (event, mod, version) => {
     console.log("Downloading mod on server...");
     let downloadLines = [];
     if (mod.type !== "allInOne") {
+        let installedVersions = getAppData().getInstalledModVersions(mod.sid);
+        let versions = getAppData().getModVersions(mod.sid);
+        for (const installedVersion of installedVersions) {
+            if (!versions.some(v => v.version === installedVersion.version)) {
+                let generatedMod = mod;
+                generatedMod.version = installedVersion.version;
+                let generatedVersion = {'version': installedVersion.version};
+                downloadLines.push(["update", generatedMod, generatedVersion]);
+            }
+        }
+
         if (!isDownloadInProgress("mod", mod, version) && !getAppData().isInstalledModFromIdAndVersion(mod.sid, version.version)) {
             downloadLines.push(["mod", mod, version]);
         }
@@ -81,8 +99,10 @@ export const downloadMod = async (event, mod, version) => {
                     promises.push(ModWorker.downloadChall(event, dl[1]));
                 }
                 break;
+            case "update":
+                promises.push(ModWorker.uninstallMod(event, dl[1], dl[2]));
         }
-        promises.push(dl[3]);
+        //promises.push(dl[3]);
     }
 
     await Promise.all(promises);
@@ -93,6 +113,8 @@ export const downloadMod = async (event, mod, version) => {
             getAppData().config.addInstalledMod(dl[1], dl[2]);
         } else if (dl[0] === "vanilla") {
             getAppData().config.addInstalledVanilla(dl[2].gameVersion);
+        } else if (dl[0] === "update") {
+            getAppData().config.removeInstalledMod(dl[1], dl[2]);
         }
     }
 
@@ -142,6 +164,27 @@ export const startMod = async (event, mod, version) => {
     }
 
     console.log("Mod started on server");
+}
+
+export const createShortcut = (mod, version) => {
+    let appPath = app.getPath('exe');
+    let desktopPath = path.join(app.getPath('home'), 'Desktop');
+    let shortcutPath = path.join(desktopPath, mod.name + (version !== null ? (" " + version.version) : "") + '.lnk');
+
+    let success = shell.writeShortcutLink(shortcutPath, 'create', {
+        target: appPath+' startmod '+ (version !== null ? (" " + version.version) : ""),
+        cwd: path.dirname(appPath),
+        icon: appPath,
+        iconIndex: 0,
+        appUserModelId: 'modmanager7',
+        description: 'Mod Manager'
+    });
+
+    if (success) {
+        console.log('Shortcut created successfully');
+    } else {
+        console.log('Failed to create shortcut');
+    }
 }
 
 export const updateTray = () => {

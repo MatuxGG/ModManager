@@ -34,9 +34,11 @@ export default createStore({
       if (state.appData && state.appData.modSources) {
         state.appData.modSources.forEach(source => {
           source.mods.forEach(mod => {
-            mod.versions.forEach(version => {
-              versions.add(version.gameVersion);
-            })
+              if (mod.type !== "dependency") {
+                  mod.versions.forEach(version => {
+                      versions.add(version.gameVersion);
+                  })
+              }
           });
         });
       }
@@ -51,11 +53,13 @@ export default createStore({
           if (state.appData && state.appData.modSources) {
               state.appData.modSources.forEach(source => {
                   source.mods.forEach(mod => {
-                      mod.versions.forEach(version => {
-                          if (getters.isInstalledMod(mod.sid, version.version)) {
-                              versions.add(version.gameVersion);
-                          }
-                      })
+                      if (mod.type !== "dependency") {
+                          mod.versions.forEach(version => {
+                              if (getters.isInstalledMod(mod.sid, version.version)) {
+                                  versions.add(version.gameVersion);
+                              }
+                          })
+                      }
                   });
               });
           }
@@ -70,10 +74,12 @@ export default createStore({
         if (state.appData && state.appData.modSources) {
           state.appData.modSources.forEach(source => {
             source.mods.forEach(mod => {
-              const cat = mod.category;
-              if (cat && !uniqueCategories[cat.sid]) {
-                uniqueCategories[cat.sid] = cat;
-              }
+                if (mod.type !== "dependency") {
+                    const cat = mod.category;
+                    if (cat && !uniqueCategories[cat.sid]) {
+                        uniqueCategories[cat.sid] = cat;
+                    }
+                }
             });
           });
         }
@@ -89,12 +95,14 @@ export default createStore({
           if (state.appData && state.appData.modSources) {
               state.appData.modSources.forEach(source => {
                   source.mods.forEach(mod => {
-                      const cat = mod.category;
-                      if (cat && !uniqueCategories[cat.sid] && getters.isInstalledMod(mod.sid, null)) {
-                          uniqueCategories[cat.sid] = cat;
-                          if (!uniqueCategories["Favorites"]) {
-                              if (state.appData.config.favoriteMods.some(m => m.modId === mod.sid)) {
-                                  uniqueCategories["Favorites"] = favoriteCat;
+                      if (mod.type != "dependency") {
+                          const cat = mod.category;
+                          if (cat && !uniqueCategories[cat.sid] && getters.isInstalledMod(mod.sid, null)) {
+                              uniqueCategories[cat.sid] = cat;
+                              if (!uniqueCategories["Favorites"]) {
+                                  if (state.appData.config.favoriteMods.some(m => m.modId === mod.sid)) {
+                                      uniqueCategories["Favorites"] = favoriteCat;
+                                  }
                               }
                           }
                       }
@@ -162,5 +170,25 @@ export default createStore({
       isFavoriteMod: (state) => (modId, version) => {
           return state.appData.config.favoriteMods.some(mod => mod.modId === modId && (version === null || mod.version === version));
       },
+      canBeUpdated: (state) => (modId) => {
+        let installedMods = state.appData.config.installedMods.filter(m => m.modId === modId);
+        if (installedMods.length === 0) return false;
+        let result = false;
+        state.appData.modSources.forEach(source => {
+            let mod = source.mods.find(m => m.sid === modId);
+            if (mod) {
+                mod.versions.forEach(v => {
+                    if (installedMods.some(im => im.version === v.version) === false) {
+                        result = true;
+                    }
+                });
+            }
+        });
+        return result;
+
+      },
+      startedMod: (state) => () => {
+        return state.appData.startedMod;
+      }
   }
 });

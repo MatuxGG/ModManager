@@ -95,7 +95,7 @@ export default {
         });
       });
     });
-    window.electronAPI.receiveData('showPopin', (text, id, classes) => {
+    window.electronAPI.receiveData('createPopin', (text, id, classes) => {
       let popinId = "popin-"+id;
       let parentDiv = document.getElementById("popinDiv");
       let popinDiv = document.getElementById(popinId);
@@ -112,16 +112,18 @@ export default {
       popinDiv.innerHTML = text;
     });
 
-    window.electronAPI.receiveData('hidePopin', (text, id, classes) => {
+    window.electronAPI.receiveData('updatePopin', (text, id, classes) => {
+      let popinId = "popin-" + id;
+      let popinDiv = document.getElementById(popinId);
+      popinDiv.classList.remove();
+      popinDiv.classList.add(classes);
+      popinDiv.innerHTML = text;
+    });
+
+    window.electronAPI.receiveData('removePopin', (id) => {
       let popinId = "popin-"+id;
       let parentDiv = document.getElementById("popinDiv");
       let popinDiv = document.getElementById(popinId);
-      popinDiv.classList.remove(classes);
-      popinDiv.classList.add('bg-green-700');
-      popinDiv.innerHTML = text;
-      // popinDiv.addEventListener('click', function () {
-      //   parentDiv.removeChild(popinDiv);
-      // })
       setTimeout(() => {
         if (popinDiv && parentDiv.contains(popinDiv)) {
           $(popinDiv).animate({ opacity: 0 }, 500);
@@ -144,6 +146,9 @@ export default {
       }
     });
 
+    window.electronAPI.receiveData('updateStartedMod', (startedMod) => {
+      this.$store.state.appData.startedMod = startedMod;
+    });
 
     window.electronAPI.receiveData('navigate', (route) => {
       this.$router.push(route);
