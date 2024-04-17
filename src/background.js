@@ -12,7 +12,7 @@ import {
   setMainWindow,
   setTray
 } from "@/class/appGlobals";
-import {handleArgs} from "@/class/functions";
+import {handleArgs, logError} from "@/class/functions";
 import setupIPCMainHandlers from "@/class/ipcHandler";
 import AppData from "@/class/appData";
 
@@ -95,6 +95,14 @@ app.on('ready', async () => {
   createWindow()
   setupIPCMainHandlers();
 })
+
+process.on('uncaughtException', (error) => {
+  logError(error.stack || error.toString());
+});
+
+process.on('unhandledRejection', (reason, promise) => {
+  logError(`Unhandled Rejection at: ${promise} reason: ${reason}`);
+});
 
 if (isDev()) {
   if (process.platform === 'win32') {

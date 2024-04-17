@@ -2,15 +2,17 @@ import {app, Menu, shell} from "electron";
 import AutoLaunch from "auto-launch";
 import ModWorker from "@/class/modWorker";
 import {
+    APP_PATH,
     getAppData,
     getArgs,
     getAutoLaunch,
     getCurrentDownloads,
     getMainWindow,
-    getTray, isDownloadInProgress, MM_ICON_PATH, removeFinishedDownload,
+    getTray, isDownloadInProgress, MM_ICON_PATH, MM_LOG_PATH, removeFinishedDownload,
     setAutoLaunch
 } from "@/class/appGlobals";
 import path from "path";
+import fs from "fs";
 
 export const handleArgs = () => {
     let args = getArgs();
@@ -288,4 +290,13 @@ export const updateLaunchOnStart = () => {
     } else {
         disableAutoLaunch()
     }
+}
+
+export const logError = (error) => {
+    const message = `[${new Date().toISOString()}] ${error}\n`;
+    fs.appendFile(MM_LOG_PATH, message, (err) => {
+        if (err) {
+            console.error('Failed to write to log file:', err);
+        }
+    });
 }
