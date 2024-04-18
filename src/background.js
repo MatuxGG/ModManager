@@ -6,7 +6,7 @@ const path = require('path');
 import {
   APP_PATH,
   getMainWindow,
-  isDev, MM_ICON_PATH,
+  isDev, MM_ICON_PATH, MM_LOG_PATH,
   setAppData,
   setArgs, setIsDev,
   setMainWindow,
@@ -15,6 +15,10 @@ import {
 import {handleArgs, logError} from "@/class/functions";
 import setupIPCMainHandlers from "@/class/ipcHandler";
 import AppData from "@/class/appData";
+
+const log = require('electron-log');
+log.transports.file.resolvePath = () => MM_LOG_PATH;
+console.log = log.log;
 
 // Setup globals
 setIsDev(process.env.NODE_ENV !== 'production');
@@ -98,6 +102,10 @@ app.on('ready', async () => {
 
 process.on('uncaughtException', (error) => {
   logError(error.stack || error.toString());
+});
+
+process.on('exit', (code) => {
+  logError(`Process was stopped with code ${code}`);
 });
 
 process.on('unhandledRejection', (reason, promise) => {
