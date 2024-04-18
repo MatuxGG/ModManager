@@ -82,7 +82,7 @@ class AppData {
             Object.assign(this.config, JSON.parse(newConfig));
             configData = JSON.stringify(this.config, null, 2);
         } else {
-            configData = JSON.stringify(this.config);
+            configData = JSON.stringify(this.config, null, 2);
         }
         fs.writeFileSync(MM_CONFIG_PATH, configData);
     }

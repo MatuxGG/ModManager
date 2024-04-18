@@ -1,14 +1,15 @@
 import {ipcMain, shell} from "electron";
-import {getAppData, getMainWindow} from "@/class/appGlobals";
+import {getAppData, getMainWindow, GL_API_URL} from "@/class/appGlobals";
 import {
     createShortcut,
     downloadMod,
-    handleArgs,
+    handleArgs, logToServ,
     startMod,
     uninstallMod,
     updateLaunchOnStart,
     updateTray
 } from "@/class/functions";
+import axios from "axios";
 
 const setupIPCMainHandlers = () => {
 
@@ -33,7 +34,6 @@ const setupIPCMainHandlers = () => {
         console.log("Data server loaded");
         event.reply('loadDataClient', sentData);
         console.log("Mod Manager started");
-
     });
 
 
@@ -97,6 +97,13 @@ const setupIPCMainHandlers = () => {
         let downloadId = Date.now().toString();
         event.sender.send('createPopin', "<div class='w-64'><p>Shortcut created for "+mod.name+(version !== null ? (" " + version.version) : "")+"</p></div>", downloadId, "bg-green-700");
         event.sender.send('removePopin', downloadId);
+    });
+
+    ipcMain.on('rateMod', async (event, modStr, versionStr, rating) => {
+        let mod = JSON.parse(modStr);
+        let version = JSON.parse(versionStr);
+
+        logToServ("Rate of "+rating+"/5 for mod "+mod.sid+" "+version.version);
     });
 
     // ipcMain.on('updateRegionInfoServer', async (event, newRegionInfo) => {

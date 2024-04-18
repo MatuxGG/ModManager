@@ -1,3 +1,5 @@
+import {BrowserWindow} from "electron";
+
 const axios = require('axios').default;
 const fs = require('fs');
 const path = require('path');
@@ -7,9 +9,9 @@ const { spawn, exec  } = require('child_process');
 const os = require('os');
 const Winreg = require("winreg");
 import {
-    getAppData,
+    getAppData, getMainWindow,
     GL_FILES_URL,
-    GL_WEBSITE_URL
+    GL_WEBSITE_URL, MM_ICON_PATH
 } from "@/class/appGlobals";
 
 class ModWorker {
@@ -233,15 +235,18 @@ class ModWorker {
         const modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version);
         Files.deleteDirectoryIfExist(gamePath);
         Files.createDirectoryIfNotExist(gamePath);
-        fs.cpSync(clientPath, gamePath, {recursive: true});
-        fs.cpSync(modPath, gamePath, {recursive: true});
-        version.modDependencies.forEach( dep => {
+        let promises = [];
+        promises.push(fs.promises.cp(clientPath, gamePath, {recursive: true}));
+        promises.push(fs.promises.cp(modPath, gamePath, {recursive: true}));
+        for (const dep of version.modDependencies) {
             let [depMod, depVersion] = getAppData().getModFromIdAndVersion(dep.modDependency, dep.modVersion);
             if (depMod && depVersion) {
                 const depPath = path.join(getAppData().config.dataPath, 'mods', depMod.sid+'-'+depVersion.version);
-                fs.cpSync(depPath, gamePath, {recursive: true});
+                promises.push(fs.promises.cp(depPath, gamePath, {recursive: true}));
             }
-        })
+        }
+
+        await Promise.all(promises);
 
         const amongUsPath = path.join(gamePath, 'Among Us.exe');
         const child = spawn(amongUsPath, {});
@@ -253,11 +258,16 @@ class ModWorker {
             event.sender.send('removePopin', downloadId);
         }
 
-        child.on('close', async () => {
+        child.on('close', () => {
             Files.createDirectoryIfNotExist(savePath);
             // await this.saveData(savePath, gamePath, foldersToSave); // TODO
             getAppData().startedMod = false;
             event.sender.send('updateStartedMod', false);
+            downloadId = Date.now().toString();
+            getMainWindow().show();
+            getMainWindow().maximize();
+            event.sender.send('createFeedback', downloadId, JSON.stringify(mod), JSON.stringify(version));
+
             console.log("Mod stopped");
         });
     }

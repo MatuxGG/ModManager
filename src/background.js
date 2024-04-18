@@ -15,6 +15,7 @@ import {
 import {handleArgs, logError} from "@/class/functions";
 import setupIPCMainHandlers from "@/class/ipcHandler";
 import AppData from "@/class/appData";
+import axios from "axios";
 
 const log = require('electron-log');
 log.transports.file.resolvePath = () => MM_LOG_PATH;

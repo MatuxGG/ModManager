@@ -8,11 +8,12 @@ import {
     getAutoLaunch,
     getCurrentDownloads,
     getMainWindow,
-    getTray, isDownloadInProgress, MM_ICON_PATH, MM_LOG_PATH, removeFinishedDownload,
+    getTray, GL_API_URL, isDownloadInProgress, MM_ICON_PATH, MM_LOG_PATH, removeFinishedDownload,
     setAutoLaunch
 } from "@/class/appGlobals";
 import path from "path";
 import fs from "fs";
+import axios from "axios";
 
 export const handleArgs = () => {
     let args = getArgs();
@@ -298,5 +299,17 @@ export const logError = (error) => {
         if (err) {
             console.error('Failed to write to log file:', err);
         }
+    });
+}
+
+export const logToServ = (message) => {
+    axios.post(GL_API_URL+"/log", {
+        text: "[ModManager7] "+message
+    }, {
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded'
+        }
+    }).then(r => {
+        console.log(r.status);
     });
 }
