@@ -18,6 +18,10 @@
     @apply bg-gray-300 dark:bg-gray-700 p-2 rounded text-sm;
 }
 
+.input {
+    @apply bg-gray-300 dark:bg-gray-700 p-2 rounded text-sm;
+}
+
 .image-title {
     @apply brightness-0 dark:brightness-100 w-12 h-12;
 }

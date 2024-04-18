@@ -37,6 +37,21 @@
         </select>
       </div>
 
+      <h2 class="title2">{{ $t('settings.data_title') }}</h2>
+
+      <div class="flex items-center text-sm">
+        <label for="minimize-to-tray" class="min-w-[300px] cursor-pointer">{{ $t('settings.data_path') }}</label>
+        <div class="flex items-center gap-1">
+          <input type="text" id="data-path" class="input w-full" v-model="dataPath">
+          <button class="button w-fit">{{ $t('settings.choose_folder') }}</button>
+        </div>
+      </div>
+
+      <div class="flex items-center text-sm">
+        <p class="min-w-[300px]">{{ $t('settings.reset_title') }}</p>
+        <button class="button" @click="reset">{{ $t('settings.reset') }}</button>
+      </div>
+
       <h2 class="title2">{{ $t('settings.support') }}</h2>
 
       <div class="flex items-center text-sm">
@@ -55,6 +70,7 @@ export default {
       selectedTheme: this.$store.state.appData.config.theme,
       minimizeToTray: this.$store.state.appData.config.minimizeToTray,
       launchOnStartup: this.$store.state.appData.config.launchOnStartup,
+      dataPath: this.$store.state.appData.config.dataPath,
       supportId: this.$store.state.appData.config.supportId,
     };
   },
@@ -78,9 +94,11 @@ export default {
         }
         document.body.removeChild(textArea);
       }
+    },
+    reset() {
+      console.log("reset");
     }
   },
-  // Ajoutez d'autres méthodes si nécessaire pour gérer les paramètres
   watch: {
     minimizeToTray(newValue) {
       this.$store.state.appData.config.minimizeToTray = newValue;
@@ -99,10 +117,10 @@ export default {
       this.$store.state.appData.config.theme = newValue;
       window.electronAPI.sendData('updateConfigServer', JSON.stringify(this.$store.state.appData.config));
     },
-  },
-  mounted() {
-    // Chargement de la configuration existante et définition des données
-    // this.loadSettings();
+    dataPath(newValue) {
+      this.$store.state.appData.config.dataPath = newValue;
+      window.electronAPI.sendData('updateConfigServer', JSON.stringify(this.$store.state.appData.config));
+    },
   }
 };
 </script>

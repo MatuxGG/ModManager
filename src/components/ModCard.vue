@@ -58,19 +58,24 @@
       <!-- Buttons -->
       <div class="flex justify-between items-center gap-4">
         <div class="flex items-center gap-2">
+          <!-- Mod -->
           <template v-if="version">
             <template v-if="!isInstalledMod(mod.sid, version.version)">
+              <!-- Update -->
               <template v-if="canBeUpdated(mod.sid, version.version) === true">
                 <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/update.png"/></div>
                 <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
               </template>
+              <!-- Download -->
               <template v-else>
                 <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/download.png"/></div>
               </template>
             </template>
+            <!-- Start -->
             <template v-else>
               <div @click="() => startMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/play.png"/></div>
               <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
+              <div @click="() => combineMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/add.png"/></div>
             </template>
 
             <template v-if="isFavoriteMod(mod.sid, version.version)">
@@ -81,6 +86,7 @@
             </template>
             <div @click="() => addShortcut(mod, version)"><img class="image-icon cursor-pointer" src="../assets/shortcut.png"/></div>
           </template>
+          <!-- All In One -->
           <template v-else>
             <template v-if="!isInstalledMod(mod.sid)">
               <div @click="() => downloadMod(mod)"><img class="image-icon cursor-pointer" src="../assets/download.png"/></div>
@@ -135,6 +141,9 @@ export default {
     },
     startMod(mod, version = null) {
       window.electronAPI.sendData('startMod', JSON.stringify(mod), JSON.stringify(version));
+    },
+    combineMod(mod, version = null) {
+      window.electronAPI.sendData('combineMod', JSON.stringify(mod), JSON.stringify(version));
     },
     addFavoriteMod(mod, version = null) {
       window.electronAPI.sendData('addFavoriteMod', JSON.stringify(mod), JSON.stringify(version));
