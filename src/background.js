@@ -55,6 +55,10 @@ async function createWindow() {
     return false;
   });
 
+  getMainWindow().webContents.once('did-finish-load', () => {
+    getMainWindow().webContents.send('navigate', '/');
+  });
+
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     await getMainWindow().loadURL(process.env.WEBPACK_DEV_SERVER_URL)
   } else {
