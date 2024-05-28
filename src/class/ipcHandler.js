@@ -9,7 +9,9 @@ import {
     updateLaunchOnStart,
     updateTray
 } from "@/class/functions";
+import ModWorker from "@/class/modWorker";
 import axios from "axios";
+import modWorker from "@/class/modWorker";
 
 const setupIPCMainHandlers = () => {
 
@@ -104,6 +106,10 @@ const setupIPCMainHandlers = () => {
         let version = JSON.parse(versionStr);
 
         logToServ("Rate of "+rating+"/5 for mod "+mod.sid+" "+version.version);
+    });
+
+    ipcMain.on('stopCurrentMod', async () => {
+        await modWorker.stopChild();
     });
 
     // ipcMain.on('updateRegionInfoServer', async (event, newRegionInfo) => {

@@ -13,6 +13,7 @@ import {
     GL_FILES_URL,
     GL_WEBSITE_URL, MM_ICON_PATH
 } from "@/class/appGlobals";
+let child = null;
 
 class ModWorker {
 
@@ -249,7 +250,7 @@ class ModWorker {
         await Promise.all(promises);
 
         const amongUsPath = path.join(gamePath, 'Among Us.exe');
-        const child = spawn(amongUsPath, {});
+        child = spawn(amongUsPath, {});
 
         if (child.pid) {
             getAppData().startedMod = [mod, version];
@@ -371,7 +372,7 @@ class ModWorker {
             if (err) {
                 console.error("Erreur lors de la lecture de la clé de registre:", err);
             } else if (item) {
-                const child = spawn(path.join(item.value, "Better-CrewLink.exe"), {});
+                child = spawn(path.join(item.value, "Better-CrewLink.exe"), {});
 
                 if (child.pid) {
                     getAppData().startedMod = [mod, null];
@@ -453,7 +454,7 @@ class ModWorker {
         let downloadId = Date.now().toString();
         event.sender.send('createPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
 
-        const child = spawn('start steam://rungameid/2160150', { shell: true });
+        child = spawn('start steam://rungameid/2160150', { shell: true });
 
         child.on('error', (error) => {
             console.error(`Error: ${error.message}`);
@@ -542,6 +543,12 @@ class ModWorker {
                 resolve(isRunning);
             });
         });
+    }
+
+    static async stopChild() {
+        if (child) {
+            child.kill();
+        }
     }
 }
 
