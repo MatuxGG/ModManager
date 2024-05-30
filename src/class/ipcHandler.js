@@ -1,5 +1,5 @@
 import {ipcMain, shell} from "electron";
-import {getAppData, getMainWindow, GL_API_URL} from "@/class/appGlobals";
+import {getAppData, getMainWindow} from "@/class/appGlobals";
 import {
     createShortcut,
     downloadMod,
@@ -9,8 +9,6 @@ import {
     updateLaunchOnStart,
     updateTray
 } from "@/class/functions";
-import ModWorker from "@/class/modWorker";
-import axios from "axios";
 import modWorker from "@/class/modWorker";
 
 const setupIPCMainHandlers = () => {
@@ -110,6 +108,10 @@ const setupIPCMainHandlers = () => {
 
     ipcMain.on('stopCurrentMod', async () => {
         await modWorker.stopChild();
+    });
+
+    ipcMain.on('resetApp', async () => {
+        await getAppData().resetApp();
     });
 
     // ipcMain.on('updateRegionInfoServer', async (event, newRegionInfo) => {

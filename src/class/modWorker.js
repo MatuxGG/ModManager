@@ -548,6 +548,7 @@ class ModWorker {
     static async stopChild() {
         if (child) {
             child.kill();
+            child = null;
         }
     }
 }

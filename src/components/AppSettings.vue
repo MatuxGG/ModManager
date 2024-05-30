@@ -1,10 +1,16 @@
 <template>
+  <ConfirmPopin
+    :visible="showResetPopin"
+    :message="`Are you sure you want to reset Mod Manager? The app will close and you'll have to start it.`"
+    @confirm="confirmReset"
+    @cancel="cancelReset"
+  />
   <div class="page p-4">
     <div class="flex flex-col gap-2">
       <!-- En-tête des paramètres -->
       <div class="flex items-center gap-2">
         <img class="image-title" src="../assets/settings.png" />
-        <h1 class="title">{{ $t('settings.title') }}</h1>
+        <h1 class="title">{{ $t('Account') }}</h1>
       </div>
 
       <h2 class="title2">{{ $t('settings.general') }}</h2>
@@ -12,8 +18,9 @@
       <div class="flex items-center text-sm">
         <label class="min-w-[300px]" for="language-selector">{{ $t('settings.select_language') }}</label>
         <select class="selectbox" id="language-selector" v-model="selectedLanguage">
-          <option value="en">English</option>
-          <option value="fr">Français</option>
+          <option v-for="lang in languages" :key="lang.code" :value="lang.code.toLowerCase()">
+            {{ lang.name }}
+          </option>
         </select>
       </div>
 
@@ -63,7 +70,11 @@
 </template>
 
 <script>
+
+import ConfirmPopin from "@/components/ConfirmPopin.vue";
+
 export default {
+  components: {ConfirmPopin},
   data() {
     return {
       selectedLanguage: this.$store.state.appData.config.lg,
@@ -72,6 +83,8 @@ export default {
       launchOnStartup: this.$store.state.appData.config.launchOnStartup,
       dataPath: this.$store.state.appData.config.dataPath,
       supportId: this.$store.state.appData.config.supportId,
+      showResetPopin: false,
+      languages: this.$languages
     };
   },
   methods: {
@@ -96,7 +109,15 @@ export default {
       }
     },
     reset() {
-      console.log("reset");
+      this.showResetPopin = true;
+    },
+    confirmReset() {
+      this.showResetPopin = false;
+      window.electronAPI.sendData('resetApp');
+
+    },
+    cancelReset() {
+      this.showResetPopin = false;
     }
   },
   watch: {

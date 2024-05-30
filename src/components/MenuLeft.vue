@@ -1,9 +1,9 @@
 <template>
   <ConfirmPopin
-      :visible="showConfirmPopin"
+      :visible="showStopModPopin"
       :message="`Are you sure you want to stop the mod?`"
-      @confirm="handleConfirm"
-      @cancel="handleCancel"
+      @confirm="confirmStopMod"
+      @cancel="cancelStopMod"
   />
   <div class="h-full min-h-screen w-52 min-w-52 flex flex-col justify-between text-sm text-white bg-gray-500 dark:bg-gray-900 p-2">
       <div class="flex flex-col">
@@ -21,7 +21,7 @@
 
       <div class="text-xs flex flex-col items-center gap-2">
         <template v-if="$store.state.appData">
-          <div v-if="startedMod !== false" @click.prevent="openConfirmPopin()" class="p-1 cursor-pointer flex flex-col justify-center items-center dark:bg-green-800 w-full rounded">
+          <div v-if="startedMod !== false" @click.prevent="stopMod()" class="p-1 cursor-pointer flex flex-col justify-center items-center dark:bg-green-800 w-full rounded">
             <span>Started mod</span>
             <div class="flex flex-wrap gap-1">
               <span>{{ startedMod[0].name }}</span>
@@ -49,7 +49,7 @@
     components: {ConfirmPopin},
     data() {
       return {
-        showConfirmPopin: false
+        showStopModPopin: false
       };
     },
     props: {
@@ -65,15 +65,15 @@
       },
     },
     methods: {
-      openConfirmPopin() {
-        this.showConfirmPopin = true;
+      stopMod() {
+        this.showStopModPopin = true;
       },
-      handleConfirm() {
-        this.showConfirmPopin = false;
+      confirmStopMod() {
+        this.showStopModPopin = false;
         window.electronAPI.sendData('stopCurrentMod');
       },
-      handleCancel() {
-        this.showConfirmPopin = false;
+      cancelStopMod() {
+        this.showStopModPopin = false;
       }
     }
   }

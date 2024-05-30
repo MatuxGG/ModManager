@@ -4,6 +4,7 @@ const Files = require("./files");
 const fs= require('fs');
 const packageJson = require('../../package.json');
 const {GL_API_URL, MM_CONFIG_PATH} = require("@/class/appGlobals");
+const { app, BrowserWindow } = require('electron');
 // const RegionInfo = require("./regionInfo");
 // const { version } = require("os");
 
@@ -38,6 +39,16 @@ class AppData {
         this.startedMod = false;
         this.isLoaded = true;
         console.log("Appdata loaded")
+    }
+
+    async resetApp() {
+        Files.deleteDirectoryIfExist(path.join(this.config.dataPath, 'game'));
+        Files.deleteDirectoryIfExist(path.join(this.config.dataPath, 'clients'));
+        Files.deleteDirectoryIfExist(path.join(this.config.dataPath, 'mods'));
+        Files.deleteDirectoryIfExist(path.join(this.config.dataPath, 'temp'));
+        Files.deleteDirectoryIfExist(path.join(this.config.dataPath, 'data'));
+        BrowserWindow.getAllWindows().forEach(window => window.close());
+        app.exit(0);
     }
 
     async downloadSource(sourceUrl) {
