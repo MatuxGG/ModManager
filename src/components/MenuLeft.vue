@@ -15,7 +15,7 @@
             active-class="menu-left-shadow font-bold"
             exact>
               <img class="col-span-1 h-8 w-8" :src="menu.img" />
-              <p class="col-span-2">{{ menu.title }}</p>
+              <p class="col-span-2">{{ $t(menu.title) }}</p>
           </router-link>
       </div>
 
@@ -29,7 +29,7 @@
             </div>
           </div>
           <div v-else class="flex justify-center p-2 dark:bg-red-800 w-full rounded">
-            <span>No mod started yet</span>
+            <span>{{ $t('No mod started yet') }}</span>
           </div>
         </template>
           <div class="flex items-center justify-between gap-2">

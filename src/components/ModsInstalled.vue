@@ -3,25 +3,25 @@
     <div class="flex flex-col gap-4">
       <div class="flex items-center gap-4">
         <img class="image-title" src="../assets/mods.png" />
-        <h1 class="title">Mods Installed</h1>
+        <h1 class="title">{{ $t('Mods library') }}</h1>
       </div>
       <template v-if="!$store.state.appData || !$store.state.appData.config.installedMods || $store.state.appData.config.installedMods.length === 0">
         <div class="pt-8 flex flex-col gap-4">
-          <p class="text-sm">You don't have any mod yet.</p>
-          <router-link class="text-sm link" to="/store">Download one here !</router-link>
+          <p class="text-sm">{{ $t('You don\'t have any mod yet.') }}</p>
+          <router-link class="text-sm link" to="/store">{{ $t('Download one here!') }}</router-link>
         </div>
       </template>
       <template v-else>
         <div class="flex items-center gap-4">
           <select v-model="selectedCategory" class="selectbox">
-            <option value="">All categories</option>
-            <option v-for="category in categoriesOptions" :key="category.sid" :value="category.sid">{{ category.name }}</option>
+            <option value="">{{ $t('All categories') }}</option>
+            <option v-for="category in categoriesOptions" :key="category.sid" :value="category.sid">{{ $t(category.name) }}</option>
           </select>
           <select v-model="selectedGameVersion" class="selectbox">
-            <option value="">All versions</option>
+            <option value="">{{ $t('All versions') }}</option>
             <option v-for="version in gameVersionOptions" :key="version" :value="version">{{ version }}</option>
           </select>
-          <input type="text" v-model="searchOption" class="searchbox" placeholder="Search...">
+          <input type="text" v-model="searchOption" class="searchbox" :placeholder="$t('Search...')">
         </div>
         <div v-if="$store.state.appData && $store.state.appData.modSources" class="flex flex-wrap gap-4">
           <template v-for="mod in filteredMods"

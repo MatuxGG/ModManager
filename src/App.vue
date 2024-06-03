@@ -50,8 +50,8 @@ export default {
   data() {
     return {
       menus: [
-        { href: '/store', img: require('@/assets/download.png'), title: 'Mods Store'},
-        { href: '/library', img: require('@/assets/mods.png'), title: 'Mods Library'},
+        { href: '/store', img: require('@/assets/download.png'), title: 'Mods store'},
+        { href: '/library', img: require('@/assets/mods.png'), title: 'Mods library'},
         // { href: '/servers', img: require('@/assets/servers.png'), title: 'Servers'},
         { href: '/addlocal', img: require('@/assets/add.png'), title: 'Add Mod'},
         { href: '/settings', img: require('@/assets/settings.png'), title: 'Settings'},
@@ -114,6 +114,10 @@ export default {
           this.updateAfterLoad();
         });
       });
+    });
+    window.electronAPI.receiveData('loadLanguage', (lg) => {
+      this.$i18n.locale = lg;
+      window.electronAPI.sendData('loadDataServer2');
     });
     window.electronAPI.receiveData('createPopin', (text, id, classes) => {
       let popinId = "popin-"+id;

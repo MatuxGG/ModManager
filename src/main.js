@@ -7,37 +7,71 @@ import axios from 'axios';
 
 const i18n = createI18n({
     legacy: false,
-    locale: 'fr',
+    locale: 'en',
     fallbackLocale: 'en',
     messages: {},
 });
 
 const loadLocaleMessages = async (locale) => {
-    try {
-        const response = await axios.get(`https://goodloss.fr/api/trans/${locale}`);
-        const messages = response.data.reduce((acc, item) => {
-            acc[item.original] = item.translation;
-            return acc;
-        }, {});
-        i18n.global.setLocaleMessage(locale, messages);
-    } catch (error) {
-        console.error(`Failed to load translations for locale ${locale}:`, error);
-    }
+    const retryInterval = 1000; // 1 seconde
+    const maxRetryTime = 10000; // 10 secondes
+    let startTime = Date.now();
+
+    const fetchTranslations = async () => {
+        try {
+            const response = await axios.get(`https://goodloss.fr/api/trans/${locale}`);
+            const messages = response.data.reduce((acc, item) => {
+                acc[item.original] = item.translation;
+                return acc;
+            }, {});
+            i18n.global.setLocaleMessage(locale, messages);
+            console.log(`Translations loaded successfully for locale ${locale}`);
+            return true;
+        } catch (error) {
+            const elapsedTime = Date.now() - startTime;
+            if (elapsedTime < maxRetryTime) {
+                console.warn(`Failed to load translations for locale ${locale}, retrying...`);
+                await new Promise(res => setTimeout(res, retryInterval));
+                return fetchTranslations();
+            } else {
+                console.error(`Failed to load translations for locale ${locale} after multiple attempts:`, error);
+                return false;
+            }
+        }
+    };
+
+    return fetchTranslations();
 };
 
 const loadAllTranslations = async () => {
-    try {
-        const response = await axios.get('https://goodloss.fr/api/trans');
-        const languages = response.data;
+    const retryInterval = 1000; // 1 seconde
+    const maxRetryTime = 10000; // 10 secondes
+    let startTime = Date.now();
 
-        const loadTranslationsPromises = languages.map(lang => loadLocaleMessages(lang.code.toLowerCase()));
+    const fetchTranslations = async () => {
+        try {
+            const response = await axios.get('https://goodloss.fr/api/trans');
+            const languages = response.data;
 
-        await Promise.all(loadTranslationsPromises);
-        return languages;
-    } catch (error) {
-        console.error('Failed to load all translations:', error);
-        return [];
-    }
+            const loadTranslationsPromises = languages.map(lang => loadLocaleMessages(lang.code.toLowerCase()));
+
+            await Promise.all(loadTranslationsPromises);
+            console.log('All translations loaded successfully');
+            return languages;
+        } catch (error) {
+            const elapsedTime = Date.now() - startTime;
+            if (elapsedTime < maxRetryTime) {
+                console.warn('Failed to load all translations, retrying...');
+                await new Promise(res => setTimeout(res, retryInterval));
+                return fetchTranslations();
+            } else {
+                console.error('Failed to load all translations after multiple attempts:', error);
+                return [];
+            }
+        }
+    };
+
+    return fetchTranslations();
 };
 
 const setupApp = async () => {

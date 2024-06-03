@@ -3,23 +3,23 @@
       <div class="flex flex-col gap-4">
           <div class="flex items-center gap-4">
               <img class="image-title" src="../assets/download.png"/>
-              <h1 class="title">Mods Store</h1>
+              <h1 class="title">{{ $t('Mods store') }}</h1>
           </div>
           <div class="flex items-center gap-4">
             <select v-model="selectedCategory" class="selectbox">
-              <option value="">All categories</option>
-              <option v-for="category in categoriesOptions" :key="category.sid" :value="category.sid">{{ category.name }}</option>
+              <option value="">{{ $t('All categories') }}</option>
+              <option v-for="category in categoriesOptions" :key="category.sid" :value="category.sid">{{ $t(category.name) }}</option>
             </select>
             <select v-model="selectedGameVersion" class="selectbox">
-              <option value="">All versions</option>
+              <option value="">{{ $t('All versions') }}</option>
               <option v-for="version in gameVersionOptions" :key="version" :value="version">{{ version }}</option>
             </select>
             <select v-model="installedType" class="selectbox">
-              <option value="ALL" selected="selected">All mods</option>
-              <option value="ONLY_INSTALLED">Only installed mods</option>
-              <option value="ONLY_NOT_INSTALLED">All not installed mods</option>
+              <option value="ALL" selected="selected">{{ $t('All mods') }}</option>
+              <option value="ONLY_INSTALLED">{{ $t('Only installed mods') }}</option>
+              <option value="ONLY_NOT_INSTALLED">{{ $t('Only not installed mods') }}</option>
             </select>
-            <input type="text" v-model="searchOption" class="searchbox" placeholder="Search...">
+            <input type="text" v-model="searchOption" class="searchbox" :placeholder="$t('Search...')">
           </div>
           <div v-if="$store.state.appData && $store.state.appData.modSources" class="flex flex-wrap gap-4">
             <template v-for="mod in filteredMods"

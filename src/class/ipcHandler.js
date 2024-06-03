@@ -21,21 +21,28 @@ const setupIPCMainHandlers = () => {
         console.log("Loading data server...");
         if (!getAppData() || !getAppData().isLoaded) {
             await getAppData().loadLocalConfig();
-            if (getAppData().config.minimizeToTray === false) {
-                getMainWindow().show();
-                getMainWindow().focus();
-            }
-            await getAppData().load();
-            updateTray();
-            updateLaunchOnStart();
-            handleArgs();
+            getMainWindow().show();
+            console.log("ici");
+            event.reply('loadLanguage', getAppData().config.lg);
         }
+    });
+
+    ipcMain.on('loadDataServer2', async (event) => {
+        if (getAppData().config.minimizeToTray === false) {
+            getMainWindow().show();
+            getMainWindow().focus();
+        }
+
+        await getAppData().load();
+        updateTray();
+        updateLaunchOnStart();
+        handleArgs();
+
         let sentData = JSON.stringify(getAppData());
         console.log("Data server loaded");
         event.reply('loadDataClient', sentData);
         console.log("Mod Manager started");
     });
-
 
     ipcMain.on('updateConfigServer', async (event, newConfig) => {
         console.log("Save config on server...");

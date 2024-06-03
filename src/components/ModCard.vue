@@ -43,12 +43,12 @@
         <a v-if="mod.author && mod.githubLink && version.version"
            @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}/releases/tag/${version.version}`)"
            class="cursor-pointer w-fit">
-          Version: <span class="text-blue-400">{{ version.version }}</span>
+          {{ $t('Version:') }} <span class="text-blue-400">{{ version.version }}</span>
         </a>
 
         <!-- Game Version -->
         <p v-if="version.gameVersion" class="w-fit">
-          Game Version: <span class="text-blue-400">{{ version.gameVersion }}</span>
+          {{ $t('Game version:') }} <span class="text-blue-400">{{ version.gameVersion }}</span>
         </p>
       </template>
 

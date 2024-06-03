@@ -4,7 +4,7 @@
       <img class="w-36" src="../assets/modmanager.png" />
       <div class="flex items-center gap-4">
         <span><div class="lds-ring"><div></div><div></div><div></div><div></div></div></span>
-        <h1 class="title">Loading</h1>
+        <h1 class="title">{{ $t('Loading...') }}</h1>
       </div>
     </div>
   </div>
