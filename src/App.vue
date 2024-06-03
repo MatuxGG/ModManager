@@ -1,5 +1,5 @@
 <template>
-  <div id="themeDiv" class="dark">
+  <div id="themeDiv" :class="currentTheme">
     <div v-if="isNotLoadingPage" class="bg-white dark:bg-gray-800 text-black dark:text-white text-xs flex items-center justify-center h-full w-full min-h-screen">
       <MenuLeft :miniIcons="miniIcons" :menus="menus" />
       <div class="min-h-screen max-h-screen h-full flex grow p-2 overflow-auto">
@@ -71,6 +71,15 @@ export default {
         ...menu,
         active: this.$route.path === menu.href
       }));
+    },
+    currentTheme() {
+      if (!this.$store || !this.$store.state.appData || !this.$store.state.appData.config) {
+        return "dark";
+      }
+      if (this.$store.state.appData.config.theme !== 'dark') {
+        return "";
+      }
+      return "dark";
     },
     isNotLoadingPage() {
       return this.$route.path !== '/';

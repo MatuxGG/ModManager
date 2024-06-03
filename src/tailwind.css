@@ -4,6 +4,7 @@
 
 .menu-left-shadow {
     box-shadow: -5px 0 0 0 orange;
+    text-shadow: 1px 0 0 currentColor;
 }
 
 .selectbox {

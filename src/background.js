@@ -1,6 +1,6 @@
 'use strict'
 
-import { app, protocol, BrowserWindow, Tray } from 'electron'
+import { app, protocol, BrowserWindow, Menu, Tray } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 const path = require('path');
 import {
@@ -47,6 +47,8 @@ async function createWindow() {
   }));
 
   if (isDev()) getMainWindow().webContents.openDevTools();
+
+  Menu.setApplicationMenu(null);
 
   getMainWindow().on('close', function (event) {
     if (!app.isQuiting) {

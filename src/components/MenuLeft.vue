@@ -5,14 +5,14 @@
       @confirm="confirmStopMod"
       @cancel="cancelStopMod"
   />
-  <div class="h-full min-h-screen w-52 min-w-52 flex flex-col justify-between text-sm text-white bg-gray-500 dark:bg-gray-900 p-2">
+  <div class="h-full min-h-screen w-52 min-w-52 flex flex-col justify-between text-sm text-black dark:text-white bg-gray-400 dark:bg-gray-900 p-2">
       <div class="flex flex-col">
           <img class="w-full" src="../assets/modmanager_logo.png">
           <router-link v-for="menu in menus"
             :to="menu.href"
             :key="menu.title"
             class="cursor-pointer grid grid-cols-3 items-center gap-2 p-2"
-            active-class="menu-left-shadow font-bold"
+            active-class="menu-left-shadow"
             exact>
               <img class="col-span-1 h-8 w-8" :src="menu.img" />
               <p class="col-span-2">{{ $t(menu.title) }}</p>

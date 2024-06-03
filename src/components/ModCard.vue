@@ -7,7 +7,7 @@
         <!-- Name -->
         <a v-if="mod.author && mod.githubLink"
            @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}`)"
-           class="cursor-pointer uppercase text-sm text-blue-500">
+           class="cursor-pointer uppercase text-sm text-blue-800 dark:text-blue-500">
           {{ mod.name }}
         </a>
         <p v-else class="uppercase text-sm text-blue-500">
@@ -43,12 +43,12 @@
         <a v-if="mod.author && mod.githubLink && version.version"
            @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}/releases/tag/${version.version}`)"
            class="cursor-pointer w-fit">
-          {{ $t('Version:') }} <span class="text-blue-400">{{ version.version }}</span>
+          {{ $t('Version:') }} <span class="text-blue-700 dark:text-blue-400">{{ version.version }}</span>
         </a>
 
         <!-- Game Version -->
         <p v-if="version.gameVersion" class="w-fit">
-          {{ $t('Game version:') }} <span class="text-blue-400">{{ version.gameVersion }}</span>
+          {{ $t('Game version:') }} <span class="text-blue-700 dark:text-blue-400">{{ version.gameVersion }}</span>
         </p>
       </template>
 
