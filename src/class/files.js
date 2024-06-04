@@ -24,6 +24,10 @@ class Files {
         fs.mkdirSync(dir, { recursive: true });
     }
 
+    static existsFolder(dir) {
+        return fs.existsSync(dir);
+    }
+
     static deleteDirectoryIfExist(dir) {
         if (!fs.existsSync(dir)) return;
         fs.rmSync(dir, { recursive: true });

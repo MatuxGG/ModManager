@@ -1,9 +1,10 @@
-import {ipcMain, shell} from "electron";
-import {getAppData, getMainWindow} from "@/class/appGlobals";
+import {dialog, ipcMain, shell} from "electron";
+import {getAppData, getCurrentDownloads, getMainWindow} from "@/class/appGlobals";
 import {
     createShortcut,
     downloadMod,
-    handleArgs, logToServ,
+    handleArgs,
+    logToServ,
     startMod,
     uninstallMod,
     updateLaunchOnStart,
@@ -119,6 +120,28 @@ const setupIPCMainHandlers = () => {
 
     ipcMain.on('resetApp', async () => {
         await getAppData().resetApp();
+    });
+
+    ipcMain.handle('openFolderDialog', async (event, newPath = null) => {
+        if (getCurrentDownloads().length === 0) {
+            if (newPath === null) {
+                const result = await dialog.showOpenDialog(getMainWindow(), {
+                    properties: ['openDirectory']
+                });
+                newPath = result.filePaths[0];
+            }
+
+            let changeResult = await getAppData().changeDataFolder(newPath);
+            let downloadId = Date.now().toString();
+            if (changeResult) {
+                event.sender.send('updateConfig', JSON.stringify(getAppData().config));
+                event.sender.send('createPopin', "<div class='w-64'>Path successfully changed!</div>", downloadId, "bg-green-700");
+            } else {
+                event.sender.send('createPopin', "<div class='w-64'>Path doesn't exist!</div>", downloadId, "bg-red-700");
+            }
+            event.sender.send('removePopin', downloadId);
+        }
+        return getAppData().config.dataPath;
     });
 
     // ipcMain.on('updateRegionInfoServer', async (event, newRegionInfo) => {

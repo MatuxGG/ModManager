@@ -3,7 +3,7 @@ const path = require('path');
 const Files = require("./files");
 const fs= require('fs');
 const packageJson = require('../../package.json');
-const {GL_API_URL, MM_CONFIG_PATH} = require("@/class/appGlobals");
+const {GL_API_URL, MM_CONFIG_PATH, getAppData} = require("@/class/appGlobals");
 const { app, BrowserWindow } = require('electron');
 // const RegionInfo = require("./regionInfo");
 // const { version } = require("os");
@@ -49,6 +49,20 @@ class AppData {
         Files.deleteDirectoryIfExist(path.join(this.config.dataPath, 'data'));
         BrowserWindow.getAllWindows().forEach(window => window.close());
         app.exit(0);
+    }
+
+    async changeDataFolder(newFolder) {
+        if (Files.existsFolder(newFolder)) {
+            Files.moveDirectory(path.join(this.config.dataPath, 'game'), path.join(newFolder, 'game'));
+            Files.moveDirectory(path.join(this.config.dataPath, 'clients'), path.join(newFolder, 'clients'));
+            Files.moveDirectory(path.join(this.config.dataPath, 'mods'), path.join(newFolder, 'mods'));
+            Files.moveDirectory(path.join(this.config.dataPath, 'temp'), path.join(newFolder, 'temp'));
+            Files.moveDirectory(path.join(this.config.dataPath, 'data'), path.join(newFolder, 'data'));
+            this.config.dataPath = newFolder;
+            this.updateConfig();
+            return true;
+        }
+        return false;
     }
 
     async downloadSource(sourceUrl) {

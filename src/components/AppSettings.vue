@@ -50,7 +50,8 @@
         <label for="minimize-to-tray" class="min-w-[300px] cursor-pointer">{{ $t('Data path:') }}</label>
         <div class="flex items-center gap-1 w-full">
           <input type="text" id="data-path" class="input w-fit flex grow" v-model="dataPath">
-          <button class="button w-fit">{{ $t('Choose folder') }}</button>
+          <button class="button w-fit" @click="chooseFolder">{{ $t('Choose folder') }}</button>
+          <button class="button w-fit" @click="browseFolder">{{ $t('Browse') }}</button>
         </div>
       </div>
 
@@ -114,11 +115,22 @@ export default {
     confirmReset() {
       this.showResetPopin = false;
       window.electronAPI.sendData('resetApp');
-
     },
     cancelReset() {
       this.showResetPopin = false;
-    }
+    },
+    async chooseFolder() {
+      let result = await window.electronAPI.openFolderDialog(this.dataPath);
+      if (result) {
+        this.dataPath = result;
+      }
+    },
+    async browseFolder() {
+      let result = await window.electronAPI.openFolderDialog();
+      if (result) {
+        this.dataPath = result;
+      }
+    },
   },
   watch: {
     minimizeToTray(newValue) {
@@ -137,11 +149,7 @@ export default {
     selectedTheme(newValue) {
       this.$store.state.appData.config.theme = newValue;
       window.electronAPI.sendData('updateConfigServer', JSON.stringify(this.$store.state.appData.config));
-    },
-    dataPath(newValue) {
-      this.$store.state.appData.config.dataPath = newValue;
-      window.electronAPI.sendData('updateConfigServer', JSON.stringify(this.$store.state.appData.config));
-    },
+    }
   }
 };
 </script>
