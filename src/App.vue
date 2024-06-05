@@ -109,6 +109,35 @@ export default {
         window.open(url, '_blank').focus();
       }
     },
+    translateText(text) {
+      // Regex pour trouver les expressions $t[]
+      const regex = /\$t\[(.*?)\]/g;
+      let matches;
+      // Répéter la recherche et le remplacement jusqu'à ce qu'il n'y ait plus de correspondances
+      while ((matches = regex.exec(text)) !== null) {
+        const fullMatch = matches[0]; // $t[...]
+        const innerContent = matches[1]; // Contenu entre les crochets
+
+        // Séparer la partie texte de la partie paramètres
+        const [template, ...params] = innerContent.split(',');
+
+        // Appeler la fonction de traduction
+        const translatedTemplate = this.$t(template.trim());
+
+        // Remplacer les paramètres % par leurs valeurs dans le texte traduit
+        let translatedString = translatedTemplate;
+        params.forEach(param => {
+          translatedString = translatedString.replace('$', param.trim());
+        });
+
+        // Remplacer l'expression $t[] dans le texte original
+        text = text.replace(fullMatch, translatedString);
+
+        // Réinitialiser l'expression régulière pour recommencer la recherche depuis le début
+        regex.lastIndex = 0;
+      }
+      return text;
+    }
   },
   provide() {
     return {
@@ -132,6 +161,7 @@ export default {
       let popinId = "popin-"+id;
       let parentDiv = document.getElementById("popinDiv");
       let popinDiv = document.getElementById(popinId);
+      text = this.translateText(text);
       if (!popinDiv) {
         popinDiv = document.createElement('div');
         popinDiv.id = popinId;
@@ -147,6 +177,7 @@ export default {
     window.electronAPI.receiveData('updatePopin', (text, id, classes) => {
       let popinId = "popin-" + id;
       let popinDiv = document.getElementById(popinId);
+      text = this.translateText(text);
       popinDiv.classList.remove();
       popinDiv.classList.add(classes);
       popinDiv.innerHTML = text;
@@ -203,7 +234,7 @@ export default {
             selectStars(stars, index);
             const rating = index + 1;
             window.electronAPI.sendData('rateMod', modStr, versionStr, rating);
-            popinDiv.innerText = "Thanks for your submission!";
+            popinDiv.innerText = this.$t("Thanks for your feedback!");
             setTimeout(() => {
               if (popinDiv && parentDiv.contains(popinDiv)) {
                 $(popinDiv).animate({ opacity: 0 }, 500);

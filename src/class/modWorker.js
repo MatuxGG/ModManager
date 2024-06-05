@@ -49,9 +49,9 @@ class ModWorker {
 
                 if (currentTime - lastTime > 100) {
 
-                    let downloadText = "<div class='w-64'><p>Downloading client " + gameVersion + "</p>"
-                        + "<p>Progress: " + percentCompleted + "%<p>"
-                        + "<p>Speed: " + this.formatByteSize(speed) + "/s<p>"
+                    let downloadText = "<div class='w-64'><p>$t[Downloading client $," + gameVersion + "]</p>"
+                        + "<p>$t[Progress: $%," + percentCompleted + "]<p>"
+                        + "<p>$t[Speed: $/s," + this.formatByteSize(speed) + "]<p>"
                         + "<p>" + this.formatByteSize(progress) + " / " + this.formatByteSize(totalLength) + "<p></div>";
 
                     if (!finished) {
@@ -70,8 +70,8 @@ class ModWorker {
 
             return new Promise((resolve, reject) => {
                 writer.on('finish', () => {
-                    let downloadText = "<div class='w-64'><p>Extracting client " + gameVersion + "...</p></div>";
-                    let downloadTextEnd = "<div class='w-64'><p>Client " + gameVersion + " installed !</p></div>";
+                    let downloadText = "<div class='w-64'><p>$t[Extracting client $...," + gameVersion + "]</p></div>";
+                    let downloadTextEnd = "<div class='w-64'><p>$[Client $ installed!," + gameVersion + "]</p></div>";
                     this.extractZipFile(tempPath, clientPath, event, downloadText, downloadTextEnd, downloadId, "bg-green-700")
                         .then(() => {
                             resolve();
@@ -140,9 +140,9 @@ class ModWorker {
                 let speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
 
                 if (currentTime - lastTime > 100) {
-                    let downloadText = "<div class='w-64'><p>Downloading " + mod.name + "</p>"
-                    + "<p>Progress: " + percentCompleted + "%<p>"
-                    + "<p>Speed: " + this.formatByteSize(speed) + "/s<p>"
+                    let downloadText = "<div class='w-64'><p>$t[Downloading $," + mod.name + "]</p>"
+                    + "<p>$t[Progress: $%," + percentCompleted + "]<p>"
+                    + "<p>$t[Speed: $/s," + this.formatByteSize(speed) + "]<p>"
                     + "<p>" + this.formatByteSize(progress) + " / " + this.formatByteSize(totalLength) + "<p></div>";
 
                     if (!finished) {
@@ -163,8 +163,8 @@ class ModWorker {
 
             return new Promise((resolve, reject) => {
                 writer.on('finish', () => {
-                    let downloadText = "<div class='w-64'><p>Extracting " + mod.name + "...</p></div>";
-                    let downloadTextEnd = "<div class='w-64'><p>" + mod.name + " installed !</p></div>";
+                    let downloadText = "<div class='w-64'><p>$t[Extracting $...," + mod.name + "]</p></div>";
+                    let downloadTextEnd = "<div class='w-64'><p>$t[$ installed!," + mod.name + "]</p></div>";
                     if (installType === 'zip') {
                         Files.deleteDirectoryIfExist(tempWorker);
                         this.extractZipFile(tempPath, tempWorker, event, downloadText, downloadTextEnd, downloadId, "bg-green-700")
@@ -216,10 +216,10 @@ class ModWorker {
 
     static async uninstallMod(event, mod, version) {
         let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>Uninstalling "+mod.name+"</p></div>", downloadId, "bg-blue-700");
+        event.sender.send('createPopin', "<div class='w-64'><p>$t[Uninstalling $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
         const modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version);
         Files.deleteDirectoryIfExist(modPath);
-        event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" uninstalled</p></div>", downloadId, "bg-red-700");
+        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
         event.sender.send('removePopin', downloadId);
     }
 
@@ -230,7 +230,7 @@ class ModWorker {
         if (isRunning) return;
 
         let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
+        event.sender.send('createPopin', "<div class='w-64'><p>$t[Starting $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
         const gamePath = path.join(getAppData().config.dataPath, 'game');
         const clientPath = path.join(getAppData().config.dataPath, 'clients', version.gameVersion);
         const modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version);
@@ -255,7 +255,7 @@ class ModWorker {
         if (child.pid) {
             getAppData().startedMod = [mod, version];
             event.sender.send('updateStartedMod', [mod, version]);
-            event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-green-700");
+            event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ started!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
             event.sender.send('removePopin', downloadId);
         }
 
@@ -313,9 +313,9 @@ class ModWorker {
                 let speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
 
                 if (currentTime - lastTime > 100) {
-                    let downloadText = "<div class='w-64'><p>Downloading " + mod.name + "</p>"
-                        + "<p>Progress: " + percentCompleted + "%<p>"
-                        + "<p>Speed: " + this.formatByteSize(speed) + "/s<p>"
+                    let downloadText = "<div class='w-64'><p>$t[Downloading $," + mod.name + "]</p>"
+                        + "<p>$t[Progress: $%," + percentCompleted + "]<p>"
+                        + "<p>$t[Speed: $/s," + this.formatByteSize(speed) + "]<p>"
                         + "<p>" + this.formatByteSize(progress) + " / " + this.formatByteSize(totalLength) + "<p></div>";
 
                     if (!finished) {
@@ -345,7 +345,7 @@ class ModWorker {
                         if (stderr) {
                             console.error(`Erreur : ${stderr}`);
                         } else {
-                            event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" installed !</p></div>", downloadId, "bg-green-700");
+                            event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ installed!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
                             event.sender.send('removePopin', downloadId);
                             resolve();
                         }
@@ -363,7 +363,7 @@ class ModWorker {
 
     static async startBcl(event, mod) {
         let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
+        event.sender.send('createPopin', "<div class='w-64'><p>$t[Starting $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
         const regKey = new Winreg({
             hive: Winreg.HKCU, // Hive du registre
             key:  '\\SOFTWARE\\03ceac78-9166-585d-b33a-90982f435933' // Chemin de la clé
@@ -377,7 +377,7 @@ class ModWorker {
                 if (child.pid) {
                     getAppData().startedMod = [mod, null];
                     event.sender.send('updateStartedMod', [mod, null]);
-                    event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-green-700");
+                    event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ started!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
                     event.sender.send('removePopin', downloadId);
                 }
 
@@ -393,7 +393,7 @@ class ModWorker {
 
     static async uninstallBcl(event, mod) {
         let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>Uninstalling "+mod.name+"</p></div>", downloadId, "bg-blue-700");
+        event.sender.send('createPopin', "<div class='w-64'><p>$t[Uninstalling $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
 
         const regKey = new Winreg({
             hive: Winreg.HKCU,
@@ -413,21 +413,21 @@ class ModWorker {
                     if (stderr) {
                         console.error(`Erreur : ${stderr}`);
                     } else {
-                        event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" uninstalled !</p></div>", downloadId, "bg-red-700");
+                        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
                         event.sender.send('removePopin', downloadId);
                     }
                 });
             }
         });
 
-        event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" uninstalled</p></div>", downloadId, "bg-red-700");
+        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
         event.sender.send('removePopin', downloadId);
     }
 
     static async downloadChall(event, mod){
         try {
             let downloadId = Date.now().toString();
-            event.sender.send('createPopin', "<div class='w-64'><p>Installing "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
+            event.sender.send('createPopin', "<div class='w-64'><p>$t[Installing $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
             exec(`start steam://run/2160150`, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Erreur d'exécution : ${error}`);
@@ -437,7 +437,7 @@ class ModWorker {
                 if (stderr) {
                     console.error(`Erreur : ${stderr}`);
                 } else {
-                    event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" installed !</p></div>", downloadId, "bg-green-700");
+                    event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ installed!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
                     event.sender.send('removePopin', downloadId);
                     return;
                 }
@@ -452,7 +452,7 @@ class ModWorker {
 
     static async startChall(event, mod) {
         let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>Starting "+mod.name+"...</p></div>", downloadId, "bg-blue-700");
+        event.sender.send('createPopin', "<div class='w-64'><p>$t[Starting $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
 
         child = spawn('start steam://rungameid/2160150', { shell: true });
 
@@ -463,7 +463,7 @@ class ModWorker {
         if (child.pid) {
             getAppData().startedMod = [mod, null];
             event.sender.send('updateStartedMod', [mod, null]);
-            event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" started !</p></div>", downloadId, "bg-green-700");
+            event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ started!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
             event.sender.send('removePopin', downloadId);
         }
 
@@ -475,7 +475,7 @@ class ModWorker {
 
     static async uninstallChall(event, mod) {
         let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>Uninstalling "+mod.name+"</p></div>", downloadId, "bg-blue-700");
+        event.sender.send('createPopin', "<div class='w-64'><p>$t[Uninstalling $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
 
         const regKey = new Winreg({
             hive: Winreg.HKLM,
@@ -495,14 +495,14 @@ class ModWorker {
                     if (stderr) {
                         console.error(`Erreur : ${stderr}`);
                     } else {
-                        event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" uninstalled !</p></div>", downloadId, "bg-red-700");
+                        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
                         event.sender.send('removePopin', downloadId);
                     }
                 });
             }
         });
 
-        event.sender.send('updatePopin', "<div class='w-64'><p>"+mod.name+" uninstalled</p></div>", downloadId, "bg-red-700");
+        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
         event.sender.send('removePopin', downloadId);
     }
 

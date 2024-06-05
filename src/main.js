@@ -5,6 +5,8 @@ import store from './store';
 import { createI18n } from 'vue-i18n';
 import axios from 'axios';
 
+var translations = [];
+
 const i18n = createI18n({
     legacy: false,
     locale: 'en',
@@ -25,6 +27,7 @@ const loadLocaleMessages = async (locale) => {
                 return acc;
             }, {});
             i18n.global.setLocaleMessage(locale, messages);
+            translations[locale] = messages;
             console.log(`Translations loaded successfully for locale ${locale}`);
             return true;
         } catch (error) {

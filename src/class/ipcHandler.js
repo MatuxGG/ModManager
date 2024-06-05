@@ -23,7 +23,6 @@ const setupIPCMainHandlers = () => {
         if (!getAppData() || !getAppData().isLoaded) {
             await getAppData().loadLocalConfig();
             getMainWindow().show();
-            console.log("ici");
             event.reply('loadLanguage', getAppData().config.lg);
         }
     });
@@ -103,7 +102,7 @@ const setupIPCMainHandlers = () => {
         let version = JSON.parse(versionStr);
         createShortcut(mod, version);
         let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>Shortcut created for "+mod.name+(version !== null ? (" " + version.version) : "")+"</p></div>", downloadId, "bg-green-700");
+        event.sender.send('createPopin', "<div class='w-64'><p>$t[Shortcut created for $,"+mod.name+(version !== null ? (" " + version.version) : "")+"]</p></div>", downloadId, "bg-green-700");
         event.sender.send('removePopin', downloadId);
     });
 
@@ -123,23 +122,29 @@ const setupIPCMainHandlers = () => {
     });
 
     ipcMain.handle('openFolderDialog', async (event, newPath = null) => {
+        let worked = false;
         if (getCurrentDownloads().length === 0) {
             if (newPath === null) {
                 const result = await dialog.showOpenDialog(getMainWindow(), {
                     properties: ['openDirectory']
                 });
+                worked = !result.canceled;
                 newPath = result.filePaths[0];
+            } else {
+                worked = true;
             }
 
             let changeResult = await getAppData().changeDataFolder(newPath);
-            let downloadId = Date.now().toString();
-            if (changeResult) {
-                event.sender.send('updateConfig', JSON.stringify(getAppData().config));
-                event.sender.send('createPopin', "<div class='w-64'>Path successfully changed!</div>", downloadId, "bg-green-700");
-            } else {
-                event.sender.send('createPopin', "<div class='w-64'>Path doesn't exist!</div>", downloadId, "bg-red-700");
+            if (worked) {
+                let downloadId = Date.now().toString();
+                if (changeResult) {
+                    event.sender.send('updateConfig', JSON.stringify(getAppData().config));
+                    event.sender.send('createPopin', "<div class='w-64'>$t[Path successfully updated!]</div>", downloadId, "bg-green-700");
+                } else {
+                    event.sender.send('createPopin', "<div class='w-64'>$t[Path doesn't exist!]</div>", downloadId, "bg-red-700");
+                }
+                event.sender.send('removePopin', downloadId);
             }
-            event.sender.send('removePopin', downloadId);
         }
         return getAppData().config.dataPath;
     });
