@@ -7,6 +7,7 @@ let autoLaunch = null;
 let currentDownloads = [];
 let args = [];
 let devEnv = false;
+let translations = {};
 
 export const APP_PATH = process.env.WEBPACK_DEV_SERVER_URL ? path.join(__dirname, '../public') : __dirname;
 
@@ -82,4 +83,13 @@ export const removeFinishedDownload = (type, mod, version) => {
     if (index !== -1) {
         currentDownloads.splice(index, 1);
     }
+}
+
+export const trans = (text) => {
+    const lg = getAppData().config.lg;
+    return translations[lg] && translations[lg][text] ? translations[lg][text] : text;
+}
+
+export const setTranslations = (newTrans) => {
+    translations = newTrans;
 }

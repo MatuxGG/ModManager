@@ -90,24 +90,11 @@ export default {
   },
   methods: {
     copySupportId() {
-      if (navigator.clipboard && window.isSecureContext) {
-        // Utiliser clipboard API quand disponible
-        return navigator.clipboard.writeText(this.supportId);
-      } else {
-        // Autre méthode pour les navigateurs plus anciens
-        let textArea = document.createElement("textarea");
-        textArea.value = this.supportId;
-        document.body.appendChild(textArea);
-        textArea.focus();
-        textArea.select();
-        try {
-          document.execCommand('copy');
-          alert('Support ID copied to clipboard');
-        } catch (err) {
-          console.error('Unable to copy to clipboard', err);
-        }
-        document.body.removeChild(textArea);
-      }
+      navigator.clipboard.writeText(this.supportId);
+      let downloadId = Date.now().toString();
+      let text = "$t[Support ID copied to clipboard]";
+      window.electronAPI.sendData('createPopin', text, downloadId, "bg-green-700")
+      window.electronAPI.sendData('removePopin', downloadId)
     },
     reset() {
       this.showResetPopin = true;
@@ -145,6 +132,7 @@ export default {
       this.$store.state.appData.config.lg = newValue;
       window.electronAPI.sendData('updateConfigServer', JSON.stringify(this.$store.state.appData.config));
       this.$i18n.locale = this.$store.state.appData.config.lg;
+      window.electronAPI.sendData('updateTray');
     },
     selectedTheme(newValue) {
       this.$store.state.appData.config.theme = newValue;

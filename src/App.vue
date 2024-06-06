@@ -155,7 +155,17 @@ export default {
     });
     window.electronAPI.receiveData('loadLanguage', (lg) => {
       this.$i18n.locale = lg;
-      window.electronAPI.sendData('loadDataServer2');
+      let trans = {};
+      for (const lang in this.$translations) {
+        let tab = {};
+        const translations = this.$translations[lang];
+        for (const key in translations) {
+          tab[key] = translations[key];
+        }
+        trans[lang] = tab;
+      }
+      let transStr = JSON.stringify(trans);
+      window.electronAPI.sendData('loadDataServer2', transStr);
     });
     window.electronAPI.receiveData('createPopin', (text, id, classes) => {
       let popinId = "popin-"+id;

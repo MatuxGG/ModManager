@@ -1,5 +1,5 @@
 import {dialog, ipcMain, shell} from "electron";
-import {getAppData, getCurrentDownloads, getMainWindow} from "@/class/appGlobals";
+import {getAppData, getCurrentDownloads, getMainWindow, setTranslations, trans} from "@/class/appGlobals";
 import {
     createShortcut,
     downloadMod,
@@ -27,7 +27,8 @@ const setupIPCMainHandlers = () => {
         }
     });
 
-    ipcMain.on('loadDataServer2', async (event) => {
+    ipcMain.on('loadDataServer2', async (event, translations) => {
+        setTranslations((JSON.parse(translations)));
         if (getAppData().config.minimizeToTray === false) {
             getMainWindow().show();
             getMainWindow().focus();
@@ -53,6 +54,9 @@ const setupIPCMainHandlers = () => {
         event.reply('loadDataClient', sentData);
     });
 
+    ipcMain.on('updateTray', async () => {
+        updateTray();
+    });
 
     ipcMain.on('downloadMod', async (event, modStr, versionStr) => {
 
@@ -147,6 +151,14 @@ const setupIPCMainHandlers = () => {
             }
         }
         return getAppData().config.dataPath;
+    });
+
+    ipcMain.on('createPopin', async (event, text, downloadId, classes) => {
+        event.sender.send('createPopin', text, downloadId, classes);
+    });
+
+    ipcMain.on('removePopin', async (event, downloadId) => {
+        event.sender.send('removePopin', downloadId);
     });
 
     // ipcMain.on('updateRegionInfoServer', async (event, newRegionInfo) => {

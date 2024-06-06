@@ -82,6 +82,7 @@ const setupApp = async () => {
 
     const app = createApp(App);
     app.config.globalProperties.$languages = languages;
+    app.config.globalProperties.$translations = translations;
 
     app.use(router)
         .use(store)

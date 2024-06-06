@@ -9,7 +9,7 @@ import {
     getCurrentDownloads,
     getMainWindow,
     getTray, GL_API_URL, isDownloadInProgress, MM_ICON_PATH, MM_LOG_PATH, removeFinishedDownload,
-    setAutoLaunch
+    setAutoLaunch, trans
 } from "@/class/appGlobals";
 import path from "path";
 import fs from "fs";
@@ -201,21 +201,21 @@ export const updateTray = () => {
         },
         { type: 'separator' },
         {
-            label: 'Library',
+            label: trans('Library'),
             click: function () {
                 getMainWindow().webContents.send('navigate', '/library');
                 getMainWindow().show();
             }
         },
         {
-            label: 'Store',
+            label: trans('Store'),
             click: function () {
                 getMainWindow().webContents.send('navigate', '/store');
                 getMainWindow().show();
             }
         },
         {
-            label: 'Settings',
+            label: trans('Settings'),
             click: function () {
                 getMainWindow().webContents.send('navigate', '/settings');
                 getMainWindow().show();
@@ -240,7 +240,7 @@ export const updateTray = () => {
 
     modsLines.push({ type: 'separator' });
     modsLines.push({
-        label: 'Exit',
+        label: trans('Exit'),
         click: function () {
             app.isQuiting = true;
             app.quit();
