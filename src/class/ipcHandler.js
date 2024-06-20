@@ -81,6 +81,9 @@ const setupIPCMainHandlers = () => {
         await startMod(event, mod, version);
     });
 
+    ipcMain.on('startVanilla', async (event) => {
+        await modWorker.startVanilla(event);
+    });
 
     ipcMain.on('addFavoriteMod', async (event, modStr, versionStr) => {
         let mod = JSON.parse(modStr);

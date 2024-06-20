@@ -273,6 +273,34 @@ class ModWorker {
         });
     }
 
+    static async startVanilla(event) {
+        const isRunning = await this.isProcessRunning('Among Us') || getAppData().startedMod !== false;
+        if (isRunning) return;
+
+        let downloadId = Date.now().toString();
+        event.sender.send('createPopin', "<div class='w-64'><p>$t[Starting vanilla...]</p></div>", downloadId, "bg-blue-700");
+        const amongUsPath = path.join(getAppData().config.amongUsPath, 'Among Us.exe');
+
+        child = spawn(amongUsPath, {});
+
+        if (child.pid) {
+            getAppData().startedMod = ["Vanilla", null];
+            event.sender.send('updateStartedMod', ["Vanilla", null]);
+            event.sender.send('updatePopin', "<div class='w-64'><p>$t[Vanilla started!]</p></div>", downloadId, "bg-green-700");
+            event.sender.send('removePopin', downloadId);
+        }
+
+        child.on('close', () => {
+            getAppData().startedMod = false;
+            event.sender.send('updateStartedMod', false);
+            downloadId = Date.now().toString();
+            getMainWindow().show();
+            getMainWindow().maximize();
+
+            console.log("Vanilla stopped");
+        });
+    }
+
     // static async saveData(savePath, rootPath, foldersToSave) {
     //     let promises = foldersToSave.map(folderToSave => {
     //         let sourcePath = path.join(rootPath, folderToSave);

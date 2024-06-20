@@ -28,7 +28,7 @@
               <span>{{ startedMod[1].version }}</span>
             </div>
           </div>
-          <div v-else class="flex justify-center p-2 dark:bg-red-800 w-full rounded">
+          <div v-else @click.prevent="startVanilla()" class="flex justify-center cursor-pointer p-1 dark:bg-red-800 w-full rounded">
             <span>{{ $t('No mod started yet') }}</span>
           </div>
         </template>
@@ -74,7 +74,10 @@
       },
       cancelStopMod() {
         this.showStopModPopin = false;
-      }
+      },
+      startVanilla() {
+        window.electronAPI.sendData('startVanilla');
+      },
     }
   }
 </script>
