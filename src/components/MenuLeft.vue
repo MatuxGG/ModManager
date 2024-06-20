@@ -22,11 +22,17 @@
       <div class="text-xs flex flex-col items-center gap-2">
         <template v-if="$store.state.appData">
           <div v-if="startedMod !== false" @click.prevent="stopMod()" class="p-1 cursor-pointer flex flex-col justify-center items-center dark:bg-green-800 w-full rounded">
-            <span>Started mod</span>
-            <div class="flex flex-wrap gap-1">
-              <span>{{ startedMod[0].name }}</span>
-              <span>{{ startedMod[1].version }}</span>
-            </div>
+            <span v-if="startedMod[0].name === 'Vanilla'">{{ $t('Started vanilla') }}</span>
+            <template v-if="startedMod[0] === 'Vanilla'">
+              <span>{{ $t('Started vanilla') }}</span>
+            </template>
+            <template v-else>
+              <span>{{ $t('Started mod') }}</span>
+              <div class="flex flex-wrap gap-1">
+                <span>{{ startedMod[0].name }}</span>
+                <span>{{ startedMod[1].version }}</span>
+              </div>
+            </template>
           </div>
           <div v-else @click.prevent="startVanilla()" class="flex justify-center cursor-pointer p-1 dark:bg-red-800 w-full rounded">
             <span>{{ $t('No mod started yet') }}</span>
