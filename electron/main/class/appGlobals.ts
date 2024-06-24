@@ -1,4 +1,5 @@
 import path from "path";
+import {fileURLToPath} from "node:url";
 
 let mainWindow = null;
 let tray = null;
@@ -6,17 +7,18 @@ let appData = null;
 let autoLaunch = null;
 let currentDownloads = [];
 let args = [];
-let devEnv = false;
 let translations = {};
+let MM_ICON_PATH = null;
 
-export const APP_PATH = process.env.WEBPACK_DEV_SERVER_URL ? path.join(__dirname, '../public') : __dirname;
+// Convertir l'URL de fichier en chemin de fichier
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 export const GL_WEBSITE_URL = "https://goodloss.fr";
 export const GL_FILES_URL = "https://goodloss.fr/files";
 export const GL_API_URL = "https://goodloss.fr/api";
 export const MM_CONFIG_PATH = path.join(process.env.APPDATA, 'ModManager7', 'config7.json');
 export const MM_LOG_PATH = path.join(process.env.APPDATA, 'ModManager7', 'log.txt');
-export const MM_ICON_PATH = path.join(APP_PATH, 'modmanager.ico');
 export const AMONGUS_REGIONINFO_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'regionInfo.json');
 
 export const setMainWindow = (win) => {
@@ -59,12 +61,12 @@ export const getArgs = () => {
     return args;
 }
 
-export const setIsDev = (state) => {
-    devEnv = state;
+export const setMMIconPath = (path) => {
+    MM_ICON_PATH = path;
 }
 
-export const isDev = () => {
-    return devEnv;
+export const getMMIconPath = () => {
+    return MM_ICON_PATH;
 }
 
 // Only get because you can only add or splice
@@ -85,9 +87,14 @@ export const removeFinishedDownload = (type, mod, version) => {
     }
 }
 
-export const trans = (text) => {
+export const trans = (text: string, ...values: any[]) => {
     const lg = getAppData().config.lg;
-    return translations[lg] && translations[lg][text] ? translations[lg][text] : text;
+    let translatedValue = translations[lg] && translations[lg][text] ? translations[lg][text] : text;
+
+    let index = 0;
+    return translatedValue.replace(/\$/g, () => {
+        return values[index++] || '$';
+    });
 }
 
 export const setTranslations = (newTrans) => {

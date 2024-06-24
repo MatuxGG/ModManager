@@ -38,9 +38,20 @@
 </template>
 
 <script>
-import MenuLeft from './components/MenuLeft.vue'
+import MenuLeft from './components/MenuLeft.vue';
 import './compiled.css';
 import $ from 'jquery';
+
+import downloadImg from './assets/download.png';
+import modsImg from './assets/mods.png';
+import addImg from './assets/add.png';
+import settingsImg from './assets/settings.png';
+import creditsImg from './assets/credits.png';
+
+import accountImg from './assets/account.png';
+import discordImg from './assets/discord.png';
+import githubImg from './assets/github.png';
+import roadmapImg from './assets/roadmap.png';
 
 export default {
   name: 'App',
@@ -50,19 +61,19 @@ export default {
   data() {
     return {
       menus: [
-        { href: '/store', img: require('@/assets/download.png'), title: 'Mods store'},
-        { href: '/library', img: require('@/assets/mods.png'), title: 'Mods library'},
-        // { href: '/servers', img: require('@/assets/servers.png'), title: 'Servers'},
-        { href: '/addlocal', img: require('@/assets/add.png'), title: 'Add Mod'},
-        { href: '/settings', img: require('@/assets/settings.png'), title: 'Settings'},
-        { href: '/credits', img: require('@/assets/credits.png'), title: 'Credits'},
+        { href: '/store', img: downloadImg, title: 'Mods store' },
+        { href: '/library', img: modsImg, title: 'Mods library' },
+        // { href: '/servers', img: serversImg, title: 'Servers' },
+        { href: '/addlocal', img: addImg, title: 'Add Mod' },
+        { href: '/settings', img: settingsImg, title: 'Settings' },
+        { href: '/credits', img: creditsImg, title: 'Credits' },
       ],
       miniIcons: [
-        { id: 'goodloss', src: require('@/assets/account.png'), href: 'https://goodloss.fr/login' },
-        { id: 'discord', src: require('@/assets/discord.png'), href: 'https://goodloss.fr/discord' },
-        { id: 'github', src: require('@/assets/github.png'), href: 'https://goodloss.fr/github' },
-        { id: 'trello', src: require('@/assets/roadmap.png'), href: 'https://goodloss.fr/roadmap' },
-      ],
+        { id: 'goodloss', src: accountImg, href: 'https://goodloss.fr/login' },
+        { id: 'discord', src: discordImg, href: 'https://goodloss.fr/discord' },
+        { id: 'github', src: githubImg, href: 'https://goodloss.fr/github' },
+        { id: 'trello', src: roadmapImg, href: 'https://goodloss.fr/roadmap' },
+      ]
     }
   },
   computed: {
@@ -109,35 +120,35 @@ export default {
         window.open(url, '_blank').focus();
       }
     },
-    translateText(text) {
-      // Regex pour trouver les expressions $t[]
-      const regex = /\$t\[(.*?)\]/g;
-      let matches;
-      // Répéter la recherche et le remplacement jusqu'à ce qu'il n'y ait plus de correspondances
-      while ((matches = regex.exec(text)) !== null) {
-        const fullMatch = matches[0]; // $t[...]
-        const innerContent = matches[1]; // Contenu entre les crochets
-
-        // Séparer la partie texte de la partie paramètres
-        const [template, ...params] = innerContent.split(',');
-
-        // Appeler la fonction de traduction
-        const translatedTemplate = this.$t(template.trim());
-
-        // Remplacer les paramètres % par leurs valeurs dans le texte traduit
-        let translatedString = translatedTemplate;
-        params.forEach(param => {
-          translatedString = translatedString.replace('$', param.trim());
-        });
-
-        // Remplacer l'expression $t[] dans le texte original
-        text = text.replace(fullMatch, translatedString);
-
-        // Réinitialiser l'expression régulière pour recommencer la recherche depuis le début
-        regex.lastIndex = 0;
-      }
-      return text;
-    }
+    // translateText(text) {
+    //   // Regex pour trouver les expressions $t[]
+    //   const regex = /\$t\[(.*?)\]/g;
+    //   let matches;
+    //   // Répéter la recherche et le remplacement jusqu'à ce qu'il n'y ait plus de correspondances
+    //   while ((matches = regex.exec(text)) !== null) {
+    //     const fullMatch = matches[0]; // $t[...]
+    //     const innerContent = matches[1]; // Contenu entre les crochets
+    //
+    //     // Séparer la partie texte de la partie paramètres
+    //     const [template, ...params] = innerContent.split(',');
+    //
+    //     // Appeler la fonction de traduction
+    //     const translatedTemplate = this.$t(template.trim());
+    //
+    //     // Remplacer les paramètres % par leurs valeurs dans le texte traduit
+    //     let translatedString = translatedTemplate;
+    //     params.forEach(param => {
+    //       translatedString = translatedString.replace('$', param.trim());
+    //     });
+    //
+    //     // Remplacer l'expression $t[] dans le texte original
+    //     text = text.replace(fullMatch, translatedString);
+    //
+    //     // Réinitialiser l'expression régulière pour recommencer la recherche depuis le début
+    //     regex.lastIndex = 0;
+    //   }
+    //   return text;
+    // }
   },
   provide() {
     return {
@@ -171,7 +182,7 @@ export default {
       let popinId = "popin-"+id;
       let parentDiv = document.getElementById("popinDiv");
       let popinDiv = document.getElementById(popinId);
-      text = this.translateText(text);
+      // text = this.translateText(text);
       if (!popinDiv) {
         popinDiv = document.createElement('div');
         popinDiv.id = popinId;
@@ -187,7 +198,7 @@ export default {
     window.electronAPI.receiveData('updatePopin', (text, id, classes) => {
       let popinId = "popin-" + id;
       let popinDiv = document.getElementById(popinId);
-      text = this.translateText(text);
+      // text = this.translateText(text);
       popinDiv.classList.remove();
       popinDiv.classList.add(classes);
       popinDiv.innerHTML = text;

@@ -1,29 +1,31 @@
-import {BrowserWindow} from "electron";
-
-const axios = require('axios').default;
-const fs = require('fs');
-const path = require('path');
-const Files = require("@/class/files");
-const decompress = require("decompress");
-const { spawn, exec  } = require('child_process');
-const os = require('os');
-const Winreg = require("winreg");
+// @ts-ignore
+import axios from 'axios';
+import * as fs from 'fs';
+import * as path from 'path';
+import Files from "./files";
+// @ts-ignore
+import decompress from "decompress";
+import { spawn, exec } from 'child_process';
+import * as os from 'os';
+// @ts-ignore
+import Winreg from "winreg";
 import {
     getAppData, getMainWindow,
     GL_FILES_URL,
-    GL_WEBSITE_URL, MM_ICON_PATH
-} from "@/class/appGlobals";
-let child = null;
+    GL_WEBSITE_URL, trans
+} from "./appGlobals";
+
+let child: any = null;
 
 class ModWorker {
 
-    static async downloadClient(event, version) {
+    static async downloadClient(event: any, version: any): Promise<boolean> {
         try {
-            let gameVersion = version.gameVersion;
+            const gameVersion = version.gameVersion;
             let finished = false;
-            let downloadId = Date.now().toString();
-            const url = GL_FILES_URL+'/client/'+gameVersion+'.zip';
-            const tempPath = path.join(getAppData().config.dataPath, 'temp', 'client-'+gameVersion+'.zip');
+            const downloadId = Date.now().toString();
+            const url = `${GL_FILES_URL}/client/${gameVersion}.zip`;
+            const tempPath = path.join(getAppData().config.dataPath, 'temp', `client-${gameVersion}.zip`);
             const clientPath = path.join(getAppData().config.dataPath, 'clients', gameVersion);
 
             const response = await axios({
@@ -33,26 +35,22 @@ class ModWorker {
             });
 
             const totalLength = response.headers['content-length'];
-
             let progress = 0;
             let lastProgress = 0;
             let lastTime = Date.now();
-            response.data.on('data', (chunk) => {
+
+            response.data.on('data', (chunk: any) => {
                 progress += chunk.length;
-                let currentTime = Date.now();
-                let elapsedTime = currentTime - lastTime;
-                let bytesDownloaded = progress - lastProgress;
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - lastTime;
+                const bytesDownloaded = progress - lastProgress;
 
-                let percentCompleted = Math.round((progress / totalLength) * 100);
+                const percentCompleted = Math.round((progress / totalLength) * 100);
 
-                let speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
+                const speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
 
                 if (currentTime - lastTime > 100) {
-
-                    let downloadText = "<div class='w-64'><p>$t[Downloading client $," + gameVersion + "]</p>"
-                        + "<p>$t[Progress: $%," + percentCompleted + "]<p>"
-                        + "<p>$t[Speed: $/s," + this.formatByteSize(speed) + "]<p>"
-                        + "<p>" + this.formatByteSize(progress) + " / " + this.formatByteSize(totalLength) + "<p></div>";
+                    const downloadText = `<div class='w-64'><p>`+trans('Downloading client $', gameVersion)+`</p>`+this.formatPopinProgress(percentCompleted, speed, progress, totalLength)+`</div>`;
 
                     if (!finished) {
                         if (percentCompleted === 100) {
@@ -65,16 +63,17 @@ class ModWorker {
                     lastProgress = progress;
                 }
             });
+
             const writer = fs.createWriteStream(tempPath);
             response.data.pipe(writer);
 
             return new Promise((resolve, reject) => {
                 writer.on('finish', () => {
-                    let downloadText = "<div class='w-64'><p>$t[Extracting client $...," + gameVersion + "]</p></div>";
-                    let downloadTextEnd = "<div class='w-64'><p>$[Client $ installed!," + gameVersion + "]</p></div>";
+                    const downloadText = `<div class='w-64'><p>`+trans('Extracting client $...', gameVersion)+`</p></div>`;
+                    const downloadTextEnd = `<div class='w-64'><p>`+trans('Client $ installed!', gameVersion)+`</p></div>`;
                     this.extractZipFile(tempPath, clientPath, event, downloadText, downloadTextEnd, downloadId, "bg-green-700")
                         .then(() => {
-                            resolve();
+                            resolve(true);
                         })
                         .catch((error) => {
                             reject(error);
@@ -88,62 +87,61 @@ class ModWorker {
         }
     }
 
-    static async downloadMod(event, mod, version) {
+    static async downloadMod(event: any, mod: any, version: any): Promise<boolean> {
         try {
             let finished = false;
-            let downloadId = Date.now().toString();
-            let tempPath = path.join(getAppData().config.dataPath, 'temp', 'mod-'+mod.sid+'-'+version.version+'.zip');
-            let tempWorker = path.join(getAppData().config.dataPath, 'temp', 'modWorker');
-            let modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version);
+            const downloadId = Date.now().toString();
+            let tempPath = path.join(getAppData().config.dataPath, 'temp', `mod-${mod.sid}-${version.version}.zip`);
+            const tempWorker = path.join(getAppData().config.dataPath, 'temp', 'modWorker');
+            let modPath = path.join(getAppData().config.dataPath, 'mods', `${mod.sid}-${version.version}`);
 
-            let installType = null;
-            // eslint-disable-next-line no-unused-vars
-            let filename = null;
-            let fileUrl = null;
-            version.release['assets'].forEach((asset) => {
+            let installType: 'zip' | 'dll' | null = null;
+            let filename: string | null = null;
+            let fileUrl: string | null = null;
+
+            version.release['assets'].forEach((asset: any) => {
                 if (asset['name'].endsWith('.zip')) {
                     installType = 'zip';
                     filename = asset['name'];
                     fileUrl = asset['browser_download_url'];
                 }
-            })
+            });
+
             if (installType === null) {
-                version.release['assets'].forEach((asset) => {
-                    if (asset['name'].endsWith('.dll')) {
+                version.release['assets'].forEach((asset: any) => {
+                    if (asset['name'].endswith('.dll')) {
                         installType = 'dll';
                         filename = asset['name'];
                         fileUrl = asset['browser_download_url'];
-                        modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version, 'BepInEx', 'plugins');
+                        modPath = path.join(getAppData().config.dataPath, 'mods', `${mod.sid}-${version.version}`, 'BepInEx', 'plugins');
                         tempPath = path.join(getAppData().config.dataPath, 'temp', filename);
                     }
-                })
+                });
             }
+
             const response = await axios({
                 method: 'get',
-                url: fileUrl,
+                url: fileUrl!,
                 responseType: 'stream'
             });
-    
+
             const totalLength = response.headers['content-length'];
-    
             let progress = 0;
             let lastProgress = 0;
             let lastTime = Date.now();
-            response.data.on('data', (chunk) => {
+
+            response.data.on('data', (chunk: any) => {
                 progress += chunk.length;
-                let currentTime = Date.now();
-                let elapsedTime = currentTime - lastTime;
-                let bytesDownloaded = progress - lastProgress;
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - lastTime;
+                const bytesDownloaded = progress - lastProgress;
 
-                let percentCompleted = Math.round((progress / totalLength) * 100);
+                const percentCompleted = Math.round((progress / totalLength) * 100);
 
-                let speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
+                const speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
 
                 if (currentTime - lastTime > 100) {
-                    let downloadText = "<div class='w-64'><p>$t[Downloading $," + mod.name + "]</p>"
-                    + "<p>$t[Progress: $%," + percentCompleted + "]<p>"
-                    + "<p>$t[Speed: $/s," + this.formatByteSize(speed) + "]<p>"
-                    + "<p>" + this.formatByteSize(progress) + " / " + this.formatByteSize(totalLength) + "<p></div>";
+                    const downloadText = `<div class='w-64'><p>`+trans('Downloading $', mod.name)+`</p>`+this.formatPopinProgress(percentCompleted, speed, progress, totalLength)+`</div>`;
 
                     if (!finished) {
                         if (percentCompleted === 100) {
@@ -158,30 +156,31 @@ class ModWorker {
                 }
 
             });
+
             const writer = fs.createWriteStream(tempPath);
             response.data.pipe(writer);
 
             return new Promise((resolve, reject) => {
                 writer.on('finish', () => {
-                    let downloadText = "<div class='w-64'><p>$t[Extracting $...," + mod.name + "]</p></div>";
-                    let downloadTextEnd = "<div class='w-64'><p>$t[$ installed!," + mod.name + "]</p></div>";
+                    const downloadText = `<div class='w-64'><p>`+trans('Extracting $...', mod.name)+`</p></div>`;
+                    const downloadTextEnd = `<div class='w-64'><p>`+trans('$ installed!', mod.name)+`</p></div>`;
                     if (installType === 'zip') {
                         Files.deleteDirectoryIfExist(tempWorker);
                         this.extractZipFile(tempPath, tempWorker, event, downloadText, downloadTextEnd, downloadId, "bg-green-700")
                             .then(() => {
-                                let rootPath = Files.getBepInExInsideDir(tempWorker);
+                                const rootPath = Files.getBepInExInsideDir(tempWorker);
                                 Files.moveDirectory(rootPath, modPath);
-                                resolve();
+                                resolve(true);
                             })
                             .catch((error) => {
                                 reject(error);
                             });
                     } else if (installType === 'dll') {
                         Files.createDirectoryIfNotExist(modPath);
-                        fs.cpSync(tempPath, path.join(modPath, filename));
+                        fs.cpSync(tempPath, path.join(modPath, filename!));
                         event.sender.send('updatePopin', downloadTextEnd, downloadId, "bg-green-700");
                         event.sender.send('removePopin', downloadId);
-                        resolve();
+                        resolve(true);
                     }
 
                 });
@@ -193,7 +192,7 @@ class ModWorker {
         }
     }
 
-    static async extractZipFile(zipFilePath, outputFolderPath, event, downloadText, downloadTextEnd, downloadId, classes) {
+    static async extractZipFile(zipFilePath: string, outputFolderPath: string, event: any, downloadText: string, downloadTextEnd: string, downloadId: string, classes: string): Promise<boolean> {
         console.log('Extracting...');
         event.sender.send('createPopin', downloadText, downloadId, classes);
         Files.createDirectoryIfNotExist(outputFolderPath);
@@ -204,7 +203,7 @@ class ModWorker {
                     event.sender.send('updatePopin', downloadTextEnd, downloadId, classes);
                     event.sender.send('removePopin', downloadId);
                 })
-                .catch((error) => {
+                .catch((error: any) => {
                     console.log('Extraction failed :' + error);
                 });
             return true;
@@ -214,36 +213,36 @@ class ModWorker {
         }
     }
 
-    static async uninstallMod(event, mod, version) {
-        let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>$t[Uninstalling $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
-        const modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version);
+    static async uninstallMod(event: any, mod: any, version: any): Promise<void> {
+        const downloadId = Date.now().toString();
+        event.sender.send('createPopin', `<div class='w-64'><p>`+trans('Uninstalling $...', mod.name)+`</p></div>`, downloadId, "bg-blue-700");
+        const modPath = path.join(getAppData().config.dataPath, 'mods', `${mod.sid}-${version.version}`);
         Files.deleteDirectoryIfExist(modPath);
-        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
+        event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ uninstalled!', mod.name)+`</p></div>`, downloadId, "bg-red-700");
         event.sender.send('removePopin', downloadId);
     }
 
-    static async startMod(event, mod, version) {
-        const savePath = path.join(getAppData().config.dataPath, 'data', mod.sid+'-'+version.version);
-        // let foldersToSave = ["BepInEx/config"]; // TODO
+    static async startMod(event: any, mod: any, version: any): Promise<void> {
+        const savePath = path.join(getAppData().config.dataPath, 'data', `${mod.sid}-${version.version}`);
         const isRunning = await this.isProcessRunning('Among Us') || getAppData().startedMod !== false;
         if (isRunning) return;
 
         let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>$t[Starting $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
+        event.sender.send('createPopin', `<div class='w-64'><p>`+trans('Starting $...', mod.name)+`</p></div>`, downloadId, "bg-blue-700");
         const gamePath = path.join(getAppData().config.dataPath, 'game');
         const clientPath = path.join(getAppData().config.dataPath, 'clients', version.gameVersion);
-        const modPath = path.join(getAppData().config.dataPath, 'mods', mod.sid+'-'+version.version);
+        const modPath = path.join(getAppData().config.dataPath, 'mods', `${mod.sid}-${version.version}`);
         Files.deleteDirectoryIfExist(gamePath);
         Files.createDirectoryIfNotExist(gamePath);
-        let promises = [];
-        promises.push(fs.promises.cp(clientPath, gamePath, {recursive: true}));
-        promises.push(fs.promises.cp(modPath, gamePath, {recursive: true}));
+        const promises = [
+            fs.promises.cp(clientPath, gamePath, { recursive: true }),
+            fs.promises.cp(modPath, gamePath, { recursive: true })
+        ];
         for (const dep of version.modDependencies) {
-            let [depMod, depVersion] = getAppData().getModFromIdAndVersion(dep.modDependency, dep.modVersion);
+            const [depMod, depVersion] = getAppData().getModFromIdAndVersion(dep.modDependency, dep.modVersion);
             if (depMod && depVersion) {
-                const depPath = path.join(getAppData().config.dataPath, 'mods', depMod.sid+'-'+depVersion.version);
-                promises.push(fs.promises.cp(depPath, gamePath, {recursive: true}));
+                const depPath = path.join(getAppData().config.dataPath, 'mods', `${depMod.sid}-${depVersion.version}`);
+                promises.push(fs.promises.cp(depPath, gamePath, { recursive: true }));
             }
         }
 
@@ -255,13 +254,12 @@ class ModWorker {
         if (child.pid) {
             getAppData().startedMod = [mod, version];
             event.sender.send('updateStartedMod', [mod, version]);
-            event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ started!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
+            event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ started!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
             event.sender.send('removePopin', downloadId);
         }
 
         child.on('close', () => {
             Files.createDirectoryIfNotExist(savePath);
-            // await this.saveData(savePath, gamePath, foldersToSave); // TODO
             getAppData().startedMod = false;
             event.sender.send('updateStartedMod', false);
             downloadId = Date.now().toString();
@@ -273,12 +271,12 @@ class ModWorker {
         });
     }
 
-    static async startVanilla(event) {
+    static async startVanilla(event: any): Promise<void> {
         const isRunning = await this.isProcessRunning('Among Us') || getAppData().startedMod !== false;
         if (isRunning) return;
 
-        let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>$t[Starting vanilla...]</p></div>", downloadId, "bg-blue-700");
+        const downloadId = Date.now().toString();
+        event.sender.send('createPopin', `<div class='w-64'><p>`+trans('Starting vanilla...')+`</p></div>`, downloadId, "bg-blue-700");
         const amongUsPath = path.join(getAppData().config.amongUsPath, 'Among Us.exe');
 
         child = spawn(amongUsPath, {});
@@ -286,14 +284,13 @@ class ModWorker {
         if (child.pid) {
             getAppData().startedMod = ["Vanilla", null];
             event.sender.send('updateStartedMod', ["Vanilla", null]);
-            event.sender.send('updatePopin', "<div class='w-64'><p>$t[Vanilla started!]</p></div>", downloadId, "bg-green-700");
+            event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('Vanilla started!')+`</p></div>`, downloadId, "bg-green-700");
             event.sender.send('removePopin', downloadId);
         }
 
         child.on('close', () => {
             getAppData().startedMod = false;
             event.sender.send('updateStartedMod', false);
-            downloadId = Date.now().toString();
             getMainWindow().show();
             getMainWindow().maximize();
 
@@ -301,50 +298,36 @@ class ModWorker {
         });
     }
 
-    // static async saveData(savePath, rootPath, foldersToSave) {
-    //     let promises = foldersToSave.map(folderToSave => {
-    //         let sourcePath = path.join(rootPath, folderToSave);
-    //         let targetPath = path.join(savePath, folderToSave);
-    //         Files.createDirectoryIfNotExist(targetPath);
-    //         return fs.renameSync(sourcePath, targetPath);
-    //     });
-    //
-    //     await Promise.all(promises);
-    // }
-
-    static async downloadBcl(event, mod){
+    static async downloadBcl(event: any, mod: any): Promise<boolean> {
         try {
             let finished = false;
-            let downloadId = Date.now().toString();
-            let tempPath = path.join(getAppData().config.dataPath, 'temp', 'Better-CrewLink-Setup.exe');
+            const downloadId = Date.now().toString();
+            const tempPath = path.join(getAppData().config.dataPath, 'temp', 'Better-CrewLink-Setup.exe');
             Files.deleteDirectoryIfExist(tempPath);
 
             const response = await axios({
                 method: 'get',
-                url: GL_WEBSITE_URL+'/bcl',
+                url: `${GL_WEBSITE_URL}/bcl`,
                 responseType: 'stream'
             });
 
             const totalLength = response.headers['content-length'];
-
             let progress = 0;
             let lastProgress = 0;
             let lastTime = Date.now();
-            response.data.on('data', (chunk) => {
+
+            response.data.on('data', (chunk: any) => {
                 progress += chunk.length;
-                let currentTime = Date.now();
-                let elapsedTime = currentTime - lastTime;
-                let bytesDownloaded = progress - lastProgress;
+                const currentTime = Date.now();
+                const elapsedTime = currentTime - lastTime;
+                const bytesDownloaded = progress - lastProgress;
 
-                let percentCompleted = Math.round((progress / totalLength) * 100);
+                const percentCompleted = Math.round((progress / totalLength) * 100);
 
-                let speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
+                const speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
 
                 if (currentTime - lastTime > 100) {
-                    let downloadText = "<div class='w-64'><p>$t[Downloading $," + mod.name + "]</p>"
-                        + "<p>$t[Progress: $%," + percentCompleted + "]<p>"
-                        + "<p>$t[Speed: $/s," + this.formatByteSize(speed) + "]<p>"
-                        + "<p>" + this.formatByteSize(progress) + " / " + this.formatByteSize(totalLength) + "<p></div>";
+                    const downloadText = `<div class='w-64'><p>`+trans('Downloading $', mod.name)+`</p>`+this.formatPopinProgress(percentCompleted, speed, progress, totalLength)+`</div>`;
 
                     if (!finished) {
                         if (percentCompleted === 100) {
@@ -359,6 +342,7 @@ class ModWorker {
                 }
 
             });
+
             const writer = fs.createWriteStream(tempPath);
             response.data.pipe(writer);
 
@@ -373,9 +357,9 @@ class ModWorker {
                         if (stderr) {
                             console.error(`Erreur : ${stderr}`);
                         } else {
-                            event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ installed!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
+                            event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ installed!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
                             event.sender.send('removePopin', downloadId);
-                            resolve();
+                            resolve(true);
                         }
                     });
                 });
@@ -385,18 +369,16 @@ class ModWorker {
             console.error('Error downloading the mod:', error);
             return false;
         }
-
     }
 
-
-    static async startBcl(event, mod) {
-        let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>$t[Starting $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
+    static async startBcl(event: any, mod: any): Promise<void> {
+        const downloadId = Date.now().toString();
+        event.sender.send('createPopin', `<div class='w-64'><p>`+trans('Starting $...', mod.name)+`</p></div>`, downloadId, "bg-blue-700");
         const regKey = new Winreg({
-            hive: Winreg.HKCU, // Hive du registre
-            key:  '\\SOFTWARE\\03ceac78-9166-585d-b33a-90982f435933' // Chemin de la clé
+            hive: Winreg.HKCU,
+            key: '\\SOFTWARE\\03ceac78-9166-585d-b33a-90982f435933'
         });
-        regKey.get('InstallLocation', (err, item) => {
+        regKey.get('InstallLocation', (err: any, item: any) => {
             if (err) {
                 console.error("Erreur lors de la lecture de la clé de registre:", err);
             } else if (item) {
@@ -405,7 +387,7 @@ class ModWorker {
                 if (child.pid) {
                     getAppData().startedMod = [mod, null];
                     event.sender.send('updateStartedMod', [mod, null]);
-                    event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ started!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
+                    event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ started!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
                     event.sender.send('removePopin', downloadId);
                 }
 
@@ -419,16 +401,16 @@ class ModWorker {
         });
     }
 
-    static async uninstallBcl(event, mod) {
-        let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>$t[Uninstalling $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
+    static async uninstallBcl(event: any, mod: any): Promise<void> {
+        const downloadId = Date.now().toString();
+        event.sender.send('createPopin', `<div class='w-64'><p>`+trans('Uninstalling $...', mod.name)+`</p></div>`, downloadId, "bg-blue-700");
 
         const regKey = new Winreg({
             hive: Winreg.HKCU,
-            key:  '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\03ceac78-9166-585d-b33a-90982f435933'
+            key: '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\03ceac78-9166-585d-b33a-90982f435933'
         });
 
-        regKey.get('QuietUninstallString', function(err, item) {
+        regKey.get('QuietUninstallString', (err: any, item: any) => {
             if (err) {
                 console.log('Erreur lors de la lecture de la clé du registre:', err);
             } else {
@@ -441,21 +423,21 @@ class ModWorker {
                     if (stderr) {
                         console.error(`Erreur : ${stderr}`);
                     } else {
-                        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
+                        event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ uninstalled!', mod.name)+`</p></div>`, downloadId, "bg-red-700");
                         event.sender.send('removePopin', downloadId);
                     }
                 });
             }
         });
 
-        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
+        event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ uninstalled!', mod.name)+`</p></div>`, downloadId, "bg-red-700");
         event.sender.send('removePopin', downloadId);
     }
 
-    static async downloadChall(event, mod){
+    static async downloadChall(event: any, mod: any): Promise<boolean> {
         try {
-            let downloadId = Date.now().toString();
-            event.sender.send('createPopin', "<div class='w-64'><p>$t[Installing $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
+            const downloadId = Date.now().toString();
+            event.sender.send('createPopin', `<div class='w-64'><p>`+trans('Installing $...', mod.name)+`</p></div>`, downloadId, "bg-blue-700");
             exec(`start steam://run/2160150`, (error, stdout, stderr) => {
                 if (error) {
                     console.error(`Erreur d'exécution : ${error}`);
@@ -465,7 +447,7 @@ class ModWorker {
                 if (stderr) {
                     console.error(`Erreur : ${stderr}`);
                 } else {
-                    event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ installed!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
+                    event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ installed!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
                     event.sender.send('removePopin', downloadId);
                     return;
                 }
@@ -474,24 +456,22 @@ class ModWorker {
             console.error('Error downloading the mod:', error);
             return false;
         }
-
     }
 
-
-    static async startChall(event, mod) {
-        let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>$t[Starting $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
+    static async startChall(event: any, mod: any): Promise<void> {
+        const downloadId = Date.now().toString();
+        event.sender.send('createPopin', `<div class='w-64'><p>`+trans('Starting $...', mod.name)+`</p></div>`, downloadId, "bg-blue-700");
 
         child = spawn('start steam://rungameid/2160150', { shell: true });
 
-        child.on('error', (error) => {
+        child.on('error', (error: any) => {
             console.error(`Error: ${error.message}`);
         });
 
         if (child.pid) {
             getAppData().startedMod = [mod, null];
             event.sender.send('updateStartedMod', [mod, null]);
-            event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ started!,"+mod.name+"]</p></div>", downloadId, "bg-green-700");
+            event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ started!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
             event.sender.send('removePopin', downloadId);
         }
 
@@ -501,16 +481,16 @@ class ModWorker {
         });
     }
 
-    static async uninstallChall(event, mod) {
-        let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>$t[Uninstalling $...,"+mod.name+"]</p></div>", downloadId, "bg-blue-700");
+    static async uninstallChall(event: any, mod: any): Promise<void> {
+        const downloadId = Date.now().toString();
+        event.sender.send('createPopin', `<div class='w-64'><p>`+trans('Uninstalling $...', mod.name)+`</p></div>`, downloadId, "bg-blue-700");
 
         const regKey = new Winreg({
             hive: Winreg.HKLM,
-            key:  '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 2160150'
+            key: '\\SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Steam App 2160150'
         });
 
-        regKey.get('UninstallString', function(err, item) {
+        regKey.get('UninstallString', (err: any, item: any) => {
             if (err) {
                 console.log('Erreur lors de la lecture de la clé du registre:', err);
             } else {
@@ -523,41 +503,44 @@ class ModWorker {
                     if (stderr) {
                         console.error(`Erreur : ${stderr}`);
                     } else {
-                        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
+                        event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ uninstalled!', mod.name)+`</p></div>`, downloadId, "bg-red-700");
                         event.sender.send('removePopin', downloadId);
                     }
                 });
             }
         });
 
-        event.sender.send('updatePopin', "<div class='w-64'><p>$t[$ uninstalled!,"+mod.name+"]</p></div>", downloadId, "bg-red-700");
+        event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ uninstalled!', mod.name)+`</p></div>`, downloadId, "bg-red-700");
         event.sender.send('removePopin', downloadId);
     }
 
-    static formatByteSize(bytes) {
+    static formatByteSize(bytes: number): string {
         const sizes = ["B", "KB", "MB", "GB", "TB"];
         if (bytes === 0) return '0 B';
-        let i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)), 10);
+        const i = parseInt(Math.floor(Math.log(bytes) / Math.log(1024)).toString(), 10);
         if (i === 0) return `${bytes} ${sizes[i]}`;
         return `${(bytes / (1024 ** i)).toFixed(2)} ${sizes[i]}`;
     }
 
-    static isProcessRunning(processName) {
-        return new Promise((resolve, reject) => {
-            // Obtenez le système d'exploitation
-            const platform = os.platform();
+    static formatPopinProgress(percentCompleted: any, speed: any, progress: any, totalLength: any): string {
+        return `<p>`+trans('Progress: $%', percentCompleted)+`<p>
+            <p>`+trans('Speed: $/s', this.formatByteSize(speed))+`<p>
+            <p>${this.formatByteSize(progress)} / ${this.formatByteSize(totalLength)}<p>`;
+    }
 
-            // Construisez la commande en fonction du système d'exploitation
-            let command;
-            if (platform === "win32") { // Pour Windows
+    static isProcessRunning(processName: string): Promise<boolean> {
+        return new Promise((resolve, reject) => {
+            const platform = os.platform();
+            let command: string;
+
+            if (platform === "win32") {
                 command = `tasklist`;
-            } else if (platform === "darwin" || platform === "linux") { // Pour macOS et Linux
+            } else if (platform === "darwin" || platform === "linux") {
                 command = `ps aux`;
             } else {
                 return reject(new Error(`Plateforme non supportée : ${platform}`));
             }
 
-            // Exécutez la commande
             exec(command, (err, stdout, stderr) => {
                 if (err) {
                     return reject(err);
@@ -566,14 +549,13 @@ class ModWorker {
                     return reject(new Error(stderr));
                 }
 
-                // Vérifiez si le nom du processus est dans la sortie
                 const isRunning = stdout.toLowerCase().includes(processName.toLowerCase());
                 resolve(isRunning);
             });
         });
     }
 
-    static async stopChild() {
+    static async stopChild(): Promise<void> {
         if (child) {
             child.kill();
             child = null;

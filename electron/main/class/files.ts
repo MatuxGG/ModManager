@@ -1,6 +1,6 @@
-const fs = require('fs');
-const path = require('path');
-const https = require('https');
+import fs from 'fs';
+import path from 'path';
+import https from 'https';
 
 class Files {
     static loadOrCreate(dir, objet) {
@@ -182,4 +182,4 @@ class Files {
     }
 }
 
-module.exports = Files;
+export default Files;

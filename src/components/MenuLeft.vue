@@ -49,7 +49,7 @@
 </template>
   
 <script>
-  import ConfirmPopin from "@/components/ConfirmPopin.vue";
+  import ConfirmPopin from "./ConfirmPopin.vue";
 
   export default {
     components: {ConfirmPopin},

@@ -72,7 +72,7 @@
 
 <script>
 
-import ConfirmPopin from "@/components/ConfirmPopin.vue";
+import ConfirmPopin from "./ConfirmPopin.vue";
 
 export default {
   components: {ConfirmPopin},
@@ -92,7 +92,7 @@ export default {
     copySupportId() {
       navigator.clipboard.writeText(this.supportId);
       let downloadId = Date.now().toString();
-      let text = "$t[Support ID copied to clipboard]";
+      let text = this.$t('Support ID copied to clipboard');
       window.electronAPI.sendData('createPopin', text, downloadId, "bg-green-700")
       window.electronAPI.sendData('removePopin', downloadId)
     },

@@ -1,11 +1,13 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router';
-import store from './store';
+import router from './import/router';
+import {store} from './import/store';
 import { createI18n } from 'vue-i18n';
 import axios from 'axios';
 
-var translations = [];
+import './compiled.css'
+
+let translations: any = [];
 
 const i18n = createI18n({
     legacy: false,
@@ -14,15 +16,15 @@ const i18n = createI18n({
     messages: {},
 });
 
-const loadLocaleMessages = async (locale) => {
+const loadLocaleMessages = async (locale: string) => {
     const retryInterval = 1000; // 1 seconde
     const maxRetryTime = 10000; // 10 secondes
     let startTime = Date.now();
 
-    const fetchTranslations = async () => {
+    const fetchTranslations: any = async () => {
         try {
             const response = await axios.get(`https://goodloss.fr/api/trans/${locale}`);
-            const messages = response.data.reduce((acc, item) => {
+            const messages = response.data.reduce((acc: any, item: any) => {
                 acc[item.original] = item.translation;
                 return acc;
             }, {});
@@ -51,12 +53,12 @@ const loadAllTranslations = async () => {
     const maxRetryTime = 10000; // 10 secondes
     let startTime = Date.now();
 
-    const fetchTranslations = async () => {
+    const fetchTranslations: any = async () => {
         try {
             const response = await axios.get('https://goodloss.fr/api/trans');
             const languages = response.data;
 
-            const loadTranslationsPromises = languages.map(lang => loadLocaleMessages(lang.code.toLowerCase()));
+            const loadTranslationsPromises = languages.map((lang: any) => loadLocaleMessages(lang.code.toLowerCase()));
 
             await Promise.all(loadTranslationsPromises);
             console.log('All translations loaded successfully');

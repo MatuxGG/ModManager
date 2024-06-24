@@ -2,7 +2,8 @@
 module.exports = {
   darkMode: 'class',
   content: [
-    "./src/**/*.{vue,js,ts}"
+    "./src/**/*.{vue,js,ts}",
+    "./electron/**/*.{vue,js,ts}"
   ],
   theme: {
     extend: {

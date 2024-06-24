@@ -1,13 +1,13 @@
-import { createRouter, createWebHistory } from 'vue-router';
-import ModsStore from './components/ModsStore.vue';
-import ModsInstalled from './components/ModsInstalled.vue';
-import AppSettings from './components/AppSettings.vue';
-import AddLocal from './components/AddLocal.vue';
-import CreditsPage from './components/CreditsPage.vue';
-import LoadingPage from './components/LoadingPage.vue';
+import {createRouter, createWebHistory, Router} from 'vue-router';
+import ModsStore from '../components/ModsStore.vue';
+import ModsInstalled from '../components/ModsInstalled.vue';
+import AppSettings from '../components/AppSettings.vue';
+import AddLocal from '../components/AddLocal.vue';
+import CreditsPage from '../components/CreditsPage.vue';
+import LoadingPage from '../components/LoadingPage.vue';
 // import ServersList from './components/ServersList.vue';
 
-const router = createRouter({
+const router: Router = createRouter({
     history: createWebHistory(),
     routes: [
       { path: '/', component: LoadingPage },

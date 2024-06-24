@@ -1,18 +1,21 @@
+// @ts-ignore
 import {app, Menu, shell} from "electron";
+// @ts-ignore
 import AutoLaunch from "auto-launch";
-import ModWorker from "@/class/modWorker";
+import ModWorker from "./modWorker";
 import {
     APP_PATH,
     getAppData,
     getArgs,
     getAutoLaunch,
     getCurrentDownloads,
-    getMainWindow,
-    getTray, GL_API_URL, isDownloadInProgress, MM_ICON_PATH, MM_LOG_PATH, removeFinishedDownload,
+    getMainWindow, getMMIconPath,
+    getTray, GL_API_URL, isDownloadInProgress, MM_LOG_PATH, removeFinishedDownload,
     setAutoLaunch, trans
-} from "@/class/appGlobals";
+} from "./appGlobals";
 import path from "path";
 import fs from "fs";
+// @ts-ignore
 import axios from "axios";
 
 export const handleArgs = () => {
@@ -153,7 +156,7 @@ export const uninstallMod = async (event, mod, version) => {
 
 export const startMod = async (event, mod, version) => {
     console.log("Starting mod on server...");
-    const result = await downloadMod(event, mod, version);
+    const result: any = await downloadMod(event, mod, version);
     if (result === false) {
         return;
     }
@@ -282,7 +285,7 @@ export const disableAutoLaunch = () => {
 export const updateLaunchOnStart = () => {
     setAutoLaunch(new AutoLaunch({
         name: 'ModManager',
-        icon: MM_ICON_PATH,
+        icon: getMMIconPath(),
         path: app.getPath('exe'),
     }));
 

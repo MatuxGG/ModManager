@@ -39,4 +39,4 @@ class RegionInfo {
     }
 }
 
-module.exports = RegionInfo;
+export default RegionInfo;

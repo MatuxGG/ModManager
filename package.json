@@ -1,63 +1,51 @@
 {
-  "name": "modmanager7",
-  "version": "7.0.0",
+  "name": "electron-vue-vite",
+  "version": "28.1.0",
+  "main": "dist-electron/main/index.js",
+  "description": "Really simple Electron + Vue + Vite boilerplate.",
+  "author": "草鞋没号 <308487730@qq.com>",
+  "license": "MIT",
   "private": true,
+  "keywords": [
+    "electron",
+    "rollup",
+    "vite",
+    "vue3",
+    "vue"
+  ],
+  "debug": {
+    "env": {
+      "VITE_DEV_SERVER_URL": "http://127.0.0.1:3344/"
+    }
+  },
+  "type": "module",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "electron:build": "set NODE_OPTIONS=--openssl-legacy-provider&&vue-cli-service electron:build",
-    "electron:serve": "set NODE_OPTIONS=&&vue-cli-service electron:serve",
-    "postinstall": "electron-builder install-app-deps",
-    "postuninstall": "electron-builder install-app-deps",
+    "dev": "vite",
+    "build": "vue-tsc --noEmit && vite build && electron-builder",
+    "preview": "vite preview",
     "watch": "npx tailwindcss -i ./src/tailwind.css -o ./src/compiled.css --watch"
   },
-  "main": "background.js",
   "dependencies": {
     "auto-launch": "^5.0.6",
     "axios": "^1.6.2",
-    "core-js": "^3.8.3",
     "decompress": "^4.2.1",
     "electron-log": "^4.0.0",
     "jquery": "^3.7.1",
-    "vue": "^3.2.13",
     "vue-i18n": "^9.11.0",
     "vue-router": "^4.2.5",
     "vuex": "^4.0.2",
-    "webpack": "^5.91.0",
     "winreg": "^1.2.5"
   },
   "devDependencies": {
-    "@babel/core": "^7.12.16",
-    "@babel/eslint-parser": "^7.12.16",
-    "@vue/cli-plugin-babel": "~5.0.0",
-    "@vue/cli-plugin-eslint": "~5.0.0",
-    "@vue/cli-service": "^5.0.8",
-    "electron": "31.0.0-alpha.1",
-    "electron-devtools-installer": "^3.1.0",
-    "eslint": "^7.32.0",
-    "eslint-plugin-vue": "^8.0.3",
-    "tailwindcss": "^3.3.6",
-    "vue-cli-plugin-electron-builder": "^2.1.1"
-  },
-  "eslintConfig": {
-    "root": true,
-    "env": {
-      "node": true
-    },
-    "extends": [
-      "plugin:vue/vue3-essential",
-      "eslint:recommended"
-    ],
-    "parserOptions": {
-      "parser": "@babel/eslint-parser"
-    },
-    "rules": {}
-  },
-  "browserslist": [
-    "> 1%",
-    "last 2 versions",
-    "not dead",
-    "not ie 11"
-  ]
+    "@vitejs/plugin-vue": "^5.0.4",
+    "electron": "^29.1.1",
+    "electron-builder": "^24.13.3",
+    "typescript": "^5.4.2",
+    "vite": "^5.1.5",
+    "vite-plugin-electron": "^0.28.4",
+    "vite-plugin-electron-renderer": "^0.14.5",
+    "vue": "^3.4.21",
+    "vue-tsc": "^2.0.6",
+    "tailwindcss": "^3.3.6"
+  }
 }

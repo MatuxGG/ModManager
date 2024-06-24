@@ -1,5 +1,6 @@
+// @ts-ignore
 import {dialog, ipcMain, shell} from "electron";
-import {getAppData, getCurrentDownloads, getMainWindow, setTranslations, trans} from "@/class/appGlobals";
+import {getAppData, getCurrentDownloads, getMainWindow, setTranslations, trans} from "./appGlobals";
 import {
     createShortcut,
     downloadMod,
@@ -9,8 +10,8 @@ import {
     uninstallMod,
     updateLaunchOnStart,
     updateTray
-} from "@/class/functions";
-import modWorker from "@/class/modWorker";
+} from "./functions";
+import modWorker from "./modWorker";
 
 const setupIPCMainHandlers = () => {
 
@@ -109,7 +110,8 @@ const setupIPCMainHandlers = () => {
         let version = JSON.parse(versionStr);
         createShortcut(mod, version);
         let downloadId = Date.now().toString();
-        event.sender.send('createPopin', "<div class='w-64'><p>$t[Shortcut created for $,"+mod.name+(version !== null ? (" " + version.version) : "")+"]</p></div>", downloadId, "bg-green-700");
+        let visibleVersion = mod.name+(version !== null ? (" " + version.version) : "");
+        event.sender.send('createPopin', "<div class='w-64'><p>"+trans('Shortcut created for $', visibleVersion)+"</p></div>", downloadId, "bg-green-700");
         event.sender.send('removePopin', downloadId);
     });
 
@@ -146,9 +148,9 @@ const setupIPCMainHandlers = () => {
                 let downloadId = Date.now().toString();
                 if (changeResult) {
                     event.sender.send('updateConfig', JSON.stringify(getAppData().config));
-                    event.sender.send('createPopin', "<div class='w-64'>$t[Path successfully updated!]</div>", downloadId, "bg-green-700");
+                    event.sender.send('createPopin', "<div class='w-64'>"+trans('Path successfully updated!')+"</div>", downloadId, "bg-green-700");
                 } else {
-                    event.sender.send('createPopin', "<div class='w-64'>$t[Path doesn't exist!]</div>", downloadId, "bg-red-700");
+                    event.sender.send('createPopin', "<div class='w-64'>"+trans("Path doesn't exist!")+"</div>", downloadId, "bg-red-700");
                 }
                 event.sender.send('removePopin', downloadId);
             }
