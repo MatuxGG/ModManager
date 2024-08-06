@@ -82,10 +82,11 @@ export const downloadMod = async (event, mod, version) => {
             downloadLines.push(["vanilla", null, version]);
         }
     } else {
-        if (!isDownloadInProgress("mod", mod, version) && !getAppData().isInstalledModFromIdAndVersion(mod.sid, version.version)) {
+        if (!isDownloadInProgress("mod", mod, version) && !getAppData().isInstalledModFromIdAndVersion(mod.sid, null)) {
             downloadLines.push(["allInOne", mod, version]);
         }
     }
+
 
     if (downloadLines.length === 0) {
         return;
@@ -124,6 +125,8 @@ export const downloadMod = async (event, mod, version) => {
             getAppData().config.addInstalledVanilla(dl[2].gameVersion);
         } else if (dl[0] === "update") {
             getAppData().config.removeInstalledMod(dl[1], dl[2]);
+        } else if (dl[0] === "allInOne") {
+            getAppData().config.addInstalledMod(dl[1], null);
         }
     }
 
@@ -137,7 +140,7 @@ export const downloadMod = async (event, mod, version) => {
 
 export const uninstallMod = async (event, mod, version) => {
     console.log("Uninstalling mod on server...");
-    if (!getAppData().isInstalledModFromIdAndVersion(mod.sid, version.version)) return;
+    if (!getAppData().isInstalledModFromIdAndVersion(mod.sid, version === null ? null : version.version)) return;
 
     if (mod.sid === "BetterCrewlink") {
         await ModWorker.uninstallBcl(event, mod);
@@ -254,8 +257,8 @@ export const updateTray = () => {
     modsLines.push({
         label: trans('Exit'),
         click: function () {
-            app.isQuiting = true;
-            app.quit();
+            BrowserWindow.getAllWindows().forEach(window => window.close());
+            app.exit(0);
         }
     });
 
@@ -266,12 +269,7 @@ export const updateTray = () => {
 
     getTray().on('double-click', () => {
         if (!getAppData() || !getAppData().isLoaded) return;
-        if (getAppData().config.minimizeToTray) {
-            getMainWindow().isVisible() ? getMainWindow().hide() : getMainWindow().show();
-        } else {
-            getTray().destroy();
-            app.quit();
-        }
+        getMainWindow().isVisible() ? getMainWindow().hide() : getMainWindow().show();
     });
 }
 

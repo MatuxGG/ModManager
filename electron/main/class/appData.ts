@@ -86,7 +86,7 @@ class AppData {
 
         // Cleanup mods that have no releases
         this.modSources.forEach(source => {
-            source.mods = source.mods.filter(mod => mod.versions.some(version => version.release));
+            source.mods = source.mods.filter(mod => mod.type === 'allInOne' || !mod.githubLink || mod.versions.some(version => version.release));
         });
     }
 
@@ -97,9 +97,6 @@ class AppData {
         mod.versions.forEach(version => {
             if (version.version === 'latest') {
                 version.release = mod.releases[0];
-                if (version.release !== undefined) {
-                    version.version = version.release.tag_name;
-                }
             } else {
                 version.release = mod.releases.find(release => release.tag_name === version.version);
             }

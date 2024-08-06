@@ -33,7 +33,7 @@
             </template>
             <template v-else>
               <template v-for="version in mod.versions" :key="version.version">
-                <template v-if="(this.isInstalledMod(mod.sid, version.version)) && (selectedGameVersion === '' || selectedGameVersion === version.gameVersion)">
+                <template v-if="(this.isInstalledMod(mod.sid, version)) && (selectedGameVersion === '' || selectedGameVersion === version.gameVersion)">
                   <ModCard :mod="mod" :version="version" />
                 </template>
               </template>

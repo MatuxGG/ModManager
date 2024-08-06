@@ -43,7 +43,7 @@
         <a v-if="mod.author && mod.githubLink && version.version"
            @click.prevent="openLink(`https://github.com/${mod.author}/${mod.github}/releases/tag/${version.version}`)"
            class="cursor-pointer w-fit">
-          {{ $t('Version:') }} <span class="text-blue-700 dark:text-blue-400">{{ version.version }}</span>
+          {{ $t('Version:') }} <span class="text-blue-700 dark:text-blue-400">{{ version.release && version.release.tag_name ? version.release.tag_name : version.version }}</span>
         </a>
 
         <!-- Game Version -->
@@ -60,25 +60,25 @@
         <div class="flex items-center gap-2">
           <!-- Mod -->
           <template v-if="version">
-            <template v-if="!isInstalledMod(mod.sid, version.version)">
-              <!-- Update -->
-              <template v-if="canBeUpdated(mod.sid, version.version) === true">
-                <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/update.png"/></div>
-                <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
-              </template>
+            <template v-if="!isInstalledMod(mod.sid, version)">
               <!-- Download -->
-              <template v-else>
-                <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/download.png"/></div>
-              </template>
+              <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/download.png"/></div>
             </template>
             <!-- Start -->
             <template v-else>
-              <div @click="() => startMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/play.png"/></div>
-              <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
-              <div @click="() => combineMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/add.png"/></div>
+              <!-- Update -->
+              <template v-if="canBeUpdated(mod.sid, version) === true">
+                <div @click="() => downloadMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/update.png"/></div>
+                <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
+              </template>
+              <template v-else>
+                <div @click="() => startMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/play.png"/></div>
+                <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
+                <div @click="() => combineMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/add.png"/></div>
+              </template>
             </template>
 
-            <template v-if="isFavoriteMod(mod.sid, version.version)">
+            <template v-if="isFavoriteMod(mod.sid, version)">
               <div @click="() => removeFavoriteMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/favoriteFilled.png"/></div>
             </template>
             <template v-else>

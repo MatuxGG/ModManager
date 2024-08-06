@@ -4,6 +4,8 @@ import path from 'path';
 import { GL_API_URL, getAppData } from './appGlobals';
 import Files from './files';
 import { InstalledMod } from './installedMod';
+import {ModVersion} from "./modVersion";
+import {Mod} from "./mod";
 
 const regKey = new Winreg({
     hive: Winreg.HKLM, // Hive du registre
@@ -91,9 +93,11 @@ class Config {
         }
     }
 
-    addInstalledMod(mod: { sid: string }, version: { version: string } | null): void {
-        if (!this.installedMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) {
-            this.installedMods.push({ modId: mod.sid, version: version === null ? null : version.version });
+    addInstalledMod(mod: Mod, version: ModVersion | null): void {
+        let versionString = version === null ? null : version.version;
+        let releasedVersion = version === null || version.release === null ? null : version.release.tag_name;
+        if (!this.installedMods.some(m => m.modId === mod.sid && m.version === versionString && m.releaseVersion === releasedVersion)) {
+            this.installedMods.push({ modId: mod.sid, version: versionString, releaseVersion: releasedVersion });
         }
     }
 
@@ -105,9 +109,9 @@ class Config {
         }
     }
 
-    addFavoriteMod(mod: { sid: string }, version: { version: string } | null): void {
+    addFavoriteMod(mod: Mod, version: ModVersion): void {
         if (!this.favoriteMods.some(m => m.modId === mod.sid && (version === null || m.version === version.version))) {
-            this.favoriteMods.push({ modId: mod.sid, version: version === null ? null : version.version });
+            this.favoriteMods.push({ modId: mod.sid, version: version === null ? null : version.version, releaseVersion: null });
         }
     }
 

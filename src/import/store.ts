@@ -1,4 +1,5 @@
 import { createStore, Store } from 'vuex';
+import {ModVersion} from "../../electron/main/class/modVersion";
 
 interface Mod {
     sid: string;
@@ -89,7 +90,7 @@ export const store = createStore({
                     source.mods.forEach(mod => {
                         if (mod.type !== "dependency") {
                             mod.versions.forEach(version => {
-                                if (getters.isInstalledMod(mod.sid, version.version)) {
+                                if (getters.isInstalledMod(mod.sid, version)) {
                                     versions.add(version.gameVersion);
                                 }
                             });
@@ -168,7 +169,7 @@ export const store = createStore({
                             hasCategory = true;
                         } else {
                             mod.versions.forEach(version => {
-                                if (getters.isFavoriteMod(mod.sid, version.version)) {
+                                if (getters.isFavoriteMod(mod.sid, version)) {
                                     hasCategory = true;
                                 }
                             });
@@ -200,28 +201,33 @@ export const store = createStore({
                 })
             );
         },
-        isInstalledMod: (state: AppState) => (modId: string, version: string | null) => {
-            return state.appData?.config.installedMods.some(mod => mod.modId === modId && (version === null || mod.version === version));
+        isInstalledMod: (state: AppState) => (modId: string, version: ModVersion | null) => {
+            return state.appData?.config.installedMods.some(im => im.modId === modId && (version === null || im.version === version.version));
         },
-        isFavoriteMod: (state: AppState) => (modId: string, version: string | null) => {
-            return state.appData?.config.favoriteMods.some(mod => mod.modId === modId && (version === null || mod.version === version));
+        isFavoriteMod: (state: AppState) => (modId: string, version: ModVersion | null) => {
+            return state.appData?.config.favoriteMods.some(fm => fm.modId === modId && (version === null || fm.version === version.version));
         },
-        canBeUpdated: (state: AppState) => (modId: string) => {
-            let installedMods = state.appData?.config.installedMods.filter(m => m.modId === modId);
+        canBeUpdated: (state: AppState) => (modId: string, version: ModVersion | null) => {
+            console.log("canBeUpdated", modId, version);
+            let installedMods = state.appData?.config.installedMods.filter(im => im.modId === modId && (version === null || im.version === version.version));
             if (installedMods === undefined) return false;
             if (installedMods.length === 0) return false;
-            let result = false;
             state.appData?.modSources.forEach(source => {
                 let mod = source.mods.find(m => m.sid === modId);
                 if (mod) {
-                    mod.versions.forEach(v => {
-                        if (installedMods.some(im => im.version === v.version) === false) {
-                            result = true;
+                    if (version === null) {
+                        return true;
+                    } else {
+                        let modVersion: ModVersion | null = mod.versions.find(v => v === null || v.version === version.version) as ModVersion | null;
+                        if (modVersion) {
+                            return modVersion.release.tag_name === version.release.tag_name;
+                        } else {
+                            return false;
                         }
-                    });
+                    }
                 }
             });
-            return result;
+            return true;
         },
         startedMod: (state: AppState) => () => {
             return state.appData?.startedMod;
