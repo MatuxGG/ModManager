@@ -1,10 +1,9 @@
 // @ts-ignore
-import {app, Menu, shell} from "electron";
+import {app, BrowserWindow, Menu, shell} from "electron";
 // @ts-ignore
 import AutoLaunch from "auto-launch";
 import ModWorker from "./modWorker";
 import {
-    APP_PATH,
     getAppData,
     getArgs,
     getAutoLaunch,
@@ -23,6 +22,10 @@ export const handleArgs = () => {
     if (args.length > 0) {
         console.log("Handle args: ", args);
         switch (args[0]) {
+            case "startvanilla":
+            {
+                getMainWindow().webContents.send('handleArgs', 'startVanilla');
+            }
             case "startmod":
             {
                 const [mod, version] = getAppData().getModFromIdAndVersion(args[1], args[2]);
@@ -194,7 +197,6 @@ export const createShortcut = (mod, version) => {
 }
 
 export const updateTray = () => {
-
     let modsLines = [
         {
             label: 'Mod Manager',
@@ -227,6 +229,13 @@ export const updateTray = () => {
     ];
 
     if (getAppData().isLoaded) {
+        modsLines.push({ type: 'separator' });
+        modsLines.push({
+            label: "Vanilla",
+            click: function () {
+                getMainWindow().webContents.send('handleArgs', 'startVanilla');
+            }
+        });
         modsLines.push({ type: 'separator' });
         getAppData().config.installedMods.forEach(im => {
             let [mod, version] = getAppData().getModFromIdAndVersion(im.modId, im.version);

@@ -107,7 +107,7 @@ async function createWindow() {
 app.on('ready', async () => {
   setArgs(process.argv.slice(2));
   let t = new Tray(getMMIconPath());
-  setTray(new Tray(getMMIconPath()));
+  setTray(t);
   await createWindow();
   setupIPCMainHandlers();
 })

@@ -302,6 +302,9 @@ export default {
         case "startmod":
           window.electronAPI.sendData('startMod', args[0], args[1]);
           break;
+        case "startVanilla":
+          window.electronAPI.sendData('startVanilla');
+          break;
         default:
           break;
       }

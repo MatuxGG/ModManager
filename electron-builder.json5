@@ -1,9 +1,9 @@
 // @see https://www.electron.build/configuration/configuration
 {
   "$schema": "https://raw.githubusercontent.com/electron-userland/electron-builder/master/packages/app-builder-lib/scheme.json",
-  "appId": "YourAppID",
+  "appId": "modmanager7",
   "asar": true,
-  "productName": "YourAppName",
+  "productName": "Mod Manager 7",
   "directories": {
     "output": "release/${version}"
   },
@@ -26,13 +26,17 @@
         ]
       }
     ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}"
+    "artifactName": "${productName}-Windows-${version}-Setup.${ext}",
+    "icon": "public/modmanager.png"
   },
   "nsis": {
     "oneClick": false,
     "perMachine": false,
+    "installerIcon": "public/modmanager.ico",
+    "uninstallerIcon": "public/modmanager.ico",
     "allowToChangeInstallationDirectory": true,
-    "deleteAppDataOnUninstall": false
+    "deleteAppDataOnUninstall": false,
+    "include": "build/installer.nsh"
   },
   "linux": {
     "target": [

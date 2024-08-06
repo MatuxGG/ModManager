@@ -20,6 +20,9 @@ export const GL_API_URL = "https://goodloss.fr/api";
 export const MM_CONFIG_PATH = path.join(process.env.APPDATA, 'ModManager7', 'config7.json');
 export const MM_LOG_PATH = path.join(process.env.APPDATA, 'ModManager7', 'log.txt');
 export const AMONGUS_REGIONINFO_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'regionInfo.json');
+export const AMONGUS_SETTINGS_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'settings.amogus');
+export const AMONGUS_OLD_SETTINGS_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'settings.amogus.old');
+export const AMONGUS_NEW_SETTINGS_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'settings.amogus.new');
 
 export const setMainWindow = (win) => {
     mainWindow = win;

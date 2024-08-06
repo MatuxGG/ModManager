@@ -38,6 +38,16 @@ class Files {
         fs.renameSync(dirSource, dirDest);
     }
 
+    static copyFile(source, target) {
+        if (!fs.existsSync(source)) return;
+        fs.copyFileSync(source, target);
+    }
+
+    static deleteFile(file) {
+        if (!fs.existsSync(file)) return;
+        fs.rmSync(file);
+    }
+
     static getAllFiles(dir) {
         return this.getAllFilesWorker(dir, dir);
     }
@@ -93,6 +103,16 @@ class Files {
             fs.rename(oldPath, newPath, function(err) {
                 if (err) throw err;
             });
+        });
+    }
+
+    static copyDirectoryContent(sourceDir, targetDir) {
+        const files = fs.readdirSync(sourceDir);
+        files.forEach(file => {
+            const oldPath = path.join(sourceDir, file);
+            const newPath = path.join(targetDir, file);
+
+            fs.copyFileSync(oldPath, newPath);
         });
     }
 

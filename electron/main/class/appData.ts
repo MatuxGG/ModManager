@@ -51,6 +51,8 @@ class AppData {
 
     async resetApp(): Promise<void> {
         Files.deleteDirectoryIfExist(this.config.dataPath);
+        this.config = new Config(packageJson.version);
+        this.updateConfig();
         BrowserWindow.getAllWindows().forEach(window => window.close());
         app.exit(0);
     }
@@ -81,6 +83,11 @@ class AppData {
         } catch (error) {
             console.error("Erreur lors du téléchargement des mods", error);
         }
+
+        // Cleanup mods that have no releases
+        this.modSources.forEach(source => {
+            source.mods = source.mods.filter(mod => mod.versions.some(version => version.release));
+        });
     }
 
     async downloadRelease(mod: Mod): Promise<void> {
@@ -90,16 +97,18 @@ class AppData {
         mod.versions.forEach(version => {
             if (version.version === 'latest') {
                 version.release = mod.releases[0];
-                version.version = version.release.tag_name;
+                if (version.release !== undefined) {
+                    version.version = version.release.tag_name;
+                }
             } else {
                 version.release = mod.releases.find(release => release.tag_name === version.version);
             }
-            console.log(mod.name, version.version);
-            if (version.release) {
-                console.log(mod.name, version.version, version.release.tag_name);
-            } else {
-                console.log(mod.name, version.version, "release missing");
-            }
+            // console.log(mod.name, version.version); LOG
+            // if (version.release) {
+            //     console.log(mod.name, version.version, version.release.tag_name);
+            // } else {
+            //     console.log(mod.name, version.version, "release missing");
+            // }
         });
     }
 

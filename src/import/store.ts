@@ -48,11 +48,14 @@ export const store = createStore({
     actions: {
         loadAppData(context) {
             return new Promise((resolve) => {
+                // @ts-ignore
                 window.electronAPI.sendData('loadDataServer');
+                // @ts-ignore
                 window.electronAPI.receiveData('loadDataClient', (data: string) => {
                     context.commit('setAppData', JSON.parse(data));
                     resolve(context.rootState);
                 });
+                // @ts-ignore
                 window.electronAPI.receiveData('updateConfig', (config: string) => {
                     context.commit('setConfig', JSON.parse(config));
                 });
@@ -131,6 +134,7 @@ export const store = createStore({
                             if (cat && !uniqueCategories[cat.sid] && getters.isInstalledMod(mod.sid, null)) {
                                 uniqueCategories[cat.sid] = cat;
                                 if (!uniqueCategories["Favorites"]) {
+                                    // @ts-ignore
                                     if (state.appData.config.favoriteMods.some(m => m.modId === mod.sid)) {
                                         uniqueCategories["Favorites"] = favoriteCat;
                                     }
@@ -143,6 +147,7 @@ export const store = createStore({
             return Object.values(uniqueCategories).sort((a, b) => a.weight - b.weight);
         },
         filteredMods: (state: AppState, getters: any) => (filterCategory: string, filterGameVersion: string, searchOption: string) => {
+            if (!state.appData) return [];
             return state.appData.modSources.flatMap(source =>
                 source.mods.filter(mod => {
                     let hasCategory = false;
@@ -203,6 +208,7 @@ export const store = createStore({
         },
         canBeUpdated: (state: AppState) => (modId: string) => {
             let installedMods = state.appData?.config.installedMods.filter(m => m.modId === modId);
+            if (installedMods === undefined) return false;
             if (installedMods.length === 0) return false;
             let result = false;
             state.appData?.modSources.forEach(source => {

@@ -10,10 +10,13 @@ import * as os from 'os';
 // @ts-ignore
 import Winreg from "winreg";
 import {
+    AMONGUS_NEW_SETTINGS_PATH, AMONGUS_OLD_SETTINGS_PATH, AMONGUS_SETTINGS_PATH,
     getAppData, getMainWindow,
     GL_FILES_URL,
     GL_WEBSITE_URL, trans
 } from "./appGlobals";
+import {Mod} from "./mod";
+import {ModVersion} from "./modVersion";
 
 let child: any = null;
 
@@ -223,7 +226,6 @@ class ModWorker {
     }
 
     static async startMod(event: any, mod: any, version: any): Promise<void> {
-        const savePath = path.join(getAppData().config.dataPath, 'data', `${mod.sid}-${version.version}`);
         const isRunning = await this.isProcessRunning('Among Us') || getAppData().startedMod !== false;
         if (isRunning) return;
 
@@ -249,6 +251,8 @@ class ModWorker {
         await Promise.all(promises);
 
         const amongUsPath = path.join(gamePath, 'Among Us.exe');
+        this.loadGameSettings(version.version);
+        this.loadData(mod, version);
         child = spawn(amongUsPath, {});
 
         if (child.pid) {
@@ -259,7 +263,8 @@ class ModWorker {
         }
 
         child.on('close', () => {
-            Files.createDirectoryIfNotExist(savePath);
+            this.saveData(mod, version);
+            this.saveGameSettings(version.version);
             getAppData().startedMod = false;
             event.sender.send('updateStartedMod', false);
             downloadId = Date.now().toString();
@@ -269,6 +274,55 @@ class ModWorker {
 
             console.log("Mod stopped");
         });
+    }
+
+    static loadData(m: Mod, v: ModVersion): void {
+        let sourcePath = path.join(getAppData().config.dataPath, 'data', `${m.sid}-${v.version}`);
+        if (!Files.existsFolder(sourcePath)) return;
+
+        let targetPath = path.join(getAppData().config.dataPath, 'game', 'BepInEx', 'config');
+        Files.copyDirectoryContent(sourcePath, targetPath);
+    }
+
+    static saveData(m: Mod, v: ModVersion): void {
+        let sourcePath = path.join(getAppData().config.dataPath, 'game', 'BepInEx', 'config');
+        let targetPath = path.join(getAppData().config.dataPath, 'data', `${m.sid}-${v.version}`);
+        if (!Files.existsFolder(sourcePath)) return;
+
+        Files.deleteDirectoryIfExist(targetPath);
+        Files.createDirectoryIfNotExist(targetPath);
+        Files.copyDirectoryContent(sourcePath, targetPath);
+    }
+
+    // Backward compatibility system for version 2024.3.5 and older
+    static loadGameSettings(version: string): void {
+        const versionParts = version.split('.');
+        const versionInt = parseInt(versionParts[0], 10);
+
+        if (versionInt <= 2023 || version === '2024.3.5') {
+            if (Files.existsFolder(AMONGUS_OLD_SETTINGS_PATH)) {
+                Files.copyFile(AMONGUS_OLD_SETTINGS_PATH, AMONGUS_SETTINGS_PATH);
+            } else {
+                Files.deleteFile(AMONGUS_SETTINGS_PATH);
+            }
+        } else {
+            if (Files.existsFolder(AMONGUS_NEW_SETTINGS_PATH)) {
+                Files.copyFile(AMONGUS_NEW_SETTINGS_PATH, AMONGUS_SETTINGS_PATH);
+            } else {
+                Files.deleteFile(AMONGUS_SETTINGS_PATH);
+            }
+        }
+    }
+
+    static saveGameSettings(version: string): void {
+        const versionParts = version.split('.');
+        const versionInt = parseInt(versionParts[0], 10);
+
+        if (versionInt <= 2023 || version === '2024.3.5') {
+            Files.copyFile(AMONGUS_SETTINGS_PATH, AMONGUS_OLD_SETTINGS_PATH);
+        } else {
+            Files.copyFile(AMONGUS_SETTINGS_PATH, AMONGUS_NEW_SETTINGS_PATH);
+        }
     }
 
     static async startVanilla(event: any): Promise<void> {
