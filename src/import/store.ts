@@ -1,5 +1,6 @@
 import { createStore, Store } from 'vuex';
 import {ModVersion} from "../../electron/main/class/modVersion";
+import {InstalledMod} from "../../electron/main/class/installedMod";
 
 interface Mod {
     sid: string;
@@ -21,7 +22,7 @@ interface AppState {
     appData: {
         config: {
             favoriteMods: Array<{ modId: string; version: string | null }>;
-            installedMods: Array<{ modId: string; version: string | null }>;
+            installedMods: Array<{ modId: string; version: string | null, releaseVersion: string | null }>;
         };
         modSources: Array<{
             mods: Mod[];
@@ -208,26 +209,10 @@ export const store = createStore({
             return state.appData?.config.favoriteMods.some(fm => fm.modId === modId && (version === null || fm.version === version.version));
         },
         canBeUpdated: (state: AppState) => (modId: string, version: ModVersion | null) => {
-            console.log("canBeUpdated", modId, version);
-            let installedMods = state.appData?.config.installedMods.filter(im => im.modId === modId && (version === null || im.version === version.version));
-            if (installedMods === undefined) return false;
-            if (installedMods.length === 0) return false;
-            state.appData?.modSources.forEach(source => {
-                let mod = source.mods.find(m => m.sid === modId);
-                if (mod) {
-                    if (version === null) {
-                        return true;
-                    } else {
-                        let modVersion: ModVersion | null = mod.versions.find(v => v === null || v.version === version.version) as ModVersion | null;
-                        if (modVersion) {
-                            return modVersion.release.tag_name === version.release.tag_name;
-                        } else {
-                            return false;
-                        }
-                    }
-                }
-            });
-            return true;
+            let installedMod: InstalledMod | undefined = state.appData?.config.installedMods.find(im => im.modId === modId && (version === null || im.version === version.version));
+            if (installedMod === undefined) return false;
+            if (version === null) return false;
+            return installedMod.releaseVersion !== version.release.tag_name;
         },
         startedMod: (state: AppState) => () => {
             return state.appData?.startedMod;

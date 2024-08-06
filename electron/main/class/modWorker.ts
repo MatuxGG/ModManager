@@ -202,12 +202,16 @@ class ModWorker {
         try {
             await decompress(zipFilePath, outputFolderPath)
                 .then(() => {
-                    console.log('Extraction complète.');
+                    console.log('Extraction complete.');
                     event.sender.send('updatePopin', downloadTextEnd, downloadId, classes);
                     event.sender.send('removePopin', downloadId);
                 })
                 .catch((error: any) => {
-                    console.log('Extraction failed :' + error);
+                    if (error.code === 'EISDIR') {
+                        console.log('Le chemin est un dossier, non un fichier. Erreur: ' + error.message);
+                    } else {
+                        console.log('Extraction failed : ' + error);
+                    }
                 });
             return true;
         } catch (err) {
