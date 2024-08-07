@@ -30,7 +30,7 @@
               <span>{{ $t('Started mod') }}</span>
               <div class="flex flex-wrap gap-1">
                 <span>{{ startedMod[0].name }}</span>
-                <span>{{ startedMod[1].version }}</span>
+                <span>{{ startedMod[1].release.tag_name }}</span>
               </div>
             </template>
           </div>

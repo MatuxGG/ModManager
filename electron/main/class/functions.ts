@@ -16,6 +16,7 @@ import path from "path";
 import fs from "fs";
 // @ts-ignore
 import axios from "axios";
+import {isOnline} from "./onlineCheck";
 
 export const handleArgs = () => {
     let args = getArgs();
@@ -46,7 +47,7 @@ export const handleArgs = () => {
             // case "addsource":
             //   break;
             default:
-                console.log('default;')
+                console.log('No arg')
                 break;
         }
     }
@@ -231,20 +232,29 @@ export const updateTray = () => {
         },
     ];
 
-    if (getAppData().isLoaded) {
+    if (getAppData() || getAppData().isLoaded) {
         modsLines.push({ type: 'separator' });
-        modsLines.push({
-            label: "Vanilla",
-            click: function () {
-                getMainWindow().webContents.send('handleArgs', 'startVanilla');
-            }
-        });
+        if (getAppData().startedMod === false) {
+            modsLines.push({
+                label: "Start Vanilla",
+                click: function () {
+                    getMainWindow().webContents.send('handleArgs', 'startVanilla');
+                }
+            });
+        } else {
+            modsLines.push({
+                label: trans("Stop $", getAppData().startedMod[0].name+" "+getAppData().startedMod[1].release.tag_name),
+                click: function () {
+                    getMainWindow().webContents.send('handleArgs', 'stopCurrentMod');
+                }
+            });
+        }
         modsLines.push({ type: 'separator' });
         getAppData().config.installedMods.forEach(im => {
             let [mod, version] = getAppData().getModFromIdAndVersion(im.modId, im.version);
             if (mod && version && mod.type !== "dependency") {
                 modsLines.push({
-                    label: mod.name + " " + version.version,
+                    label: mod.name + " " + im.releaseVersion,
                     click: function () {
                         getMainWindow().webContents.send('handleArgs', 'startmod', [JSON.stringify(mod), JSON.stringify(version)]);
                     }
@@ -257,8 +267,8 @@ export const updateTray = () => {
     modsLines.push({
         label: trans('Exit'),
         click: function () {
-            BrowserWindow.getAllWindows().forEach(window => window.close());
-            app.exit(0);
+            app.quit()
+            process.exit(0)
         }
     });
 
@@ -277,7 +287,7 @@ export const enableAutoLaunch = () => {
     getAutoLaunch().isEnabled().then((isEnabled) => {
         if (!isEnabled) getAutoLaunch().enable();
     }).catch((err) => {
-        console.error(err);
+        logError(err);
     });
 }
 
@@ -285,7 +295,7 @@ export const disableAutoLaunch = () => {
     getAutoLaunch().isEnabled().then((isEnabled) => {
         if (isEnabled) getAutoLaunch().disable();
     }).catch((err) => {
-        console.error(err);
+        logError(err);
     });
 }
 
@@ -303,23 +313,40 @@ export const updateLaunchOnStart = () => {
     }
 }
 
-export const logError = (error) => {
-    const message = `[${new Date().toISOString()}] ${error}\n`;
-    fs.appendFile(MM_LOG_PATH, message, (err) => {
+export const getFormattedLogMessage = (message: string) => {
+    let supportId = getAppData()?.config?.supportId ?? '';
+    return `[ModManager7][${supportId}] ${message}`;
+}
+
+export const logError = (firstError: string, ...errors: any[]) => {
+    errors = errors.map((error) => {
+        if (typeof error === 'string') {
+            return error;
+        } else {
+            return JSON.stringify(error);
+        }
+    });
+    let concatenatedErrors = errors.join(', ');
+    concatenatedErrors = firstError + " " + concatenatedErrors;
+    logToServ(concatenatedErrors);
+    console.error(concatenatedErrors);
+    fs.appendFile(MM_LOG_PATH, "[" + new Date().toISOString() + "] " + concatenatedErrors + "\n", (err) => {
         if (err) {
-            console.error('Failed to write to log file:', err);
+            logError('Failed to write to log file:', err);
         }
     });
 }
 
-export const logToServ = (message) => {
+export const logToServ = (message: string) => {
+    if (!isOnline()) return;
+    message = getFormattedLogMessage(message);
     axios.post(GL_API_URL+"/log", {
-        text: "[ModManager7] "+message
+        text: message
     }, {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded'
         }
     }).then(r => {
-        console.log(r.status);
+        // console.log(r.status);
     });
 }

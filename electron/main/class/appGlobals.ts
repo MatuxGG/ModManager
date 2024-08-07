@@ -24,6 +24,8 @@ export const AMONGUS_SETTINGS_PATH = path.join(process.env.APPDATA, '..', 'Local
 export const AMONGUS_OLD_SETTINGS_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'settings.amogus.old');
 export const AMONGUS_NEW_SETTINGS_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'settings.amogus.new');
 
+export const AMONGUS_DOWNLOAD_LINK = GL_WEBSITE_URL + "/amonguspage";
+
 export const setMainWindow = (win) => {
     mainWindow = win;
 }
@@ -91,6 +93,7 @@ export const removeFinishedDownload = (type, mod, version) => {
 }
 
 export const trans = (text: string, ...values: any[]) => {
+    if (!getAppData() || !getAppData().config || !getAppData().config.lg) return text;
     const lg = getAppData().config.lg;
     let translatedValue = translations[lg] && translations[lg][text] ? translations[lg][text] : text;
 

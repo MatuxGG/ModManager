@@ -1,6 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 import https from 'https';
+import {logError} from "./functions";
 
 class Files {
     static loadOrCreate(dir, objet) {
@@ -151,7 +152,7 @@ class Files {
             });
 
             req.on('error', (error) => {
-                console.error(error);
+                logError(error);
                 reject(error);
             });
 

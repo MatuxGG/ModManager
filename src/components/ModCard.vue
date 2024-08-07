@@ -74,7 +74,7 @@
               <template v-else>
                 <div @click="() => startMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/play.png"/></div>
                 <div @click="() => uninstallMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/delete.png"/></div>
-                <div @click="() => combineMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/add.png"/></div>
+<!--                <div @click="() => combineMod(mod, version)"><img class="image-icon cursor-pointer" src="../assets/add.png"/></div>-->
               </template>
             </template>
 
@@ -129,6 +129,11 @@ export default {
       required: false
     }
   },
+  computed: {
+    categoriesOptions() {
+      return this.$store.getters.categoriesInstalledOptions;
+    },
+  },
   methods: {
     openLink(url) {
       window.electronAPI.openExternal(url);
@@ -142,13 +147,16 @@ export default {
     startMod(mod, version = null) {
       window.electronAPI.sendData('startMod', JSON.stringify(mod), JSON.stringify(version));
     },
-    combineMod(mod, version = null) {
+    combineMod(mod, version = null) { // TODO: Combine mods
       window.electronAPI.sendData('combineMod', JSON.stringify(mod), JSON.stringify(version));
     },
     addFavoriteMod(mod, version = null) {
       window.electronAPI.sendData('addFavoriteMod', JSON.stringify(mod), JSON.stringify(version));
     },
     removeFavoriteMod(mod, version = null) {
+      // if (this.$store.getters.getFavoriteCount() === 1) {
+      //   this.selectedCategory = this.categoriesOptions[0].sid;
+      // }
       window.electronAPI.sendData('removeFavoriteMod', JSON.stringify(mod), JSON.stringify(version));
     },
     isInstalledMod(modId, version = null) {

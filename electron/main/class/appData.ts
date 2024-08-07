@@ -2,13 +2,13 @@ import Config from "./config";
 import path from 'path';
 import Files from "./files";
 import fs from 'fs';
-import packageJson from '../../../package.json';
 import { GL_API_URL, MM_CONFIG_PATH, getAppData } from "./appGlobals";
 // @ts-ignore
 import { app, BrowserWindow } from 'electron';
 import {ModSource} from "./modSource";
 import {Mod} from "./mod";
 import {ModVersion} from "./modVersion";
+import {logError, logToServ} from "./functions";
 
 // const RegionInfo = require("./regionInfo");
 // const { version } = require("os");
@@ -16,6 +16,7 @@ import {ModVersion} from "./modVersion";
 
 class AppData {
     private isLoaded: boolean;
+    private isUpdating: boolean;
     private config: Config;
     private githubToken: string;
     private modSources: ModSource[];
@@ -24,26 +25,30 @@ class AppData {
 
     constructor() {
         this.isLoaded = false;
+        this.isUpdating = false;
         this.startedMod = false;
     }
 
     async loadLocalConfig(): Promise<void> {
         console.log("Appdata load...");
-        this.config = new Config(packageJson.version);
+        this.config = new Config(app.getVersion());
+        this.githubToken = <string>await Files.downloadString(`${GL_API_URL}/github/token`);
         await Files.loadOrCreate(MM_CONFIG_PATH, this.config);
     }
 
     async load(): Promise<void> {
         await this.config.loadAmongUsPath();
         Files.createDirectoryIfNotExist(this.config.dataPath);
+        // Delete Mod Manager 5 folder if exist
+        let ModManager5Path = path.join(process.env.APPDATA, 'ModManager');
+        Files.deleteDirectoryIfExist(ModManager5Path);
         this.subFolders.forEach(folder => Files.createDirectoryIfNotExist(path.join(this.config.dataPath, folder)));
-        this.githubToken = <string>await Files.downloadString(`${GL_API_URL}/github/token`);
         this.modSources = [];
         let downloadPromises = this.config.sources.map(source => this.downloadSource(source));
         try {
             await Promise.all(downloadPromises);
         } catch (error) {
-            console.error("Erreur lors du téléchargement des sources", error);
+            logError("Erreur lors du téléchargement des sources", error);
         }
         this.isLoaded = true;
         console.log("Appdata loaded");
@@ -51,10 +56,10 @@ class AppData {
 
     async resetApp(): Promise<void> {
         Files.deleteDirectoryIfExist(this.config.dataPath);
-        this.config = new Config(packageJson.version);
+        this.config = new Config(app.getVersion());
         this.updateConfig();
-        BrowserWindow.getAllWindows().forEach(window => window.close());
-        app.exit(0);
+        app.quit()
+        process.exit(0)
     }
 
     async changeDataFolder(newFolder: string): Promise<boolean> {
@@ -81,7 +86,7 @@ class AppData {
         try {
             await Promise.all(downloadPromises);
         } catch (error) {
-            console.error("Erreur lors du téléchargement des mods", error);
+            logError("Erreur lors du téléchargement des mods", error);
         }
 
         // Cleanup mods that have no releases

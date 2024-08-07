@@ -12,6 +12,7 @@ import {
     updateTray
 } from "./functions";
 import modWorker from "./modWorker";
+import {initializeUpdater, isUpdating} from "./updater";
 
 const setupIPCMainHandlers = () => {
 
@@ -23,6 +24,9 @@ const setupIPCMainHandlers = () => {
         console.log("Loading data server...");
         if (!getAppData() || !getAppData().isLoaded) {
             await getAppData().loadLocalConfig();
+            await initializeUpdater();
+            console.log(getAppData().isUpdating);
+            if (getAppData().isUpdating) return;
             getMainWindow().show();
             event.reply('loadLanguage', getAppData().config.lg);
         }

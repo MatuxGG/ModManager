@@ -14,6 +14,7 @@ import {
 import AppData from "./class/appData";
 import {handleArgs, logError} from "./class/functions";
 import setupIPCMainHandlers from "./class/ipcHandler";
+import {initializeOnlineCheck} from "./class/onlineCheck";
 
 const require = createRequire(import.meta.url)
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -100,11 +101,13 @@ async function createWindow() {
     if (url.startsWith('https:')) shell.openExternal(url)
     return { action: 'deny' }
   })
+
   // win.webContents.on('will-navigate', (event, url) => { }) #344
 }
 
 
 app.on('ready', async () => {
+  initializeOnlineCheck();
   setArgs(process.argv.slice(2));
   let t = new Tray(getMMIconPath());
   setTray(t);

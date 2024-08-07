@@ -128,6 +128,9 @@ export const store = createStore({
                 name: 'Favorites',
                 weight: 0,
             };
+            if (getters.getFavoriteCount() > 0) {
+                uniqueCategories["Favorites"] = favoriteCat;
+            }
             if (state.appData && state.appData.modSources) {
                 state.appData.modSources.forEach(source => {
                     source.mods.forEach(mod => {
@@ -135,12 +138,6 @@ export const store = createStore({
                             const cat = mod.category;
                             if (cat && !uniqueCategories[cat.sid] && getters.isInstalledMod(mod.sid, null)) {
                                 uniqueCategories[cat.sid] = cat;
-                                if (!uniqueCategories["Favorites"]) {
-                                    // @ts-ignore
-                                    if (state.appData.config.favoriteMods.some(m => m.modId === mod.sid)) {
-                                        uniqueCategories["Favorites"] = favoriteCat;
-                                    }
-                                }
                             }
                         }
                     });
@@ -207,6 +204,15 @@ export const store = createStore({
         },
         isFavoriteMod: (state: AppState) => (modId: string, version: ModVersion | null) => {
             return state.appData?.config.favoriteMods.some(fm => fm.modId === modId && (version === null || fm.version === version.version));
+        },
+        getFavoriteCount: (state: AppState, getters: any) => () => {
+            let count = 0;
+            state.appData?.config.installedMods.forEach(im => {
+                let versions = state.appData?.modSources.flatMap(source => source.mods.find(m => m.sid === im.modId)?.versions);
+                let favoriteVersions = versions?.filter(version => getters.isFavoriteMod(im.modId, version));
+                count += favoriteVersions?.length || 0;
+            });
+            return count;
         },
         canBeUpdated: (state: AppState) => (modId: string, version: ModVersion | null) => {
             let installedMod: InstalledMod | undefined = state.appData?.config.installedMods.find(im => im.modId === modId && (version === null || im.version === version.version));

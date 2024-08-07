@@ -1,11 +1,13 @@
 // @ts-ignore
 import Winreg from 'winreg';
 import path from 'path';
-import { GL_API_URL, getAppData } from './appGlobals';
+import {GL_API_URL, getAppData, trans, AMONGUS_DOWNLOAD_LINK} from './appGlobals';
 import Files from './files';
 import { InstalledMod } from './installedMod';
 import {ModVersion} from "./modVersion";
 import {Mod} from "./mod";
+import {logError} from "./functions";
+import {app, dialog, Notification, shell} from "electron";
 
 const regKey = new Winreg({
     hive: Winreg.HKLM, // Hive du registre
@@ -58,7 +60,11 @@ class Config {
         try {
             this.amongUsPath = await this.getSteamLocation();
         } catch (err) {
-            console.error(err);
+            let notification = new Notification({ title: trans('Among Us not found'), body: trans('Please uninstall and reinstall it to solve the issue.\nMod Manager will close!') });
+            notification.show();
+            shell.openExternal(AMONGUS_DOWNLOAD_LINK);
+            app.quit()
+            process.exit(0)
         }
     }
 
@@ -66,7 +72,7 @@ class Config {
         return new Promise((resolve, reject) => {
             regKey.get('InstallLocation', (err, item) => {
                 if (err) {
-                    console.error("Erreur lors de la lecture de la clé de registre:", err);
+                    logError("Erreur lors de la lecture de la clé de registre:", err);
                     reject(err);
                 } else if (item) {
                     resolve(item.value);

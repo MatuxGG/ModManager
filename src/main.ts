@@ -39,7 +39,8 @@ const loadLocaleMessages = async (locale: string) => {
                 await new Promise(res => setTimeout(res, retryInterval));
                 return fetchTranslations();
             } else {
-                console.error(`Failed to load translations for locale ${locale} after multiple attempts:`, error);
+                log
+                logError(`Failed to load translations for locale ${locale} after multiple attempts:`, error);
                 return false;
             }
         }
@@ -70,7 +71,7 @@ const loadAllTranslations = async () => {
                 await new Promise(res => setTimeout(res, retryInterval));
                 return fetchTranslations();
             } else {
-                console.error('Failed to load all translations after multiple attempts:', error);
+                logError('Failed to load all translations after multiple attempts:', error);
                 return [];
             }
         }

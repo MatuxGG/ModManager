@@ -57,9 +57,22 @@
         selectedGameVersion: '',
         selectedCategory: '',
         searchOption: '',
+        favoriteCount: this.$store.getters.getFavoriteCount(),
       };
     },
+    watch: {
+      getFavoriteCount(newValue) {
+        console.log(newValue);
+        this.favoriteCount = newValue;
+        if (newValue === 0) {
+          this.selectedCategory = this.categoriesOptions[0].sid;
+        }
+      }
+    },
     computed: {
+      getFavoriteCount() {
+        return this.$store.getters.getFavoriteCount();
+      },
       categoriesOptions() {
         return this.$store.getters.categoriesInstalledOptions;
       },
@@ -71,6 +84,7 @@
       },
     },
     mounted() {
+      this.favoriteCount = this.$store.getters.getFavoriteCount();
       let favCat = this.categoriesOptions.find(category => category.sid === "Favorites");
       if (favCat) {
         this.selectedCategory = favCat.sid;

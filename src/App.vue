@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div v-else class="bg-white dark:bg-gray-800 text-black dark:text-white text-xs flex justify-center items-center justify-center h-full w-full min-h-screen">
+    <div v-else class="bg-white dark:bg-gray-800 text-black dark:text-white text-xs flex justify-center items-center h-full w-full min-h-screen">
       <router-view></router-view>
     </div>
   </div>
@@ -63,8 +63,8 @@ export default {
       menus: [
         { href: '/store', img: downloadImg, title: 'Mods store' },
         { href: '/library', img: modsImg, title: 'Mods library' },
-        // { href: '/servers', img: serversImg, title: 'Servers' },
-        { href: '/addlocal', img: addImg, title: 'Add Mod' },
+        // { href: '/servers', img: serversImg, title: 'Servers' }, // TODO: Servers
+        // { href: '/addlocal', img: addImg, title: 'Add Mod' }, // TODO: Add local mod
         { href: '/settings', img: settingsImg, title: 'Settings' },
         { href: '/credits', img: creditsImg, title: 'Credits' },
       ],
@@ -93,7 +93,7 @@ export default {
       return "dark";
     },
     isNotLoadingPage() {
-      return this.$route.path !== '/';
+      return this.$route.path !== '/' && this.$route.path !== '/updating';
     }
   },
   watch: {
@@ -304,6 +304,9 @@ export default {
           break;
         case "startVanilla":
           window.electronAPI.sendData('startVanilla');
+          break;
+        case "stopCurrentMod":
+          window.electronAPI.sendData('stopCurrentMod');
           break;
         default:
           break;

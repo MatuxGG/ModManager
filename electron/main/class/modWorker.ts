@@ -17,6 +17,7 @@ import {
 } from "./appGlobals";
 import {Mod} from "./mod";
 import {ModVersion} from "./modVersion";
+import {logError, updateTray} from "./functions";
 
 let child: any = null;
 
@@ -85,7 +86,7 @@ class ModWorker {
                 writer.on('error', reject);
             });
         } catch (error) {
-            console.error('Error downloading the mod:', error);
+            logError('Error downloading the mod:', error);
             return false;
         }
     }
@@ -190,7 +191,7 @@ class ModWorker {
                 writer.on('error', reject);
             });
         } catch (error) {
-            console.error('Error downloading the mod:', error);
+            logError('Error downloading the mod:', error);
             return false;
         }
     }
@@ -215,7 +216,7 @@ class ModWorker {
                 });
             return true;
         } catch (err) {
-            console.error('Erreur lors de l\'extraction:', err);
+            logError('Erreur lors de l\'extraction:', err);
             return false;
         }
     }
@@ -262,6 +263,7 @@ class ModWorker {
         if (child.pid) {
             getAppData().startedMod = [mod, version];
             event.sender.send('updateStartedMod', [mod, version]);
+            updateTray();
             event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ started!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
             event.sender.send('removePopin', downloadId);
         }
@@ -271,6 +273,7 @@ class ModWorker {
             this.saveGameSettings(version.version);
             getAppData().startedMod = false;
             event.sender.send('updateStartedMod', false);
+            updateTray();
             downloadId = Date.now().toString();
             getMainWindow().show();
             getMainWindow().maximize();
@@ -342,6 +345,7 @@ class ModWorker {
         if (child.pid) {
             getAppData().startedMod = ["Vanilla", null];
             event.sender.send('updateStartedMod', ["Vanilla", null]);
+            updateTray();
             event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('Vanilla started!')+`</p></div>`, downloadId, "bg-green-700");
             event.sender.send('removePopin', downloadId);
         }
@@ -349,6 +353,7 @@ class ModWorker {
         child.on('close', () => {
             getAppData().startedMod = false;
             event.sender.send('updateStartedMod', false);
+            updateTray();
             getMainWindow().show();
             getMainWindow().maximize();
 
@@ -408,12 +413,12 @@ class ModWorker {
                 writer.on('finish', () => {
                     exec(tempPath, (error, stdout, stderr) => {
                         if (error) {
-                            console.error(`Erreur d'exécution : ${error}`);
+                            logError(`Erreur d'exécution : ${error}`);
                             console.log(`Code de sortie : ${error.code}`);
                             return;
                         }
                         if (stderr) {
-                            console.error(`Erreur : ${stderr}`);
+                            logError(`Erreur : ${stderr}`);
                         } else {
                             event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ installed!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
                             event.sender.send('removePopin', downloadId);
@@ -424,7 +429,7 @@ class ModWorker {
                 writer.on('error', reject);
             });
         } catch (error) {
-            console.error('Error downloading the mod:', error);
+            logError('Error downloading the mod:', error);
             return false;
         }
     }
@@ -438,13 +443,14 @@ class ModWorker {
         });
         regKey.get('InstallLocation', (err: any, item: any) => {
             if (err) {
-                console.error("Erreur lors de la lecture de la clé de registre:", err);
+                logError("Erreur lors de la lecture de la clé de registre:", err);
             } else if (item) {
                 child = spawn(path.join(item.value, "Better-CrewLink.exe"), {});
 
                 if (child.pid) {
                     getAppData().startedMod = [mod, null];
                     event.sender.send('updateStartedMod', [mod, null]);
+                    updateTray();
                     event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ started!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
                     event.sender.send('removePopin', downloadId);
                 }
@@ -452,6 +458,7 @@ class ModWorker {
                 child.on('close', () => {
                     getAppData().startedMod = false;
                     event.sender.send('updateStartedMod', false);
+                    updateTray();
                 });
             } else {
                 console.log(null);
@@ -474,12 +481,12 @@ class ModWorker {
             } else {
                 exec(`cmd /c ${item.value}`, { windowsHide: true }, async (error, stdout, stderr) => {
                     if (error) {
-                        console.error(`Erreur d'exécution : ${error}`);
+                        logError(`Erreur d'exécution : ${error}`);
                         console.log(`Code de sortie : ${error.code}`);
                         return;
                     }
                     if (stderr) {
-                        console.error(`Erreur : ${stderr}`);
+                        logError(`Erreur : ${stderr}`);
                     } else {
                         event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ uninstalled!', mod.name)+`</p></div>`, downloadId, "bg-red-700");
                         event.sender.send('removePopin', downloadId);
@@ -498,12 +505,12 @@ class ModWorker {
             event.sender.send('createPopin', `<div class='w-64'><p>`+trans('Installing $...', mod.name)+`</p></div>`, downloadId, "bg-blue-700");
             exec(`start steam://run/2160150`, (error, stdout, stderr) => {
                 if (error) {
-                    console.error(`Erreur d'exécution : ${error}`);
+                    logError(`Erreur d'exécution : ${error}`);
                     console.log(`Code de sortie : ${error.code}`);
                     return;
                 }
                 if (stderr) {
-                    console.error(`Erreur : ${stderr}`);
+                    logError(`Erreur : ${stderr}`);
                 } else {
                     event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ installed!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
                     event.sender.send('removePopin', downloadId);
@@ -511,7 +518,7 @@ class ModWorker {
                 }
             });
         } catch (error) {
-            console.error('Error downloading the mod:', error);
+            logError('Error downloading the mod:', error);
             return false;
         }
     }
@@ -523,12 +530,13 @@ class ModWorker {
         child = spawn('start steam://rungameid/2160150', { shell: true });
 
         child.on('error', (error: any) => {
-            console.error(`Error: ${error.message}`);
+            logError(`Error: ${error.message}`);
         });
 
         if (child.pid) {
             getAppData().startedMod = [mod, null];
             event.sender.send('updateStartedMod', [mod, null]);
+            updateTray();
             event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ started!', mod.name)+`</p></div>`, downloadId, "bg-green-700");
             event.sender.send('removePopin', downloadId);
         }
@@ -536,6 +544,7 @@ class ModWorker {
         child.on('close', () => {
             getAppData().startedMod = false;
             event.sender.send('updateStartedMod', false);
+            updateTray();
         });
     }
 
@@ -554,12 +563,12 @@ class ModWorker {
             } else {
                 exec(`cmd /c ${item.value}`, { windowsHide: true }, async (error, stdout, stderr) => {
                     if (error) {
-                        console.error(`Erreur d'exécution : ${error}`);
+                        logError(`Erreur d'exécution : ${error}`);
                         console.log(`Code de sortie : ${error.code}`);
                         return;
                     }
                     if (stderr) {
-                        console.error(`Erreur : ${stderr}`);
+                        logError(`Erreur : ${stderr}`);
                     } else {
                         event.sender.send('updatePopin', `<div class='w-64'><p>`+trans('$ uninstalled!', mod.name)+`</p></div>`, downloadId, "bg-red-700");
                         event.sender.send('removePopin', downloadId);
