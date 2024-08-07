@@ -1,7 +1,11 @@
 import {app, Notification} from "electron";
 import https from "https";
-import {getAppData, getMainWindow, trans} from "./appGlobals";
-import {logError, logToServ} from "./functions";
+import {getAppData, getMainWindow, MM_INSTALLER_PATH, trans} from "./appGlobals";
+import {logError, logToServ, updateTray} from "./functions";
+import axios from "axios";
+import fs from "fs";
+import path from "path";
+import {spawn} from "child_process";
 
 function compareDates(date1, date2) {
     function convertToDate(dateString) {
@@ -21,7 +25,7 @@ function compareDates(date1, date2) {
     }
 }
 
-function processUpdate(installerAsset: any) {
+async function processUpdate(installerAsset: any) {
     getAppData().isUpdating = true;
     console.log('Processing update');
     let installerUrl = installerAsset.browser_download_url;
@@ -30,13 +34,58 @@ function processUpdate(installerAsset: any) {
     let notification = new Notification({title: trans('Mod Manager update available'), body: trans('The update will be downloaded in the background and installed immediately afterward.\nYou cannot use Mod Manager during this process!')});
     notification.show();
     console.log(installerUrl);
-    // app.quit();
-    // process.exit(0);
+
+    const response = await axios({
+        method: 'get',
+        url: installerUrl,
+        responseType: 'stream'
+    });
+
+    const totalLength = response.headers['content-length'];
+    let progress = 0;
+    let lastProgress = 0;
+    let lastTime = Date.now();
+
+    response.data.on('data', (chunk: any) => {
+        progress += chunk.length;
+        const currentTime = Date.now();
+        const elapsedTime = currentTime - lastTime;
+        const bytesDownloaded = progress - lastProgress;
+
+        const percentCompleted = Math.round((progress / totalLength) * 100);
+
+        const speed = elapsedTime > 0 ? (bytesDownloaded / (elapsedTime / 1000)) : 0;
+
+        if (currentTime - lastTime > 100) {
+            lastTime = currentTime;
+            lastProgress = progress;
+        }
+    });
+
+    const writer = fs.createWriteStream(MM_INSTALLER_PATH);
+    response.data.pipe(writer);
+
+    return new Promise((resolve, reject) => {
+        writer.on('finish', () => {
+            console.log('updater downloaded');
+            let child = spawn(MM_INSTALLER_PATH, {});
+
+            if (child.pid) {
+
+            }
+
+            child.on('close', () => {
+                app.quit();
+                process.exit(0);
+            });
+            resolve(true);
+        });
+        writer.on('error', reject);
+    });
+
 }
 
 async function updateCheck() {
-    // transform this function in async one
-    var opt // TODO
     var options = {
         host: 'api.github.com',
         path: `/repos/MatuxGG/ModManager/releases`,
@@ -47,56 +96,65 @@ async function updateCheck() {
         }
     };
 
-    const req = https.request(options, (res) => {
-        let data = '';
 
-        res.on('data', (chunk) => {
-            data += chunk;
-        });
+    return new Promise((resolve, reject) => {
+        const req = https.request(options, (res) => {
+            let data = '';
 
-        res.on('end', () => {
-            if (res.statusCode === 200 || res.statusCode == 301) {
-                try {
-                    let releases = JSON.parse(data);
-                    if (!releases) {
-                        logError('No releases for updater');
-                        return;
-                    }
-                    let latestRelease = releases[0];
-                    if (!latestRelease) {
-                        logError('No latest release for updater')
-                        return;
-                    }
-                    let latestVersion = latestRelease.tag_name;
-                    let currentVersion = app.getVersion();
-                    let compareResult = compareDates(currentVersion, latestVersion);
-                    if (compareResult < 0) { // TODO: Inverser signe
-                        let installerAsset = latestRelease.assets.find(asset => asset.name === 'ModManagerInstaller.exe');
-                        if (!installerAsset) {
-                            logError('No installer asset for updater');
-                            return;
+            res.on('data', (chunk) => {
+                data += chunk;
+            });
+
+            res.on('end', async () => {
+                if (res.statusCode === 200 || res.statusCode === 301) {
+                    try {
+                        let releases = JSON.parse(data);
+                        if (!releases) {
+                            logError('No releases for updater');
+                            return reject('No releases for updater');
                         }
-                        // Need update
-                        processUpdate(installerAsset)
+                        let latestRelease = releases[0];
+                        if (!latestRelease) {
+                            logError('No latest release for updater');
+                            return reject('No latest release for updater');
+                        }
+                        let latestVersion = latestRelease.tag_name;
+                        let currentVersion = app.getVersion();
+                        let compareResult = compareDates(currentVersion, latestVersion);
+                        if (compareResult < 0) { // TODO: Inverser signe
+                            let installerAsset = latestRelease.assets.find(asset => asset.name === 'ModManagerInstaller.exe');
+                            if (!installerAsset) {
+                                logError('No installer asset for updater');
+                                return reject('No installer asset for updater');
+                            }
+                            // Need update
+                            await processUpdate(installerAsset);
+                            resolve('Update required');
+                        } else {
+                            resolve('No update required');
+                        }
+                    } catch (e) {
+                        logError(`Error parsing response: ${e}`);
+                        reject(`Error parsing response: ${e}`);
                     }
-                } catch (e) {
-                    logError(`Error parsing response: ${e}`);
+                } else {
+                    logError(`Request failed with status code ${res.statusCode}`);
+                    reject(`Request failed with status code ${res.statusCode}`);
                 }
-            } else {
-                logError(`Request failed with status code ${res.statusCode}`);
-            }
+            });
         });
-    });
 
-    req.on('error', (e) => {
-        logError(`Request error: ${e}`);
-    });
+        req.on('error', (e) => {
+            logError(`Request error: ${e}`);
+            reject(`Request error: ${e}`);
+        });
 
-    req.end();
+        req.end();
+    });
 }
 
 export async function initializeUpdater() {
-    await updateCheck();
+    const result = await updateCheck();
     setInterval(function() {
         updateCheck();
     }, 60000);

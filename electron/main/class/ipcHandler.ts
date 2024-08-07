@@ -24,10 +24,9 @@ const setupIPCMainHandlers = () => {
         console.log("Loading data server...");
         if (!getAppData() || !getAppData().isLoaded) {
             await getAppData().loadLocalConfig();
-            await initializeUpdater();
-            console.log(getAppData().isUpdating);
-            if (getAppData().isUpdating) return;
             getMainWindow().show();
+            await initializeUpdater();
+            if (getAppData().isUpdating) return;
             event.reply('loadLanguage', getAppData().config.lg);
         }
     });

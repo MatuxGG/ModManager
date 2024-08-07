@@ -19,6 +19,7 @@ export const GL_FILES_URL = "https://goodloss.fr/files";
 export const GL_API_URL = "https://goodloss.fr/api";
 export const MM_CONFIG_PATH = path.join(process.env.APPDATA, 'ModManager7', 'config7.json');
 export const MM_LOG_PATH = path.join(process.env.APPDATA, 'ModManager7', 'log.txt');
+export const MM_INSTALLER_PATH = path.join(process.env.APPDATA, 'ModManager7', 'installer.exe');
 export const AMONGUS_REGIONINFO_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'regionInfo.json');
 export const AMONGUS_SETTINGS_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'settings.amogus');
 export const AMONGUS_OLD_SETTINGS_PATH = path.join(process.env.APPDATA, '..', 'LocalLow', 'Innersloth', 'Among Us', 'settings.amogus.old');
