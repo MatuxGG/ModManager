@@ -30,7 +30,7 @@
     "auto-launch": "^5.0.6",
     "axios": "^1.6.2",
     "decompress": "^4.2.1",
-    "electron-log": "^4.0.0",
+    "electron-log": "^5.1.7",
     "jquery": "^3.7.1",
     "vue-i18n": "^9.11.0",
     "vue-router": "^4.2.5",
