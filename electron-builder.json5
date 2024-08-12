@@ -15,7 +15,7 @@
     "target": [
       "dmg"
     ],
-    "artifactName": "${productName}-Mac-${version}-Installer.${ext}"
+    "artifactName": "${productName}-Mac-Installer.${ext}"
   },
   "win": {
     "target": [
@@ -26,7 +26,7 @@
         ]
       }
     ],
-    "artifactName": "${productName}-Windows-${version}-Setup.${ext}",
+    "artifactName": "${productName}-Windows-Installer.${ext}",
     "icon": "public/modmanager.png"
   },
   "nsis": {
@@ -42,6 +42,6 @@
     "target": [
       "AppImage"
     ],
-    "artifactName": "${productName}-Linux-${version}.${ext}"
+    "artifactName": "${productName}-Linux-Installer.${ext}"
   }
 }

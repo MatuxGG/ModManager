@@ -1,6 +1,4 @@
 import { createStore, Store } from 'vuex';
-import {ModVersion} from "../../electron/main/class/modVersion";
-import {InstalledMod} from "../../electron/main/class/installedMod";
 
 interface Mod {
     sid: string;
@@ -21,14 +19,25 @@ interface Mod {
 interface AppState {
     appData: {
         config: {
-            favoriteMods: Array<{ modId: string; version: string | null }>;
-            installedMods: Array<{ modId: string; version: string | null, releaseVersion: string | null }>;
+            favoriteMods: InstalledMod[];
+            installedMods: InstalledMod[];
         };
         modSources: Array<{
             mods: Mod[];
         }>;
         startedMod?: any;
     } | null;
+}
+
+interface ModVersion {
+    version: string;
+    release?: any;
+}
+
+interface InstalledMod {
+    modId: string;
+    version: string;
+    releaseVersion: string;
 }
 
 export const store = createStore({

@@ -33,7 +33,6 @@ async function processUpdate(installerAsset: any) {
     getMainWindow().webContents.send('navigate', '/updating');
     let notification = new Notification({title: trans('Mod Manager update available'), body: trans('The update will be downloaded in the background and installed immediately afterward.\nYou cannot use Mod Manager during this process!')});
     notification.show();
-    console.log(installerUrl);
 
     const response = await axios({
         method: 'get',
@@ -68,17 +67,25 @@ async function processUpdate(installerAsset: any) {
     return new Promise((resolve, reject) => {
         writer.on('finish', () => {
             console.log('updater downloaded');
-            let child = spawn(MM_INSTALLER_PATH, {});
 
-            if (child.pid) {
+            setTimeout(() => {
+                let child = spawn(MM_INSTALLER_PATH, {
+                    detached: true,
+                    stdio: 'ignore'
+                });
 
-            }
+                if (child.pid) {
+                    console.log('Process started with PID:', child.pid);
+                    app.quit();
+                    process.exit(0);
+                }
 
-            child.on('close', () => {
-                app.quit();
-                process.exit(0);
-            });
-            resolve(true);
+                child.on('close', () => {
+                    app.quit();
+                    process.exit(0);
+                });
+                resolve(true);
+            }, 100); // 100 ms delay
         });
         writer.on('error', reject);
     });
@@ -121,8 +128,15 @@ async function updateCheck() {
                         let latestVersion = latestRelease.tag_name;
                         let currentVersion = app.getVersion();
                         let compareResult = compareDates(currentVersion, latestVersion);
-                        if (compareResult < 0) { // TODO: Inverser signe
-                            let installerAsset = latestRelease.assets.find(asset => asset.name === 'ModManagerInstaller.exe');
+                        if (compareResult > 0) {
+                            const platform = process.platform;
+                            let installerName = 'ModManager7-Windows-Installer.exe';
+                            if (platform === 'darwin') {
+                                installerName = 'ModManager7-Mac-Installer.dmg';
+                            } else if (platform === 'linux') {
+                                installerName = 'ModManager7-Linux-Installer.AppImage';
+                            }
+                            let installerAsset = latestRelease.assets.find(asset => asset.name === installerName);
                             if (!installerAsset) {
                                 logError('No installer asset for updater');
                                 return reject('No installer asset for updater');
